@@ -22,3 +22,13 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'remember_token' => str_random(10),
     ];
 });
+
+$factory->define(App\RosterMember::class, function (Faker\Generator $faker) {
+
+    return [
+        'name' => $faker->name,
+        'hometown' => $faker->city . ', ' . $faker->state,
+        'height' => $faker->numberBetween(63, 84),
+        'weight' => $faker->numberBetween(175, 400)
+    ];
+});
