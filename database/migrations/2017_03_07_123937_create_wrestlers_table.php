@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRosterMembersTable extends Migration
+class CreateWrestlersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateRosterMembersTable extends Migration
      */
     public function up()
     {
-        Schema::create('roster_members', function (Blueprint $table) {
+        Schema::create('wrestlers', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->unique();
             $table->string('hometown');
@@ -31,6 +31,6 @@ class CreateRosterMembersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('roster_members');
+        Schema::dropIfExists('wrestlers');
     }
 }

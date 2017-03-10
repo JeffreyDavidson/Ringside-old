@@ -15,4 +15,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('roster-members', 'RosterMembersController');
+Route::resource('wrestlers', 'WrestlersController');

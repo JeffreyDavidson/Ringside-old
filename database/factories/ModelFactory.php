@@ -23,7 +23,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\RosterMember::class, function (Faker\Generator $faker) {
+$factory->define(App\Wrestler::class, function (Faker\Generator $faker) {
 
     return [
         'name' => $faker->name,

@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class RosterMember extends Model
+class Wrestler extends Model
 {
     protected $guarded = [];
 
