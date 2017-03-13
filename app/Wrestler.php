@@ -42,13 +42,9 @@ class Wrestler extends Model
         return $this->managers()->updateExistingPivot($manager->id, ['fired_on' => Carbon::now()]);
     }
 
-    public function getTitlesAttribute()
+    public function titles()
     {
-        return Title::all()->filter(function ($title) {
-            return ($title->currentHolder)
-                        ? $title->currentHolder->is($this)
-                        : false;
-        });
+        return $this->hasMany(Title::class);
     }
 
     public function winTitle($title)

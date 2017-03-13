@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use DB;
 
 class Title extends Model
 {
@@ -12,15 +13,18 @@ class Title extends Model
         return $this->hasMany(TitleHistory::class)->orderBy('won_on', 'desc');
     }
 
-    public function getCurrentHolderAttribute()
+    public function wrestler()
     {
-        $currentRecord = $this->titleHistory()->first();
-
-        return $currentRecord ? $currentRecord->wrestler : null;
+        return $this->belongsTo(Wrestler::class);
     }
 
     public function winTitle($wrestler)
     {
-        return $this->titleHistory()->create(['wrestler_id' => $wrestler->id, 'won_on' => Carbon::now()]);
+        return DB::transaction(function () use ($wrestler) {
+            $this->titleHistory()->create(['wrestler_id' => $wrestler->id, 'won_on' => Carbon::now()]);
+            $this->wrestler_id = $wrestler->id;
+            $this->save();
+            return $this;
+        });
     }
 }
