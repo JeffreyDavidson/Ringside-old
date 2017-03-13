@@ -7,18 +7,16 @@ use Carbon\Carbon;
 
 class Title extends Model
 {
-
     public function titleHistory()
     {
         return $this->hasMany(TitleHistory::class)->orderBy('won_on', 'desc');
     }
-    public function currentRecord()
+
+    public function getCurrentHolderAttribute()
     {
-        return $this->hasOne(TitleHistory::class)->orderBy('won_on', 'desc');
-    }
-    public function currentHolder()
-    {
-        return $this->currentRecord() ? $this->currentRecord->wrestler: null;
+        $currentRecord = $this->titleHistory()->first();
+
+        return $currentRecord ? $currentRecord->wrestler : null;
     }
 
     public function winTitle($wrestler)

@@ -45,7 +45,9 @@ class Wrestler extends Model
     public function getTitlesAttribute()
     {
         return Title::all()->filter(function ($title) {
-            return ($title->currentHolder()->id == $this->id) ?? false;
+            return ($title->currentHolder)
+                        ? $title->currentHolder->is($this)
+                        : false;
         });
     }
 

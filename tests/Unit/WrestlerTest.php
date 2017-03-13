@@ -78,8 +78,10 @@ class WrestlerTest extends TestCase
 
         $newTitleHolder->winTitle($first_title);
 
+        // the first title is lost
         $this->assertFalse($wrestler->titles->contains($first_title));
 
+        // the second title is still around
         $this->assertTrue($wrestler->titles->contains($second_title));
 
         Carbon::setTestNow();
