@@ -18,8 +18,8 @@ class CreateTitleWrestlerTable extends Migration
             $table->unsignedInteger('title_id');
             $table->unsignedInteger('wrestler_id');
             $table->dateTime('won_on');
-            $table->dateTime('lost_on')->nullable();
             $table->timestamps();
+            $table->unique(['title_id', 'won_on']);
         });
     }
 
