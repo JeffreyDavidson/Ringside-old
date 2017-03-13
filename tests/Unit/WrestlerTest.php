@@ -59,24 +59,28 @@ class WrestlerTest extends TestCase
 
         $wrestler->winTitle($title);
 
-        $wrestler = Wrestler::with('titles')->find($wrestler->id);
-
-        $this->assertEquals($wrestler->titles->first()->id, $title->id);
+        $this->assertTrue($wrestler->titles->contains($title));
     }
 
     /** @test * */
     public function can_lose_a_title()
     {
         $wrestler = factory(Wrestler::class)->create();
-        $title = factory(Title::class)->create();
+        $first_title = factory(Title::class)->create();
+        $second_title = factory(Title::class)->create();
 
-        $wrestler->winTitle($title);
-        $wrestler->loseTitle($title);
+        $wrestler->winTitle($first_title);
+        $wrestler->winTitle($second_title);
+
+        $newTitleHolder = factory(Wrestler::class)->create();
+
         Carbon::setTestNow(Carbon::parse('+1 day'));
 
-        $wrestler = Wrestler::with('titles')->find($wrestler->id);
+        $newTitleHolder->winTitle($first_title);
 
-        $this->assertEquals($wrestler->titles->first()->id, $title->id);
+        $this->assertFalse($wrestler->titles->contains($first_title));
+
+        $this->assertTrue($wrestler->titles->contains($second_title));
 
         Carbon::setTestNow();
     }

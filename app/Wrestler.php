@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Wrestler extends Model
 {
-
     protected $guarded = [];
 
     public function getFormattedHeightAttribute()
@@ -15,7 +14,7 @@ class Wrestler extends Model
         $feet = floor($this->height / 12);
         $inches = ($this->height % 12);
 
-        return $feet . '\'' . $inches . '"';
+        return $feet.'\''.$inches.'"';
     }
 
     public function managers()
@@ -43,18 +42,15 @@ class Wrestler extends Model
         return $this->managers()->updateExistingPivot($manager->id, ['fired_on' => Carbon::now()]);
     }
 
-    public function titles()
+    public function getTitlesAttribute()
     {
-        return $this->belongsToMany(Title::class)->withPivot('won_on')->withTimestamps();
+        return Title::all()->filter(function ($title) {
+            return ($title->currentHolder()->id == $this->id) ?? false;
+        });
     }
 
     public function winTitle($title)
     {
-        return $this->titles()->attach($title->id, ['won_on' => Carbon::now()]);
-    }
-
-    public function loseTitle($title)
-    {
-        return $this->titles()->updateExistingPivot($title->id, ['lost_on' => Carbon::now()]);
+        return $title->winTitle($this);
     }
 }
