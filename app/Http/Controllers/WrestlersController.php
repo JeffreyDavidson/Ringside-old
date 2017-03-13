@@ -10,7 +10,8 @@ class WrestlersController extends Controller
 
     public function show($id)
     {
-        $wrestler = Wrestler::findOrFail($id);
+        $wrestler = Wrestler::with('currentManagers', 'previousManagers')->findOrFail($id);
+
         return view('wrestlers.show', ['wrestler' => $wrestler]);
     }
 }

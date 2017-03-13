@@ -3,6 +3,9 @@
 namespace Tests\Feature;
 
 use App\Wrestler;
+use App\Manager;
+use App\Title;
+use Carbon\Carbon;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -22,6 +25,21 @@ class ViewAWrestlerBioTest extends TestCase
             'weight' => 251,
             'signature_move' => 'Powerbomb'
         ]);
+        $manager1 = factory(Manager::class)->create(['name' => 'Manager 1']);
+        $manager2 = factory(Manager::class)->create(['name' => 'Manager 2']);
+        $manager3 = factory(Manager::class)->create(['name' => 'Manager 3']);
+
+        $wrestler->hireManager($manager1);
+        $wrestler->fireManager($manager1);
+        Carbon::setTestNow(Carbon::parse('+1 day'));
+        $wrestler->hireManager($manager2);
+        $wrestler->hireManager($manager3);
+
+        $title = factory(Title::class)->create([
+            'name' => 'Title 1'
+        ]);
+
+        $wrestler->winTitle($title);
 
         $this->visit('wrestlers/'.$wrestler->id);
 
@@ -30,5 +48,12 @@ class ViewAWrestlerBioTest extends TestCase
         $this->see('6\'1"');
         $this->see('251 lbs.');
         $this->see('Powerbomb');
+        $this->see('Manager 1');
+        $this->see('Manager 2');
+        $this->see('Manager 3');
+        $this->see('Title 1');
+
+        Carbon::setTestNow();
     }
+
 }

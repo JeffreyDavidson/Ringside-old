@@ -32,3 +32,20 @@ $factory->define(App\Wrestler::class, function (Faker\Generator $faker) {
         'weight' => $faker->numberBetween(175, 400)
     ];
 });
+
+$factory->define(App\Manager::class, function (Faker\Generator $faker) {
+
+    return [
+        'name' => $faker->name,
+        'hometown' => $faker->city . ', ' . $faker->state,
+        'height' => $faker->numberBetween(63, 84),
+        'weight' => $faker->numberBetween(175, 400)
+    ];
+});
+
+$factory->define(App\Title::class, function (Faker\Generator $faker) {
+
+    return [
+        'name' => $faker->sentence(3),
+    ];
+});
