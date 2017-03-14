@@ -17,8 +17,8 @@ class CreateManagerWrestlerTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('manager_id');
             $table->unsignedInteger('wrestler_id');
-            $table->datetime('hired_on');
-            $table->datetime('fired_on')->nullable();
+            $table->dateTime('hired_on');
+            $table->dateTime('fired_on')->nullable();
             $table->timestamps();
         });
     }

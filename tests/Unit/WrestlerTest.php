@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\TitleHistory;
 use App\Wrestler;
 use App\Manager;
 use App\Title;
@@ -59,32 +60,24 @@ class WrestlerTest extends TestCase
 
         $wrestler->winTitle($title);
 
-        $this->assertTrue($wrestler->titles->contains($title));
+        $this->assertNotNull($wrestler->titles()->where('title_id', $title->id)->whereDate('won_on', Carbon::today()->toDateString())->first());
     }
 
     /** @test * */
     public function can_lose_a_title()
     {
         $wrestler = factory(Wrestler::class)->create();
-        $first_title = factory(Title::class)->create();
-        $second_title = factory(Title::class)->create();
+        $title = factory(Title::class)->create();
 
-        $wrestler->winTitle($first_title);
-        $wrestler->winTitle($second_title);
-
-        $newTitleHolder = factory(Wrestler::class)->create();
+        $wrestler->winTitle($title);
 
         Carbon::setTestNow(Carbon::parse('+1 day'));
 
-        $newTitleHolder->winTitle($first_title);
-
-        // the first title is lost
-        $this->assertFalse($wrestler->titles->contains($first_title));
-
-        // the second title is still around
-        $this->assertTrue($wrestler->titles->contains($second_title));
+        $wrestler->loseTitle($title);
 
         Carbon::setTestNow();
+
+        $this->assertNotNull($wrestler->titles()->where('title_id', $title->id)->whereDate('won_on', Carbon::today()->toDateString())->first()->pivot->lost_on);
     }
 
 }

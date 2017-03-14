@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class TitleHistory extends Model
 {
     protected $table = 'title_wrestler';
-    protected $dates = ['won_on'];
+    protected $dates = ['won_on', 'lost_on'];
     protected $guarded = ['id'];
 
     public function title()

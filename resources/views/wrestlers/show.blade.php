@@ -4,17 +4,23 @@
 <p>{{ $wrestler->weight }} lbs.</p>
 <p>{{ $wrestler->signature_move }}</p>
 
-<p>Current Managers:</p>
-@foreach($wrestler->currentManagers as $manager)
-    {{ $manager->name }}
-@endforeach
+@if($wrestler->currentManagers->count() > 0)
+    <p>Current Managers:</p>
+    @foreach($wrestler->currentManagers as $manager)
+        {{ $manager->name }}
+    @endforeach
+@endif
 
-<p>Previous Managers</p>
-@foreach($wrestler->previousManagers as $manager)
-    {{ $manager->name }}
-@endforeach
+@if($wrestler->currentManagers->count() > 0)
+    <p>Previous Managers</p>
+    @foreach($wrestler->previousManagers as $manager)
+        {{ $manager->name }}
+    @endforeach
+@endif
 
-<p>Titles Held</p>
-@foreach($wrestler->titles as $title)
-    {{ $title->name }}
-@endforeach
+@if($wrestler->titles->count() > 0)
+    <p>Titles Held</p>
+    @foreach($wrestler->titles as $title)
+        {{ $title->name }}
+    @endforeach
+@endif
