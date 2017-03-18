@@ -18,9 +18,9 @@
     @endforeach
 @endif
 
-@if($wrestler->titles->count() > 0)
+@if($wrestler->groupedTitles->count() > 0)
     <p>Titles Held</p>
-    @foreach($wrestler->titles as $title)
-        {{ $title->name }}
+    @foreach($wrestler->groupedTitles as $title)
+        {{ $title->name }} {{ $title->count(). 'x'}}
     @endforeach
 @endif

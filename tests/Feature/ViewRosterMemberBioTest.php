@@ -63,13 +63,16 @@ class ViewAWrestlerBioTest extends TestCase
     {
         $wrestler = factory(Wrestler::class)->create();
 
-        $title = factory(Title::class)->create(['name' => 'Title 1']);
+        $title1 = factory(Title::class)->create(['name' => 'Title 1']);
+        $title2 = factory(Title::class)->create(['name' => 'Title 2']);
 
-        $wrestler->winTitle($title);
+        $wrestler->winTitle($title1);
         Carbon::setTestNow(Carbon::parse('+1 day'));
-        $wrestler->loseTitle($title);
-        $wrestler->winTitle($title);
-
+        $wrestler->loseTitle($title1);
+        $wrestler->winTitle($title1);
+        Carbon::setTestNow(Carbon::parse('+2 day'));
+        $wrestler->loseTitle($title1);
+        $wrestler->winTitle($title2);
         Carbon::setTestNow();
 
         $this->visit('wrestlers/'.$wrestler->id);
