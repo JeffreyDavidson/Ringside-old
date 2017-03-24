@@ -12,6 +12,8 @@ class WrestlersController extends Controller
     {
         $wrestler = Wrestler::with('currentManagers', 'previousManagers', 'groupedTitles')->findOrFail($id);
 
+        dd($wrestler);
+
         return view('wrestlers.show', ['wrestler' => $wrestler]);
     }
 }

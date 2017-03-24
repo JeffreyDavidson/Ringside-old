@@ -14,19 +14,10 @@ class WrestlerTest extends TestCase
 {
     use DatabaseMigrations;
 
-    protected $wrestler;
-
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->wrestler = factory(Wrestler::class)->create();
-    }
-
     /** @test */
     public function it_can_get_formatted_height()
     {
-        $wrestler = factory(Wrestler::class)->make(['height' => '73']);
+        $wrestler = make(Wrestler::class, ['height' => '73']);
 
         $this->assertEquals('6\'1"', $wrestler->formatted_height);
     }
@@ -34,88 +25,97 @@ class WrestlerTest extends TestCase
     /** @test */
     public function it_can_have_managers()
     {
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->wrestler->managers);
+        $wrestler = create(Wrestler::class);
+
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $wrestler->managers);
     }
 
     /** @test */
     public function it_can_hire_a_manager()
     {
-        $manager = factory(Manager::class)->create();
+        $wrestler = create(Wrestler::class);
+        $manager = create(Manager::class);
 
-        $this->wrestler->hireManager($manager);
+        $wrestler->hireManager($manager);
 
-        $this->assertEquals($this->wrestler->currentManagers->first()->id, $manager->id);
-    }
-
-    /** @test */
-    public function it_can_have_titles()
-    {
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->wrestler->titles);
+        $this->assertEquals($wrestler->currentManagers->first()->id, $manager->id);
     }
 
     /** @test */
     public function it_can_fire_a_manager()
     {
-        $manager = factory(Manager::class)->create();
-        $this->wrestler->hireManager($manager);
-        $this->wrestler->fireManager($manager);
+        $wrestler = create(Wrestler::class);
+        $manager = create(Manager::class);
+
+        $wrestler->hireManager($manager);
+        $wrestler->fireManager($manager);
+
         Carbon::setTestNow(Carbon::parse('+1 day'));
 
-        $this->assertEquals($this->wrestler->previousManagers()->first()->id, $manager->id);
+        $this->assertEquals($wrestler->previousManagers()->first()->id, $manager->id);
 
         Carbon::setTestNow();
+    }
+
+    /** @test */
+    public function it_can_have_titles()
+    {
+        $wrestler = create(Wrestler::class);
+
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $wrestler->titles);
     }
 
     /** @test * */
     public function it_can_win_a_title()
     {
-        $title = factory(Title::class)->create();
+        $wrestler = create(Wrestler::class);
+        $title = create(Title::class);
 
-        $this->wrestler->winTitle($title);
+        $wrestler->winTitle($title);
 
-        $this->assertNotNull($this->wrestler->titles()->where('title_id', $title->id)->whereDate('won_on', Carbon::today()->toDateString())->first());
+        $this->assertNotNull($wrestler->titles()->where('title_id', $title->id)->whereDate('won_on', Carbon::today()->toDateString())->first());
     }
 
     /** @test * */
     public function it_can_lose_a_title()
     {
-        $title = factory(Title::class)->create();
+        $wrestler = create(Wrestler::class);
+        $title = create(Title::class);
 
-        $this->wrestler->winTitle($title);
+        $wrestler->winTitle($title);
 
         Carbon::setTestNow(Carbon::parse('+1 day'));
 
-        $this->wrestler->loseTitle($title);
+        $wrestler->loseTitle($title);
 
         Carbon::setTestNow();
 
-        $this->assertNotNull($this->wrestler->titles()->where('title_id', $title->id)->whereDate('won_on', Carbon::today()->toDateString())->first()->pivot->lost_on);
+        $this->assertNotNull($wrestler->titles()->where('title_id', $title->id)->whereDate('won_on', Carbon::today()->toDateString())->first()->pivot->lost_on);
     }
 
     /** @test * */
-    public function it_can_show_grouped_titles()
+    public function it_can_show_titles_won()
     {
-        $title1 = factory(Title::class)->create();
-        $title2 = factory(Title::class)->create();
+        $wrestler = create(Wrestler::class);
+        $title1 = create(Title::class);
+        $title2 = create(Title::class);
 
-        $this->wrestler->winTitle($title1);
+        $wrestler->winTitle($title1);
 
         Carbon::setTestNow(Carbon::parse('+1 day'));
 
-        $this->wrestler->loseTitle($title1);
-        $this->wrestler->winTitle($title2);
+        $wrestler->loseTitle($title1);
+        $wrestler->winTitle($title2);
 
         Carbon::setTestNow(Carbon::parse('+2 day'));
 
-        $this->wrestler->loseTitle($title2);
-        $this->wrestler->winTitle($title1);
+        $wrestler->loseTitle($title2);
+        $wrestler->winTitle($title1);
 
         Carbon::setTestNow();
 
-//        dd($this->wrestler->groupedTitles()->count());
-
-        $this->assertEquals(2, $this->wrestler->groupedTitles()->first()->count());
-        $this->assertEquals(1, $this->wrestler->groupedTitles()->last()->count());
+        $this->assertEquals(2, $wrestler->groupedTitles()->first()->count());
+        $this->assertEquals(1, $wrestler->groupedTitles()->last()->count());
     }
 
 }

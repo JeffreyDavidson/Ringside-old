@@ -49,7 +49,12 @@ class Wrestler extends Model
 
     public function groupedTitles()
     {
-        return $this->titles()->groupBy('title_id')->get();
+        return $this->titles->unique();
+    }
+
+    public function timesHeldTitle($title)
+    {
+        return $this->titles()->where('id', $title->id)->count();
     }
 
     public function winTitle($title)

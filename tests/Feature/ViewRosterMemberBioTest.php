@@ -18,7 +18,7 @@ class ViewAWrestlerBioTest extends TestCase
     /** @test */
     public function view_wrestler_data_wrestler_bio()
     {
-        $wrestler = factory(Wrestler::class)->create([
+        $wrestler = create(Wrestler::class, [
             'name' => 'Wrestler 1',
             'hometown' => 'Kansas City, Missouri',
             'height' => 73,
@@ -38,10 +38,10 @@ class ViewAWrestlerBioTest extends TestCase
     /** @test */
     public function view_list_of_managers_on_wrestler_bio()
     {
-        $wrestler = factory(Wrestler::class)->create();
+        $wrestler = create(Wrestler::class);
 
-        $manager1 = factory(Manager::class)->create(['name' => 'Manager 1']);
-        $manager2 = factory(Manager::class)->create(['name' => 'Manager 2']);
+        $manager1 = create(Manager::class, ['name' => 'Manager 1']);
+        $manager2 = create(Manager::class, ['name' => 'Manager 2']);
 
         $wrestler->hireManager($manager1);
         $wrestler->fireManager($manager1);
@@ -61,10 +61,10 @@ class ViewAWrestlerBioTest extends TestCase
     /** @test */
     public function view_list_of_titles_held_on_wrestler_bio()
     {
-        $wrestler = factory(Wrestler::class)->create();
+        $wrestler = create(Wrestler::class);
 
-        $title1 = factory(Title::class)->create(['name' => 'Title 1']);
-        $title2 = factory(Title::class)->create(['name' => 'Title 2']);
+        $title1 = create(Title::class, ['name' => 'Title 1']);
+        $title2 = factory(Title::class, ['name' => 'Title 2']);
 
         $wrestler->winTitle($title1);
         Carbon::setTestNow(Carbon::parse('+1 day'));
@@ -78,6 +78,7 @@ class ViewAWrestlerBioTest extends TestCase
         $this->visit('wrestlers/'.$wrestler->id);
 
         $this->see('Title 1 (2x)');
+        $this->see('Title 2');
     }
 
 }
