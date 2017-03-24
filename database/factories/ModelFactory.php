@@ -49,3 +49,20 @@ $factory->define(App\Title::class, function (Faker\Generator $faker) {
         'name' => $faker->sentence(3),
     ];
 });
+
+$factory->define(App\Match::class, function (Faker\Generator $faker) {
+
+    return [
+        'event_id' => function () {
+            return factory(Event::class)->create()->id;
+        },
+        'match_number' => $faker->sentence(3),
+    ];
+});
+
+$factory->define(App\Event::class, function (Faker\Generator $faker) {
+
+    return [
+        'name' => $faker->sentence(3),
+    ];
+});

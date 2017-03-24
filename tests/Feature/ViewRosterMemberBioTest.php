@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use App\Wrestler;
 use App\Manager;
 use App\Title;
+use App\Match;
+use App\Event;
 use Carbon\Carbon;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
@@ -79,6 +81,19 @@ class ViewAWrestlerBioTest extends TestCase
 
         $this->see('Title 1 (2x)');
         $this->see('Title 2');
+    }
+
+    /** @test */
+    public function view_list_of_matches_on_wrestler_bio()
+    {
+        $event = create(Event::class);
+        $match = create(Match::class, ['event_id' => $event->id]);
+        $wrestler1 = create(Wrestler::class, ['name' => 'Wrestler 1']);
+        $wrestler2 = create(Wrestler::class, ['name' => 'Wrestler 2']);
+
+        $match->competitors([$wrestler1, $wrestler2]);
+
+        $this->visit('wrestlers/'.$wrestler1->id);
     }
 
 }
