@@ -10,4 +10,14 @@ class Match extends Model
     {
         return $this->belongsToMany(Wrestler::class);
     }
+
+    public function addCompetitor($wrestler)
+    {
+        return $this->competitors()->attach($wrestler->id);
+    }
+
+    public function event()
+    {
+        return $this->belongsTo(Event::class);
+    }
 }

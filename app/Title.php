@@ -8,13 +8,8 @@ use DB;
 
 class Title extends Model
 {
-    public function history()
-    {
-        return $this->hasMany(TitleHistory::class)->orderBy('won_on', 'desc');
-    }
-
     public function wrestler()
     {
-        return $this->belongsTo(Wrestler::class);
+        return $this->hasMany(TitleHistory::class);
     }
 }

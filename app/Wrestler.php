@@ -44,27 +44,21 @@ class Wrestler extends Model
 
     public function titles()
     {
-        return $this->belongsToMany(Title::class)->withPivot('won_on', 'lost_on')->withTimestamps();
-    }
-
-    public function groupedTitles()
-    {
-        return $this->titles->unique();
-    }
-
-    public function timesHeldTitle($title)
-    {
-        return $this->titles()->where('id', $title->id)->count();
+        return $this->hasMany(TitleHistory::class)->with('title');
     }
 
     public function winTitle($title)
     {
-        return $this->titles()->attach($title->id, ['won_on' => Carbon::now()]);
+        $this->titles()->create(['title_id' => $title->id, 'won_on' => Carbon::now()]);
     }
 
     public function loseTitle($title)
     {
-        return $this->titles()->wherePivot('lost_on', null)->updateExistingPivot($title->id, ['lost_on' => Carbon::now()]);
+        return $this->titles()->whereTitleId($title->id)->whereNull('lost_on')->update(['lost_on' => Carbon::now()]);
     }
 
+    public function matches()
+    {
+        return $this->belongsToMany(Match::class);
+    }
 }

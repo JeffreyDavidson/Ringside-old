@@ -18,9 +18,25 @@
     @endforeach
 @endif
 
-@if($wrestler->groupedTitles->count() > 0)
+@if($wrestler->titles->count() > 0)
     <p>Titles Held</p>
-    @foreach($wrestler->groupedTitles as $title)
-        {{ $title->name }} {{ $title->count(). 'x'}}
+    @foreach($wrestler->titles as $title)
+        {{ dd($title->title->name) }}
+        {{ $title->name }} {{ '(' . $title->count(). 'x)'}}
     @endforeach
+@endif
+
+@if($wrestler->matches->count() > 0)
+    <p>Matches</p>
+    <table>
+        <thead>
+            <th>Event</th>
+        </thead>
+        <tbody>
+            @foreach($wrestler->matches as $match)
+                <tr>{{ $match->event->name }}</tr>
+            @endforeach
+        </tbody>
+
+    </table>
 @endif

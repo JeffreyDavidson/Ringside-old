@@ -66,7 +66,7 @@ class WrestlerTest extends TestCase
     }
 
     /** @test * */
-    public function it_can_win_a_title()
+    public function a_wrestler_can_win_a_title()
     {
         $wrestler = create(Wrestler::class);
         $title = create(Title::class);
@@ -77,7 +77,7 @@ class WrestlerTest extends TestCase
     }
 
     /** @test * */
-    public function it_can_lose_a_title()
+    public function a_wrestler_can_lose_a_title()
     {
         $wrestler = create(Wrestler::class);
         $title = create(Title::class);
@@ -90,32 +90,42 @@ class WrestlerTest extends TestCase
 
         Carbon::setTestNow();
 
-        $this->assertNotNull($wrestler->titles()->where('title_id', $title->id)->whereDate('won_on', Carbon::today()->toDateString())->first()->pivot->lost_on);
+        $this->assertNotNull($wrestler->titles()->where('title_id', $title->id)->whereDate('won_on', Carbon::today()->toDateString())->first()->lost_on);
     }
 
     /** @test * */
-    public function it_can_show_titles_won()
+    public function it_can_count_number_of_times_a_wrestler_has_won_a_title()
     {
         $wrestler = create(Wrestler::class);
-        $title1 = create(Title::class);
-        $title2 = create(Title::class);
+        $title = create(Title::class);
 
-        $wrestler->winTitle($title1);
+        $wrestler->winTitle($title);
 
         Carbon::setTestNow(Carbon::parse('+1 day'));
 
-        $wrestler->loseTitle($title1);
-        $wrestler->winTitle($title2);
+        $wrestler->loseTitle($title);
+        $wrestler->winTitle($title);
 
         Carbon::setTestNow(Carbon::parse('+2 day'));
 
-        $wrestler->loseTitle($title2);
-        $wrestler->winTitle($title1);
+        $wrestler->loseTitle($title);
+        $wrestler->winTitle($title);
+
+        Carbon::setTestNow(Carbon::parse('+3 day'));
+
+        $wrestler->loseTitle($title);
 
         Carbon::setTestNow();
 
-        $this->assertEquals(2, $wrestler->groupedTitles()->first()->count());
-        $this->assertEquals(1, $wrestler->groupedTitles()->last()->count());
+        $this->assertEquals(3, $wrestler->titles()->where('title_id', $title->id)->count());
+    }
+
+    /** @test */
+    public function it_can_have_matches()
+    {
+        $wrestler = create(Wrestler::class);
+
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $wrestler->matches);
     }
 
 }

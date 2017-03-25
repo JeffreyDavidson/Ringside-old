@@ -66,7 +66,7 @@ class ViewAWrestlerBioTest extends TestCase
         $wrestler = create(Wrestler::class);
 
         $title1 = create(Title::class, ['name' => 'Title 1']);
-        $title2 = factory(Title::class, ['name' => 'Title 2']);
+        $title2 = create(Title::class, ['name' => 'Title 2']);
 
         $wrestler->winTitle($title1);
         Carbon::setTestNow(Carbon::parse('+1 day'));
@@ -86,14 +86,17 @@ class ViewAWrestlerBioTest extends TestCase
     /** @test */
     public function view_list_of_matches_on_wrestler_bio()
     {
-        $event = create(Event::class);
+        $event = create(Event::class, ['name' => 'My Event']);
         $match = create(Match::class, ['event_id' => $event->id]);
         $wrestler1 = create(Wrestler::class, ['name' => 'Wrestler 1']);
         $wrestler2 = create(Wrestler::class, ['name' => 'Wrestler 2']);
 
-        $match->competitors([$wrestler1, $wrestler2]);
+        $match->addCompetitor($wrestler1);
+        $match->addCompetitor($wrestler2);
 
         $this->visit('wrestlers/'.$wrestler1->id);
+        $this->see('My Event');
+//        $this->see('Wrestler 1 vs. Wrestler 2');
     }
 
 }
