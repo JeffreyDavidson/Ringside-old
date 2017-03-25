@@ -1,0 +1,15 @@
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
+use DB;
+
+class Title extends Model
+{
+    public function wrestler()
+    {
+        return $this->hasMany(TitleHistory::class);
+    }
+}
