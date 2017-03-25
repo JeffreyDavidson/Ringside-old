@@ -96,7 +96,6 @@ class ViewAWrestlerBioTest extends TestCase
 
         $this->visit('wrestlers/'.$wrestler1->id);
         $this->see('My Event');
-//        $this->see('Wrestler 1 vs. Wrestler 2');
     }
 
 }

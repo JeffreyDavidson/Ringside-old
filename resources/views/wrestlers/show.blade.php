@@ -20,9 +20,8 @@
 
 @if($wrestler->titles->count() > 0)
     <p>Titles Held</p>
-    @foreach($wrestler->titles as $title)
-        {{ dd($title->title->name) }}
-        {{ $title->name }} {{ '(' . $title->count(). 'x)'}}
+    @foreach($wrestler->titles->groupByTitle() as $title)
+        {{ $title[0]->title->name }} {{ '(' . $title->count(). 'x)'}}
     @endforeach
 @endif
 
@@ -37,6 +36,5 @@
                 <tr>{{ $match->event->name }}</tr>
             @endforeach
         </tbody>
-
     </table>
 @endif

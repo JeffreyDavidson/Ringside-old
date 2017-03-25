@@ -10,11 +10,11 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class TitleHistoryTest extends TestCase
+class TitleHistory extends TestCase
 {
     use DatabaseMigrations;
 
-//    /** @test */
+    /** @test */
     public function it_belongs_to_a_wrestler()
     {
         $titleHistory = create(TitleHistory::class);
@@ -22,7 +22,7 @@ class TitleHistoryTest extends TestCase
         $this->assertInstanceOf(App\Wrestler::class, $titleHistory->wrestler);
     }
 
-//    /** @test */
+    /** @test */
     public function it_belongs_to_a_title()
     {
         $titleHistory = create(TitleHistory::class);
