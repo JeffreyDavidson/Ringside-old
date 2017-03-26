@@ -14,6 +14,7 @@
     <!-- Plugins -->
     <link href="/css/plugins.css" rel="stylesheet">
     <!-- Fonts -->
+    <link href="/css/fonts.css" rel="stylesheet">
     <link rel="stylesheet" href="../../../global/fonts/web-icons/web-icons.min.css">
     <link rel="stylesheet" href="../../../global/fonts/brand-icons/brand-icons.min.css">
     <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,300italic'>

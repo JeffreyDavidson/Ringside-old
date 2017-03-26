@@ -12,7 +12,12 @@ const { mix } = require('laravel-mix');
  */
 
 mix.styles([
-        'resources/assets/vendor/animsition/animsition.css',
+        'resources/assets/css/bootstrap.min.css',
+        'resources/assets/css/bootstrap-extend.min.css',
+        'resources/assets/css/site.min.css',
+    ], 'public/css/app.css')
+    .styles([
+        // 'resources/assets/vendor/animsition/animsition.css',
         'resources/assets/vendor/asscrollable/asScrollable.css',
         'resources/assets/vendor/switchery/switchery.css',
         'resources/assets/vendor/intro-js/introjs.css',
@@ -20,10 +25,9 @@ mix.styles([
         'resources/assets/vendor/flag-icon-css/flag-icon.css',
     ], 'public/css/plugins.css')
     .styles([
-        'resources/assets/css/bootstrap.min.css',
-        'resources/assets/css/bootstrap-extend.min.css',
-        'resources/assets/css/site.min.css',
-    ], 'public/css/app.css')
+        'resources/assets/fonts/brand-icons/brand-icons.min.css',
+        'resources/assets/fonts/web-icons/web-icons.min.css',
+    ], 'public/css/fonts.css')
     .scripts([
         'resources/assets/vendor/babel-external-helpers/babel-external-helpers.js',
         'resources/assets/vendor/jquery/jquery.js',
@@ -61,3 +65,5 @@ mix.styles([
         'resources/assets/js/Plugin/slidepanel.js',
         'resources/assets/js/Plugin/switchery.js',
     ], 'public/js/page.js')
+    .copy('resources/assets/fonts/brand-icons/fonts', 'public/fonts')
+    .copy('resources/assets/fonts/web-icons/fonts', 'public/fonts');
