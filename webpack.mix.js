@@ -60,10 +60,25 @@ mix.styles([
         'resources/assets/js/config/tour.js',
     ], 'public/js/scripts.js')
     .scripts([
-        'resources/assets/js/Site.js',
+        // 'resources/assets/js/Site.js',
         'resources/assets/js/Plugin/asscrollable.js',
         'resources/assets/js/Plugin/slidepanel.js',
         'resources/assets/js/Plugin/switchery.js',
-    ], 'public/js/page.js')
-    .copy('resources/assets/fonts/brand-icons/fonts', 'public/fonts')
-    .copy('resources/assets/fonts/web-icons/fonts', 'public/fonts');
+    ], 'public/js/page.js');
+    mix.copy('resources/assets/fonts/brand-icons/fonts/brand-icons.eot', 'public/fonts');
+    mix.copy('resources/assets/fonts/brand-icons/fonts/brand-icons.svg', 'public/fonts');
+mix.copy('resources/assets/fonts/brand-icons/fonts/brand-icons.ttf', 'public/fonts');
+    mix.copy('resources/assets/fonts/brand-icons/fonts/brand-icons.woff', 'public/fonts');
+    mix.copy('resources/assets/fonts/brand-icons/fonts/brand-icons.woff2', 'public/fonts');
+mix.copy('resources/assets/fonts/web-icons/fonts/web-icons.eot', 'public/fonts');
+mix.copy('resources/assets/fonts/web-icons/fonts/web-icons.svg', 'public/fonts');
+mix.copy('resources/assets/fonts/web-icons/fonts/web-icons.ttf', 'public/fonts');
+mix.copy('resources/assets/fonts/web-icons/fonts/web-icons.woff', 'public/fonts');
+mix.copy('resources/assets/fonts/web-icons/fonts/web-icons.woff2', 'public/fonts');
+mix.copy('resources/assets/images/portaits/2.jpg', 'public/images/portraits');
+mix.copy('resources/assets/images/portaits/5.jpg', 'public/images/portraits');
+mix.copy('resources/assets/images/logo.png', 'public/images');
+mix.copy('resources/assets/vendor/breakpoints/breakpoints.js', 'public/js');
+mix.copy('resources/assets/vendor/media-match/media.match.js', 'public/js');
+mix.copy('resources/assets/vendor/respond/respond.min.js', 'public/js');
+mix.copy('resources/assets/js/Site.js', 'public/js');
