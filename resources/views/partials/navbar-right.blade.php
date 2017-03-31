@@ -3,7 +3,7 @@
         <a class="nav-link navbar-avatar" data-toggle="dropdown" href="#" aria-expanded="false"
            data-animation="scale-up" role="button">
               <span class="avatar avatar-online">
-                <img src="images/portraits/5.jpg" alt="...">
+                <img src="{{ url('images/portraits/5.jpg') }}" alt="...">
                 <i></i>
               </span>
         </a>
@@ -71,7 +71,7 @@
                             <div class="media">
                                 <div class="pr-10">
                           <span class="avatar avatar-sm avatar-online">
-                            <img src="images/portraits/2.jpg" alt="..." />
+                            <img src="{{ url('images/portraits/2.jpg') }}" alt="..." />
                             <i></i>
                           </span>
                                 </div>

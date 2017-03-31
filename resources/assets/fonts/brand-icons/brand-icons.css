@@ -5,8 +5,8 @@
     font-weight: normal;
     font-style: normal; 
 
-    src: url('./brand-icons.eot?v=0.3.2');
-    src: url('./brand-icons.eot?#iefix&v=0.3.2') format('embedded-opentype'), url('./brand-icons.woff2?v=0.3.2') format('woff2'), url('./brand-icons.woff?v=0.3.2') format('woff'), url('./brand-icons.ttf?v=0.3.2') format('truetype'), url('./brand-icons.svg?v=0.3.2#brand-icons') format('svg');
+    src: url('./fonts/brand-icons.eot?v=0.3.2');
+    src: url('./fonts/brand-icons.eot?#iefix&v=0.3.2') format('embedded-opentype'), url('./fonts/brand-icons.woff2?v=0.3.2') format('woff2'), url('./fonts/brand-icons.woff?v=0.3.2') format('woff'), url('./fonts/brand-icons.ttf?v=0.3.2') format('truetype'), url('./fonts/brand-icons.svg?v=0.3.2#brand-icons') format('svg');
 }
 
 [class^='bd-'],

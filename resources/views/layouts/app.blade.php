@@ -20,11 +20,11 @@
         <script src="../../../global/vendor/html5shiv/html5shiv.min.js"></script>
         <![endif]-->
         <!--[if lt IE 10]>
-        <script src="js/media.match.min.js"></script>
-        <script src="js/respond.min.js"></script>
+        <script src="{{ asset('js/media.match.min.js') }}"></script>
+        <script src="{{ asset('js/respond.min.js') }}"></script>
         <![endif]-->
         <!-- Scripts -->
-        <script src="js/breakpoints.js"></script>
+        <script src="{{ asset('js/breakpoints.js') }}"></script>
         <script type="text/javascript">
             Breakpoints();
         </script>
@@ -42,6 +42,9 @@
 
         <!-- Page -->
         <div class="page">
+            <div class="page-header">
+                @yield('header')
+            </div>
             <div class="page-content">
                 @yield('content')
             </div>
@@ -53,30 +56,26 @@
         <!-- End Footer -->
 
         <!-- Core  -->
-        <script src="/js/core.js" type="text/javascript"></script>
+        <script src="{{ asset('js/core.js') }}" type="text/javascript"></script>
         <!-- Plugins -->
-        <script src="/js/plugins.js" type="text/javascript"></script>
+        <script src="{{ asset('js/plugins.js') }}" type="text/javascript"></script>
         <!-- Scripts -->
-        <script src="/js/scripts.js" type="text/javascript"></script>
+        <script src="{{ asset('js/scripts.js') }}" type="text/javascript"></script>
         <script type="text/javascript">
             Config.set('assets', '../../assets');
         </script>
         <!-- Page -->
-        <script src="/js/page.js" type="text/javascript"></script>
+        <script src="{{ asset('js/page.js') }}" type="text/javascript"></script>
 
         <script type="text/javascript">
             (function(document, window, $) {
                 'use strict';
-                $.getScript('../../assets/js/Site.js', function(data, status, jq) {
-                    window.Site = data.Site;
-                });
                 var Site = window.Site;
-                console.log(Site);
                 $(document).ready(function() {
-                    console.log(Site);
                     Site.run();
                 });
             })(document, window, jQuery);
         </script>
+        @yield('footer-scripts')
     </body>
 </html>

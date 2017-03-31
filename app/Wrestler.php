@@ -3,18 +3,16 @@
 namespace App;
 
 use Carbon\Carbon;
+use App\Exceptions\WrestlerCanNotBeHealedException;
 use Illuminate\Database\Eloquent\Model;
 
 class Wrestler extends Model
 {
     protected $guarded = [];
 
-    public function getFormattedHeightAttribute()
+    public function bio()
     {
-        $feet = floor($this->height / 12);
-        $inches = ($this->height % 12);
-
-        return $feet.'\''.$inches.'"';
+        return $this->hasOne(WrestlerBio::class);
     }
 
     public function managers()
@@ -60,5 +58,54 @@ class Wrestler extends Model
     public function matches()
     {
         return $this->belongsToMany(Match::class);
+    }
+
+    public function injuries()
+    {
+        return $this->hasMany(WrestlerInjury::class);
+    }
+
+    public function injure()
+    {
+        $this->update(['status_id' => 3]);
+
+        $this->injuries()->create(['injured_at' => Carbon::now()]);
+    }
+
+    public function heal()
+    {
+        if ($this->status_id != 3)
+        {
+            throw new WrestlerCanNotBeHealedException;
+        }
+
+        $this->update(['status_id' => 1]);
+
+        $this->injuries()->whereNull('healed_at')->first()->healed();
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status_id', 1);
+    }
+
+    public function scopeInactive($query)
+    {
+        return $query->where('status_id', 2);
+    }
+
+    public function scopeInjured($query)
+    {
+        return $query->where('status_id', 3);
+    }
+
+    public function scopeSuspended($query)
+    {
+        return $query->where('status_id', 4);
+    }
+
+    public function scopeRetired($query)
+    {
+        return $query->where('status_id', 5);
     }
 }

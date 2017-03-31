@@ -16,9 +16,6 @@ class CreateManagersTable extends Migration
         Schema::create('managers', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->unique();
-            $table->string('hometown');
-            $table->integer('height');
-            $table->integer('weight');
             $table->timestamps();
         });
     }

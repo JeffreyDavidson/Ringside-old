@@ -16,10 +16,9 @@ class CreateWrestlersTable extends Migration
         Schema::create('wrestlers', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->unique();
-            $table->string('hometown');
-            $table->integer('height');
-            $table->integer('weight');
-            $table->string('signature_move')->nullable();
+            $table->string('slug')->unique();
+            $table->unsignedInteger('status_id');
+            $table->dateTime('hired_at')->nullable();
             $table->timestamps();
         });
     }

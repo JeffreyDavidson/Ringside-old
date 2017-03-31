@@ -2,10 +2,13 @@
 
 @section('content')
     <h1>{{ $wrestler->name }}</h1>
-    <p>{{ $wrestler->hometown }}</p>
-    <p>{{ $wrestler->formatted_height }}</p>
-    <p>{{ $wrestler->weight }} lbs.</p>
-    <p>{{ $wrestler->signature_move }}</p>
+    <p>Hometown: {{ $wrestler->bio->hometown }}</p>
+    <p>Height: {{ $wrestler->bio->formatted_height }}</p>
+    <p>Weight: {{ $wrestler->bio->weight }} lbs.</p>
+
+    @if($wrestler->bio->signature_move)
+        <p>{{ $wrestler->bio->signature_move }}</p>
+    @endif
 
     @if($wrestler->currentManagers->count() > 0)
         <p>Current Managers:</p>
@@ -25,6 +28,13 @@
         <p>Titles Held</p>
         @foreach($wrestler->titles->groupByTitle() as $title)
             {{ $title[0]->title->name }} {{ '(' . $title->count(). 'x)'}}
+        @endforeach
+    @endif
+
+    @if($wrestler->injuries->count() > 0)
+        <p>Previous Injuries</p>
+        @foreach($wrestler->injuries as $injury)
+            {{ $injury->injured_at->format('F m, Y') }} to {{ $injury->healed_at->format('F m, Y') }}
         @endforeach
     @endif
 

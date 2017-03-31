@@ -17,16 +17,18 @@ mix.styles([
         'resources/assets/css/site.min.css',
     ], 'public/css/app.css')
     .styles([
-        // 'resources/assets/vendor/animsition/animsition.css',
+        'resources/assets/vendor/animsition/animsition.css',
         'resources/assets/vendor/asscrollable/asScrollable.css',
         'resources/assets/vendor/switchery/switchery.css',
         'resources/assets/vendor/intro-js/introjs.css',
         'resources/assets/vendor/slidepanel/slidePanel.css',
-        'resources/assets/vendor/flag-icon-css/flag-icon.css',
+        'resources/assets/vendor/datatables-bootstrap/dataTables.bootstrap.css',
+        'resources/assets/vendor/datatables-responsive/dataTables.responsive.css',
     ], 'public/css/plugins.css')
     .styles([
         'resources/assets/fonts/brand-icons/brand-icons.min.css',
         'resources/assets/fonts/web-icons/web-icons.min.css',
+        'resources/assets/fonts/font-awesome/font-awesome.min.css',
     ], 'public/css/fonts.css')
     .scripts([
         'resources/assets/vendor/babel-external-helpers/babel-external-helpers.js',
@@ -44,10 +46,13 @@ mix.styles([
         'resources/assets/vendor/intro-js/intro.js',
         'resources/assets/vendor/screenfull/screenfull.js',
         'resources/assets/vendor/slidepanel/jquery-slidePanel.js',
+        'resources/assets/vendor/datatables/jquery.dataTables.js',
+        'resources/assets/vendor/datatables-bootstrap/dataTables.bootstrap.js',
+        'resources/assets/vendor/datatables-responsive/dataTables.responsive.js',
     ], 'public/js/plugins.js')
     .scripts([
         'resources/assets/js/State.js',
-        'resources/assets/js/Componenet.js',
+        'resources/assets/js/Component.js',
         'resources/assets/js/Plugin.js',
         'resources/assets/js/Base.js',
         'resources/assets/js/Config.js',
@@ -60,7 +65,7 @@ mix.styles([
         'resources/assets/js/config/tour.js',
     ], 'public/js/scripts.js')
     .scripts([
-        // 'resources/assets/js/Site.js',
+        'resources/assets/js/Site.js',
         'resources/assets/js/Plugin/asscrollable.js',
         'resources/assets/js/Plugin/slidepanel.js',
         'resources/assets/js/Plugin/switchery.js',
@@ -75,10 +80,14 @@ mix.copy('resources/assets/fonts/web-icons/fonts/web-icons.svg', 'public/fonts')
 mix.copy('resources/assets/fonts/web-icons/fonts/web-icons.ttf', 'public/fonts');
 mix.copy('resources/assets/fonts/web-icons/fonts/web-icons.woff', 'public/fonts');
 mix.copy('resources/assets/fonts/web-icons/fonts/web-icons.woff2', 'public/fonts');
-mix.copy('resources/assets/images/portaits/2.jpg', 'public/images/portraits');
-mix.copy('resources/assets/images/portaits/5.jpg', 'public/images/portraits');
+mix.copy('resources/assets/fonts/font-awesome/fonts/font-awesome.eot', 'public/fonts');
+mix.copy('resources/assets/fonts/font-awesome/fonts/font-awesome.svg', 'public/fonts');
+mix.copy('resources/assets/fonts/font-awesome/fonts/font-awesome.ttf', 'public/fonts');
+mix.copy('resources/assets/fonts/font-awesome/fontsfont-awesomes.woff', 'public/fonts');
+mix.copy('resources/assets/fonts/font-awesome/fonts/font-awesome.woff2', 'public/fonts');
+mix.copy('resources/assets/images/portraits/2.jpg', 'public/images/portraits');
+mix.copy('resources/assets/images/portraits/5.jpg', 'public/images/portraits');
 mix.copy('resources/assets/images/logo.png', 'public/images');
 mix.copy('resources/assets/vendor/breakpoints/breakpoints.js', 'public/js');
 mix.copy('resources/assets/vendor/media-match/media.match.js', 'public/js');
 mix.copy('resources/assets/vendor/respond/respond.min.js', 'public/js');
-mix.copy('resources/assets/js/Site.js', 'public/js');
