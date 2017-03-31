@@ -70,6 +70,8 @@ class Wrestler extends Model
         $this->update(['status_id' => 3]);
 
         $this->injuries()->create(['injured_at' => Carbon::now()]);
+
+        return $this;
     }
 
     public function heal()

@@ -29,6 +29,6 @@ class CreateWrestlerInjuriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('injuries');
+        Schema::dropIfExists('wrestler_injuries');
     }
 }
