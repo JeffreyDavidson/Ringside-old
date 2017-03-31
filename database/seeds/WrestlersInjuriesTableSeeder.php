@@ -14,26 +14,8 @@ class WrestlersInjuriesTableSeeder extends Seeder
      */
     public function run()
     {
-        $wrestlers = Wrestler::get(['id', 'hired_at'])->random(50);
-
-        foreach($wrestlers as $wrestler)
-        {
-            factory(WrestlerInjury::class)->create([
-                'wrestler_id' => $wrestler->id,
-                'injured_at' => function() use ($wrestler) {
-                    return Carbon::parse($wrestler->hired_at)->addDays(30);
-                },
-                'healed_at' => function(array $injury) {
-                    return Carbon::parse($injury['injured_at'])->addDays(30);
-                }
-            ]);
-        }
-
-        $injuredWrestlerIds = Wrestler::where('status_id', 3)->get()->pluck('id');
-
-        foreach($injuredWrestlerIds as $wrestlerId)
-        {
-            factory(WrestlerInjury::class)->create(['wrestler_id' => $wrestlerId, 'healed_at' => null]);
-        }
+        Wrestler::active()->get()->random(50)->each(function($item) {
+        	$item->injure()->heal();
+        });
     }
 }
