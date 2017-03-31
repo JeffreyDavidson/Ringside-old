@@ -70,24 +70,12 @@ mix.styles([
         'resources/assets/js/Plugin/slidepanel.js',
         'resources/assets/js/Plugin/switchery.js',
     ], 'public/js/page.js');
-    mix.copy('resources/assets/fonts/brand-icons/fonts/brand-icons.eot', 'public/fonts');
-    mix.copy('resources/assets/fonts/brand-icons/fonts/brand-icons.svg', 'public/fonts');
-mix.copy('resources/assets/fonts/brand-icons/fonts/brand-icons.ttf', 'public/fonts');
-    mix.copy('resources/assets/fonts/brand-icons/fonts/brand-icons.woff', 'public/fonts');
-    mix.copy('resources/assets/fonts/brand-icons/fonts/brand-icons.woff2', 'public/fonts');
-mix.copy('resources/assets/fonts/web-icons/fonts/web-icons.eot', 'public/fonts');
-mix.copy('resources/assets/fonts/web-icons/fonts/web-icons.svg', 'public/fonts');
-mix.copy('resources/assets/fonts/web-icons/fonts/web-icons.ttf', 'public/fonts');
-mix.copy('resources/assets/fonts/web-icons/fonts/web-icons.woff', 'public/fonts');
-mix.copy('resources/assets/fonts/web-icons/fonts/web-icons.woff2', 'public/fonts');
-mix.copy('resources/assets/fonts/font-awesome/fonts/font-awesome.eot', 'public/fonts');
-mix.copy('resources/assets/fonts/font-awesome/fonts/font-awesome.svg', 'public/fonts');
-mix.copy('resources/assets/fonts/font-awesome/fonts/font-awesome.ttf', 'public/fonts');
-mix.copy('resources/assets/fonts/font-awesome/fontsfont-awesomes.woff', 'public/fonts');
-mix.copy('resources/assets/fonts/font-awesome/fonts/font-awesome.woff2', 'public/fonts');
-mix.copy('resources/assets/images/portraits/2.jpg', 'public/images/portraits');
-mix.copy('resources/assets/images/portraits/5.jpg', 'public/images/portraits');
-mix.copy('resources/assets/images/logo.png', 'public/images');
-mix.copy('resources/assets/vendor/breakpoints/breakpoints.js', 'public/js');
-mix.copy('resources/assets/vendor/media-match/media.match.js', 'public/js');
-mix.copy('resources/assets/vendor/respond/respond.min.js', 'public/js');
+
+    mix.copy('resources/assets/fonts/brand-icons/fonts', 'public/fonts/brand-icons/fonts');
+    mix.copy('resources/assets/fonts/web-icons/fonts', 'public/fonts/web-icons/fonts');
+    mix.copy('resources/assets/fonts/font-awesome/fonts', 'public/fonts/font-awesome/fonts');
+    mix.copy('resources/assets/images/portraits', 'public/images/portraits');
+    mix.copy('resources/assets/images', 'public/images');
+    mix.copy('resources/assets/vendor/breakpoints/breakpoints.js', 'public/js');
+    mix.copy('resources/assets/vendor/media-match/media.match.js', 'public/js');
+    mix.copy('resources/assets/vendor/respond/respond.min.js', 'public/js');
