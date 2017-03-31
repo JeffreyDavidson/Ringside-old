@@ -65,6 +65,11 @@ class Wrestler extends Model
         return $this->hasMany(WrestlerInjury::class);
     }
 
+    public function retirements()
+    {
+        return $this->hasMany(WrestlerRetire::class);
+    }
+
     public function injure()
     {
         $this->update(['status_id' => 3]);
@@ -84,6 +89,27 @@ class Wrestler extends Model
         $this->update(['status_id' => 1]);
 
         $this->injuries()->whereNull('healed_at')->first()->healed();
+    }
+
+    public function retire()
+    {
+        $this->update(['status_id' => 5]);
+
+        $this->retirements()->create(['retired_at' => Carbon::now()]);
+
+        return $this;
+    }
+
+    public function unretire()
+    {
+        if ($this->status_id != 5)
+        {
+            throw new WrestlerCanNotRetireException;
+        }
+
+        $this->update(['status_id' => 1]);
+
+        $this->retirements()->whereNull('ended_at')->first()->unretire();
     }
 
     public function scopeActive($query)

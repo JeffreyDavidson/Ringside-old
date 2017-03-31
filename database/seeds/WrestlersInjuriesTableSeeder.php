@@ -1,8 +1,6 @@
 <?php
 
 use App\Wrestler;
-use App\WrestlerInjury;
-use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class WrestlersInjuriesTableSeeder extends Seeder
@@ -16,6 +14,10 @@ class WrestlersInjuriesTableSeeder extends Seeder
     {
         Wrestler::active()->get()->random(50)->each(function($item) {
         	$item->injure()->heal();
+        });
+
+        Wrestler::active()->get()->random(4)->each(function($item) {
+            $item->injure();
         });
     }
 }

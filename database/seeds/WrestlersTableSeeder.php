@@ -29,21 +29,12 @@ class WrestlersTableSeeder extends Seeder
 
         for($i = 111; $i <= 115; $i++)
         {
-            $wrestler = factory(Wrestler::class)->states('active')->create(['name' => 'Wrestler '. $i, 'slug' => 'wrestler'.$i]);
-
-            $wrestler->injure();
-
-            $wrestler->bio()->save(factory(WrestlerBio::class)->create(['wrestler_id' => $wrestler->id, 'signature_move' => 'Signature Move '.$i]));
-        }
-
-        for($i = 116; $i <= 118; $i++)
-        {
             $wrestler = factory(Wrestler::class)->states('suspended')->create(['name' => 'Wrestler '. $i, 'slug' => 'wrestler'.$i]);
 
             $wrestler->bio()->save(factory(WrestlerBio::class)->create(['wrestler_id' => $wrestler->id, 'signature_move' => 'Signature Move '.$i]));
         }
 
-        for($i = 119; $i <= 500; $i++)
+        for($i = 116; $i <= 500; $i++)
         {
             $wrestler = factory(Wrestler::class)->states('retired')->create(['name' => 'Wrestler '. $i, 'slug' => 'wrestler'.$i]);
 
