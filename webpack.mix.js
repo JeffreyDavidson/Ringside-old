@@ -79,3 +79,6 @@ mix.styles([
     mix.copy('resources/assets/vendor/breakpoints/breakpoints.js', 'public/js');
     mix.copy('resources/assets/vendor/media-match/media.match.js', 'public/js');
     mix.copy('resources/assets/vendor/respond/respond.min.js', 'public/js');
+
+
+
