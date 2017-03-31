@@ -5,7 +5,6 @@ namespace Tests\Unit;
 use App\Event;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class EventTest extends TestCase
 {
@@ -14,7 +13,7 @@ class EventTest extends TestCase
     /** @test */
     public function it_can_have_matches()
     {
-        $event = create(Event::class);
+        $event = factory(Event::class)->create();
 
         $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $event->matches);
     }
