@@ -13,28 +13,35 @@ class WrestlersTableSeeder extends Seeder
      */
     public function run()
     {
-        for($i = 1; $i <= 100; $i++)
+        for($i = 1; $i <= 30; $i++)
         {
             $wrestler =  factory(Wrestler::class)->states('active')->create(['name' => 'Wrestler '.$i, 'slug' => 'wrestler'.$i]);
 
             $wrestler->bio()->save(factory(WrestlerBio::class)->create(['wrestler_id' => $wrestler->id, 'signature_move' => 'Signature Move '.$i]));
         }
 
-        for($i = 101; $i <= 110; $i++)
+        for($i = 31; $i <= 34; $i++)
         {
             $wrestler = factory(Wrestler::class)->states('inactive')->create(['name' => 'Wrestler '. $i, 'slug' => 'wrestler'.$i]);
 
             $wrestler->bio()->save(factory(WrestlerBio::class)->create(['wrestler_id' => $wrestler->id, 'signature_move' => 'Signature Move '.$i]));
         }
 
-        for($i = 111; $i <= 115; $i++)
+        for($i = 35; $i <= 40; $i++)
+        {
+            $wrestler =  factory(Wrestler::class)->states('injured')->create(['name' => 'Wrestler '.$i, 'slug' => 'wrestler'.$i]);
+
+            $wrestler->bio()->save(factory(WrestlerBio::class)->create(['wrestler_id' => $wrestler->id, 'signature_move' => 'Signature Move '.$i]));
+        }
+
+        for($i = 41; $i <= 44; $i++)
         {
             $wrestler = factory(Wrestler::class)->states('suspended')->create(['name' => 'Wrestler '. $i, 'slug' => 'wrestler'.$i]);
 
             $wrestler->bio()->save(factory(WrestlerBio::class)->create(['wrestler_id' => $wrestler->id, 'signature_move' => 'Signature Move '.$i]));
         }
 
-        for($i = 116; $i <= 500; $i++)
+        for($i = 45; $i <= 500; $i++)
         {
             $wrestler = factory(Wrestler::class)->states('retired')->create(['name' => 'Wrestler '. $i, 'slug' => 'wrestler'.$i]);
 

@@ -11,8 +11,8 @@ class WrestlerRetire extends Model
 
     protected $table = 'wrestler_retirements';
 
-    public function unretire()
+    public function unretire($date)
     {
-        return $this->update(['ended_at' => Carbon::now()]);
+        return $this->update(['ended_at' => $date]);
     }
 }

@@ -11,18 +11,23 @@ class WrestlersController extends Controller
     {
         $wrestlers = Wrestler::active()->get();
 
-        return view('wrestlers.active', ['wrestlers' => $wrestlers]);
+        return view('wrestlers.active', compact('wrestlers'));
+    }
+
+    public function create()
+    {
+        return view('wrestlers.create', ['wrestler' => new Wrestler]);
     }
 
     public function show($id)
     {
         $wrestler = Wrestler::with('currentManagers', 'previousManagers', 'titles.title', 'bio')->findOrFail($id);
 
-        return view('wrestlers.show', ['wrestler' => $wrestler]);
+        return view('wrestlers.show', compact('wrestler'));
     }
 
     public function edit(Wrestler $wrestler)
     {
-        return view('wrestlers.edit', ['wrestler' => $wrestler]);
+        return view('wrestlers.edit', compact('wrestler'));
     }
 }

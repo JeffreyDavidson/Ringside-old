@@ -31,7 +31,7 @@ $factory->define(App\Wrestler::class, function (Faker\Generator $faker) {
         'name' => $faker->name,
         'slug' => $faker->name,
         'status_id' => $faker->numberBetween(1, 5),
-        'hired_at' => $faker->dateTimeThisDecade()
+        'hired_at' => $faker->dateTimeBetween('-10 years','-1 year')
     ];
 });
 
@@ -89,6 +89,12 @@ $factory->state(App\Wrestler::class, 'inactive', function ($faker) {
     ];
 });
 
+$factory->state(App\Wrestler::class, 'injured', function ($faker) {
+    return [
+        'status_id' => 3,
+    ];
+});
+
 $factory->state(App\Wrestler::class, 'suspended', function ($faker) {
     return [
         'status_id' => 4,
@@ -112,6 +118,8 @@ $factory->define(App\Title::class, function (Faker\Generator $faker) {
 
     return [
         'name' => $faker->sentence(3),
+        'slug' => $faker->sentence(3),
+        'introduced_at' => $faker->date()
     ];
 });
 
@@ -141,6 +149,6 @@ $factory->define(App\TitleHistory::class, function (Faker\Generator $faker) {
         'title_id' => function () {
             return factory(App\Title::class)->create()->id;
         },
-        'won_on' => '',
+        'won_on' => $faker->date(),
     ];
 });

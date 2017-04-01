@@ -42,17 +42,29 @@ class Wrestler extends Model
 
     public function titles()
     {
-        return $this->hasMany(TitleHistory::class)->with('title');
+        return $this->belongsToMany(TitleHistory::class);
     }
 
-    public function winTitle($title)
+    public function winTitle($title, $date = null)
     {
-        $this->titles()->create(['title_id' => $title->id, 'won_on' => Carbon::now()]);
+        if (! $date) {
+            $date = Carbon::now();
+        }
+
+        $this->titles()->create(['title_id' => $title->id, 'won_on' => $date]);
+
+        return $this;
     }
 
-    public function loseTitle($title)
+    public function loseTitle($title, $date = null)
     {
-        return $this->titles()->whereTitleId($title->id)->whereNull('lost_on')->update(['lost_on' => Carbon::now()]);
+        if (! $date) {
+            $date = Carbon::now();
+        }
+
+        $this->titles()->whereTitleId($title->id)->whereNull('lost_on')->first()->loseTitle($date);
+
+        return $this;
     }
 
     public function matches()
@@ -70,17 +82,25 @@ class Wrestler extends Model
         return $this->hasMany(WrestlerRetire::class);
     }
 
-    public function injure()
+    public function injure($date = null)
     {
+        if(! $date) {
+            $date = Carbon::now();
+        }
+
         $this->update(['status_id' => 3]);
 
-        $this->injuries()->create(['injured_at' => Carbon::now()]);
+        $this->injuries()->create(['injured_at' => $date]);
 
         return $this;
     }
 
-    public function heal()
+    public function heal($date = null)
     {
+        if(! $date) {
+            $date = Carbon::now();
+        }
+
         if ($this->status_id != 3)
         {
             throw new WrestlerCanNotBeHealedException;
@@ -88,20 +108,28 @@ class Wrestler extends Model
 
         $this->update(['status_id' => 1]);
 
-        $this->injuries()->whereNull('healed_at')->first()->healed();
+        $this->injuries()->whereNull('healed_at')->first()->healed($date);
     }
 
-    public function retire()
+    public function retire($date = null)
     {
+        if(! $date) {
+            $date = Carbon::now();
+        }
+
         $this->update(['status_id' => 5]);
 
-        $this->retirements()->create(['retired_at' => Carbon::now()]);
+        $this->retirements()->create(['retired_at' => $date]);
 
         return $this;
     }
 
-    public function unretire()
+    public function unretire($date = null)
     {
+        if(! $date) {
+            $date = Carbon::now();
+        }
+
         if ($this->status_id != 5)
         {
             throw new WrestlerCanNotRetireException;
@@ -109,7 +137,7 @@ class Wrestler extends Model
 
         $this->update(['status_id' => 1]);
 
-        $this->retirements()->whereNull('ended_at')->first()->unretire();
+        $this->retirements()->whereNull('ended_at')->first()->unretire($date);
     }
 
     public function scopeActive($query)

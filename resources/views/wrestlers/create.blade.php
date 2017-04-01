@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('header')
-    <h1 class="page-title">Edit Wrestler</h1>
+    <h1 class="page-title">Create Wrestler</h1>
 @endsection
 
 @section('content')
@@ -13,11 +13,8 @@
                     <div class="example-wrap">
                         <h4 class="example-title">Basic Form</h4>
                         <div class="example">
-                            <form method="POST" action="/wrestlers/{{ $wrestler->id }}">
-                                {{ method_field('PATCH') }}
-                                @include('wrestlers.form', [
-                                    'submitButtonText' => 'Update Wrestler'
-                                ])
+                            <form method="POST" action="/wrestlers">
+                                @include('wrestlers.form', compact('wrestler'))
                             </form>
                         </div>
                     </div>

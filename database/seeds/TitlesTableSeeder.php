@@ -12,8 +12,8 @@ class TitlesTableSeeder extends Seeder
      */
     public function run()
     {
-        for($i = 0; $i <= 5; $i++) {
-            factory(Title::class)->create(['name' => 'Title '.$i]);
+        for($i = 1; $i <= 10; $i++) {
+            factory(Title::class)->create(['name' => 'Title '.$i, 'slug' => 'title'.$i]);
         }
     }
 }

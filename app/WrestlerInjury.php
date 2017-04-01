@@ -11,8 +11,13 @@ class WrestlerInjury extends Model
 
     protected $dates = ['injured_at', 'healed_at'];
 
-    public function healed()
+    public function healed($date)
     {
-        return $this->update(['healed_at' => Carbon::now()]);
+        return $this->update(['healed_at' => $date]);
+    }
+
+    public function injured()
+    {
+        return $this;
     }
 }

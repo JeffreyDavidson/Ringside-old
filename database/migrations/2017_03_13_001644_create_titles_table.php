@@ -15,8 +15,9 @@ class CreateTitlesTable extends Migration
     {
         Schema::create('titles', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->unsignedInteger('wrestler_id')->nullable();
+            $table->string('name')->unique();
+            $table->string('slug')->unique();
+            $table->dateTime('introduced_at');
             $table->timestamps();
         });
     }
