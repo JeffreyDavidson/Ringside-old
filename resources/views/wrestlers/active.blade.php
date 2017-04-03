@@ -2,6 +2,7 @@
 
 @section('header')
     <h1 class="page-title">Active Wrestlers</h1>
+    <a class="btn btn-primary pull-right" href="{{ route('wrestlers.create') }}">Create Wrestler</a>
 @endsection
 
 @section('content')

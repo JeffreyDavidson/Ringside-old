@@ -79,7 +79,7 @@ class Wrestler extends Model
 
     public function retirements()
     {
-        return $this->hasMany(WrestlerRetire::class);
+        return $this->hasMany(WrestlerRetirement::class);
     }
 
     public function injure($date = null)

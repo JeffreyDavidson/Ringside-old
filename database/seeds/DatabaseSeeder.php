@@ -4,7 +4,7 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    protected $toTruncate = ['wrestler_statuses', 'wrestlers', 'wrestler_bios', 'wrestler_injuries', 'wrestler_retirements', 'titles', 'title_wrestler'];
+    protected $toTruncate = ['wrestler_statuses', 'wrestlers', 'wrestler_bios', 'wrestler_injuries', 'wrestler_retirements', 'titles', 'title_wrestler', 'managers'];
 
     /**
      * Run the database seeds.
@@ -20,8 +20,9 @@ class DatabaseSeeder extends Seeder
         $this->call(WrestlerStatusesTableSeeder::class);
         $this->call(WrestlersTableSeeder::class);
         $this->call(WrestlersInjuriesTableSeeder::class);
-        $this->call(WrestlersRetirementsTableSeeder::class);
+//        $this->call(WrestlersRetirementsTableSeeder::class);
         $this->call(TitlesTableSeeder::class);
-        $this->call(TitleHistoryTableSeeder::class);
+        $this->call(ManagersTableSeeder::class);
+//        $this->call(TitleHistoryTableSeeder::class);
     }
 }

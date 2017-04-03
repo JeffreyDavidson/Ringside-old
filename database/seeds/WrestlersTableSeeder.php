@@ -41,7 +41,7 @@ class WrestlersTableSeeder extends Seeder
             $wrestler->bio()->save(factory(WrestlerBio::class)->create(['wrestler_id' => $wrestler->id, 'signature_move' => 'Signature Move '.$i]));
         }
 
-        for($i = 45; $i <= 500; $i++)
+        for($i = 45; $i <= 1000; $i++)
         {
             $wrestler = factory(Wrestler::class)->states('retired')->create(['name' => 'Wrestler '. $i, 'slug' => 'wrestler'.$i]);
 

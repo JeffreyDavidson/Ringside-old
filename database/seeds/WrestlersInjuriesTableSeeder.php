@@ -14,18 +14,25 @@ class WrestlersInjuriesTableSeeder extends Seeder
      */
     public function run()
     {
-        Wrestler::all()->random(50)->each(function($wrestler) {
-            $startDate = Carbon::now();
-            $endDate   = Carbon::now()->subDays(7);
+        Wrestler::all()->random(100)->each(function($wrestler) {
+            $hiredAt = (new Carbon)->parse($wrestler->hired_at);
+            $hiredAtPlusAYear = $hiredAt->addYear(1);
+            $sixMonthsAgo = Carbon::now()->subMonths(6);
 
-            $injury = WrestlerInjury::create([
+            $diffInDays = $sixMonthsAgo->diffInDays($hiredAtPlusAYear);
+
+            $daysBetweenHiredAtAndInjuredAt = rand(1, $diffInDays);
+
+            $injuredAtDate = $hiredAtPlusAYear->addDays($daysBetweenHiredAtAndInjuredAt);
+
+            $daysBetweenInjuredAtAndHealedAt = rand(1, 365);
+            $healedAtDate = $injuredAtDate->copy()->addDays($daysBetweenInjuredAtAndHealedAt);
+
+            WrestlerInjury::create([
                 'wrestler_id' => $wrestler->id,
-//                'injured_at' => Carbon::createFromTimestamp(rand(Carbon::parse($wrestler->hired_at), Carbon::now()->subDays(7)))
-                'injured_at' => Carbon::parse()->between(Carbon::parse($wrestler->hired_at), Carbon::now()->subMonths(6))
+                'injured_at' => $injuredAtDate,
+                'healed_at' => $healedAtDate
             ]);
-
-//            $injury = WrestlerInjury::create(['wrestler_id' => $wrestler->id, 'injured_at' => Carbon::parse()->between(Carbon::parse($wrestler->hired_at), Carbon::now())->subMonths(6)]);
-//            WrestlerInjury::where(['wrestler_id' => $injury->wrestler_id])->whereNull('healed_at')->update(['healed_at' => Carbon::parse($injury->injured_at)->addMonths(4)]);
         });
 
         Wrestler::injured()->each(function($wrestler) {

@@ -12,6 +12,9 @@ class TitleHistoryTableSeeder extends Seeder
      */
     public function run()
     {
-
+        $oldChampion = Wrestler::get()->random(1);
+        Title::all()->each(function($title) {
+            $title->champions()->newChampion($oldChampion->id, $newChampion->id);
+        });
     }
 }

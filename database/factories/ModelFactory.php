@@ -31,7 +31,7 @@ $factory->define(App\Wrestler::class, function (Faker\Generator $faker) {
         'name' => $faker->name,
         'slug' => $faker->name,
         'status_id' => $faker->numberBetween(1, 5),
-        'hired_at' => $faker->dateTimeBetween('-10 years','-1 year')
+        'hired_at' => $faker->dateTimeBetween('-30 years','-1 year')
     ];
 });
 
@@ -53,7 +53,7 @@ $factory->define(App\WrestlerInjury::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\WrestlerRetire::class, function (Faker\Generator $faker) {
+$factory->define(App\WrestlerRetirement::class, function (Faker\Generator $faker) {
 
     return [
         'wrestler_id' => function () {

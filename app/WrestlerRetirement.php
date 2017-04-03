@@ -5,7 +5,7 @@ namespace App;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
-class WrestlerRetire extends Model
+class WrestlerRetirement extends Model
 {
     protected $guarded = [];
 
