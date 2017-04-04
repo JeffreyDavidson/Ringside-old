@@ -1,6 +1,8 @@
 <?php
 
 use App\TitleHistory;
+use App\Title;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class TitleHistoryTableSeeder extends Seeder
@@ -12,9 +14,8 @@ class TitleHistoryTableSeeder extends Seeder
      */
     public function run()
     {
-        $oldChampion = Wrestler::get()->random(1);
         Title::all()->each(function($title) {
-            $title->champions()->newChampion($oldChampion->id, $newChampion->id);
+            TitleHistory::create(['title_id' => $title->id, 'wrestler_id' => \App\Wrestler::inRandomOrder()->first()->id, 'won_on' => Carbon::now()]);
         });
     }
 }

@@ -10,6 +10,8 @@ class Wrestler extends Model
 {
     protected $guarded = [];
 
+    protected $dates = ['hired_at'];
+
     public function bio()
     {
         return $this->hasOne(WrestlerBio::class);
@@ -130,6 +132,11 @@ class Wrestler extends Model
             $date = Carbon::now();
         }
 
+        if ($this->isInjured())
+        {
+            $this->injuries()->update(['healed_on' => Carbon::now()]);
+        }
+
         if ($this->status_id != 5)
         {
             throw new WrestlerCanNotRetireException;
@@ -138,6 +145,10 @@ class Wrestler extends Model
         $this->update(['status_id' => 1]);
 
         $this->retirements()->whereNull('ended_at')->first()->unretire($date);
+    }
+
+    public function isInjured() {
+        return $this->injuries()->whereNULL('healed_at');
     }
 
     public function scopeActive($query)

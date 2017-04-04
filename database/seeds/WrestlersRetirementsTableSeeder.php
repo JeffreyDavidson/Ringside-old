@@ -23,9 +23,17 @@ class WrestlersRetirementsTableSeeder extends Seeder
 //        });
 
         Wrestler::retired()->each(function($wrestler) {
-            dd($wrestler->injuries->last()->healed_at);
-            $lastInjuredHealedDate = (new Carbon)->parse($wrestler->hired_at);
             WrestlerRetirement::create(['wrestler_id' => $wrestler->id, 'retired_at' => Carbon::now()->subMonths(3)]);
         });
+    }
+
+    private function getRetiredAtDate($wrestler){
+        return $wrestler->hired_at->addYear()->addDays(
+            rand(1, Carbon::now()->subMonths(6)->diffInDays($wrestler->hired_at->addYear()))
+        );
+    }
+
+    private function getEndedAtDate($injured_at) {
+        return $injured_at->copy()->addDays(rand(1, 365));
     }
 }

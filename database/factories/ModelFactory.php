@@ -123,6 +123,13 @@ $factory->define(App\Title::class, function (Faker\Generator $faker) {
     ];
 });
 
+$factory->state(App\Title::class, 'retired', function ($faker) {
+
+    return [
+        'retired_at' => $faker->dateTimeBetween('-10 years')
+    ];
+});
+
 $factory->define(App\Match::class, function (Faker\Generator $faker) {
 
     return [
@@ -137,6 +144,8 @@ $factory->define(App\Event::class, function (Faker\Generator $faker) {
 
     return [
         'name' => $faker->sentence(3),
+        'slug' => $faker->sentence(3),
+        'date' => Carbon::parse('-1 week'),
     ];
 });
 
@@ -152,3 +161,29 @@ $factory->define(App\TitleHistory::class, function (Faker\Generator $faker) {
         'won_on' => $faker->date(),
     ];
 });
+
+$factory->define(App\MatchType::class, function (Faker\Generator $faker) {
+
+    return [
+        'name' => $faker->sentence(3),
+        'slug' => $faker->sentence(3),
+    ];
+});
+
+$factory->define(App\MatchStipulation::class, function (Faker\Generator $faker) {
+
+    return [
+        'name' => $faker->sentence(3),
+        'slug' => $faker->sentence(3),
+    ];
+});
+
+$factory->define(App\MatchDecision::class, function (Faker\Generator $faker) {
+
+    return [
+        'name' => $faker->sentence(3),
+        'slug' => $faker->sentence(3),
+    ];
+});
+
+

@@ -17,6 +17,11 @@ class CreateMatchesTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('event_id');
             $table->unsignedInteger('match_number');
+            $table->unsignedInteger('match_type_id');
+            $table->unsignedInteger('match_stipulation_id')->nullable();
+            $table->unsignedInteger('title_id')->nullable();
+            $table->unsignedInteger('match_decision_id')->nullable();
+            $table->text('preview');
             $table->timestamps();
         });
     }

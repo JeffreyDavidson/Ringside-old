@@ -14,7 +14,7 @@ class ManagersTableSeeder extends Seeder
     {
         for($i = 1; $i <= 100; $i++)
         {
-            factory(Manager::class)->create(['name' => 'Manager '.$i, 'hired_at' ]);
+            factory(Manager::class)->create(['name' => 'Manager '.$i]);
         }
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEventsTable extends Migration
+class CreateMatchDecisionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateEventsTable extends Migration
      */
     public function up()
     {
-        Schema::create('events', function (Blueprint $table) {
+        Schema::create('match_decisions', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->string('slug');
-            $table->dateTime('date');
+            $table->string('name')->unique();
+            $table->string('slug')->unique();
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class CreateEventsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('events');
+        Schema::dropIfExists('match_decisions');
     }
 }

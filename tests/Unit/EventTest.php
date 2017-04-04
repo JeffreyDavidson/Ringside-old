@@ -11,7 +11,7 @@ class EventTest extends TestCase
     use DatabaseMigrations;
 
     /** @test */
-    public function it_can_have_matches()
+    public function it_can_have_many_matches()
     {
         $event = factory(Event::class)->create();
 
