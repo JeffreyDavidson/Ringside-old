@@ -2,7 +2,6 @@
 
 namespace Tests\Unit;
 
-use App\WrestlerRetirement;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 

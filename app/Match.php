@@ -20,4 +20,9 @@ class Match extends Model
     {
         return $this->belongsTo(Event::class);
     }
+
+    public function type()
+    {
+        return $this->belongsTo(MatchType::class, 'match_type_id');
+    }
 }
