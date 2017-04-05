@@ -133,9 +133,6 @@ $factory->state(App\Title::class, 'retired', function ($faker) {
 $factory->define(App\Match::class, function (Faker\Generator $faker) {
 
     return [
-        'event_id' => function () {
-            return factory(App\Event::class)->create()->id;
-        },
         'match_type_id' => function () {
             return factory(App\MatchType::class)->create()->id;
         },

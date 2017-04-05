@@ -15,14 +15,21 @@ class CreateMatchesTable extends Migration
     {
         Schema::create('matches', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('event_id');
+            $table->unsignedInteger('event_id')->index()->nullable();
             $table->unsignedInteger('match_number');
-            $table->unsignedInteger('match_type_id');
-            $table->unsignedInteger('match_stipulation_id')->nullable();
-            $table->unsignedInteger('title_id')->nullable();
-            $table->unsignedInteger('match_decision_id')->nullable();
+            $table->unsignedInteger('match_type_id')->index();
+            $table->unsignedInteger('match_stipulation_id')->index()->nullable();
+            $table->unsignedInteger('title_id')->index()->nullable();
+            $table->unsignedInteger('match_decision_id')->index()->nullable();
             $table->text('preview');
             $table->timestamps();
+
+            $table->unique(['event_id', 'match_number']);
+            $table->foreign('event_id')->references('id')->on('events');
+            $table->foreign('match_type_id')->references('id')->on('match_types');
+            $table->foreign('match_stipulation_id')->references('id')->on('match_stipulations');
+            $table->foreign('title_id')->references('id')->on('titles');
+            $table->foreign('match_decision_id')->references('id')->on('match_decisions');
         });
     }
 

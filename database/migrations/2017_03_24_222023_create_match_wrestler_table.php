@@ -15,9 +15,12 @@ class CreateMatchWrestlerTable extends Migration
     {
         Schema::create('match_wrestler', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('match_id');
-            $table->unsignedInteger('wrestler_id');
+            $table->unsignedInteger('match_id')->index();
+            $table->unsignedInteger('wrestler_id')->index();
             $table->timestamps();
+
+            $table->foreign('match_id')->references('id')->on('matches');
+            $table->foreign('wrestler_id')->references('id')->on('wrestlers');
         });
     }
 

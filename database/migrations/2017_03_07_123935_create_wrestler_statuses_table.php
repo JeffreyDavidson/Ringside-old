@@ -15,7 +15,7 @@ class CreateWrestlerStatusesTable extends Migration
     {
         Schema::create('wrestler_statuses', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
+            $table->string('name')->unique();
             $table->timestamps();
         });
     }

@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Match extends Model
 {
+    protected $guarded = [];
+
     public function competitors()
     {
         return $this->belongsToMany(Wrestler::class);

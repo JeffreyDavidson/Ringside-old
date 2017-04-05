@@ -10,4 +10,10 @@ class Event extends Model
     {
         return $this->hasMany(Match::class);
     }
+
+    public function addMatches($matches)
+    {
+//        dd($matches);
+        $this->matches()->createMany($matches);
+    }
 }

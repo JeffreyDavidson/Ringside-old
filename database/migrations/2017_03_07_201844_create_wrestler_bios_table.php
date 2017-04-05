@@ -15,12 +15,14 @@ class CreateWrestlerBiosTable extends Migration
     {
         Schema::create('wrestler_bios', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('wrestler_id');
+            $table->unsignedInteger('wrestler_id')->index();
             $table->string('hometown');
             $table->integer('height');
             $table->integer('weight');
             $table->string('signature_move')->unique()->nullable();
             $table->timestamps();
+
+            $table->foreign('wrestler_id')->references('id')->on('wrestlers');
         });
     }
 

@@ -15,10 +15,12 @@ class CreateWrestlerInjuriesTable extends Migration
     {
         Schema::create('wrestler_injuries', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('wrestler_id');
+            $table->unsignedInteger('wrestler_id')->index();
             $table->dateTime('injured_at');
             $table->dateTime('healed_at')->nullable();
             $table->timestamps();
+
+            $table->foreign('wrestler_id')->references('id')->on('wrestlers');
         });
     }
 

@@ -15,12 +15,15 @@ class CreateTitleWrestlerTable extends Migration
     {
         Schema::create('title_wrestler', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('title_id');
-            $table->unsignedInteger('wrestler_id');
+            $table->unsignedInteger('title_id')->index();
+            $table->unsignedInteger('wrestler_id')->index();
             $table->dateTime('won_on');
             $table->dateTime('lost_on')->nullable();
             $table->timestamps();
+
             $table->unique(['title_id', 'won_on']);
+            $table->foreign('title_id')->references('id')->on('titles');
+            $table->foreign('wrestler_id')->references('id')->on('wrestlers');
         });
     }
 
