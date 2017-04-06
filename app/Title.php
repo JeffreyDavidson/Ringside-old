@@ -12,4 +12,9 @@ class Title extends Model
     {
         return $this->hasMany(TitleHistory::class);
     }
+
+    public function matches()
+    {
+        return $this->belongsToMany(Match::class);
+    }
 }

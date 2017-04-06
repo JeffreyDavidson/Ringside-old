@@ -27,4 +27,20 @@ class Match extends Model
     {
         return $this->belongsTo(MatchType::class, 'match_type_id');
     }
+
+    public function titles()
+    {
+        return $this->belongsToMany(Title::class);
+    }
+
+    public function addTitles($titles)
+    {
+        if($titles instanceof Title) {
+            $titles = collect([$titles]);
+        } else if(is_array($titles) && $titles[0] instanceof Title) {
+            $titles = collect($titles);
+        }
+
+        $this->titles()->saveMany($titles->all());
+    }
 }

@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Match;
 use App\MatchType;
+use App\Title;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -23,9 +24,11 @@ class MatchTest extends TestCase
     /** @test */
     public function a_match_can_have_a_title_competed_in_it()
     {
-        $title = factory(MatchType::class)->create();
-        $match = factory(Match::class)->create(['title_id' => $title->id]);
+        $titles = factory(Title::class, 2)->create();
+        $match = factory(Match::class)->create();
 
-        $this->assertEquals($match->title_id, $title->id);
+        $match->addTitles($titles);
+
+        $this->assertCount(2, $match->titles);
     }
 }
