@@ -14,7 +14,14 @@ class EventsTableSeeder extends Seeder
     public function run()
     {
         for($i = 1; $i <= 50; $i++) {
-            Event::create(['name' => 'Event '.$i, 'slug' => 'event'.$i, 'date' => Carbon::parse('-10 years')]);
+            factory(Event::class)->create(['name' => 'Event '.$i, 'slug' => 'event'.$i])->each(function ($event) {
+                for($j = 1; $j <= 8; $j++) {
+                    $event->matches()->save(factory(App\Match::class)->create([
+                        'match_number'  => $j,
+                        'match_type_id' => 1,
+                    ]));
+                }
+            });
         }
     }
 }

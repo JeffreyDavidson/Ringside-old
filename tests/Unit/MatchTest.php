@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Match;
+use App\Stipulation;
 use App\MatchType;
 use App\Title;
 use Tests\TestCase;
@@ -22,7 +23,7 @@ class MatchTest extends TestCase
     }
 
     /** @test */
-    public function a_match_can_have_a_title_competed_in_it()
+    public function a_match_can_have_titles_competed_in_it()
     {
         $titles = factory(Title::class, 2)->create();
         $match = factory(Match::class)->create();
@@ -30,5 +31,16 @@ class MatchTest extends TestCase
         $match->addTitles($titles);
 
         $this->assertCount(2, $match->titles);
+    }
+
+    /** @test */
+    public function a_match_can_have_stipulations_added_to_it()
+    {
+        $stipulations = factory(Stipulation::class, 2)->create();
+        $match = factory(Match::class)->create();
+
+        $match->addStipulations($stipulations);
+
+        $this->assertCount(2, $match->stipulations);
     }
 }

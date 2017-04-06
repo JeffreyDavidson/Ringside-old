@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class MatchStipulation extends Model
+class Stipulation extends Model
 {
     //
 }

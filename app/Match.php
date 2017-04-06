@@ -33,6 +33,11 @@ class Match extends Model
         return $this->belongsToMany(Title::class);
     }
 
+    public function stipulations()
+    {
+        return $this->belongsToMany(Stipulation::class);
+    }
+
     public function addTitles($titles)
     {
         if($titles instanceof Title) {
@@ -42,5 +47,16 @@ class Match extends Model
         }
 
         $this->titles()->saveMany($titles->all());
+    }
+
+    public function addStipulations($stipulations)
+    {
+        if($stipulations instanceof Stipulation) {
+            $stipulations = collect([$stipulations]);
+        } else if(is_array($stipulations) && $stipulations[0] instanceof Stipulation) {
+            $stipulations = collect($stipulations);
+        }
+
+        $this->stipulations()->saveMany($stipulations->all());
     }
 }

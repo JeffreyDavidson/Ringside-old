@@ -16,9 +16,10 @@ class DatabaseSeeder extends Seeder
         'events',
         'matches',
         'match_types',
-        'match_stipulations',
+        'stipulations',
         'match_decisions',
         'match_wrestler',
+        'match_stipulation'
     ];
 
     /**
@@ -40,10 +41,9 @@ class DatabaseSeeder extends Seeder
         $this->call(WrestlersRetirementsTableSeeder::class);
         $this->call(TitlesTableSeeder::class);
         $this->call(MatchTypesTableSeeder::class);
-        $this->call(MatchStipulationsTableSeeder::class);
+        $this->call(StipulationsTableSeeder::class);
         $this->call(MatchDecisionsTableSeeder::class);
         $this->call(EventsTableSeeder::class);
-        $this->call(MatchesTableSeeder::class);
 //        $this->call(ManagersTableSeeder::class);
 //        $this->call(TitleHistoryTableSeeder::class);
 

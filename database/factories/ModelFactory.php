@@ -119,14 +119,10 @@ $factory->define(App\Title::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->sentence(3),
         'slug' => $faker->sentence(3),
-        'introduced_at' => $faker->date()
-    ];
-});
-
-$factory->state(App\Title::class, 'retired', function ($faker) {
-
-    return [
-        'retired_at' => $faker->dateTimeBetween('-10 years')
+        'introduced_at' => $faker->date(),
+        'retired_at' => function (array $title) use ($faker) {
+            return $faker->boolean(80) ? $faker->dateTimeBetween($title['introduced_at']) : null;
+        }
     ];
 });
 
@@ -146,7 +142,7 @@ $factory->define(App\Event::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->sentence(3),
         'slug' => $faker->sentence(3),
-        'date' => Carbon::parse('-1 week'),
+        'date' => $faker->dateTimeBetween('-10 years'),
     ];
 });
 
@@ -171,7 +167,7 @@ $factory->define(App\MatchType::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\MatchStipulation::class, function (Faker\Generator $faker) {
+$factory->define(App\Stipulation::class, function (Faker\Generator $faker) {
 
     return [
         'name' => $faker->sentence(3),

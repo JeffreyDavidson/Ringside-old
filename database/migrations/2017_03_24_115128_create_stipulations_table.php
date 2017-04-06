@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMatchStipulationsTable extends Migration
+class CreateStipulationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateMatchStipulationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('match_stipulations', function (Blueprint $table) {
+        Schema::create('stipulations', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->unique();
             $table->string('slug')->unique();
@@ -28,6 +28,6 @@ class CreateMatchStipulationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('match_stipulations');
+        Schema::dropIfExists('stipulations');
     }
 }
