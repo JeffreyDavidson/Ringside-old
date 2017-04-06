@@ -19,4 +19,13 @@ class MatchTest extends TestCase
 
         $this->assertEquals($match->type->id, $type->id);
     }
+
+    /** @test */
+    public function a_match_can_have_a_title_competed_in_it()
+    {
+        $title = factory(MatchType::class)->create();
+        $match = factory(Match::class)->create(['title_id' => $title->id]);
+
+        $this->assertEquals($match->title_id, $title->id);
+    }
 }
