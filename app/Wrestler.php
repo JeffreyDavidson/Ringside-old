@@ -132,9 +132,9 @@ class Wrestler extends Model
             $date = Carbon::now();
         }
 
-        if ($this->isInjured())
+        if ($this->isRetired())
         {
-            $this->injuries()->update(['healed_on' => Carbon::now()]);
+            $this->retirements()->update(['ended_at' => Carbon::now()]);
         }
 
         if ($this->status_id != 5)
@@ -149,6 +149,10 @@ class Wrestler extends Model
 
     public function isInjured() {
         return $this->injuries()->whereNULL('healed_at');
+    }
+
+    public function isRetired() {
+        return $this->retirements()->whereNULL('ended_at');
     }
 
     public function scopeActive($query)

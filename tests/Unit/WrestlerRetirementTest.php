@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Wrestler;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -16,7 +17,8 @@ class WrestlerRetirementTest extends TestCase
 
         $wrestler->retire();
 
-        $this->assertEquals('6\'1"', $bio->formatted_height);
+        $this->assertCount(1, $wrestler->retirements);
+        $this->assertNull($wrestler->retirements->first()->ended_at);
     }
 
     /** @test */
@@ -24,8 +26,10 @@ class WrestlerRetirementTest extends TestCase
     {
         $wrestler = factory(Wrestler::class)->create();
 
+        $wrestler->retire();
         $wrestler->unretire();
 
-        $this->assertEquals('6\'1"', $bio->formatted_height);
+        $this->assertCount(1, $wrestler->retirements);
+        $this->assertNotNull($wrestler->retirements->first()->ended_at);
     }
 }
