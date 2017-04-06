@@ -17,4 +17,9 @@ class Title extends Model
     {
         return $this->belongsToMany(Match::class);
     }
+
+    public function scopeIntroducedBefore($query, $date)
+    {
+        return $query->where('introduced_at', '<=', $date);
+    }
 }
