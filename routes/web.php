@@ -22,3 +22,4 @@ Route::get('wrestlers/injured', 'InjuredWrestlersController@index')->name('wrest
 Route::get('wrestlers/suspended', 'SuspendedWrestlersController@index')->name('wrestlers.suspended');
 Route::get('wrestlers/retired', 'RetiredWrestlersController@index')->name('wrestlers.retired');
 Route::resource('wrestlers', 'WrestlersController');
+Route::resource('events', 'EventsController');

@@ -3,6 +3,7 @@
 use App\Event;
 use App\Stipulation;
 use App\Title;
+use App\Referee;
 use Illuminate\Database\Seeder;
 
 class EventsTableSeeder extends Seeder
@@ -15,7 +16,7 @@ class EventsTableSeeder extends Seeder
     public function run()
     {
         for($i = 1; $i <= 50; $i++) {
-            $event = factory(Event::class)->create(['name' => 'Event '.$i, 'slug' => 'event'.$i]);
+            $event = factory(Event::class)->create(['name' => 'Event '.$i, 'slug' => 'event'.$i, 'arena_id' => \App\Arena::inRandomOrder()->first()->id]);
 
             for($j = 1; $j <= 8; $j++) {
                 $event->matches()->save($match = factory(App\Match::class)->create([
@@ -23,12 +24,26 @@ class EventsTableSeeder extends Seeder
                     'match_type_id' => 1,
                 ]));
 
-                if($this->chance(10)) {
-                    $match->addTitles(Title::introducedBefore($event->date)->random()->first()->get());
+                if($this->chance(100)) {
+                    $match->addReferees($referee = Referee::get()->random());
+                    if ($this->chance(1)) {
+                        $match->addReferees(Referee::get()->except($referee->id)->random());
+                    }
                 }
 
-                if($this->chance(10)) {
-                    $match->addStipulations(Stipulation::all());
+                if($this->chance(5)) {
+                    $match->addTitles($title = Title::introducedBefore($event->date)->get()->random());
+                    if($this->chance(1)) {
+                        $match->addTitles(Title::introducedBefore($event->date)->get()->except($title->id)->random());
+                    }
+                }
+
+                if($this->chance(5)) {
+                    $match->addStipulations($stipulation = Stipulation::get()->random());
+
+                    if($this->chance(1)) {
+                        $match->addStipulations(Stipulation::get()->except($stipulation->id)->random());
+                    }
                 }
             }
         }

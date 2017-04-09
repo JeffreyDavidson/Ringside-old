@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEventsTable extends Migration
+class CreateMatchRefereeTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,14 @@ class CreateEventsTable extends Migration
      */
     public function up()
     {
-        Schema::create('events', function (Blueprint $table) {
+        Schema::create('match_referee', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->string('slug');
-            $table->dateTime('date');
-            $table->unsignedInteger('arena_id');
+            $table->unsignedInteger('match_id')->index();
+            $table->unsignedInteger('referee_id')->index();
             $table->timestamps();
 
-            $table->foreign('arena_id')->references('id')->on('arenas');
+            $table->foreign('match_id')->references('id')->on('matches');
+            $table->foreign('referee_id')->references('id')->on('referees');
         });
     }
 
@@ -32,6 +31,6 @@ class CreateEventsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('events');
+        Schema::dropIfExists('match_referee');
     }
 }

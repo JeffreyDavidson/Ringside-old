@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Event;
 use App\Match;
+use App\Arena;
 use App\Exceptions\MatchesHaveSameMatchNumberAtEventException;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -22,6 +23,16 @@ class EventTest extends TestCase
         $event->addMatches($matches);
 
         $this->assertCount(3, $event->matches);
+    }
+
+    /** @test */
+    public function an_event_takes_place_at_an_arena()
+    {
+        $arena = factory(Arena::class)->create();
+
+        $event = factory(Event::class)->create(['arena_id' => $arena->id]);
+
+        $this->assertEquals($arena->id, $event->arena_id);
     }
 
     /** @test */
@@ -56,5 +67,13 @@ class EventTest extends TestCase
         $event->addMatches($moreMatches);
 
         $this->assertCount(5, $event->matches);
+    }
+
+    /** @test */
+    public function event_date_can_be_formatted()
+    {
+        $event = factory(Event::class)->make(['date' => '2017-04-01 12:00:00']);
+
+        $this->assertEquals('April 1st, 2017', $event->formatted_date);
     }
 }

@@ -7,9 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
+    protected $dates = ['date'];
+
+    public function getFormattedDateAttribute()
+    {
+        return $this->date->format('F jS, Y');
+    }
+
     public function matches()
     {
         return $this->hasMany(Match::class);
+    }
+
+    public function arena()
+    {
+        return $this->belongsTo(Arena::class);
     }
 
     public function addMatches($matches)

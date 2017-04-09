@@ -143,6 +143,9 @@ $factory->define(App\Event::class, function (Faker\Generator $faker) {
         'name' => $faker->sentence(3),
         'slug' => $faker->sentence(3),
         'date' => $faker->dateTimeBetween('-10 years'),
+        'arena_id' => function () {
+            return factory(App\Arena::class)->create()->id;
+        },
     ];
 });
 
@@ -180,6 +183,26 @@ $factory->define(App\MatchDecision::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->sentence(3),
         'slug' => $faker->sentence(3),
+    ];
+});
+
+$factory->define(App\Arena::class, function (Faker\Generator $faker) {
+
+    return [
+        'name' => $faker->sentence(3),
+        'address' => $faker->streetAddress,
+        'city' => $faker->city,
+        'state' => $faker->state,
+        'postcode' => $faker->postcode,
+    ];
+});
+
+
+$factory->define(App\Referee::class, function (Faker\Generator $faker) {
+
+    return [
+        'first_name' => $faker->firstName,
+        'last_name' => $faker->lastName,
     ];
 });
 

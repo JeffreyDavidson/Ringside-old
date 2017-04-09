@@ -8,14 +8,20 @@ class Match extends Model
 {
     protected $guarded = [];
 
-    public function competitors()
+    public function wrestlers()
     {
         return $this->belongsToMany(Wrestler::class);
     }
 
-    public function addCompetitor($wrestler)
+    public function addWrestlers($wrestlers)
     {
-        return $this->competitors()->attach($wrestler->id);
+        if($wrestlers instanceof Wrestler) {
+            $wrestlers = collect([$wrestlers]);
+        } else if(is_array($wrestlers) && $wrestlers[0] instanceof Wrestler) {
+            $wrestlers = collect($wrestlers);
+        }
+
+        $this->wrestlers()->saveMany($wrestlers->all());
     }
 
     public function event()
@@ -31,6 +37,11 @@ class Match extends Model
     public function titles()
     {
         return $this->belongsToMany(Title::class);
+    }
+
+    public function referees()
+    {
+        return $this->belongsToMany(Referee::class);
     }
 
     public function stipulations()
@@ -58,5 +69,16 @@ class Match extends Model
         }
 
         $this->stipulations()->saveMany($stipulations->all());
+    }
+
+    public function addReferees($referees)
+    {
+        if($referees instanceof Referee) {
+            $referees = collect([$referees]);
+        } else if(is_array($referees) && $referees[0] instanceof Referee) {
+            $referees = collect($referees);
+        }
+
+        $this->referees()->saveMany($referees->all());
     }
 }
