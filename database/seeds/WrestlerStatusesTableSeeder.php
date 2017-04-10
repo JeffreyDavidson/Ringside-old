@@ -1,6 +1,6 @@
 <?php
 
-use App\WrestlerStatus;
+use App\Status;
 use Illuminate\Database\Seeder;
 
 class WrestlerStatusesTableSeeder extends Seeder
@@ -12,10 +12,10 @@ class WrestlerStatusesTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(WrestlerStatus::class)->create(['name' => 'Active']);
-        factory(WrestlerStatus::class)->create(['name' => 'Inactive']);
-        factory(WrestlerStatus::class)->create(['name' => 'Injured']);
-        factory(WrestlerStatus::class)->create(['name' => 'Suspended']);
-        factory(WrestlerStatus::class)->create(['name' => 'Retired']);
+        factory(Status::class)->create(['name' => 'Active']);
+        factory(Status::class)->create(['name' => 'Inactive']);
+        factory(Status::class)->create(['name' => 'Injured']);
+        factory(Status::class)->create(['name' => 'Suspended']);
+        factory(Status::class)->create(['name' => 'Retired']);
     }
 }

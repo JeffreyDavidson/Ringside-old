@@ -2,12 +2,17 @@
 
 namespace App;
 
+use App\Traits\HasManagers;
+use App\Traits\HasStatuses;
+use App\Traits\HasTitles;
 use Carbon\Carbon;
 use App\Exceptions\WrestlerCanNotBeHealedException;
 use Illuminate\Database\Eloquent\Model;
 
 class Wrestler extends Model
 {
+	use HasStatuses, HasManagers, HasTitles;
+
     protected $guarded = [];
 
     protected $dates = ['hired_at'];
@@ -22,66 +27,28 @@ class Wrestler extends Model
         return $this->belongsToMany(Manager::class)->withPivot('hired_on', 'fired_on')->withTimestamps();
     }
 
-    public function previousManagers()
-    {
-        return $this->managers()->wherePivot('fired_on', '<', Carbon::now());
-    }
-
-    public function currentManagers()
-    {
-        return $this->managers()->wherePivot('fired_on', '=', null);
-    }
-
-    public function hireManager($manager)
-    {
-        return $this->managers()->attach($manager->id, ['hired_on' => Carbon::now()]);
-    }
-
-    public function fireManager($manager)
-    {
-        return $this->managers()->updateExistingPivot($manager->id, ['fired_on' => Carbon::now()]);
-    }
-
     public function titles()
     {
         return $this->belongsToMany(TitleHistory::class);
     }
 
-    public function winTitle($title, $date = null)
-    {
-        if (! $date) {
-            $date = Carbon::now();
-        }
+	public function matches()
+	{
+		return $this->belongsToMany(Match::class);
+	}
 
-        $this->titles()->create(['title_id' => $title->id, 'won_on' => $date]);
+	public function injuries()
+	{
+		return $this->hasMany(WrestlerInjury::class);
+	}
 
-        return $this;
-    }
+	public function retirements()
+	{
+		return $this->hasMany(WrestlerRetirement::class);
+	}
 
-    public function loseTitle($title, $date = null)
-    {
-        if (! $date) {
-            $date = Carbon::now();
-        }
-
-        $this->titles()->whereTitleId($title->id)->whereNull('lost_on')->first()->loseTitle($date);
-
-        return $this;
-    }
-
-    public function matches()
-    {
-        return $this->belongsToMany(Match::class);
-    }
-
-    public function injuries()
-    {
-        return $this->hasMany(WrestlerInjury::class);
-    }
-
-    public function retirements()
-    {
-        return $this->hasMany(WrestlerRetirement::class);
+	public function status() {
+		return $this->status_id;
     }
 
     public function injure($date = null)
@@ -90,7 +57,7 @@ class Wrestler extends Model
             $date = Carbon::now();
         }
 
-        $this->update(['status_id' => 3]);
+        $this->setStatusToInjured();
 
         $this->injuries()->create(['injured_at' => $date]);
 
@@ -103,12 +70,12 @@ class Wrestler extends Model
             $date = Carbon::now();
         }
 
-        if ($this->status_id != 3)
+        if (! $this->isInjured())
         {
             throw new WrestlerCanNotBeHealedException;
         }
 
-        $this->update(['status_id' => 1]);
+        $this->setStatusToActive();
 
         $this->injuries()->whereNull('healed_at')->first()->healed($date);
     }
@@ -119,7 +86,7 @@ class Wrestler extends Model
             $date = Carbon::now();
         }
 
-        $this->update(['status_id' => 5]);
+        $this->setStatusToRetired();
 
         $this->retirements()->create(['retired_at' => $date]);
 
@@ -137,46 +104,21 @@ class Wrestler extends Model
             $this->retirements()->update(['ended_at' => Carbon::now()]);
         }
 
-        if ($this->status_id != 5)
+        if (! $this->isRetired())
         {
             throw new WrestlerCanNotRetireException;
         }
 
-        $this->update(['status_id' => 1]);
+        $this->setStatusToActive();
 
         $this->retirements()->whereNull('ended_at')->first()->unretire($date);
     }
 
-    public function isInjured() {
-        return $this->injuries()->whereNULL('healed_at');
+    public function hasInjuries() {
+        return $this->injuries()->whereNULL('healed_at')->count > 0;
     }
 
-    public function isRetired() {
-        return $this->retirements()->whereNULL('ended_at');
-    }
-
-    public function scopeActive($query)
-    {
-        return $query->where('status_id', 1);
-    }
-
-    public function scopeInactive($query)
-    {
-        return $query->where('status_id', 2);
-    }
-
-    public function scopeInjured($query)
-    {
-        return $query->where('status_id', 3);
-    }
-
-    public function scopeSuspended($query)
-    {
-        return $query->where('status_id', 4);
-    }
-
-    public function scopeRetired($query)
-    {
-        return $query->where('status_id', 5);
+    public function hasRetirements() {
+        return $this->retirements()->whereNULL('ended_at')->count > 0;
     }
 }

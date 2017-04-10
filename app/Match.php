@@ -13,17 +13,6 @@ class Match extends Model
         return $this->belongsToMany(Wrestler::class);
     }
 
-    public function addWrestlers($wrestlers)
-    {
-        if($wrestlers instanceof Wrestler) {
-            $wrestlers = collect([$wrestlers]);
-        } else if(is_array($wrestlers) && $wrestlers[0] instanceof Wrestler) {
-            $wrestlers = collect($wrestlers);
-        }
-
-        $this->wrestlers()->saveMany($wrestlers->all());
-    }
-
     public function event()
     {
         return $this->belongsTo(Event::class);
@@ -48,6 +37,25 @@ class Match extends Model
     {
         return $this->belongsToMany(Stipulation::class);
     }
+
+	public function addWrestlers($wrestlers)
+	{
+		if($wrestlers instanceof Wrestler) {
+			$wrestlers = collect([$wrestlers]);
+		} else if(is_array($wrestlers) && $wrestlers[0] instanceof Wrestler) {
+			$wrestlers = collect($wrestlers);
+		}
+
+		if($this->isTitleMatch()) {
+			$wrestlers->each(function($wrestler) {
+				if($wrestler->isChampionOfCurrentTitle()) {
+					$this->addTitles($wrestler->currentTitles());
+				}
+			});
+		}
+
+		$this->wrestlers()->saveMany($wrestlers->all());
+	}
 
     public function addTitles($titles)
     {
@@ -80,5 +88,9 @@ class Match extends Model
         }
 
         $this->referees()->saveMany($referees->all());
+    }
+
+	public function isTitleMatch() {
+		return $this->title_match;
     }
 }
