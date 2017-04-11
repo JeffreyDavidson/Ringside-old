@@ -35,7 +35,7 @@ $factory->define(App\Wrestler::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\WrestlerStatus::class, function (Faker\Generator $faker) {
+$factory->define(App\Status::class, function (Faker\Generator $faker) {
 
     return [
         'name' => $faker->sentence(3),
@@ -133,7 +133,8 @@ $factory->define(App\Match::class, function (Faker\Generator $faker) {
             return factory(App\MatchType::class)->create()->id;
         },
         'match_number' => $faker->randomNumber(),
-        'preview' => $faker->paragraphs(3, true)
+        'preview' => $faker->paragraphs(3, true),
+		'title_match' => $faker->boolean(5)
     ];
 });
 
