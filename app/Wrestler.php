@@ -115,10 +115,10 @@ class Wrestler extends Model
     }
 
     public function hasInjuries() {
-        return $this->injuries()->whereNULL('healed_at')->count > 0;
+        return $this->injuries()->whereNull('healed_at')->count > 0;
     }
 
     public function hasRetirements() {
-        return $this->retirements()->whereNULL('ended_at')->count > 0;
+        return $this->retirements()->whereNull('ended_at')->count > 0;
     }
 }
