@@ -19,6 +19,7 @@ class CreateMatchRefereeTable extends Migration
             $table->unsignedInteger('referee_id')->index();
             $table->timestamps();
 
+            $table->unique(['match_id', 'referee_id']);
             $table->foreign('match_id')->references('id')->on('matches');
             $table->foreign('referee_id')->references('id')->on('referees');
         });

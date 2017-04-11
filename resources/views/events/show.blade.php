@@ -21,16 +21,37 @@
                     @endif
                     <div class="panel-desc">
                         {{ $match->type->name }}
+                        <p>
                         @if ($match->titles)
                             @foreach ($match->titles as $title)
                                 {{ $title->name }} Match
                             @endforeach
                         @endif
+                        </p>
+                        <p>
                         @if ($match->stipulations)
                             @foreach ($match->stipulations as $stipulation)
                                 {{ $stipulation->name }} Match
                             @endforeach
                         @endif
+                        </p>
+                        <p>
+                        @if ($match->referees)
+                            @if ($match->referees->count() == 1)
+                                Referee: {{  $match->referees->first()->full_name }}
+                            @elseif ($match->referees->count() == 2)
+                                Referees: {{ $match->referees->implode('full_name', ' & ') }}
+                            @else
+                                Referees: {{ $match->referees->implode('full_name', ', ') }}
+                            @endif
+                        @endif
+                        </p>
+                        <p>
+                        @if ($match->titles)
+
+                        @endif
+                        {{ $match->wrestlers->implode('name', ' vs. ') }}
+                        </p>
                     </div>
                 </div>
             </div>

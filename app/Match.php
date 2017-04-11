@@ -10,7 +10,7 @@ class Match extends Model
 
     public function wrestlers()
     {
-        return $this->belongsToMany(Wrestler::class);
+        return $this->belongsToMany(Wrestler::class)->withTimestamps();
     }
 
     public function event()
@@ -25,17 +25,17 @@ class Match extends Model
 
     public function titles()
     {
-        return $this->belongsToMany(Title::class);
+        return $this->belongsToMany(Title::class)->withTimestamps();
     }
 
     public function referees()
     {
-        return $this->belongsToMany(Referee::class);
+        return $this->belongsToMany(Referee::class)->withTimestamps();
     }
 
     public function stipulations()
     {
-        return $this->belongsToMany(Stipulation::class);
+        return $this->belongsToMany(Stipulation::class)->withTimestamps();
     }
 
 	public function addWrestlers($wrestlers)

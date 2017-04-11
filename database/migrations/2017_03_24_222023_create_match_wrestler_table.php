@@ -19,6 +19,7 @@ class CreateMatchWrestlerTable extends Migration
             $table->unsignedInteger('wrestler_id')->index();
             $table->timestamps();
 
+            $table->unique(['match_id', 'wrestler_id']);
             $table->foreign('match_id')->references('id')->on('matches');
             $table->foreign('wrestler_id')->references('id')->on('wrestlers');
         });

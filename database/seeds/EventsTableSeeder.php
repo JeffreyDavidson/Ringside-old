@@ -4,6 +4,7 @@ use App\Event;
 use App\Stipulation;
 use App\Title;
 use App\Referee;
+use App\Wrestler;
 use Illuminate\Database\Seeder;
 
 class EventsTableSeeder extends Seeder
@@ -24,6 +25,8 @@ class EventsTableSeeder extends Seeder
                     'match_type_id' => 1,
                 ]));
 
+                $match->addWrestlers($wrestlers = Wrestler::get()->random(2));
+
                 if($this->chance(100)) {
                     $match->addReferees($referee = Referee::get()->random());
                     if ($this->chance(1)) {
@@ -36,6 +39,8 @@ class EventsTableSeeder extends Seeder
                     if($this->chance(1)) {
                         $match->addTitles(Title::introducedBefore($event->date)->get()->except($title->id)->random());
                     }
+
+
                 }
 
                 if($this->chance(5)) {
