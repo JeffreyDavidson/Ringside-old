@@ -7,6 +7,7 @@ use App\Traits\HasStatuses;
 use App\Traits\HasTitles;
 use Carbon\Carbon;
 use App\Exceptions\WrestlerCanNotBeHealedException;
+use App\Exceptions\WrestlerCanNotRetireException;
 use Illuminate\Database\Eloquent\Model;
 
 class Wrestler extends Model
