@@ -35,7 +35,7 @@ $factory->define(App\Wrestler::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\Status::class, function (Faker\Generator $faker) {
+$factory->define(App\WrestlerStatus::class, function (Faker\Generator $faker) {
 
     return [
         'name' => $faker->sentence(3),

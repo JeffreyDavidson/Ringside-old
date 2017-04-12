@@ -2,10 +2,9 @@
 
 namespace App;
 
-//use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model;
 
-//class Status extends Model
-class Status
+class WrestlerStatus extends Model
 {
     const ACTIVE = 1, INACTIVE = 2, INJURED = 3, SUSPENDED = 4, RETIRED = 5;
 }
