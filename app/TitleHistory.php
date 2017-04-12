@@ -7,6 +7,7 @@ use App\Collections\TitleHistories;
 
 class TitleHistory extends Model
 {
+
     protected $table = 'title_wrestler';
     protected $dates = ['won_on', 'lost_on'];
     protected $guarded = ['id'];
@@ -24,11 +25,18 @@ class TitleHistory extends Model
     /**
      * Create a new Eloquent Collection instance.
      *
-     * @param  array  $models
+     * @param  array $models
+     *
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function newCollection(array $models = [])
     {
         return new TitleHistories($models);
+    }
+
+    public function loseTitle($date = null)
+    {
+        dd($date);
+        return $this->update(['lost_on' => $date]);
     }
 }

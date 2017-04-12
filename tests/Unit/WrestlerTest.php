@@ -82,15 +82,15 @@ class WrestlerTest extends TestCase
         $wrestler = factory(Wrestler::class)->create();
         $title = factory(Title::class)->create();
 
-        $wrestler->winTitle($title);
+        $wrestler->winTitle($title, Carbon::parse('-3 days'));
 
         $this->assertNotNull($wrestler->titles()->where('title_id', $title->id)->whereDate('won_on', Carbon::parse('-3 days')->toDateString())->first());
 
         $wrestler->loseTitle($title);
 
-        Carbon::setTestNow();
+//        dd($wrestler->titles()->where('title_id', $title->id)->first());
 
-        dd($wrestler->titles()->where('title_id', $title->id)->whereDate('won_on', Carbon::parse('-3 days')->toDateString())->first()->lost_on);
+//        dd($wrestler->titles()->where('title_id', $title->id)->whereDate('won_on', Carbon::parse('-3 days')->toDateString())->first());
 
         $this->assertNotNull($wrestler->titles()->where('title_id', $title->id)->whereDate('won_on', Carbon::today()->toDateString())->first()->lost_on);
     }

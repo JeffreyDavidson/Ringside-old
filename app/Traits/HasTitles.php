@@ -9,7 +9,8 @@ trait HasTitles {
 	abstract public function titles();
 
 	public function hasTitle($title) {
-		return $this->titles->contains($title);
+	    dd($this->titles());
+	    return $this->titles()->contains($title);
 	}
 
 	public function winTitle($title, $date = null)
@@ -29,7 +30,8 @@ trait HasTitles {
 
 	public function loseTitle($title, $date = null)
 	{
-		if (! $date) {
+
+	    if (! $date) {
 			$date = Carbon::now();
 		}
 
