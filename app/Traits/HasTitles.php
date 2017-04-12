@@ -10,7 +10,7 @@ trait HasTitles {
 
 	public function hasTitle($title) {
         $this->load('titles');
-	    return $this->titles->contains($title);
+	    return $this->titles()->whereNull('lost_on')->get()->contains($title);
 	}
 
 	public function winTitle($title, $date = null)
