@@ -3,9 +3,11 @@
 namespace Tests\Unit;
 
 use App\Exceptions\WrestlerCanNotBeHealedException;
+use App\Exceptions\WrestlerCanNotBeInjuredException;
 use App\Wrestler;
 use App\Manager;
 use App\Title;
+use App\WrestlerStatus;
 use Carbon\Carbon;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -88,11 +90,7 @@ class WrestlerTest extends TestCase
 
         $wrestler->loseTitle($title);
 
-//        dd($wrestler->titles()->where('title_id', $title->id)->first());
-
-//        dd($wrestler->titles()->where('title_id', $title->id)->whereDate('won_on', Carbon::parse('-3 days')->toDateString())->first());
-
-        $this->assertNotNull($wrestler->titles()->where('title_id', $title->id)->whereDate('won_on', Carbon::today()->toDateString())->first()->lost_on);
+        $this->assertNotNull($wrestler->titles()->where('title_id', $title->id)->whereDate('won_on', Carbon::parse('-3 days')->toDateString())->first()->lost_on);
     }
 
     /** @test * */
@@ -101,25 +99,14 @@ class WrestlerTest extends TestCase
         $wrestler = factory(Wrestler::class)->create();
         $title = factory(Title::class)->create();
 
-        $wrestler->winTitle($title);
+        $wrestler->winTitle($title, Carbon::parse('-3 days'));
 
-        Carbon::setTestNow(Carbon::parse('+1 day'));
+        $wrestler->loseTitle($title, Carbon::parse('-3 days'));
+        $wrestler->winTitle($title, Carbon::parse('-2 days'));
 
-        $wrestler->loseTitle($title);
-        $wrestler->winTitle($title);
+        $wrestler->loseTitle($title, Carbon::parse('-2 days'));  // Error
 
-        Carbon::setTestNow(Carbon::parse('+2 day'));
-
-        $wrestler->loseTitle($title);
-        $wrestler->winTitle($title);
-
-        Carbon::setTestNow(Carbon::parse('+3 day'));
-
-        $wrestler->loseTitle($title);
-
-        Carbon::setTestNow();
-
-        $this->assertEquals(3, $wrestler->titles()->where('title_id', $title->id)->count());
+        $this->assertEquals(2, $wrestler->titles()->where('title_id', $title->id)->count());
     }
 
     /** @test */
@@ -139,27 +126,41 @@ class WrestlerTest extends TestCase
 
         $wrestler->injure();
 
-        $this->assertEquals(3, $wrestler->fresh()->status_id);
+        $this->assertEquals(3, $wrestler->fresh()->status());
         $this->assertCount(1, $wrestler->fresh()->injuries);
+    }
+
+    /** @test */
+    public function a_non_active_wrestler_cannot_be_injured()
+    {
+        $wrestler = factory(Wrestler::class)->create(['status_id' => collect(WrestlerStatus::INACTIVE, WrestlerStatus::INJURED, WrestlerStatus::SUSPENDED, WrestlerStatus::RETIRED)->random()]);
+
+        try {
+            $wrestler->injure();
+        } catch (WrestlerCanNotBeInjuredException $e) {
+            return;
+        }
+
+        $this->fail('This wrestler cannot be injured.');
     }
 
     /** @test */
     public function an_injured_wrestler_can_be_healed()
     {
-        $wrestler = factory(Wrestler::class)->create();
+        $wrestler = factory(Wrestler::class)->states('active')->create();
         $wrestler->injure();
         $this->assertCount(1, $wrestler->injuries);
 
         $wrestler->heal();
 
-        $this->assertEquals(1, $wrestler->fresh()->status_id);
+        $this->assertEquals(1, $wrestler->fresh()->status());
         $this->assertNotNull($wrestler->fresh()->injuries->last()->healed_at);
     }
 
     /** @test */
     public function a_wrestler_that_is_not_injured_cannot_be_healed()
     {
-        $wrestler = factory(Wrestler::class)->states('active')->create();
+        $wrestler = factory(Wrestler::class)->create(['status_id' => collect(WrestlerStatus::ACTIVE, WrestlerStatus::INACTIVE, WrestlerStatus::SUSPENDED, WrestlerStatus::RETIRED)->random()]);
         $this->assertCount(0, $wrestler->injuries);
 
         try {
@@ -219,9 +220,9 @@ class WrestlerTest extends TestCase
     {
         $wrestler = factory(Wrestler::class)->states('retired')->create();
 
-        $retireddWrestlers = Wrestler::retired()->get();
+        $retiredWrestlers = Wrestler::retired()->get();
 
-        $this->assertTrue($retireddWrestlers->contains($wrestler));
+        $this->assertTrue($retiredWrestlers->contains($wrestler));
     }
 
 }

@@ -9,8 +9,8 @@ trait HasTitles {
 	abstract public function titles();
 
 	public function hasTitle($title) {
-	    dd($this->titles());
-	    return $this->titles()->contains($title);
+        $this->load('titles');
+	    return $this->titles->contains($title);
 	}
 
 	public function winTitle($title, $date = null)
@@ -30,14 +30,13 @@ trait HasTitles {
 
 	public function loseTitle($title, $date = null)
 	{
-
 	    if (! $date) {
 			$date = Carbon::now();
 		}
 
 		if(! $this->hasTitle($title)) {
-			return $this;
-		}
+            return $this;
+        }
 
 		$this->titles()->whereTitleId($title->id)->whereNull('lost_on')->first()->loseTitle($date);
 

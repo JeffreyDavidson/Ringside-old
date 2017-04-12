@@ -36,7 +36,6 @@ class TitleHistory extends Model
 
     public function loseTitle($date = null)
     {
-        dd($date);
         return $this->update(['lost_on' => $date]);
     }
 }

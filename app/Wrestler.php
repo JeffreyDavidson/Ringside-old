@@ -8,6 +8,7 @@ use App\Traits\HasTitles;
 use Carbon\Carbon;
 use App\Exceptions\WrestlerCanNotBeHealedException;
 use App\Exceptions\WrestlerCanNotRetireException;
+use App\Exceptions\WrestlerCanNotBeInjuredException;
 use Illuminate\Database\Eloquent\Model;
 
 class Wrestler extends Model
@@ -56,6 +57,10 @@ class Wrestler extends Model
     {
         if(! $date) {
             $date = Carbon::now();
+        }
+
+        if (! $this->isActive()) {
+            throw new WrestlerCanNotBeInjuredException;
         }
 
         $this->setStatusToInjured();
