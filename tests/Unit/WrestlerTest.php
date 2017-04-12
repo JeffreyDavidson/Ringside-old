@@ -50,19 +50,19 @@ class WrestlerTest extends TestCase
     }
 
     /** @test */
-    public function a_wrestler_can_have_titles()
-    {
-        $wrestler = factory(Wrestler::class)->create();
-
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $wrestler->titles);
-    }
-
-    /** @test */
     public function a_wrestler_can_have_injuries()
     {
         $wrestler = factory(Wrestler::class)->create();
 
         $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $wrestler->injuries);
+    }
+
+    /** @test */
+    public function a_wrestler_can_have_titles()
+    {
+        $wrestler = factory(Wrestler::class)->create();
+
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $wrestler->titles);
     }
 
     /** @test * */
@@ -84,11 +84,13 @@ class WrestlerTest extends TestCase
 
         $wrestler->winTitle($title);
 
-        Carbon::setTestNow(Carbon::parse('+1 day'));
+        $this->assertNotNull($wrestler->titles()->where('title_id', $title->id)->whereDate('won_on', Carbon::parse('-3 days')->toDateString())->first());
 
         $wrestler->loseTitle($title);
 
         Carbon::setTestNow();
+
+        dd($wrestler->titles()->where('title_id', $title->id)->whereDate('won_on', Carbon::parse('-3 days')->toDateString())->first()->lost_on);
 
         $this->assertNotNull($wrestler->titles()->where('title_id', $title->id)->whereDate('won_on', Carbon::today()->toDateString())->first()->lost_on);
     }

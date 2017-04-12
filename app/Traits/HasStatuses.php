@@ -11,23 +11,23 @@ trait HasStatuses {
 	abstract public function status();
 
 	public function isActive() {
-		return $this->status_id == WrestlerStatus::ACTIVE;
+		return $this->status() == WrestlerStatus::ACTIVE;
 	}
 
 	public function isInactive() {
-		return $this->status_id == WrestlerStatus::INACTIVE;
+		return $this->status() == WrestlerStatus::INACTIVE;
 	}
 
 	public function isInjured() {
-		return $this->status_id == WrestlerStatus::INJURED;
+		return $this->status() == WrestlerStatus::INJURED;
 	}
 
 	public function isSuspended() {
-		return $this->status_id == WrestlerStatus::SUSPENDED;
+		return $this->status() == WrestlerStatus::SUSPENDED;
 	}
 
 	public function isRetired() {
-		return $this->status_id == WrestlerStatus::RETIRED;
+		return $this->status() == WrestlerStatus::RETIRED;
 	}
 
 	public function scopeActive($query)

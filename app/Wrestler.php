@@ -30,7 +30,7 @@ class Wrestler extends Model
 
     public function titles()
     {
-        return $this->belongsToMany(TitleHistory::class);
+        return $this->hasMany(TitleHistory::class);
     }
 
 	public function matches()
@@ -49,7 +49,7 @@ class Wrestler extends Model
 	}
 
 	public function status() {
-		return $this->status_id;
+        return $this->getAttribute('status_id');
     }
 
     public function injure($date = null)
@@ -98,11 +98,6 @@ class Wrestler extends Model
     {
         if(! $date) {
             $date = Carbon::now();
-        }
-
-        if ($this->isRetired())
-        {
-            $this->retirements()->update(['ended_at' => Carbon::now()]);
         }
 
         if (! $this->isRetired())
