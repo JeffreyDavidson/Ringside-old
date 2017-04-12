@@ -5,15 +5,13 @@ namespace App;
 use App\Traits\HasManagers;
 use App\Traits\HasStatuses;
 use App\Traits\HasTitles;
-use Carbon\Carbon;
-use App\Exceptions\WrestlerCanNotBeHealedException;
-use App\Exceptions\WrestlerCanNotRetireException;
-use App\Exceptions\WrestlerCanNotBeInjuredException;
+use App\Traits\HasRetirements;
+use App\Traits\HasInjuries;
 use Illuminate\Database\Eloquent\Model;
 
 class Wrestler extends Model
 {
-	use HasStatuses, HasManagers, HasTitles;
+	use HasStatuses, HasManagers, HasTitles, HasRetirements, HasInjuries;
 
     protected $guarded = [];
 
@@ -51,75 +49,5 @@ class Wrestler extends Model
 
 	public function status() {
         return $this->getAttribute('status_id');
-    }
-
-    public function injure($date = null)
-    {
-        if(! $date) {
-            $date = Carbon::now();
-        }
-
-        if (! $this->isActive()) {
-            throw new WrestlerCanNotBeInjuredException;
-        }
-
-        $this->setStatusToInjured();
-
-        $this->injuries()->create(['injured_at' => $date]);
-
-        return $this;
-    }
-
-    public function heal($date = null)
-    {
-        if(! $date) {
-            $date = Carbon::now();
-        }
-
-        if (! $this->isInjured())
-        {
-            throw new WrestlerCanNotBeHealedException;
-        }
-
-        $this->setStatusToActive();
-
-        $this->injuries()->whereNull('healed_at')->first()->healed($date);
-    }
-
-    public function retire($date = null)
-    {
-        if(! $date) {
-            $date = Carbon::now();
-        }
-
-        $this->setStatusToRetired();
-
-        $this->retirements()->create(['retired_at' => $date]);
-
-        return $this;
-    }
-
-    public function unretire($date = null)
-    {
-        if(! $date) {
-            $date = Carbon::now();
-        }
-
-        if (! $this->isRetired())
-        {
-            throw new WrestlerCanNotRetireException;
-        }
-
-        $this->setStatusToActive();
-
-        $this->retirements()->whereNull('ended_at')->first()->unretire($date);
-    }
-
-    public function hasInjuries() {
-        return $this->injuries()->whereNull('healed_at')->count > 0;
-    }
-
-    public function hasRetirements() {
-        return $this->retirements()->whereNull('ended_at')->count > 0;
     }
 }
