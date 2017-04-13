@@ -74,14 +74,11 @@ class ViewARosterMemberBioTest extends TestCase
         $title1 = factory(Title::class)->create(['name' => 'Title 1']);
         $title2 = factory(Title::class)->create(['name' => 'Title 2']);
 
-        $wrestler->winTitle($title1);
-        Carbon::setTestNow(Carbon::parse('+1 day'));
-        $wrestler->loseTitle($title1);
-        $wrestler->winTitle($title1);
-        Carbon::setTestNow(Carbon::parse('+2 day'));
-        $wrestler->loseTitle($title1);
-        $wrestler->winTitle($title2);
-        Carbon::setTestNow();
+        $wrestler->winTitle($title1, Carbon::parse('-3 days'));
+        $wrestler->loseTitle($title1, Carbon::parse('-2 days'));
+        $wrestler->winTitle($title1, Carbon::parse('-2 days'));
+        $wrestler->loseTitle($title1, Carbon::parse('-1 day'));
+        $wrestler->winTitle($title2, Carbon::parse('-1 day'));
 
         $this->visit('wrestlers/'.$wrestler->id);
 
@@ -92,16 +89,15 @@ class ViewARosterMemberBioTest extends TestCase
     /** @test */
     public function view_list_of_matches_on_wrestler_bio()
     {
-        $event = create(Event::class, ['name' => 'My Event']);
-        $match = create(Match::class, ['event_id' => $event->id]);
-        $wrestler1 = create(Wrestler::class, ['name' => 'Wrestler 1']);
+        $event = factory(Event::class)->create(['name' => 'My Event']);
+        $match = factory(Match::class)->create(['event_id' => $event->id]);
+        $wrestler1 = factory(Wrestler::class)->create(['name' => 'Wrestler 1']);
 
         $wrestler1->bio()->save(factory(WrestlerBio::class)->create(['wrestler_id' => $wrestler1->id]));
 
-        $wrestler2 = create(Wrestler::class, ['name' => 'Wrestler 2']);
+        $wrestler2 = factory(Wrestler::class)->create(['name' => 'Wrestler 2']);
 
-        $match->addCompetitor($wrestler1);
-        $match->addCompetitor($wrestler2);
+        $match->addWrestlers([$wrestler1, $wrestler2]);
 
         $this->visit('wrestlers/'.$wrestler1->id);
         $this->see('My Event');
