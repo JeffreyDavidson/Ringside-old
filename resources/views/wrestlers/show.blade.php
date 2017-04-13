@@ -26,8 +26,8 @@
 
     @if($wrestler->titles->count() > 0)
         <p>Titles Held</p>
-        @foreach($wrestler->titles->groupByTitle() as $title)
-            {{ $title[0]->title->name }} {{ '(' . $title->count(). 'x)'}}
+        @foreach($wrestler->titles->groupByTitle() as $titles)
+            {{ "{$titles->first()->title->name} ({$titles->count()}x)" }}
         @endforeach
     @endif
 

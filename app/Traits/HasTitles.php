@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Title;
 use Carbon\Carbon;
 
 trait HasTitles {
@@ -9,8 +10,13 @@ trait HasTitles {
 	abstract public function titles();
 
 	public function hasTitle($title) {
-        $this->load('titles');
-	    return $this->titles()->whereNull('lost_on')->get()->contains($title);
+		if($title instanceof Title) {
+			$title = $title->id;
+		}
+
+	    return $this->titles()->whereNull('lost_on')->get()->map(function($item) {
+	    	return $item->title_id;
+	    })->contains($title);
 	}
 
 	public function winTitle($title, $date = null)
@@ -35,12 +41,12 @@ trait HasTitles {
 		}
 
 		if(! $this->hasTitle($title)) {
-            return $this;
+            return false;
         }
 
-		$this->titles()->whereTitleId($title->id)->whereNull('lost_on')->first()->loseTitle($date);
+		$this->titles()->where('title_id', $title->id)->whereNull('lost_on')->first()->loseTitle($date);
 
-		return $this;
+		return true;
 	}
 
 	public function isChampionOfCurrentTitle() {
