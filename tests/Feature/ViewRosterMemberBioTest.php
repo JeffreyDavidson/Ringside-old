@@ -80,7 +80,10 @@ class ViewARosterMemberBioTest extends TestCase
         $wrestler->loseTitle($title1, Carbon::parse('-1 day'));
         $wrestler->winTitle($title2, Carbon::parse('-1 day'));
 
+        $wrestler->titles->map(function($i) { return $i->title->name; });
+
         $this->visit('wrestlers/'.$wrestler->id);
+//        dd($this->visit('wrestlers/'.$wrestler->id));
 
         $this->see('Title 1 (2x)');
         $this->see('Title 2');
