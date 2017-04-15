@@ -9,9 +9,9 @@ class WrestlersController extends Controller
 {
     public function index()
     {
-        $wrestlers = Wrestler::active()->get();
+        $wrestlers = Wrestler::all();
 
-        return view('wrestlers.active', compact('wrestlers'));
+        return view('wrestlers.index', compact('wrestlers'));
     }
 
     public function create()

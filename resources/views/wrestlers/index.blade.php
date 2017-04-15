@@ -1,12 +1,17 @@
 @extends('layouts.app')
 
 @section('header')
-    <h1 class="page-title">Active Wrestlers</h1>
-    <a class="btn btn-primary pull-right" href="{{ route('wrestlers.create') }}">Create Wrestler</a>
+    <h1 class="page-title">Wrestlers</h1>
 @endsection
 
 @section('content')
-    <div class="panel">
+    <div class="panel panel-bordered panel-primary">
+        <div class="panel-heading clearfix">
+            <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-group"></i>Wrestlers</h3>
+            <div class="panel-actions">
+                <a class="btn btn-default pull-right" href="{{ route('wrestlers.create') }}">Create Wrestler</a>
+            </div>
+        </div>
         <div class="panel-body container-fluid">
             <table id="wrestlersList" class="table table-striped table-bordered" cellspacing="0" width="100%">
                 <thead>

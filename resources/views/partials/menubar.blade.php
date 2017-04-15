@@ -12,51 +12,33 @@
                     </li>
                     <li class="site-menu-category">Administrator</li>
                     <li class="site-menu-item has-sub">
-                        <a href="javascript:void(0)">
+                        <a href="{{ route('wrestlers.index') }}">
                             <i class="site-menu-icon icon fa-group" aria-hidden="true"></i>
-                            <span class="site-menu-title">Roster</span>
-                            <span class="site-menu-arrow"></span>
+                            <span class="site-menu-title">Wrestlers</span>
                         </a>
-                        <ul class="site-menu-sub">
-                            <li class="site-menu-item has-sub">
-                                <a href="javascript:void(0)">
-                                    <span class="site-menu-title">Singles</span>
-                                    <span class="site-menu-arrow"></span>
-                                </a>
-                                <ul class="site-menu-sub">
-                                    <li class="site-menu-item">
-                                        <a class="animsition-link" href="{{ route('wrestlers.active') }}">
-                                            <span class="site-menu-title">Active</span>
-                                        </a>
-                                    </li>
-                                    <li class="site-menu-item">
-                                        <a class="animsition-link" href="{{ route('wrestlers.inactive') }}">
-                                            <span class="site-menu-title">Inactive</span>
-                                        </a>
-                                    </li>
-                                    <li class="site-menu-item">
-                                        <a class="animsition-link" href="{{ route('wrestlers.injured') }}">
-                                            <span class="site-menu-title">Injured</span>
-                                        </a>
-                                    </li>
-                                    <li class="site-menu-item">
-                                        <a class="animsition-link" href="{{ route('wrestlers.suspended') }}">
-                                            <span class="site-menu-title">Suspended</span>
-                                        </a>
-                                    </li>
-                                    <li class="site-menu-item">
-                                        <a class="animsition-link" href="{{ route('wrestlers.retired') }}">
-                                            <span class="site-menu-title">Retired</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
                     </li>
                     <li class="site-menu-item has-sub">
                         <a href="{{ route('events.index') }}">
-                            <i class="site-menu-icon icon fa-group" aria-hidden="true"></i>
+                            <i class="site-menu-icon icon fa-calendar" aria-hidden="true"></i>
                             <span class="site-menu-title">Events</span>
+                        </a>
+                    </li>
+                    <li class="site-menu-item has-sub">
+                        <a href="{{ route('titles.index') }}">
+                            <i class="site-menu-icon icon fa-trophy" aria-hidden="true"></i>
+                            <span class="site-menu-title">Titles</span>
+                        </a>
+                    </li>
+                    <li class="site-menu-item has-sub">
+                        <a href="{{ route('stipulations.index') }}">
+                            <i class="site-menu-icon icon fa-gavel" aria-hidden="true"></i>
+                            <span class="site-menu-title">Stipulations</span>
+                        </a>
+                    </li>
+                    <li class="site-menu-item has-sub">
+                        <a href="{{ route('arenas.index') }}">
+                            <i class="site-menu-icon icon fa-building" aria-hidden="true"></i>
+                            <span class="site-menu-title">Arenas</span>
                         </a>
                     </li>
                 </ul>

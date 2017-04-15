@@ -2,54 +2,53 @@
 
 namespace App\Http\Controllers;
 
-use App\Event;
+use App\Arena;
 use Illuminate\Http\Request;
 
-class EventsController extends Controller
+class ArenasController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of all the arenas.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $events = Event::with('arena')->get();
+        $arenas = Arena::all();
 
-        return view('events.index', ['events' => $events]);
+        return view('arenas.index', ['arenas' => $arenas]);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for adding an arena.
      *
      * @return \Illuminate\Http\Response
      */
     public function create()
     {
-        //
+        return view('arenas.create', ['arena' => new Arena]);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly added arena.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  Event  $event
+     * @param  Arena $arena
      * @return \Illuminate\Http\Response
      */
-    public function show(Event $event)
+    public function show(Arena $arena)
     {
-        return view('events.show', ['event' => $event]);
-
+        return view('arenas.show', ['arena' => $arena]);
     }
 
     /**

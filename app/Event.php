@@ -16,7 +16,8 @@ class Event extends Model
 
     public function matches()
     {
-        return $this->hasMany(Match::class);
+        return $this->hasMany(Match::class)
+                ->with('type', 'referees', 'stipulations', 'wrestlers', 'titles');
     }
 
     public function arena()

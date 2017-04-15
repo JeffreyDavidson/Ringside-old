@@ -38,4 +38,14 @@ class TitleHistory extends Model
     {
         return $this->update(['lost_on' => $date]);
     }
+
+    public function getFormattedWonOnAttribute()
+    {
+        return $this->won_on->format('F j, Y');
+    }
+
+    public function getFormattedLostOnAttribute()
+    {
+        return $this->lost_on ? $this->lost_on->format('F j, Y') : 'Present';
+    }
 }

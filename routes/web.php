@@ -23,3 +23,6 @@ Route::get('wrestlers/suspended', 'SuspendedWrestlersController@index')->name('w
 Route::get('wrestlers/retired', 'RetiredWrestlersController@index')->name('wrestlers.retired');
 Route::resource('wrestlers', 'WrestlersController');
 Route::resource('events', 'EventsController');
+Route::resource('titles', 'TitlesController');
+Route::resource('stipulations', 'StipulationsController');
+Route::resource('arenas', 'ArenasController');

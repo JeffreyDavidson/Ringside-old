@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Event;
+use App\Title;
 use Illuminate\Http\Request;
 
-class EventsController extends Controller
+class TitlesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,9 +14,9 @@ class EventsController extends Controller
      */
     public function index()
     {
-        $events = Event::with('arena')->get();
+        $titles = Title::all();
 
-        return view('events.index', ['events' => $events]);
+        return view('titles.index', ['titles' => $titles]);
     }
 
     /**
@@ -43,13 +43,12 @@ class EventsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  Event  $event
+     * @param  Title $title
      * @return \Illuminate\Http\Response
      */
-    public function show(Event $event)
+    public function show(Title $title)
     {
-        return view('events.show', ['event' => $event]);
-
+        return view('titles.show', ['title' => $title]);
     }
 
     /**
