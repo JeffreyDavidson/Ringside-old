@@ -194,7 +194,7 @@ $factory->define(App\Arena::class, function (Faker\Generator $faker) {
         'address' => $faker->streetAddress,
         'city' => $faker->city,
         'state' => $faker->state,
-        'postcode' => $faker->postcode,
+        'postcode' => substr($faker->postcode, 0, 5)
     ];
 });
 

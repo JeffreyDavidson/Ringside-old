@@ -15,20 +15,11 @@
         <div class="panel-body container-fluid">
             <div class="row row-lg">
                 <div class="col-md-6">
-                    <!-- Example Basic Form -->
-                    <div class="example-wrap">
-                        <div class="example">
-                            <form method="POST" action="{{ route('arenas.index') }}">
-                                @include('arenas.form', compact('arena'))
-                            </form>
-                        </div>
-                    </div>
-                    <!-- End Example Basic Form -->
+                    <form method="POST" action="{{ route('arenas.index') }}">
+                        @include('arenas.form', compact('arena'))
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-@endsection
-
-@section('footer-scripts')
 @endsection

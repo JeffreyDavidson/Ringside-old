@@ -18,7 +18,7 @@ class ViewWrestlersListingTest extends TestCase
     {
         $wrestler = factory(Wrestler::class)->states('active')->create();
 
-        $this->visit('wrestlers/active');
+        $this->visit('wrestlers');
 
         $this->see($wrestler->name);
     }

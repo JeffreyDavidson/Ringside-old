@@ -17,7 +17,7 @@ class ArenaTest extends TestCase
         $arena = factory(Arena::class)->create();
         $event = factory(Event::class)->create(['arena_id' => $arena->id]);
 
-        $this->assertEquals($arena->id, $event->arena_id);
+        $this->assertInstanceOf(Event::class, $arena->events->first());
+        $this->assertEquals($event->id, $arena->events->first()->id);
     }
-
 }

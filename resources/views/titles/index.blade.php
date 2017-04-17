@@ -10,7 +10,7 @@
             <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-trophy"></i>Titles</h3>
             <div class="panel-actions">
                 <div class="dropdown">
-                    <button id="titleFilters" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                    <button id="titleFilters" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true" >
                         Filters
                         <span class="caret"></span>
                     </button>

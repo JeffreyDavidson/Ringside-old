@@ -37,7 +37,23 @@ class ArenasController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'name' => 'required|unique:arenas,name',
+            'address' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'postcode' => 'required|digits:5'
+        ]);
 
+        Arena::create([
+            'name' => request('name'),
+            'address' => request('address'),
+            'city' => request('city'),
+            'state' => request('state'),
+            'postcode' => request('postcode'),
+        ]);
+
+        return back();
     }
 
     /**
@@ -54,12 +70,12 @@ class ArenasController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  Arena $arena
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Arena $arena)
     {
-        //
+        return view('arenas.edit', ['arena' => $arena]);
     }
 
     /**

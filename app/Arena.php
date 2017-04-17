@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Arena extends Model
 {
-    public function event()
+    protected $guarded = [];
+
+    public function events()
     {
         return $this->hasMany(Event::class);
     }
