@@ -16,7 +16,11 @@ class ArenasController extends Controller
     {
         $arenas = Arena::all();
 
-        return view('arenas.index', ['arenas' => $arenas]);
+        if ($this->wantsJson() || $this->ajax()) {
+            return response()->json($arenas);
+        }
+
+        return response()->view('arenas.index', ['arenas' => $arenas]);
     }
 
     /**

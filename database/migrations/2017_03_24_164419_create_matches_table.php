@@ -20,7 +20,6 @@ class CreateMatchesTable extends Migration
             $table->unsignedInteger('match_type_id')->index();
             $table->unsignedInteger('match_decision_id')->index()->nullable();
             $table->text('preview');
-            $table->boolean('title_match');
             $table->timestamps();
 
             $table->unique(['event_id', 'match_number']);

@@ -61,11 +61,11 @@ class CreateArenasTest extends TestCase
     }
 
     /** @test */
-    public function an_arena_requires_a_postcode_of_only_5_digits()
+    public function an_arena_requires_a_postcode_of_exactly_5_digits()
     {
-        $arena = $this->createArena($arena = ['postcode' => 44554]);
-        dd($arena);
-            $this->assertEquals(5, strlen((string)$arena['postcode']));
+        $this->createArena(['postcode' => 445544]);
+        $this->createArena(['postcode' => 4455])
+            ->assertSessionHasErrors('postcode');
     }
 
     /** @test */

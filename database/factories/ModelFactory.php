@@ -134,7 +134,6 @@ $factory->define(App\Match::class, function (Faker\Generator $faker) {
         },
         'match_number' => $faker->randomNumber(),
         'preview' => $faker->paragraphs(3, true),
-		'title_match' => $faker->boolean(5)
     ];
 });
 

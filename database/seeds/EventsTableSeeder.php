@@ -16,7 +16,7 @@ class EventsTableSeeder extends Seeder
      */
     public function run()
     {
-        for($i = 1; $i <= 50; $i++) {
+        for($i = 1; $i <= 1000; $i++) {
             $event = factory(Event::class)->create(['name' => 'Event '.$i, 'slug' => 'event'.$i, 'arena_id' => \App\Arena::inRandomOrder()->first()->id]);
 
             for($j = 1; $j <= 8; $j++) {
