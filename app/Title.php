@@ -49,4 +49,8 @@ class Title extends Model
     {
         return 'most title reigns';
     }
+
+	public function getCurrentChampion() {
+		return $this->champions()->whereNull('lost_on')->first();
+    }
 }
