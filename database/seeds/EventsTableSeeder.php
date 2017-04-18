@@ -25,23 +25,28 @@ class EventsTableSeeder extends Seeder
                     'match_type_id' => 1,
                 ]));
 
-                $match->addWrestlers($wrestlers = Wrestler::get()->random(2));
+				if($this->chance(5)) {
+					$match->addTitles($title = Title::introducedBefore($event->date)->get()->random());
+					if($this->chance(1)) {
+						$match->addTitles($title2 = Title::introducedBefore($event->date)->get()->except($title->id)->random());
+					}
+				}
 
-                if($this->chance(100)) {
-                    $match->addReferees($referee = Referee::get()->random());
-                    if ($this->chance(1)) {
-                        $match->addReferees(Referee::get()->except($referee->id)->random());
-                    }
-                }
+				if(isset($title)) {
+					$match->addWrestlers($wrestler = ($title->getCurrentChampion() ?: Wrestler::inRandomOrder()->first()));
+					if(isset($title2)) {
+						$match->addWrestlers($title2->getCurrentChampion() ?: Wrestler::get()->except($wrestler->id)->random());
+					} else {
+						$match->addWrestlers(Wrestler::get()->except($wrestler->id)->random());
+					}
+				} else {
+					$match->addWrestlers(Wrestler::get()->random(2));
+				}
 
-                if($this->chance(5)) {
-                    $match->addTitles($title = Title::introducedBefore($event->date)->get()->random());
-                    if($this->chance(1)) {
-                        $match->addTitles(Title::introducedBefore($event->date)->get()->except($title->id)->random());
-                    }
-
-
-                }
+				$match->addReferees($referee = Referee::get()->random());
+				if ($this->chance(1)) {
+					$match->addReferees(Referee::get()->except($referee->id)->random());
+				}
 
                 if($this->chance(5)) {
                     $match->addStipulations($stipulation = Stipulation::get()->random());
