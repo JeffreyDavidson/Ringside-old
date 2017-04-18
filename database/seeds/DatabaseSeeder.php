@@ -51,7 +51,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ArenasTableSeeder::class);
         $this->call(EventsTableSeeder::class);
 //        $this->call(ManagersTableSeeder::class);
-        $this->call(TitleHistoryTableSeeder::class);
+//        $this->call(TitleHistoryTableSeeder::class);
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }

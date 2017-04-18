@@ -90,7 +90,7 @@ class Match extends Model
         $this->referees()->saveMany($referees->all());
     }
 
-	public function isTitleMatch() {
-		return $this->title_match;
-    }
+//	public function isTitleMatch() {
+//		return $this->title_match;
+//    }
 }

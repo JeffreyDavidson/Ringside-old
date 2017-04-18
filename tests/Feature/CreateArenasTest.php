@@ -61,23 +61,24 @@ class CreateArenasTest extends TestCase
     }
 
     /** @test */
-    public function an_arena_requires_a_postcode_of_only_6_digits()
+    public function an_arena_requires_a_postcode_of_only_5_digits()
     {
-        $this->createArena(['postcode' => 445544])
-            ->assertSessionHasErrors('postcode');
+        $arena = $this->createArena($arena = ['postcode' => 44554]);
+        dd($arena);
+            $this->assertEquals(5, strlen((string)$arena['postcode']));
     }
 
     /** @test */
     public function can_see_created_arena_after_form_submission()
     {
-        $arena = $this->createArena();
+        $this->createArena(['name' => 'Amway Center', 'address' => '400 W Church St', 'city' => 'Orlando', 'state' => 'Florida', 'postcode' => 32801]);
 
         $this->get(route('arenas.index'))
-            ->see($arena->name)
-            ->see($arena->address)
-            ->see($arena->city)
-            ->see($arena->state)
-            ->see($arena->postcode);
+            ->see('Amway Center')
+            ->see('400 W Church St')
+            ->see('Orlando')
+            ->see('Florida')
+            ->see(32801);
     }
 
     public function createArena($overrides = [])

@@ -16,53 +16,53 @@ class ViewWrestlersListingTest extends TestCase
     /** @test */
     public function view_listing_of_active_wrestlers()
     {
-        $wrestler = factory(Wrestler::class)->states('active')->create();
+        factory(Wrestler::class)->states('active')->create(['name' => 'Wrestler 1']);
 
         $this->visit('wrestlers');
 
-        $this->see($wrestler->name);
+        $this->see('Wrestler 1');
     }
 
     /** @test */
     public function view_listing_of_inactive_wrestlers()
     {
-        $wrestler = factory(Wrestler::class)->states('inactive')->create();
+        factory(Wrestler::class)->states('inactive')->create(['name' => 'Wrestler 1']);
 
         $this->visit('wrestlers/inactive');
 
-        $this->see($wrestler->name);
+        $this->see('Wrestler 1');
     }
 
     /** @test */
     public function view_listing_of_injured_wrestlers()
     {
-        $wrestler = factory(Wrestler::class)->states('active')->create();
+        $wrestler = factory(Wrestler::class)->states('active')->create(['name' => 'Wrestler 1']);
 
         $wrestler->injure();
 
         $this->visit('wrestlers/injured');
 
-        $this->see($wrestler->name);
+        $this->see('Wrestler 1');
     }
 
     /** @test */
     public function view_listing_of_suspended_wrestlers()
     {
-        $wrestler = factory(Wrestler::class)->states('suspended')->create();
+        factory(Wrestler::class)->states('suspended')->create(['name' => 'Wrestler 1']);
 
         $this->visit('wrestlers/suspended');
 
-        $this->see($wrestler->name);
+        $this->see('Wrestler 1');
     }
 
     /** @test */
     public function view_listing_of_retired_wrestlers()
     {
-        $wrestler = factory(Wrestler::class)->states('retired')->create();
+        factory(Wrestler::class)->states('retired')->create(['name' => 'Wrestler 1']);
 
         $this->visit('wrestlers/retired');
 
-        $this->see($wrestler->name);
+        $this->see('Wrestler 1');
     }
 
 }
