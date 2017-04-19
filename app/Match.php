@@ -90,7 +90,13 @@ class Match extends Model
         $this->referees()->saveMany($referees->all());
     }
 
-	public function isTitleMatch() {
+	public function isTitleMatch()
+    {
         return $this->titles()->count() > 0;
+    }
+
+    public function winner($wrestler)
+    {
+        return $this->update(['winner_id' => $wrestler->id]);
     }
 }
