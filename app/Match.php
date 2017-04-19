@@ -97,6 +97,17 @@ class Match extends Model
 
     public function winner($wrestler)
     {
-        return $this->update(['winner_id' => $wrestler->id]);
+        $this->update(['winner_id' => $wrestler->id]);
+
+        if ($this->isTitleMatch())
+        {
+            $this->titles()->each(function ($title) use ($wrestler) {
+                if ($wrestler->id != $title->getCurrentChampion()) {
+                    $wrestler->winTitle($title);
+                    $loser = $title->getCurrentChampion();
+                    $loser->wrestler->loseTitle($title);
+                }
+            });
+        }
     }
 }

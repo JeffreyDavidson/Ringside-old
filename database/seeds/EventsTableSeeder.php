@@ -16,7 +16,7 @@ class EventsTableSeeder extends Seeder
      */
     public function run()
     {
-        for($i = 1; $i <= 20; $i++) {
+        for($i = 1; $i <= 1000; $i++) {
             $event = factory(Event::class)->create(['name' => 'Event '.$i, 'slug' => 'event'.$i, 'arena_id' => \App\Arena::inRandomOrder()->first()->id]);
 
             for($j = 1; $j <= 8; $j++) {
@@ -33,18 +33,17 @@ class EventsTableSeeder extends Seeder
 				}
 
 				if(isset($title)) {
-					$match->addWrestlers($wrestler1 = ($title->getCurrentChampion() ?: Wrestler::inRandomOrder()->first()));
+					$match->addWrestlers($wrestler = ($title->getCurrentChampion() ?: Wrestler::inRandomOrder()->first()));
 					if(isset($title2)) {
-						$match->addWrestlers($wrestler2 = $title2->getCurrentChampion() ?: Wrestler::get()->except($wrestler1->id)->random());
+						$match->addWrestlers($title2->getCurrentChampion() ?: Wrestler::get()->except($wrestler->id)->random());
 					} else {
-						$match->addWrestlers($wrestler2 = Wrestler::get()->except($wrestler1->id)->random());
+						$match->addWrestlers(Wrestler::get()->except($wrestler->id)->random());
 					}
 					$wrestlers = $match->wrestlers()->get();
-					$match->winner($wrestler = $wrestlers->random());
 				} else {
 					$match->addWrestlers($wrestlers = Wrestler::get()->random(2));
-					$match->winner($wrestlers->random());
 				}
+                $match->winner($wrestlers->random());
 
 				$match->addReferees($referee = Referee::get()->random());
 				if ($this->chance(1)) {
