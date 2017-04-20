@@ -23,7 +23,9 @@ class Title extends Model
 
     public function scopeValid($query, $date)
     {
-        return $query->where('introduced_at', '<=', $date)->where('retired_at', '>', $date);
+        return $query->where('introduced_at', '<=', $date->toDateString())->where(function($query) use ($date) {
+			$query->whereNull('retired_at')->orWhere('retired_at', '>', $date->toDateString());
+		});
     }
 
     public function setNewChampion($wrestler, $date = null)
