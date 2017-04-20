@@ -33,16 +33,19 @@ class EventsTableSeeder extends Seeder
 				}
 
 				if(isset($title)) {
-					$match->addWrestlers($wrestler = ($title->getCurrentChampion() ?: Wrestler::inRandomOrder()->first()));
+					$match->addWrestler($wrestler = ($title->getCurrentChampion() ?: Wrestler::inRandomOrder()->first()));
 					if(isset($title2)) {
-						$match->addWrestlers($title2->getCurrentChampion() ?: Wrestler::get()->except($wrestler->id)->random());
+						$match->addWrestler($title2->getCurrentChampion() ?: Wrestler::get()->except($wrestler->id)->random());
 					} else {
-						$match->addWrestlers(Wrestler::get()->except($wrestler->id)->random());
+						$match->addWrestler(Wrestler::get()->except($wrestler->id)->random());
 					}
 					$wrestlers = $match->wrestlers()->get();
 				} else {
-					$match->addWrestlers($wrestlers = Wrestler::get()->random(2));
+					$wrestlers = Wrestler::get()->random(2)->each(function($item) use ($match) {
+						$match->addWrestler($item);
+					});
 				}
+
                 $match->setWinner($wrestlers->random());
 
 				$match->addReferees($referee = Referee::get()->random());
