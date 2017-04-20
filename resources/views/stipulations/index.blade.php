@@ -17,6 +17,7 @@
                 <thead>
                     <th>ID</th>
                     <th>Name</th>
+                    <th>Slug</th>
                     <th>Actions</th>
                 </thead>
                 <tbody>
@@ -24,6 +25,7 @@
                     <tr>
                         <td>{{ $stipulation->id }}</td>
                         <td>{{ $stipulation->name }}</td>
+                        <td>{{ $stipulation->slug }}</td>
                         <td>
                             <a class="btn btn-sm btn-icon btn-flat btn-default" href="{{ route('stipulations.edit', ['id' => $stipulation->id]) }}" data-toggle="tooltip" data-original-title="Edit">
                                 <i class="icon wb-wrench" aria-hidden="true"></i>

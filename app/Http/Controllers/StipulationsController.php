@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class StipulationsController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of all the stipulations.
      *
      * @return \Illuminate\Http\Response
      */
@@ -16,72 +16,110 @@ class StipulationsController extends Controller
     {
         $stipulations = Stipulation::all();
 
-        return view('stipulations.index', ['stipulations' => $stipulations]);
+        if ($this->wantsJson() || $this->ajax()) {
+            return response()->json($stipulations);
+        }
+
+        return response()->view('stipulations.index', ['stipulations' => $stipulations]);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for adding a new stipulation.
      *
      * @return \Illuminate\Http\Response
      */
     public function create()
     {
-        //
+        return response()->view('stipulations.create', ['stipulation' => new Stipulation]);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly added stipulation.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|unique:stipulations,name',
+            'slug' => 'required|unique:stipulations,slug'
+        ]);
+
+        $stipulation = Stipulation::create([
+            'name' => request('name'),
+            'slug' => request('slug')
+        ]);
+
+        if ($this->wantsJson() || $this->ajax()) {
+            return response()->json($stipulation);
+        }
+
+        return redirect(route('stipulations.index'));
     }
 
     /**
-     * Display the specified resource.
+     * Display the stipulation.
      *
      * @param  Stipulation $stipulation
      * @return \Illuminate\Http\Response
      */
     public function show(Stipulation $stipulation)
     {
-        return view('stipulations.show', ['stipulation' => $stipulation]);
+        if ($this->wantsJson() || $this->ajax()) {
+            return response()->json($stipulation);
+        }
+
+        return response()->view('stipulations.show', ['stipulation' => $stipulation]);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing a stipulation.
      *
-     * @param  int  $id
+     * @param  Stipulation  $stipulation
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Stipulation $stipulation)
     {
-        //
+        return response()->view('stipulations.edit', ['stipulation' => $stipulation]);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified stipulation.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  Stipulation $stipulation
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Stipulation $stipulation)
     {
-        //
+        dd($stipulation);
+        $this->validate($request, [
+            'name' => 'required|unique:stipulations,name,except,id',
+            'slug' => 'required|unique:stipulations,slug,except,id'
+        ]);
+
+        $stipulation->update([
+            'name' => request('name'),
+            'slug' => request('slug')
+        ]);
+
+        if ($this->wantsJson() || $this->ajax()) {
+            return response()->json($stipulation);
+        }
+
+        return redirect(route('stipulations.index'));
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified stipulation.
      *
-     * @param  int  $id
+     * @param  Stipulation $stipulation
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Stipulation $stipulation)
     {
-        //
+        $stipulation->delete();
+        return redirect(route('stipulations.index'));
     }
 }

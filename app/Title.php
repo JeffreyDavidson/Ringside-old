@@ -21,9 +21,9 @@ class Title extends Model
         return $this->belongsToMany(Match::class)->with('event');
     }
 
-    public function scopeIntroducedBefore($query, $date)
+    public function scopeValid($query, $date)
     {
-        return $query->where('introduced_at', '<=', $date);
+        return $query->where('introduced_at', '<=', $date)->where('retired_at', '>', $date);
     }
 
     public function setNewChampion($wrestler, $date = null)

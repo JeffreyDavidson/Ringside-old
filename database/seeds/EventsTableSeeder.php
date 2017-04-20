@@ -18,7 +18,7 @@ class EventsTableSeeder extends Seeder
     public function run()
     {
     	$lastDate = Carbon::parse('January 2, 1970');
-        for($i = 1; $i <= 100; $i++) {
+        for($i = 1; $i <= 500; $i++) {
             $event = factory(Event::class)->create([
             	'name' => 'Event '.$i,
 				'slug' => 'event'.$i,
@@ -33,26 +33,25 @@ class EventsTableSeeder extends Seeder
                 ]));
 
 				if($this->chance(5)) {
-					$match->addTitles($title = Title::introducedBefore($event->date)->get()->random());
+					$match->addTitles($title = Title::valid($event->date)->get()->random());
 					if($this->chance(1)) {
-						$match->addTitles($title2 = Title::introducedBefore($event->date)->get()->except($title->id)->random());
+						$match->addTitles($title2 = Title::valid($event->date)->get()->except($title->id)->random());
 					}
 				}
 
-				if(isset($title)) {
-					$match->addWrestler($wrestler = ($title->getCurrentChampion() ?: Wrestler::inRandomOrder()->first()));
-					if(isset($title2)) {
-						$match->addWrestler($title2->getCurrentChampion() ?: Wrestler::get()->except($wrestler->id)->random());
-					} else {
-						$match->addWrestler(Wrestler::get()->except($wrestler->id)->random());
-					}
-					$wrestlers = $match->wrestlers()->get();
-				} else {
-					$wrestlers = Wrestler::get()->random(2)->each(function($item) use ($match) {
-						$match->addWrestler($item);
-					});
-				}
+                if(isset($title)) {
+                    $match->addWrestler($wrestler = ($title->getCurrentChampion() ?: Wrestler::inRandomOrder()->first()));
+                    if(isset($title2)) {
+                        $match->addWrestler($title2->getCurrentChampion() ?: Wrestler::get()->except($wrestler->id)->random());
+                    } else {
+                        $match->addWrestler(Wrestler::get()->except($wrestler->id)->random());
+                    }
+                } else {
+                    $match->addWrestler(Wrestler::get()->random());
+                    $match->addWrestler(Wrestler::get()->except($match->wrestlers->first()->id)->random());
+                }
 
+                $wrestlers = $match->wrestlers()->get();
                 $match->setWinner($wrestlers->random());
 
 				$match->addReferees($referee = Referee::get()->random());
