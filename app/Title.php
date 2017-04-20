@@ -26,13 +26,17 @@ class Title extends Model
         return $query->where('introduced_at', '<=', $date);
     }
 
-    public function setNewChampion($wrestler)
-    {
-    	if($formerChampion = $this->getCurrentChampion()) {
-			$formerChampion->loseTitle($this);
+    public function setNewChampion($wrestler, $date = null)
+	{
+		if(! $date) {
+			$date = Carbon::now();
 		}
 
-		$wrestler->winTitle($this);
+    	if($formerChampion = $this->getCurrentChampion()) {
+			$formerChampion->loseTitle($this, $date);
+		}
+
+		$wrestler->winTitle($this, $date);
     }
 
     public function getFormattedIntroducedAtAttribute()

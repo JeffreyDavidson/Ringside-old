@@ -100,7 +100,7 @@ class Match extends Model
         {
             $this->titles->each(function ($title) use ($winner) {
                 if (!$winner->hasTitle($title)) {
-                    $title->setNewChampion($winner);
+                    $title->setNewChampion($winner, $this->event->date);
                 }
             });
         }
