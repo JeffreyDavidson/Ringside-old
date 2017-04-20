@@ -13,7 +13,7 @@ class Title extends Model
 
     public function champions()
     {
-        return $this->hasMany(TitleHistory::class);
+        return $this->hasMany(TitleHistory::class)->orderBy('won_on');
     }
 
     public function matches()

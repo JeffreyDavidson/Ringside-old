@@ -10,11 +10,11 @@
                 <th>Event</th>
             </thead>
             <tbody>
-                @foreach($stipulation->matches as $match)
-                    <tr>
-                        <td>{{ $match->event->name }}</td>
-                    </tr>
-                @endforeach
+            @foreach($stipulation->matches as $match)
+                <tr>
+                    <td>{{ $match->event->name }}</td>
+                </tr>
+            @endforeach
             </tbody>
         </table>
     @endif

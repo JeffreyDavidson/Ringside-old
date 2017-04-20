@@ -12,16 +12,6 @@
     @if ($errors->has('slug')) <small class="help-block">{{ $errors->first('slug') }}</small> @endif
 </div>
 
-@if (count($errors) > 0)
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-
 <div class="form-group">
     <button type="submit" class="btn btn-primary">
         {{ $submitButtonText ?? 'Create Stipulation' }}

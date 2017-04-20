@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Stipulation;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 
 class StipulationsController extends Controller
@@ -24,7 +25,7 @@ class StipulationsController extends Controller
     }
 
     /**
-     * Show the form for adding a new stipulation.
+     * Show the form for creating a new stipulation.
      *
      * @return \Illuminate\Http\Response
      */
@@ -34,7 +35,7 @@ class StipulationsController extends Controller
     }
 
     /**
-     * Store a newly added stipulation.
+     * Store a newly created stipulation.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -59,7 +60,7 @@ class StipulationsController extends Controller
     }
 
     /**
-     * Display the stipulation.
+     * Display the specified stipulation.
      *
      * @param  Stipulation $stipulation
      * @return \Illuminate\Http\Response
@@ -93,10 +94,9 @@ class StipulationsController extends Controller
      */
     public function update(Request $request, Stipulation $stipulation)
     {
-        dd($stipulation);
         $this->validate($request, [
-            'name' => 'required|unique:stipulations,name,except,id',
-            'slug' => 'required|unique:stipulations,slug,except,id'
+            'name' => ['required', Rule::unique('stipulations' ,'name')->ignore($stipulation->id)],
+            'slug' => ['required', Rule::unique('stipulations' ,'slug')->ignore($stipulation->id)]
         ]);
 
         $stipulation->update([
@@ -112,7 +112,7 @@ class StipulationsController extends Controller
     }
 
     /**
-     * Remove the specified stipulation.
+     * Delete the specified stipulation.
      *
      * @param  Stipulation $stipulation
      * @return \Illuminate\Http\Response
@@ -120,6 +120,7 @@ class StipulationsController extends Controller
     public function destroy(Stipulation $stipulation)
     {
         $stipulation->delete();
+
         return redirect(route('stipulations.index'));
     }
 }

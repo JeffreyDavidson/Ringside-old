@@ -9,13 +9,14 @@
         <div class="panel-heading clearfix">
             <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-gavel"></i>Edit Stipulation Form</h3>
             <div class="panel-actions">
-                <a class="btn btn-default pull-right" href="{{ route('stipulations.index') }}">Back to Stipiulations</a>
+                <a class="btn btn-default pull-right" href="{{ route('stipulations.index') }}">Back to Stipulations</a>
             </div>
         </div>
         <div class="panel-body container-fluid">
             <div class="row row-lg">
                 <div class="col-md-6">
-                    <form method="POST" action="{{ route('stipulations.index') }}">
+                    <form method="POST" action="{{ route('stipulations.update', $stipulation->id) }}">
+                        {{ method_field('PATCH') }}
                         @include('stipulations.form', ['submitButtonText' => 'Edit Stipulation'])
                     </form>
                 </div>

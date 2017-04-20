@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class EventsController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of all events.
      *
      * @return \Illuminate\Http\Response
      */
@@ -16,17 +16,21 @@ class EventsController extends Controller
     {
         $events = Event::with('arena')->get();
 
-        return view('events.index', ['events' => $events]);
+        if ($this->wantsJson() || $this->ajax()) {
+            return response()->json($events);
+        }
+
+        return response()->view('events.index', ['events' => $events]);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating an event.
      *
      * @return \Illuminate\Http\Response
      */
     public function create()
     {
-        //
+        return view('events.create', ['event' => new Event]);
     }
 
     /**

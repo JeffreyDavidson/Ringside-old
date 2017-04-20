@@ -21,6 +21,7 @@ class CreateArenasTable extends Migration
             $table->string('state');
             $table->string('postcode');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

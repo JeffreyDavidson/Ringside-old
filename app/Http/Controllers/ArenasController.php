@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Arena;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 
 class ArenasController extends Controller
@@ -24,17 +25,17 @@ class ArenasController extends Controller
     }
 
     /**
-     * Show the form for adding an arena.
+     * Show the form for creating a new arena.
      *
      * @return \Illuminate\Http\Response
      */
     public function create()
     {
-        return view('arenas.create', ['arena' => new Arena]);
+        return response()->view('arenas.create', ['arena' => new Arena]);
     }
 
     /**
-     * Store a newly added arena.
+     * Store a newly created arena.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -49,7 +50,7 @@ class ArenasController extends Controller
             'postcode' => 'required|digits:5'
         ]);
 
-        Arena::create([
+        $arena = Arena::create([
             'name' => request('name'),
             'address' => request('address'),
             'city' => request('city'),
@@ -57,51 +58,81 @@ class ArenasController extends Controller
             'postcode' => request('postcode'),
         ]);
 
-        return back();
+        if ($this->wantsJson() || $this->ajax()) {
+            return response()->json($arena);
+        }
+
+        return redirect(route('arenas.index'));
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified arena.
      *
      * @param  Arena $arena
      * @return \Illuminate\Http\Response
      */
     public function show(Arena $arena)
     {
-        return view('arenas.show', ['arena' => $arena]);
+        if ($this->wantsJson() || $this->ajax()) {
+            return response()->json($arena);
+        }
+
+        return response()->view('arenas.show', ['arena' => $arena]);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing an arena.
      *
      * @param  Arena $arena
      * @return \Illuminate\Http\Response
      */
     public function edit(Arena $arena)
     {
-        return view('arenas.edit', ['arena' => $arena]);
+        return response()->view('arenas.edit', ['arena' => $arena]);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified arena.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  Arena $arena
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Arena $arena)
     {
-        //
+        $this->validate($request, [
+            'name' => ['required', Rule::unique('stipulations' ,'name')->ignore($arena->id)],
+            'address' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'postcode' => 'required|digits:5'
+        ]);
+
+        $arena->update([
+            'name' => request('name'),
+            'address' => request('address'),
+            'city' => request('city'),
+            'state' => request('state'),
+            'postcode' => request('postcode')
+        ]);
+
+        if ($this->wantsJson() || $this->ajax()) {
+            return response()->json($arena);
+        }
+
+        return redirect(route('arenas.index'));
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete the specified arena.
      *
-     * @param  int  $id
+     * @param  Arena $arena
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Arena $arena)
     {
-        //
+        $arena->delete();
+
+        return redirect(route('arenas.index'));
     }
 }

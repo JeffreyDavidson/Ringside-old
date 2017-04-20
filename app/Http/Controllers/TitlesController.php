@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class TitlesController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of all the titles.
      *
      * @return \Illuminate\Http\Response
      */
@@ -16,72 +16,98 @@ class TitlesController extends Controller
     {
         $titles = Title::all();
 
-        return view('titles.index', ['titles' => $titles]);
+        if ($this->wantsJson() || $this->ajax()) {
+            return response()->json($titles);
+        }
+
+        return response()->view('titles.index', ['titles' => $titles]);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new title.
      *
      * @return \Illuminate\Http\Response
      */
     public function create()
     {
-        //
+        return response()->view('titles.create', ['title' => new Title]);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created title.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|unique:titles,name',
+            'slug' => 'required|unique:titles.slug',
+            'introduced_at' => 'required|date'
+        ]);
+
+        $title = Title::create([
+            'name' => request('name'),
+            'slug' => request('slug'),
+            'introduced_at' => request('introduced_at')
+        ]);
+
+        if ($this->wantsJson() || $this->ajax()) {
+            return response()->json($title);
+        }
+
+        return redirect(route('titles.index'));
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified title.
      *
      * @param  Title $title
      * @return \Illuminate\Http\Response
      */
     public function show(Title $title)
     {
+        if ($this->wantsJson() || $this->ajax()) {
+            return response()->json($title);
+        }
+
         return view('titles.show', ['title' => $title]);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing a title.
      *
-     * @param  int  $id
+     * @param  Title $title
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Title $title)
     {
-        //
+        return response()->view('titles.edit', ['arena' => $title]);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified title.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  Title $title
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Title $title)
     {
         //
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete the specified title.
      *
-     * @param  int  $id
+     * @param  Title $title
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Title $title)
     {
-        //
+        $titlee->delete();
+
+        return redirect(route('titles.index'));
     }
 }

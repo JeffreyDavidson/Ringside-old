@@ -19,7 +19,7 @@ class EventsTableSeeder extends Seeder
     public function run()
     {
     	$lastDate = Carbon::parse('January 2, 1970');
-        for($i = 1; $i <= 500; $i++) {
+        for($i = 1; $i <= 1000; $i++) {
             $event = factory(Event::class)->create([
             	'name' => 'Event '.$i,
 				'slug' => 'event'.$i,
@@ -91,7 +91,7 @@ class EventsTableSeeder extends Seeder
 	public function getEventDate(int $min, int $max) {
     	$spread = $max - $min;
 
-		$result = mt_rand($min, $max - ($spread * (90 / 100)));
+		$result = mt_rand($min, $max - ($spread * (450 / 500)));
 
 		return $result;
     }
