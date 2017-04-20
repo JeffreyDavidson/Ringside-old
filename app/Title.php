@@ -29,7 +29,7 @@ class Title extends Model
     public function setNewChampion($wrestler)
     {
     	if($formerChampion = $this->getCurrentChampion()) {
-			$formerChampion->wrestler->loseTitle($this);
+			$formerChampion->loseTitle($this);
 		}
 
 		$wrestler->winTitle($this);
@@ -61,7 +61,6 @@ class Title extends Model
     }
 
 	public function getCurrentChampion() {
-    	Log::info($this->champions()->whereNull('lost_on')->first());
-		return $this->champions()->whereNull('lost_on')->first();
+		return $this->champions()->whereNull('lost_on')->first() ? $this->champions()->whereNull('lost_on')->first()->wrestler : null;
     }
 }
