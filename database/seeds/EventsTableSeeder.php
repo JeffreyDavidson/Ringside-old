@@ -16,7 +16,7 @@ class EventsTableSeeder extends Seeder
      */
     public function run()
     {
-        for($i = 1; $i <= 1000; $i++) {
+        for($i = 1; $i <= 100; $i++) {
             $event = factory(Event::class)->create(['name' => 'Event '.$i, 'slug' => 'event'.$i, 'arena_id' => \App\Arena::inRandomOrder()->first()->id]);
 
             for($j = 1; $j <= 8; $j++) {
@@ -43,7 +43,7 @@ class EventsTableSeeder extends Seeder
 				} else {
 					$match->addWrestlers($wrestlers = Wrestler::get()->random(2));
 				}
-                $match->winner($wrestlers->random());
+                $match->setWinner($wrestlers->random());
 
 				$match->addReferees($referee = Referee::get()->random());
 				if ($this->chance(1)) {

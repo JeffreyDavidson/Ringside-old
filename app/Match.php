@@ -46,14 +46,6 @@ class Match extends Model
 			$wrestlers = collect($wrestlers);
 		}
 
-		if($this->isTitleMatch()) {
-			$wrestlers->each(function($wrestler) {
-				if($wrestler->isChampionOfCurrentTitle()) {
-					$this->addTitles($wrestler->currentTitles());
-				}
-			});
-		}
-
 		$this->wrestlers()->saveMany($wrestlers->all());
 	}
 
@@ -95,17 +87,14 @@ class Match extends Model
         return $this->titles()->count() > 0;
     }
 
-    public function winner($wrestler)
+    public function setWinner($winner)
     {
-        $this->update(['winner_id' => $wrestler->id]);
-
+        $this->update(['winner_id' => $winner->id, 'loser_id' => $this->wrestlers->except($winner->id)->first()->id]);
         if ($this->isTitleMatch())
         {
-            $this->titles()->each(function ($title) use ($wrestler) {
-                if ($wrestler->id != $title->getCurrentChampion()) {
-                    $wrestler->winTitle($title);
-                    $loser = $title->getCurrentChampion();
-                    $loser->wrestler->loseTitle($title);
+            $this->titles()->each(function ($title) use ($winner) {
+                if (!$winner->hasTitle($title)) {
+                    $title->setNewChampion($winner);
                 }
             });
         }

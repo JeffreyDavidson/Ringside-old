@@ -48,10 +48,4 @@ trait HasTitles {
 
 		return true;
 	}
-
-	public function isChampionOfCurrentTitle() {
-		//Do something
-
-		return false;
-	}
 }

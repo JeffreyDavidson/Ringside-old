@@ -25,6 +25,13 @@ class Title extends Model
         return $query->where('introduced_at', '<=', $date);
     }
 
+    public function setNewChampion($wrestler)
+    {
+        $wrestler->winTitle($this);
+        $formerChampion = $this->getCurrentChampion();
+        $formerChampion->wrestler->loseTitle($this);
+    }
+
     public function getFormattedIntroducedAtAttribute()
     {
         return $this->introduced_at->format('F j, Y');
