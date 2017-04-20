@@ -7,6 +7,7 @@ use App\Referee;
 use App\Wrestler;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Log;
 
 class EventsTableSeeder extends Seeder
 {
@@ -35,23 +36,32 @@ class EventsTableSeeder extends Seeder
 				if($this->chance(5)) {
 					$match->addTitles($title = Title::valid($event->date)->get()->random());
 					if($this->chance(1)) {
-						$match->addTitles($title2 = Title::valid($event->date)->get()->except($title->id)->random());
+						$title2 = Title::valid($event->date)->get()->except($title->id);
+						if($title->getCurrentChampion()) {
+							$excludes = $title->getCurrentChampion()->titles()->whereNull('lost_on')->get()->map(function($item) {
+								return $item->id;
+							});
+							$title2->except($excludes->count() == 1 ? $excludes->first() : $excludes);
+						}
+
+						$match->addTitles($title2 = $title2->random());
 					}
 				}
 
-                if(isset($title)) {
-                    $match->addWrestler($wrestler = ($title->getCurrentChampion() ?: Wrestler::inRandomOrder()->first()));
-                    if(isset($title2)) {
-                        $match->addWrestler($title2->getCurrentChampion() ?: Wrestler::get()->except($wrestler->id)->random());
-                    } else {
-                        $match->addWrestler(Wrestler::get()->except($wrestler->id)->random());
-                    }
-                } else {
-                    $match->addWrestler(Wrestler::get()->random());
-                    $match->addWrestler(Wrestler::get()->except($match->wrestlers->first()->id)->random());
-                }
+				if(isset($title)) {
+					$match->addWrestler($wrestler = ($title->getCurrentChampion() ?: Wrestler::inRandomOrder()->first()));
+					if(isset($title2)) {
+						$match->addWrestler($title2->getCurrentChampion() ?: Wrestler::get()->except($wrestler->id)->random());
+					} else {
+						$match->addWrestler(Wrestler::get()->except($wrestler->id)->random());
+					}
+				} else {
+					$match->addWrestler(Wrestler::get()->random());
+					$match->addWrestler(Wrestler::get()->except($match->wrestlers->first()->id)->random());
+				}
 
-                $wrestlers = $match->wrestlers()->get();
+				$match->load('wrestlers');
+				$wrestlers = $match->wrestlers;
                 $match->setWinner($wrestlers->random());
 
 				$match->addReferees($referee = Referee::get()->random());
@@ -69,6 +79,10 @@ class EventsTableSeeder extends Seeder
             }
         }
     }
+
+    /*
+     * Helpers
+     */
 
     public function chance(int $percent) {
         return rand(0,100) < $percent;
