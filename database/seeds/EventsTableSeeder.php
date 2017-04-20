@@ -5,6 +5,7 @@ use App\Stipulation;
 use App\Title;
 use App\Referee;
 use App\Wrestler;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class EventsTableSeeder extends Seeder
@@ -16,8 +17,14 @@ class EventsTableSeeder extends Seeder
      */
     public function run()
     {
+    	$lastDate = Carbon::parse('January 2, 1970');
         for($i = 1; $i <= 100; $i++) {
-            $event = factory(Event::class)->create(['name' => 'Event '.$i, 'slug' => 'event'.$i, 'arena_id' => \App\Arena::inRandomOrder()->first()->id]);
+            $event = factory(Event::class)->create([
+            	'name' => 'Event '.$i,
+				'slug' => 'event'.$i,
+				'arena_id' => \App\Arena::inRandomOrder()->first()->id,
+				'date' => $lastDate = Carbon::createFromTimestamp($this->getEventDate($lastDate->timestamp, Carbon::now()->timestamp))
+			]);
 
             for($j = 1; $j <= 8; $j++) {
                 $event->matches()->save($match = factory(App\Match::class)->create([
@@ -66,5 +73,13 @@ class EventsTableSeeder extends Seeder
 
     public function chance(int $percent) {
         return rand(0,100) < $percent;
+    }
+
+	public function getEventDate(int $min, int $max) {
+    	$spread = $max - $min;
+
+		$result = mt_rand($min, $max - ($spread * (90 / 100)));
+
+		return $result;
     }
 }

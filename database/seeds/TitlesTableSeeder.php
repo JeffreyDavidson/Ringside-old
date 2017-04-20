@@ -1,6 +1,7 @@
 <?php
 
 use App\Title;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class TitlesTableSeeder extends Seeder
@@ -12,7 +13,9 @@ class TitlesTableSeeder extends Seeder
      */
     public function run()
     {
-        for($i = 1; $i <= 10; $i++) {
+		factory(Title::class)->create(['name' => 'Title 1', 'slug' => 'title1', 'introduced_at' => Carbon::parse('January 1, 1970')]);
+
+        for($i = 2; $i <= 10; $i++) {
             factory(Title::class)->create(['name' => 'Title '.$i, 'slug' => 'title'.$i]);
         }
     }
