@@ -25,11 +25,9 @@ trait HasTitles {
 			$date = Carbon::now();
 		}
 
-		if($this->hasTitle($title)) {
-			return $this;
+		if(! $this->hasTitle($title)) {
+			$this->titles()->create(['title_id' => $title->id, 'won_on' => $date]);
 		}
-
-		$this->titles()->create(['title_id' => $title->id, 'won_on' => $date]);
 
 		return $this;
 	}
@@ -40,12 +38,11 @@ trait HasTitles {
 			$date = Carbon::now();
 		}
 
-		if(! $this->hasTitle($title)) {
-            return false;
+		if($this->hasTitle($title)) {
+	    	$this->titles()->where('title_id', $title->id)->whereNull('lost_on')->first()->loseTitle($date);
+	    	return true;
         }
 
-		$this->titles()->where('title_id', $title->id)->whereNull('lost_on')->first()->loseTitle($date);
-
-		return true;
+		return false;
 	}
 }

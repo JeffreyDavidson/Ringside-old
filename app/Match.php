@@ -38,15 +38,20 @@ class Match extends Model
         return $this->belongsToMany(Stipulation::class)->withTimestamps();
     }
 
-	public function addWrestlers($wrestlers)
-	{
-		if($wrestlers instanceof Wrestler) {
-			$wrestlers = collect([$wrestlers]);
-		} else if(is_array($wrestlers) && $wrestlers[0] instanceof Wrestler) {
-			$wrestlers = collect($wrestlers);
-		}
+//	public function addWrestlers($wrestlers)
+//	{
+//		if($wrestlers instanceof Wrestler) {
+//			$wrestlers = collect([$wrestlers]);
+//		} else if(is_array($wrestlers) && $wrestlers[0] instanceof Wrestler) {
+//			$wrestlers = collect($wrestlers);
+//		}
+//
+//		$this->wrestlers()->saveMany($wrestlers->all());
+//	}
 
-		$this->wrestlers()->saveMany($wrestlers->all());
+	public function addWrestler(Wrestler $wrestler)
+	{
+		$this->wrestlers()->save($wrestler);
 	}
 
     public function addTitles($titles)
@@ -90,9 +95,10 @@ class Match extends Model
     public function setWinner($winner)
     {
         $this->update(['winner_id' => $winner->id, 'loser_id' => $this->wrestlers->except($winner->id)->first()->id]);
+
         if ($this->isTitleMatch())
         {
-            $this->titles()->each(function ($title) use ($winner) {
+            $this->titles->each(function ($title) use ($winner) {
                 if (!$winner->hasTitle($title)) {
                     $title->setNewChampion($winner);
                 }

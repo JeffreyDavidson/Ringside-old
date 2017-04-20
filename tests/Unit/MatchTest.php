@@ -52,7 +52,9 @@ class MatchTest extends TestCase
         $wrestlers = factory(Wrestler::class, 2)->create();
         $match = factory(Match::class)->create();
 
-        $match->addWrestlers($wrestlers);
+        $wrestlers->each(function($wrestler) use ($match) {
+			$match->addWrestler($wrestler);
+		});
 
         $this->assertCount(2, $match->wrestlers);
     }

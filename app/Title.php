@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use DB;
+use Illuminate\Support\Facades\Log;
 
 class Title extends Model
 {
@@ -27,9 +28,11 @@ class Title extends Model
 
     public function setNewChampion($wrestler)
     {
-        $wrestler->winTitle($this);
-        $formerChampion = $this->getCurrentChampion();
-        $formerChampion->wrestler->loseTitle($this);
+    	if($formerChampion = $this->getCurrentChampion()) {
+			$formerChampion->wrestler->loseTitle($this);
+		}
+
+		$wrestler->winTitle($this);
     }
 
     public function getFormattedIntroducedAtAttribute()
@@ -58,6 +61,7 @@ class Title extends Model
     }
 
 	public function getCurrentChampion() {
+    	Log::info($this->champions()->whereNull('lost_on')->first());
 		return $this->champions()->whereNull('lost_on')->first();
     }
 }

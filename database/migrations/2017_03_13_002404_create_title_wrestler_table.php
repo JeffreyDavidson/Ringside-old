@@ -21,7 +21,7 @@ class CreateTitleWrestlerTable extends Migration
             $table->dateTime('lost_on')->nullable();
             $table->timestamps();
 
-            $table->unique(['title_id', 'won_on']);
+            $table->unique(['title_id', 'wrestler_id', 'won_on']);
             $table->foreign('title_id')->references('id')->on('titles');
             $table->foreign('wrestler_id')->references('id')->on('wrestlers');
         });

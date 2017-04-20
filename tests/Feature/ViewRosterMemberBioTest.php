@@ -99,7 +99,8 @@ class ViewARosterMemberBioTest extends TestCase
 
         $wrestler2 = factory(Wrestler::class)->create(['name' => 'Wrestler 2']);
 
-        $match->addWrestlers([$wrestler1, $wrestler2]);
+        $match->addWrestler($wrestler1);
+        $match->addWrestler($wrestler2);
 
         $this->visit('wrestlers/'.$wrestler1->id);
         $this->see('My Event');
