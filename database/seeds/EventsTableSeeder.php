@@ -91,7 +91,7 @@ class EventsTableSeeder extends Seeder
 	public function getEventDate(int $min, int $max) {
     	$spread = $max - $min;
 
-		$result = mt_rand($min, $max - ($spread * (450 / 500)));
+		$result = mt_rand($min, $max - ($spread * (990 / 1000)));
 
 		return $result;
     }

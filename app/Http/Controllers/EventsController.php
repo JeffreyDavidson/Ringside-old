@@ -30,63 +30,106 @@ class EventsController extends Controller
      */
     public function create()
     {
-        return view('events.create', ['event' => new Event]);
+        return response()->view('events.create', ['event' => new Event]);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created event.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|unique:arenas,name',
+            'address' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'postcode' => 'required|digits:5'
+        ]);
+
+        $arena = Arena::create([
+            'name' => request('name'),
+            'address' => request('address'),
+            'city' => request('city'),
+            'state' => request('state'),
+            'postcode' => request('postcode'),
+        ]);
+
+        if ($this->wantsJson() || $this->ajax()) {
+            return response()->json($arena);
+        }
+
+        return redirect(route('events.index'));
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified event.
      *
      * @param  Event  $event
      * @return \Illuminate\Http\Response
      */
     public function show(Event $event)
     {
-        return view('events.show', ['event' => $event]);
+        if ($this->wantsJson() || $this->ajax()) {
+            return response()->json($event);
+        }
 
+        return response()->view('events.show', ['event' => $event]);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing an event.
      *
-     * @param  int  $id
+     * @param  Event $event
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($event)
     {
-        //
+        return response()->view('events.edit', ['event' => $event]);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified event.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  Event $event
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Event $event)
     {
-        //
+        $this->validate($request, [
+            'name' => ['required', Rule::unique('stipulations' ,'name')->ignore($event->id)],
+            'address' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'postcode' => 'required|digits:5'
+        ]);
+
+        $event->update([
+            'name' => request('name'),
+            'address' => request('address'),
+            'city' => request('city'),
+            'state' => request('state'),
+            'postcode' => request('postcode')
+        ]);
+
+        if ($this->wantsJson() || $this->ajax()) {
+            return response()->json($event);
+        }
+
+        return redirect(route('events.index'));
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete the specified event.
      *
-     * @param  int  $id
+     * @param  Event $event
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Event $event)
     {
-        //
+
     }
 }
