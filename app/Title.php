@@ -75,7 +75,7 @@ class Title extends Model
             return $this->attributes['introduced_at'] = $date;
         }
 
-        return $this->attributes['introduced_at'] = Carbon::createFromFormat('m/d/Y', $date);
+        return $this->attributes['introduced_at'] = Carbon::parse($date);
     }
 
 	public function getCurrentChampion() {
