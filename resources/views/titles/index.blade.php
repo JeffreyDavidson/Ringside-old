@@ -27,6 +27,8 @@
                 <thead>
                     <th>ID</th>
                     <th>Name</th>
+                    <th>Slug</th>
+                    <th>Introduced At</th>
                     <th>Actions</th>
                 </thead>
                 <tbody>
@@ -34,6 +36,8 @@
                     <tr>
                         <td>{{ $title->id }}</td>
                         <td>{{ $title->name }}</td>
+                        <td>{{ $title->slug }}</td>
+                        <td>{{ $title->formatted_introduced_at }}</td>
                         <td>
                             <a class="btn btn-sm btn-icon btn-flat btn-default" href="{{ route('titles.edit', ['id' => $title->id]) }}" data-toggle="tooltip" data-original-title="Edit">
                                 <i class="icon wb-wrench" aria-hidden="true"></i>

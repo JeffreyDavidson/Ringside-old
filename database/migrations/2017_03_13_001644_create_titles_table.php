@@ -20,6 +20,7 @@ class CreateTitlesTable extends Migration
             $table->dateTime('introduced_at');
             $table->dateTime('retired_at')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

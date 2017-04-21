@@ -14,7 +14,12 @@
 
 <div class="form-group @if ($errors->has('introduced_at')) {{ 'has-error' }} @endif">
     <label class="control-label" for="introduced_at">Date Introduced</label>
-    <input type="date" class="form-control" id="introduced_at" name="introduced_at" value="{{ old('introduced_at') ?? $title->introduced_at }}"/>
+    <div class="input-group">
+        <span class="input-group-addon">
+            <i class="icon wb-calendar" aria-hidden="true"></i>
+        </span>
+        <input type="text" data-plugin="datepicker" class="form-control" id="introduced_at" name="introduced_at" value="{{ old('introduced_at') ?? $title->introduced_at->format('m/d/Y') }}"/>
+    </div>
     @if ($errors->has('introduced_at')) <small class="help-block">{{ $errors->first('introduced_at') }}</small> @endif
 </div>
 

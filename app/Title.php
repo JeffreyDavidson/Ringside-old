@@ -2,13 +2,16 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
-use DB;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Title extends Model
 {
+    use SoftDeletes;
+
+    protected $guarded = [];
+
     protected $dates = ['introduced_at', 'retired_at'];
 
     public function champions()
@@ -64,6 +67,15 @@ class Title extends Model
     public function getMostTitleReignsAttribute()
     {
         return 'most title reigns';
+    }
+
+    public function setIntroducedAtAttribute($date)
+    {
+        if($date instanceof \Carbon\Carbon) {
+            return $this->attributes['introduced_at'] = $date;
+        }
+
+        return $this->attributes['introduced_at'] = Carbon::createFromFormat('m/d/Y', $date);
     }
 
 	public function getCurrentChampion() {

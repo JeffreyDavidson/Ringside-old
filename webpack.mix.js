@@ -24,6 +24,7 @@ mix.styles([
         'resources/assets/vendor/slidepanel/slidePanel.css',
         'resources/assets/vendor/datatables-bootstrap/dataTables.bootstrap.css',
         'resources/assets/vendor/datatables-responsive/dataTables.responsive.css',
+        'resources/assets/vendor/bootstrap-datepicker/bootstrap-datepicker.min.css',
     ], 'public/css/plugins.css')
     .styles([
         'resources/assets/fonts/brand-icons/brand-icons.min.css',
@@ -49,6 +50,7 @@ mix.styles([
         'resources/assets/vendor/datatables/jquery.dataTables.js',
         'resources/assets/vendor/datatables-bootstrap/dataTables.bootstrap.js',
         'resources/assets/vendor/datatables-responsive/dataTables.responsive.js',
+        'resources/assets/vendor/bootstrap-datepicker/bootstrap-datepicker.min.js',
     ], 'public/js/plugins.js')
     .scripts([
         'resources/assets/js/State.js',

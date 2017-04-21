@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Title;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 
 class TitlesController extends Controller
@@ -43,10 +44,10 @@ class TitlesController extends Controller
     {
         $this->validate($request, [
             'name' => 'required|unique:titles,name',
-            'slug' => 'required|unique:titles.slug',
+            'slug' => 'required|unique:titles,slug',
             'introduced_at' => 'required|date'
         ]);
-
+        
         $title = Title::create([
             'name' => request('name'),
             'slug' => request('slug'),
@@ -83,7 +84,7 @@ class TitlesController extends Controller
      */
     public function edit(Title $title)
     {
-        return response()->view('titles.edit', ['arena' => $title]);
+        return response()->view('titles.edit', ['title' => $title]);
     }
 
     /**
@@ -95,7 +96,23 @@ class TitlesController extends Controller
      */
     public function update(Request $request, Title $title)
     {
-        //
+        $this->validate($request, [
+            'name' => ['required', Rule::unique('titles' ,'name')->ignore($title->id)],
+            'slug' => ['required', Rule::unique('titles' ,'slug')->ignore($title->id)],
+            'introduced_at' => 'required|date'
+        ]);
+
+        $title->update([
+            'name' => request('name'),
+            'slug' => request('slug'),
+            'introduced_at' => request('introduced_at')
+        ]);
+
+        if ($this->wantsJson() || $this->ajax()) {
+            return response()->json($title);
+        }
+
+        return redirect(route('titles.index'));
     }
 
     /**
@@ -106,7 +123,7 @@ class TitlesController extends Controller
      */
     public function destroy(Title $title)
     {
-        $titlee->delete();
+        $title->delete();
 
         return redirect(route('titles.index'));
     }
