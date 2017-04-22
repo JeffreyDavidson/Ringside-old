@@ -9,6 +9,11 @@ class Stipulation extends Model
 {
     use SoftDeletes;
 
+    /**
+     * Don't auto-apply mass assignment protection.
+     *
+     * @var array
+     */
     protected $guarded = [];
 
     /**
@@ -18,6 +23,11 @@ class Stipulation extends Model
      */
     protected $dates = ['deleted_at'];
 
+    /**
+     * A stipulation can be assigned to many matches.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function matches()
     {
         return $this->belongsToMany(Match::class);
