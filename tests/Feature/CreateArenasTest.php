@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Arena;
+use App\Models\Arena;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 

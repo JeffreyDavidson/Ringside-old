@@ -1,6 +1,6 @@
 <?php
 
-use App\MatchType;
+use App\Models\MatchType;
 use Illuminate\Database\Seeder;
 
 class MatchTypesTableSeeder extends Seeder

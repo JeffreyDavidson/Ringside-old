@@ -1,7 +1,7 @@
 <?php
 
-use App\TitleHistory;
-use App\Title;
+use App\Models\TitleHistory;
+use App\Models\Title;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 

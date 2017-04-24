@@ -2,9 +2,9 @@
 
 namespace Tests\Unit;
 
-use App\TitleHistory;
-use App\Wrestler;
-use App\Title;
+use App\Models\TitleHistory;
+use App\Models\Wrestler;
+use App\Models\Title;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 

@@ -2,12 +2,12 @@
 
 namespace Tests\Unit;
 
-use App\Match;
-use App\Stipulation;
-use App\MatchType;
-use App\Title;
-use App\Wrestler;
-use App\Event;
+use App\Models\Match;
+use App\Models\Stipulation;
+use App\Models\MatchType;
+use App\Models\Title;
+use App\Models\Wrestler;
+use App\Models\Event;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 

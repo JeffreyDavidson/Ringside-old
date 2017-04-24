@@ -1,6 +1,6 @@
 <?php
 
-use App\MatchDecision;
+use App\Models\MatchDecision;
 
 use Illuminate\Database\Seeder;
 

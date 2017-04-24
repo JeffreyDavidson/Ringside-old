@@ -1,7 +1,7 @@
 <?php
 
-use App\Wrestler;
-use App\WrestlerInjury;
+use App\Models\Wrestler;
+use App\Models\WrestlerInjury;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 

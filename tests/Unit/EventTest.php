@@ -2,9 +2,9 @@
 
 namespace Tests\Unit;
 
-use App\Event;
-use App\Match;
-use App\Arena;
+use App\Models\Event;
+use App\Models\Match;
+use App\Models\Arena;
 use App\Exceptions\MatchesHaveSameMatchNumberAtEventException;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;

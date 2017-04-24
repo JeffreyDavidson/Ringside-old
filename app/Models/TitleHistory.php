@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Collections\TitleHistories;
@@ -9,7 +9,14 @@ class TitleHistory extends Model
 {
 
     protected $table = 'title_wrestler';
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
     protected $dates = ['won_on', 'lost_on'];
+
     protected $guarded = ['id'];
 
     public function title()

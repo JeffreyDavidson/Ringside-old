@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use App\Traits\HasManagers;
 use App\Traits\HasStatuses;
@@ -25,7 +25,7 @@ class Wrestler extends Model
      *
      * @var array
      */
-	protected $dates = ['hired_at'];
+    protected $dates = ['hired_at'];
 
     /**
      * A wrestler can have one bio.

@@ -1,6 +1,6 @@
 <?php
 
-use App\Title;
+use App\Models\Title;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 

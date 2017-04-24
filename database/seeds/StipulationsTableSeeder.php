@@ -1,6 +1,6 @@
 <?php
 
-use App\Stipulation;
+use App\Models\Stipulation;
 use Illuminate\Database\Seeder;
 
 class StipulationsTableSeeder extends Seeder {

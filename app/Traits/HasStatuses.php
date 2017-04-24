@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-use App\WrestlerStatus;
+use App\Models\WrestlerStatus;
 
 trait HasStatuses {
 

@@ -1,6 +1,6 @@
 <?php
 
-use App\Manager;
+use App\Models\Manager;
 use Illuminate\Database\Seeder;
 
 class ManagersTableSeeder extends Seeder

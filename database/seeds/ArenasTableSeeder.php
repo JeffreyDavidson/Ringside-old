@@ -1,6 +1,6 @@
 <?php
 
-use App\Arena;
+use App\Models\Arena;
 use Illuminate\Database\Seeder;
 
 class ArenasTableSeeder extends Seeder

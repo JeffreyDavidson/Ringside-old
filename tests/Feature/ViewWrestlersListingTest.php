@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Wrestler;
+use App\Models\Wrestler;
 use Carbon\Carbon;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;

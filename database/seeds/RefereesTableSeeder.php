@@ -1,6 +1,6 @@
 <?php
 
-use App\Referee;
+use App\Models\Referee;
 use Illuminate\Database\Seeder;
 
 class RefereesTableSeeder extends Seeder

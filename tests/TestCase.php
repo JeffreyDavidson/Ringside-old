@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\Models\User;
 use App\Exceptions\Handler;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Laravel\BrowserKitTesting\TestCase as BaseTestCase;
@@ -21,7 +22,7 @@ abstract class TestCase extends BaseTestCase
 
     protected function signIn($user = null)
     {
-        $user = $user ?: create(User::class);
+        $user = $user ?: factory(User::class)->create();
 
         $this->actingAs($user);
 

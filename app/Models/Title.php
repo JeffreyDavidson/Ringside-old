@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -25,9 +25,13 @@ class Title extends Model
     protected $dates = ['introduced_at', 'retired_at'];
 
     /**
+<<<<<<< Updated upstream:app/Title.php
      * A title can have many champions.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
+=======
+     * @return mixed
+>>>>>>> Stashed changes:app/Models/Title.php
      */
     public function champions()
     {

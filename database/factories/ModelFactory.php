@@ -14,7 +14,7 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 use Carbon\Carbon;
 
-$factory->define(App\User::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\User::class, function (Faker\Generator $faker) {
     static $password;
 
     return [
@@ -25,7 +25,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\Wrestler::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\Wrestler::class, function (Faker\Generator $faker) {
 
     return [
         'name' => $faker->name,
@@ -35,40 +35,40 @@ $factory->define(App\Wrestler::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\WrestlerStatus::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\WrestlerStatus::class, function (Faker\Generator $faker) {
 
     return [
         'name' => $faker->sentence(3),
     ];
 });
 
-$factory->define(App\WrestlerInjury::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\WrestlerInjury::class, function (Faker\Generator $faker) {
 
     return [
         'wrestler_id' => function () {
-            return factory(App\Wrestler::class)->create()->id;
+            return factory(App\Models\Wrestler::class)->create()->id;
         },
         'injured_at' => Carbon::now('-2 years'),
         'healed_at' => Carbon::now('-2 days'),
     ];
 });
 
-$factory->define(App\WrestlerRetirement::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\WrestlerRetirement::class, function (Faker\Generator $faker) {
 
     return [
         'wrestler_id' => function () {
-            return factory(App\Wrestler::class)->create()->id;
+            return factory(App\Models\Wrestler::class)->create()->id;
         },
         'retired_at' => Carbon::now('-2 years'),
         'ended_at' => Carbon::now('-2 days'),
     ];
 });
 
-$factory->define(App\WrestlerBio::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\WrestlerBio::class, function (Faker\Generator $faker) {
 
     return [
         'wrestler_id' => function () {
-            return factory(App\Wrestler::class)->create()->id;
+            return factory(App\Models\Wrestler::class)->create()->id;
         },
         'hometown' => $faker->city . ', ' . $faker->state,
         'height' => $faker->numberBetween(63, 84),
@@ -77,44 +77,44 @@ $factory->define(App\WrestlerBio::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->state(App\Wrestler::class, 'active', function ($faker) {
+$factory->state(App\Models\Wrestler::class, 'active', function ($faker) {
     return [
         'status_id' => 1,
     ];
 });
 
-$factory->state(App\Wrestler::class, 'inactive', function ($faker) {
+$factory->state(App\Models\Wrestler::class, 'inactive', function ($faker) {
     return [
         'status_id' => 2,
     ];
 });
 
-$factory->state(App\Wrestler::class, 'injured', function ($faker) {
+$factory->state(App\Models\Wrestler::class, 'injured', function ($faker) {
     return [
         'status_id' => 3,
     ];
 });
 
-$factory->state(App\Wrestler::class, 'suspended', function ($faker) {
+$factory->state(App\Models\Wrestler::class, 'suspended', function ($faker) {
     return [
         'status_id' => 4,
     ];
 });
 
-$factory->state(App\Wrestler::class, 'retired', function ($faker) {
+$factory->state(App\Models\Wrestler::class, 'retired', function ($faker) {
     return [
         'status_id' => 5,
     ];
 });
 
-$factory->define(App\Manager::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\Manager::class, function (Faker\Generator $faker) {
 
     return [
         'name' => $faker->name,
     ];
 });
 
-$factory->define(App\Title::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\Title::class, function (Faker\Generator $faker) {
 
     return [
         'name' => $faker->sentence(3),
@@ -126,43 +126,43 @@ $factory->define(App\Title::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\Match::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\Match::class, function (Faker\Generator $faker) {
 
     return [
         'match_type_id' => function () {
-            return factory(App\MatchType::class)->create()->id;
+            return factory(App\Models\MatchType::class)->create()->id;
         },
         'match_number' => $faker->randomNumber(),
         'preview' => $faker->paragraphs(3, true),
     ];
 });
 
-$factory->define(App\Event::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\Event::class, function (Faker\Generator $faker) {
 
     return [
         'name' => $faker->sentence(3),
         'slug' => $faker->sentence(3),
         'date' => $faker->dateTimeBetween('-10 years'),
         'arena_id' => function () {
-            return factory(App\Arena::class)->create()->id;
+            return factory(App\Models\Arena::class)->create()->id;
         },
     ];
 });
 
-$factory->define(App\TitleHistory::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\TitleHistory::class, function (Faker\Generator $faker) {
 
     return [
         'wrestler_id' => function () {
-            return factory(App\Wrestler::class)->create()->id;
+            return factory(App\Models\Wrestler::class)->create()->id;
         },
         'title_id' => function () {
-            return factory(App\Title::class)->create()->id;
+            return factory(App\Models\Title::class)->create()->id;
         },
         'won_on' => $faker->date(),
     ];
 });
 
-$factory->define(App\MatchType::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\MatchType::class, function (Faker\Generator $faker) {
 
     return [
         'name' => $faker->sentence(3),
@@ -170,7 +170,7 @@ $factory->define(App\MatchType::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\Stipulation::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\Stipulation::class, function (Faker\Generator $faker) {
 
     return [
         'name' => $faker->sentence(3),
@@ -178,7 +178,7 @@ $factory->define(App\Stipulation::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\MatchDecision::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\MatchDecision::class, function (Faker\Generator $faker) {
 
     return [
         'name' => $faker->sentence(3),
@@ -186,7 +186,7 @@ $factory->define(App\MatchDecision::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\Arena::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\Arena::class, function (Faker\Generator $faker) {
 
     return [
         'name' => $faker->sentence(3),
@@ -198,7 +198,7 @@ $factory->define(App\Arena::class, function (Faker\Generator $faker) {
 });
 
 
-$factory->define(App\Referee::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\Referee::class, function (Faker\Generator $faker) {
 
     return [
         'first_name' => $faker->firstName,

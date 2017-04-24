@@ -1,7 +1,7 @@
 <?php
 
-use App\Wrestler;
-use App\WrestlerBio;
+use App\Models\Wrestler;
+use App\Models\WrestlerBio;
 use Illuminate\Database\Seeder;
 
 class WrestlersTableSeeder extends Seeder

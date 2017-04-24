@@ -4,10 +4,10 @@ namespace Tests\Unit;
 
 use App\Exceptions\WrestlerCanNotBeHealedException;
 use App\Exceptions\WrestlerCanNotBeInjuredException;
-use App\Wrestler;
-use App\Manager;
-use App\Title;
-use App\WrestlerStatus;
+use App\Models\Wrestler;
+use App\Models\Manager;
+use App\Models\Title;
+use App\Models\WrestlerStatus;
 use Carbon\Carbon;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;

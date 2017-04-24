@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Wrestler;
+use App\Models\Wrestler;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 

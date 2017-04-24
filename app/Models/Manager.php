@@ -1,10 +1,10 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class MatchType extends Model
+class Manager extends Model
 {
     //
 }

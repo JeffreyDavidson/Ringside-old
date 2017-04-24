@@ -2,12 +2,12 @@
 
 namespace Tests\Feature;
 
-use App\Wrestler;
-use App\Manager;
-use App\Title;
-use App\Match;
-use App\Event;
-use App\WrestlerBio;
+use App\Models\Wrestler;
+use App\Models\Manager;
+use App\Models\Title;
+use App\Models\Match;
+use App\Models\Event;
+use App\Models\WrestlerBio;
 use Carbon\Carbon;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;

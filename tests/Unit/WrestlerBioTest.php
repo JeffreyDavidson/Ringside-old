@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\WrestlerBio;
+use App\Models\WrestlerBio;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 

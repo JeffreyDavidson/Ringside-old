@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Arena;
+use App\Models\Arena;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 

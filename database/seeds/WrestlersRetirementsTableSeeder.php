@@ -1,7 +1,7 @@
 <?php
 
-use App\Wrestler;
-use App\WrestlerRetirement;
+use App\Models\Wrestler;
+use App\Models\WrestlerRetirement;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 

@@ -1,14 +1,13 @@
 <?php
 
-use App\Event;
-use App\Stipulation;
-use App\Title;
-use App\Referee;
-use App\TitleHistory;
-use App\Wrestler;
+use App\Models\Arena;
+use App\Models\Event;
+use App\Models\Stipulation;
+use App\Models\Title;
+use App\Models\Referee;
+use App\Models\Wrestler;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Log;
 
 class EventsTableSeeder extends Seeder
 {
@@ -24,12 +23,13 @@ class EventsTableSeeder extends Seeder
 			$event = factory(Event::class)->create([
 				'name' => 'Event '.$i,
 				'slug' => 'event'.$i,
-				'arena_id' => \App\Arena::inRandomOrder()->first()->id,
+				'arena_id' => Arena::inRandomOrder()->first()->id,
 				'date' => $lastDate = Carbon::createFromTimestamp($this->getEventDate($lastDate->timestamp, Carbon::now()->timestamp))
 			]);
 
 			for($j = 1; $j <= 8; $j++) {
-				$event->matches()->save($match = factory(App\Match::class)->create([
+				$event->matches()->save($match = factory(App\Models\
+                Match::class)->create([
 					'match_number'  => $j,
 					'match_type_id' => 1,
 				]));
@@ -76,15 +76,6 @@ class EventsTableSeeder extends Seeder
 					$match->addWrestler(Wrestler::get()->random());
 					$match->addWrestler(Wrestler::get()->except($match->wrestlers->first()->id)->random());
 				}
-
-//				if(isset($title)) {
-//					$match->addWrestler($wrestler = ($title->getCurrentChampion() ?: Wrestler::inRandomOrder()->first()));
-//					if(isset($title2)) {
-//						$match->addWrestler($title2->getCurrentChampion() ?: Wrestler::get()->except($wrestler->id)->random());
-//					} else {
-//						$match->addWrestler(Wrestler::get()->except($wrestler->id)->random());
-//					}
-//				}
 
 				$match->load('wrestlers');
 				$wrestlers = $match->wrestlers;
