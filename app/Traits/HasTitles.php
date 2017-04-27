@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-use App\Title;
+use App\Models\Title;
 use Carbon\Carbon;
 
 trait HasTitles {
