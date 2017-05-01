@@ -17,6 +17,9 @@
     "vue": "^2.1.10"
   },
   "dependencies": {
-    "cross-env": "^3.1.4"
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-stage-2": "^6.24.1",
+    "cross-env": "^3.1.4",
+    "vuetable-2": "^1.6.0"
   }
 }

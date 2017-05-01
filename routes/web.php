@@ -26,3 +26,4 @@ Route::resource('events', 'EventsController');
 Route::resource('titles', 'TitlesController');
 Route::resource('stipulations', 'StipulationsController');
 Route::resource('arenas', 'ArenasController');
+Route::resource('wrestler-statuses', 'WrestlerStatusesController', ['only' => ['index']]);

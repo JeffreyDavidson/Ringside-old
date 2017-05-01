@@ -28,6 +28,11 @@
         <script type="text/javascript">
             Breakpoints();
         </script>
+        <script>
+            window.Laravel = <?php echo json_encode([
+				'csrfToken' => csrf_token(),
+			]); ?>
+        </script>
     </head>
     <body class="animsition">
         <!--[if lt IE 8]>
@@ -41,7 +46,7 @@
         @include('partials.gridmenu')
 
         <!-- Page -->
-        <div class="page">
+        <div class="page" id="app">
             <div class="page-header">
                 @yield('header')
             </div>
@@ -66,6 +71,10 @@
         </script>
         <!-- Page -->
         <script src="{{ asset('js/page.js') }}" type="text/javascript"></script>
+
+{{--        <script src="{{ asset('js/manifest.js') }}" type="text/javascript"></script>--}}
+        {{--<script src="{{ asset('js/vendor.js') }}" type="text/javascript"></script>--}}
+        <script src="{{ asset('js/app.js') }}" type="text/javascript"></script>
 
         <script type="text/javascript">
             (function(document, window, $) {

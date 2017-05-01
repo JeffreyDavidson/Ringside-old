@@ -73,6 +73,8 @@ mix.styles([
         'resources/assets/js/Plugin/switchery.js',
     ], 'public/js/page.js');
 
+    mix.js('resources/assets/js/app.js', 'public/js');
+
     mix.copy('resources/assets/fonts/brand-icons/fonts', 'public/fonts/brand-icons/fonts');
     mix.copy('resources/assets/fonts/web-icons/fonts', 'public/fonts/web-icons/fonts');
     mix.copy('resources/assets/fonts/font-awesome/fonts', 'public/fonts/font-awesome/fonts');
