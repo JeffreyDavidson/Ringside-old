@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Wrestler;
+use App\Models\Wrestler;
 use Illuminate\Http\Request;
 
 class WrestlersController extends Controller
