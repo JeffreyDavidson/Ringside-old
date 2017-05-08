@@ -7,8 +7,8 @@
         <meta name="description" content="bootstrap admin template">
         <meta name="author" content="">
         <title>Blank | Remark Admin Template</title>
-        <link rel="apple-touch-icon" href="../../assets/images/apple-touch-icon.png">
-        <link rel="shortcut icon" href="../../assets/images/favicon.ico">
+        <link rel="apple-touch-icon" href="apple-touch-icon.png">
+        <link rel="shortcut icon" href="favicon.ico">
         <!-- Stylesheets -->
         <link href="/css/app.css" rel="stylesheet">
         <!-- Plugins -->
