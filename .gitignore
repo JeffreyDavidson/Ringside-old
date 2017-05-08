@@ -11,7 +11,6 @@ public/js
 public/css
 public/fonts
 public/images
+/public/mix-manifest.json
 .gitignore
 .DS_Store
-public/css/app.css
-public/js/app.js

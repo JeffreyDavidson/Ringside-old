@@ -55,6 +55,8 @@ Vue.component('wrestler-table', {
             } else {
                 this.$delete(this.filters, 'status_id');
             }
+
+            this.$refs.vuetable.setData(this.filteredList);
         }
     }
 });

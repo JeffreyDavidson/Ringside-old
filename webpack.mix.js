@@ -75,11 +75,10 @@ mix.styles([
 
     mix.js('resources/assets/js/app.js', 'public/js');
 
-    mix.copy('resources/assets/fonts/brand-icons/fonts', 'public/fonts/brand-icons/fonts');
-    mix.copy('resources/assets/fonts/web-icons/fonts', 'public/fonts/web-icons/fonts');
-    mix.copy('resources/assets/fonts/font-awesome/fonts', 'public/fonts/font-awesome/fonts');
-    mix.copy('resources/assets/images/portraits/*', 'public/images/portraits');
-    mix.copy('resources/assets/images', 'public/images');
+    mix.copyDirectory('resources/assets/fonts/brand-icons/fonts',  'public/fonts/brand-icons/fonts');
+    mix.copyDirectory('resources/assets/fonts/web-icons/fonts',    'public/fonts/web-icons/fonts');
+    mix.copyDirectory('resources/assets/fonts/font-awesome/fonts', 'public/fonts/font-awesome/fonts');
+    mix.copyDirectory('resources/assets/images', 'public/images');
     mix.copy('resources/assets/vendor/breakpoints/breakpoints.js', 'public/js');
     mix.copy('resources/assets/vendor/media-match/media.match.js', 'public/js');
     mix.copy('resources/assets/vendor/respond/respond.min.js', 'public/js');

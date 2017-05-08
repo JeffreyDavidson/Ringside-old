@@ -18,7 +18,7 @@
                     <option value="0">Choose One</option>
                     <option :value="status.id" v-for="status in statuses">@{{ status.name }}</option>
                 </select>
-                <vuetable ref="vuetable" :api-mode="false" :data="wrestler_list" :fields="['id', 'name']">
+                <vuetable ref="vuetable" :api-mode="false" :data="filteredList" :fields="['id', 'name']">
                 </vuetable>
                 {{--<table id="wrestlersList" class="table table-striped table-bordered" cellspacing="0" width="100%">--}}
                     {{--<thead>--}}
