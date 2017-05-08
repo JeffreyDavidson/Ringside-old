@@ -5,23 +5,22 @@
 @endsection
 
 @section('content')
-    <div class="panel">
+    <div class="panel panel-bordered panel-primary">
+        <div class="panel-heading clearfix">
+            <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-trophy"></i>Edit Wrestler Form</h3>
+            <div class="panel-actions">
+                <a class="btn btn-default pull-right" href="{{ route('wrestlers.index') }}">Back to Wrestlers</a>
+            </div>
+        </div>
         <div class="panel-body container-fluid">
             <div class="row row-lg">
                 <div class="col-md-6">
-                    <!-- Example Basic Form -->
-                    <div class="example-wrap">
-                        <h4 class="example-title">Basic Form</h4>
-                        <div class="example">
-                            <form method="POST" action="/wrestlers/{{ $wrestler->id }}">
-                                {{ method_field('PATCH') }}
-                                @include('wrestlers.form', [
-                                    'submitButtonText' => 'Update Wrestler'
-                                ])
-                            </form>
-                        </div>
-                    </div>
-                    <!-- End Example Basic Form -->
+                    <form method="POST" action="{{ route('wrestlers.update', $wrestler->id) }}d }}">
+                        {{ method_field('PATCH') }}
+                        @include('wrestlers.form', [
+                            'submitButtonText' => 'Update Wrestler'
+                        ])
+                    </form>
                 </div>
             </div>
         </div>

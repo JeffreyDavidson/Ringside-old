@@ -18,7 +18,7 @@
         <span class="input-group-addon">
             <i class="icon wb-calendar" aria-hidden="true"></i>
         </span>
-        <input type="text" data-plugin="datepicker" class="form-control" id="introduced_at" name="introduced_at" value="{{ old('introduced_at') ?? $title->introduced_at->format('m/d/Y') }}"/>
+        <input type="date" data-plugin="datepicker" class="form-control" id="introduced_at" name="introduced_at" value="{{ old('introduced_at') ?? ($title->introduced_at ?: \Carbon\Carbon::now())->format('m/d/Y') }}"/>
     </div>
     @if ($errors->has('introduced_at')) <small class="help-block">{{ $errors->first('introduced_at') }}</small> @endif
 </div>

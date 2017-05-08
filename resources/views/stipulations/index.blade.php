@@ -7,7 +7,7 @@
 @section('content')
     <div class="panel panel-bordered panel-primary">
         <div class="panel-heading clearfix">
-            <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-gavel"></i>Stipulations</h3>
+            <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-gavel"></i>List of Stipulations</h3>
             <div class="panel-actions">
                 <a class="btn btn-default pull-right" href="{{ route('stipulations.create') }}">Create Stipulation</a>
             </div>
