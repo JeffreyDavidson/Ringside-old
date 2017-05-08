@@ -137,7 +137,7 @@ class Title extends Model
      */
     public function setIntroducedAtAttribute($date)
     {
-        if($date instanceof \Carbon\Carbon) {
+        if($date instanceof Carbon) {
             return $this->attributes['introduced_at'] = $date;
         }
 

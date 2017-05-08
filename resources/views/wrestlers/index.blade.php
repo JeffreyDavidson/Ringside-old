@@ -7,8 +7,22 @@
 @section('content')
     <div class="panel panel-bordered panel-primary">
         <div class="panel-heading clearfix">
-            <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-group"></i>Wrestlers</h3>
+            <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-group"></i>List of Wrestlers</h3>
             <div class="panel-actions">
+                <div class="dropdown">
+                    <button id="wrestlerFilters" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true" >
+                        Filters
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="wrestlerFilters" role="menu">
+                        <li role="presentation"><a href="javascript:void(0)" role="menuitem">View All Wrestlers</a></li>
+                        <li role="presentation"><a href="javascript:void(0)" role="menuitem">View Active Wrestlers</a></li>
+                        <li role="presentation"><a href="javascript:void(0)" role="menuitem">View Inactive Wrestlers</a></li>
+                        <li role="presentation"><a href="javascript:void(0)" role="menuitem">View Injured Wrestlers</a></li>
+                        <li role="presentation"><a href="javascript:void(0)" role="menuitem">View Suspended Wrestlers</a></li>
+                        <li role="presentation"><a href="javascript:void(0)" role="menuitem">View Retired Wrestlers</a></li>
+                    </ul>
+                </div>
                 <a class="btn btn-default pull-right" href="{{ route('wrestlers.create') }}">Create Wrestler</a>
             </div>
         </div>
@@ -17,6 +31,7 @@
                 <thead>
                     <th>ID</th>
                     <th>Name</th>
+                    <th>Slug</th>
                     <th>Actions</th>
                 </thead>
                 <tbody>
@@ -24,6 +39,7 @@
                     <tr>
                         <td>{{ $wrestler->id }}</td>
                         <td>{{ $wrestler->name }}</td>
+                        <td>{{ $wrestler->slug }}</td>
                         <td>
                             <a class="btn btn-sm btn-icon btn-flat btn-default" href="{{ route('wrestlers.edit', ['id' => $wrestler->id]) }}" data-toggle="tooltip" data-original-title="Edit">
                                 <i class="icon wb-wrench" aria-hidden="true"></i>

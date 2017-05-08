@@ -14,7 +14,7 @@
     <label class="form-control-label" for="status_id">Status</label>
     <select class="form-control" id="status_id" name="status_id">
         <option value="0">Choose One</option>
-        @foreach(App\Status::all() as $status)
+        @foreach(App\Models\WrestlerStatus::all() as $status)
             <option value="{{ $status->id }}" {{ $wrestler->status_id == $status->id ? 'selected' : '' }}>{{ $status->name }}</option>
         @endforeach
     </select>
@@ -57,7 +57,7 @@
 </div>
 
 <div class="form-group">
-    <button type="button" class="btn btn-primary">
+    <button type="submit" class="btn btn-primary">
         {{ $submitButtonText ?? 'Create Wrestler' }}
     </button>
 </div>

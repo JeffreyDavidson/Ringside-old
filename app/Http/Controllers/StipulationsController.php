@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Stipulation;
+use App\Models\Stipulation;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 
@@ -67,6 +67,8 @@ class StipulationsController extends Controller
      */
     public function show(Stipulation $stipulation)
     {
+        $stipulation->load('matches', 'matches.event');
+
         if ($this->wantsJson() || $this->ajax()) {
             return response()->json($stipulation);
         }

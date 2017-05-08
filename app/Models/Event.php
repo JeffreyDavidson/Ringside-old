@@ -3,10 +3,18 @@
 namespace App\Models;
 
 use App\Exceptions\MatchesHaveSameMatchNumberAtEventException;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
+    /**
+     * Don't auto-apply mass assignment protection.
+     *
+     * @var array
+     */
+    protected $guarded = [];
+
     /**
      * The attributes that should be mutated to dates.
      *
@@ -19,6 +27,16 @@ class Event extends Model
         return $this->date->format('F jS, Y');
     }
 
+    public function getFormattedFormDateAttribute()
+    {
+        return $this->date->format('m/d/Y');
+    }
+
+    public function getTimeAttribute()
+    {
+        return $this->date->format('h:ia');
+    }
+
     public function matches()
     {
         return $this->hasMany(Match::class)
@@ -27,7 +45,7 @@ class Event extends Model
 
     public function arena()
     {
-        return $this->belongsTo(Arena::class);
+        return $this->belongsTo(Arena::class)->withTrashed();
     }
 
     public function addMatches($matches)
@@ -49,5 +67,19 @@ class Event extends Model
         } catch (\PDOException $e) {
             throw new MatchesHaveSameMatchNumberAtEventException;
         }
+    }
+
+    /**
+     * Set the date field for the title.
+     *
+     * @return date
+     */
+    public function setDateAttribute($date)
+    {
+        if($date instanceof Carbon) {
+            return $this->attributes['date'] = $date;
+        }
+
+        return $this->attributes['date'] = Carbon::parse($date);
     }
 }

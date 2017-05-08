@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Event;
+use App\Models\Event;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class EventsController extends Controller
 {
@@ -43,22 +44,21 @@ class EventsController extends Controller
     {
         $this->validate($request, [
             'name' => 'required|unique:arenas,name',
-            'address' => 'required',
-            'city' => 'required',
-            'state' => 'required',
-            'postcode' => 'required|digits:5'
+            'slug' => 'required|unique:events,slug',
+            'date' => 'required|date_format:"m/d/Y"',
+            'time' => 'required|date_format:"H:ia"',
+            'arena_id' => 'required'
         ]);
 
-        $arena = Arena::create([
+        $event = Event::create([
             'name' => request('name'),
-            'address' => request('address'),
-            'city' => request('city'),
-            'state' => request('state'),
-            'postcode' => request('postcode'),
+            'slug' => request('slug'),
+            'date' => request('date'),
+            'arena_id' => request('arena_id')
         ]);
 
         if ($this->wantsJson() || $this->ajax()) {
-            return response()->json($arena);
+            return response()->json($event);
         }
 
         return redirect(route('events.index'));
@@ -85,7 +85,7 @@ class EventsController extends Controller
      * @param  Event $event
      * @return \Illuminate\Http\Response
      */
-    public function edit($event)
+    public function edit(Event $event)
     {
         return response()->view('events.edit', ['event' => $event]);
     }
@@ -100,11 +100,11 @@ class EventsController extends Controller
     public function update(Request $request, Event $event)
     {
         $this->validate($request, [
-            'name' => ['required', Rule::unique('stipulations' ,'name')->ignore($event->id)],
-            'address' => 'required',
-            'city' => 'required',
-            'state' => 'required',
-            'postcode' => 'required|digits:5'
+            'name' => ['required', Rule::unique('events' ,'name')->ignore($event->id)],
+            'slug' => ['required', Rule::unique('events' ,'slug')->ignore($event->id)],
+            'date' => 'required|date_format:"m/d/Y"',
+            'time' => 'required|date_format:"H:ia"',
+            'arena_id' => 'required|exists:staff,arena_id,deleted_at,NULL'
         ]);
 
         $event->update([
