@@ -29,12 +29,12 @@ class Event extends Model
 
     public function getFormattedFormDateAttribute()
     {
-        return $this->date->format('m/d/Y');
+        return $this->date ? $this->date->format('m/d/Y') : null;
     }
 
     public function getTimeAttribute()
     {
-        return $this->date->format('h:ia');
+        return $this->date ? $this->date->format('h:ia') : null;
     }
 
     public function matches()
