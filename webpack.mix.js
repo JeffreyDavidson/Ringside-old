@@ -75,9 +75,9 @@ mix.styles([
 
     mix.js('resources/assets/js/app.js', 'public/js');
 
-    mix.copyDirectory('resources/assets/fonts/brand-icons/fonts',  'public/fonts/brand-icons/fonts');
-    mix.copyDirectory('resources/assets/fonts/web-icons/fonts',    'public/fonts/web-icons/fonts');
-    mix.copyDirectory('resources/assets/fonts/font-awesome/fonts', 'public/fonts/font-awesome/fonts');
+    mix.copyDirectory('resources/assets/fonts/brand-icons/fonts',  'public/css/fonts');
+    mix.copyDirectory('resources/assets/fonts/web-icons/fonts',    'public/css/fonts');
+    mix.copyDirectory('resources/assets/fonts/font-awesome/fonts', 'public/css/fonts');
     mix.copyDirectory('resources/assets/images', 'public/images');
     mix.copy('resources/assets/vendor/breakpoints/breakpoints.js', 'public/js');
     mix.copy('resources/assets/vendor/media-match/media.match.js', 'public/js');
