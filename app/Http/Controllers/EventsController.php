@@ -46,7 +46,6 @@ class EventsController extends Controller
             'name' => 'required|unique:arenas,name',
             'slug' => 'required|unique:events,slug',
             'date' => 'required|date_format:"m/d/Y"',
-            'time' => 'required|date_format:"H:ia"',
             'arena_id' => 'required'
         ]);
 
