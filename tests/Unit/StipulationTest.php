@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Models\Stipulation;
+use App\Models\Match;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('header')
-    <h1 class="page-title">Arenas</h1>
+    <h1 class="page-title">Edit Arena</h1>
 @endsection
 
 @section('content')

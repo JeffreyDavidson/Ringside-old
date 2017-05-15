@@ -80,8 +80,13 @@ class Match extends Model
      * @param Wrestler $wrestler
      */
 	public function addWrestler(Wrestler $wrestler)
-	{
-		$this->wrestlers()->save($wrestler);
+    {
+        if ($wrestler->hired_at > $this->event->date)
+        {
+            throw new WrestlerNotQualifiedException;
+        }
+
+        $this->wrestlers()->save($wrestler);
 	}
 
     /**

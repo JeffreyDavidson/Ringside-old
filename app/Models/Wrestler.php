@@ -7,6 +7,7 @@ use App\Traits\HasStatuses;
 use App\Traits\HasTitles;
 use App\Traits\HasRetirements;
 use App\Traits\HasInjuries;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Wrestler extends Model
@@ -94,5 +95,49 @@ class Wrestler extends Model
      */
 	public function status() {
         return $this->getAttribute('status_id');
+    }
+
+    /**
+     * Set the hired at field for the title.
+     *
+     * @return date
+     */
+    public function setHiredAtAttribute($date)
+    {
+        if($date instanceof Carbon) {
+            return $this->attributes['hired_at'] = $date;
+        }
+
+        return $this->attributes['hired_at'] = Carbon::parse($date);
+    }
+
+    /**
+     * Get the wrestler's height in feet.
+     *
+     * @return integer
+     */
+    public function getHeightInFeetAttribute()
+    {
+        if ($this->bio)
+        {
+            return floor($this->bio->height/12);
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the wrestler's remaining height in inches.
+     *
+     * @return integer
+     */
+    public function getHeightInInchesAttribute()
+    {
+        if ($this->bio)
+        {
+            return $this->bio->height % 12;
+        }
+
+        return null;
     }
 }
