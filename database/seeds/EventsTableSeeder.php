@@ -40,7 +40,7 @@ class EventsTableSeeder extends Seeder
 					$match->addTitles($title = Title::valid($event->date)->get()->random());
 
 					//Add first Wrestler
-					$match->addWrestler($wrestler = $title->getCurrentChampion() ?: Wrestler::get()->random());
+					$match->addWrestler($wrestler = $title->getCurrentChampion() ?: Wrestler::where('hired_at', '<', $event->date)->get()->random());
 
 					if ( $this->chance(1) ) {
 						$title2 = '';
@@ -58,23 +58,23 @@ class EventsTableSeeder extends Seeder
 							}
 
 							$title2 = $builder->random();
-							$wrestler2 = $title2->getCurrentChampion() ?: Wrestler::whereNotIn('id', [$match->wrestlers->first()->id])->get()->random();
+							$wrestler2 = $title2->getCurrentChampion() ?: Wrestler::where('hired_at', '<', $event->date)->whereNotIn('id', [$match->wrestlers->first()->id])->get()->random();
 							$excludes->push($title2->id);
 						} while ( $wrestler->id === $wrestler2->id );
 
 						if($title2) {
 							$match->addTitles($title2);
 						} else {
-							$wrestler2 = Wrestler::whereNotIn('id', [$match->wrestlers->first()->id])->get()->random();
+							$wrestler2 = Wrestler::where('hired_at', '<', $event->date)->whereNotIn('id', [$match->wrestlers->first()->id])->get()->random();
 						}
 					} else {
-						$wrestler2 = Wrestler::whereNotIn('id', [$match->wrestlers->first()->id])->get()->random();
+						$wrestler2 = Wrestler::where('hired_at', '<', $event->date)->whereNotIn('id', [$match->wrestlers->first()->id])->get()->random();
 					}
 
 					$match->addWrestler($wrestler2);
 				} else {
-					$match->addWrestler(Wrestler::get()->random());
-					$match->addWrestler(Wrestler::get()->except($match->wrestlers->first()->id)->random());
+					$match->addWrestler(Wrestler::where('hired_at', '<', $event->date)->get()->random());
+					$match->addWrestler(Wrestler::where('hired_at', '<', $event->date)->get()->except($match->wrestlers->first()->id)->random());
 				}
 
 				$match->load('wrestlers');

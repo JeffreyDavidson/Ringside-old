@@ -104,11 +104,7 @@ class Wrestler extends Model
      */
     public function setHiredAtAttribute($date)
     {
-        if($date instanceof Carbon) {
-            return $this->attributes['hired_at'] = $date;
-        }
-
-        return $this->attributes['hired_at'] = Carbon::parse($date);
+		return $this->attributes['hired_at'] = $date;
     }
 
     /**
