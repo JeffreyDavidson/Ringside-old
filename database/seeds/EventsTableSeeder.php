@@ -18,13 +18,17 @@ class EventsTableSeeder extends Seeder
 	 */
 	public function run()
 	{
-		$lastDate = Carbon::parse('January 2, 1970');
-		for($i = 1; $i <= 1000; $i++) {
+		//perform check on the number of wrestlers hired before date.
+		//if more than one create event with at most 10 matches
+		//if 1 or less, go to next date
+		$lastDate = Carbon::parse('January 9, 1980');
+		$i = 0;
+		while($lastDate->lt(Carbon::now()->subDay(14))) {
 			$event = factory(Event::class)->create([
-				'name' => 'Event '.$i,
-				'slug' => 'event'.$i,
+				'name' => 'Event ' . $i++,
+				'slug' => 'event' . $i,
 				'arena_id' => Arena::inRandomOrder()->first()->id,
-				'date' => $lastDate = Carbon::createFromTimestamp($this->getEventDate($lastDate->timestamp, Carbon::now()->timestamp))
+				'date' => $lastDate = $lastDate->addDay(7)
 			]);
 
 			for($j = 1; $j <= 8; $j++) {
@@ -103,13 +107,5 @@ class EventsTableSeeder extends Seeder
 
     public function chance(int $percent) {
         return rand(0,100) < $percent;
-    }
-
-	public function getEventDate(int $min, int $max) {
-    	$spread = $max - $min;
-
-		$result = mt_rand($min, $max - ($spread * (990 / 1000)));
-
-		return $result;
     }
 }
