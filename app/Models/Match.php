@@ -166,4 +166,8 @@ class Match extends Model
             });
         }
     }
+
+	public function getWinner() {
+		return Wrestler::find($this->winner_id);
+    }
 }

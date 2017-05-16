@@ -18,16 +18,7 @@ class WrestlersTableSeeder extends Seeder
     	$i = 0;
     	while($lastDate->lt(Carbon::now()->subDay(14))) {
     		while($this->chance(30)) {
-				$wrestler = factory(Wrestler::class)->states($this->getStatus())->create([
-					'name' => 'Wrestler ' . $i++,
-					'slug' => 'wrestler' . $i,
-					'hired_at' => $lastDate
-				]);
 
-				$wrestler->bio()->save(factory(WrestlerBio::class)->create([
-					'wrestler_id' => $wrestler->id,
-					'signature_move' => 'Signature Move ' . $i
-				]));
 
 			}
 

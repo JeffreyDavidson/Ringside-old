@@ -40,10 +40,10 @@ class DatabaseSeeder extends Seeder
         }
 
         $this->call(WrestlerStatusesTableSeeder::class);
-        $this->call(WrestlersTableSeeder::class);
+//        $this->call(WrestlersTableSeeder::class);
         $this->call(RefereesTableSeeder::class);
-        $this->call(WrestlersInjuriesTableSeeder::class);
-        $this->call(WrestlersRetirementsTableSeeder::class);
+//        $this->call(WrestlersInjuriesTableSeeder::class);
+//        $this->call(WrestlersRetirementsTableSeeder::class);
         $this->call(TitlesTableSeeder::class);
         $this->call(MatchTypesTableSeeder::class);
         $this->call(StipulationsTableSeeder::class);
