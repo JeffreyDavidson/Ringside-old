@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Exceptions\WrestlerNotQualifiedException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 

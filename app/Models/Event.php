@@ -76,10 +76,6 @@ class Event extends Model
      */
     public function setDateAttribute($date)
     {
-        if($date instanceof Carbon) {
-            return $this->attributes['date'] = $date;
-        }
-
-        return $this->attributes['date'] = Carbon::parse($date);
+		return $this->attributes['date'] = $date;
     }
 }

@@ -2,4 +2,4 @@
 
 namespace App\Exceptions;
 
-class WrestlerNotQualifiedException extends \PDOException {}
+class WrestlerNotQualifiedException extends \Exception {}
