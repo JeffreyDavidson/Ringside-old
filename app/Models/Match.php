@@ -79,6 +79,7 @@ class Match extends Model
      * Add a wrestler to a match.
      *
      * @param Wrestler $wrestler
+     * @throws WrestlerNotQualifiedException
      */
 	public function addWrestler(Wrestler $wrestler)
     {

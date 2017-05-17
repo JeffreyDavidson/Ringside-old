@@ -47,7 +47,7 @@ class MatchTest extends TestCase
     }
 
     /** @test */
-    public function a_match_must_have_at_least_two_wrstlers()
+    public function a_match_must_contain_at_least_two_wrestlers()
     {
         $wrestlers = factory(Wrestler::class, 2)->create();
         $match = factory(Match::class)->create();
