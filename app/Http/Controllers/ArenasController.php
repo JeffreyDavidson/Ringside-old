@@ -47,7 +47,7 @@ class ArenasController extends Controller
             'address' => 'required',
             'city' => 'required',
             'state' => 'required',
-            'postcode' => 'required|digits:5'
+            'postcode' => 'required|numeric|digits:5'
         ]);
 
         $arena = Arena::create([
