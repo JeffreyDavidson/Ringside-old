@@ -168,7 +168,13 @@ class Match extends Model
         }
     }
 
-	public function getWinner() {
+	public function getWinner()
+    {
 		return Wrestler::find($this->winner_id);
+    }
+
+    public function getFormattedWrestlersAttribute()
+    {
+        return $this->wrestlers->implode('name', ' vs. ');
     }
 }

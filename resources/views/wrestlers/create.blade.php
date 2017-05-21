@@ -13,13 +13,9 @@
             </div>
         </div>
         <div class="panel-body container-fluid">
-            <div class="row row-lg">
-                <div class="col-md-6">
-                    <form method="POST" action="{{ route('wrestlers.index') }}">
-                        @include('wrestlers.form', compact('wrestler'))
-                    </form>
-                </div>
-            </div>
+            <form method="POST" action="{{ route('wrestlers.index') }}">
+                @include('wrestlers.form', compact('wrestler'))
+            </form>
         </div>
     </div>
 @endsection

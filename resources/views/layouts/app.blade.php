@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
         <meta name="description" content="bootstrap admin template">
         <meta name="author" content="">
-        <title>Blank | Remark Admin Template</title>
+        <title>Ringside</title>
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
         <link rel="shortcut icon" href="favicon.ico">
         <!-- Stylesheets -->
@@ -85,6 +85,6 @@
                 });
             })(document, window, jQuery);
         </script>
-        @yield('footer-scripts')
+        <script src="{{ asset('js/script.js') }}"></script>
     </body>
 </html>

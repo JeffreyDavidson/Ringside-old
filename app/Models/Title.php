@@ -25,17 +25,13 @@ class Title extends Model
     protected $dates = ['introduced_at', 'retired_at'];
 
     /**
-<<<<<<< Updated upstream:app/Title.php
      * A title can have many champions.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
-=======
-     * @return mixed
->>>>>>> Stashed changes:app/Models/Title.php
      */
     public function champions()
     {
-        return $this->hasMany(TitleHistory::class)->orderBy('won_on');
+        return $this->hasMany(TitleHistory::class);
     }
 
     /**
@@ -115,9 +111,21 @@ class Title extends Model
      *
      * @return Wrestler $wrestler
      */
-    public function getMostTitleDefensesAttribute()
+    public function most_title_defenses()
     {
-        return 'most title defenses';
+        $wrestlers = $this->champions()
+            ->join('wrestlers', 'wrestlers.id', '=', 'title_wrestler.wrestler_id')
+            ->join('match_title', 'title_wrestler.id', '=', 'match_title.title_id')
+            ->selectRaw('COUNT(*) as count')
+            ->addSelect('wrestlers.name')
+            ->groupBy('wrestler_id')->orderBy('count', 'desc')
+            ->get();
+
+        $most = $wrestlers->first()->count;
+
+        return $wrestlers->filter(function($item) use($most) {
+            return $item->count == $most;
+        });
     }
 
     /**
@@ -125,9 +133,21 @@ class Title extends Model
      *
      * @return Wrestler $wrestler
      */
-    public function getMostTitleReignsAttribute()
+    public function most_title_reigns()
     {
-        return 'most title reigns';
+        $wrestlers = $this->champions()
+            ->join('wrestlers', 'wrestlers.id', '=', 'title_wrestler.wrestler_id')
+            ->selectRaw('COUNT(*) as count')
+            ->addSelect('wrestlers.name')
+            ->groupBy('wrestler_id')->orderBy('count', 'desc')
+            ->get();
+
+        $most = $wrestlers->first()->count;
+
+
+        return $wrestlers->filter(function($item) use($most) {
+            return $item->count == $most;
+        });
     }
 
     /**

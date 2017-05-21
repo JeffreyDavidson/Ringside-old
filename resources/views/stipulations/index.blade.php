@@ -13,7 +13,7 @@
             </div>
         </div>
         <div class="panel-body container-fluid">
-            <table id="stipulationsList" class="table table-striped table-bordered" cellspacing="0" width="100%">
+            <table class="table table-striped table-bordered datatable" cellspacing="0" width="100%">
                 <thead>
                     <th>ID</th>
                     <th>Name</th>
@@ -27,10 +27,10 @@
                         <td>{{ $stipulation->name }}</td>
                         <td>{{ $stipulation->slug }}</td>
                         <td>
-                            <a class="btn btn-sm btn-icon btn-flat btn-default" href="{{ route('stipulations.edit', ['id' => $stipulation->id]) }}" data-toggle="tooltip" data-original-title="Edit">
+                            <a class="btn btn-sm btn-icon btn-flat btn-default" href="{{ route('stipulations.edit', $stipulation->id) }}" data-toggle="tooltip" data-original-title="Edit">
                                 <i class="icon wb-wrench" aria-hidden="true"></i>
                             </a>
-                            <a class="btn btn-sm btn-icon btn-flat btn-default" href="{{ route('stipulations.show', ['id' => $stipulation->id]) }}" data-toggle="tooltip" data-original-title="Show">
+                            <a class="btn btn-sm btn-icon btn-flat btn-default" href="{{ route('stipulations.show', $stipulation->id) }}" data-toggle="tooltip" data-original-title="Show">
                                 <i class="icon wb-eye" aria-hidden="true"></i>
                             </a>
                             <form style="display: inline-block;" action="{{ route('stipulations.destroy', $stipulation->id) }}" method="POST">
@@ -47,19 +47,4 @@
             </table>
         </div>
     </div>
-@endsection
-
-@section('footer-scripts')
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('#stipulationsList').DataTable({
-                "pagingType": "full_numbers",
-                "columnDefs": [
-                    { "width": "20px", "targets": 0 },
-                    { "width": "150px", "targets": -1 },
-                    { "targets": -1, "orderable": false }
-                ]
-            });
-        } );
-    </script>
 @endsection

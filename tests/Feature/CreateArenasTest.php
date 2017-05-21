@@ -10,11 +10,34 @@ class CreateArenasTest extends TestCase
 {
     use DatabaseMigrations;
 
-    /** @test */
-    public function an_arena_requires_a_name()
+    private function validParams($overrides = [])
     {
-        $this->createArena(['name' => null])
-            ->assertSessionHasErrors('name');
+        return array_merge([
+            'name' => 'My Arena',
+            'address' => '123 Main St.',
+            'city' => 'Laraville',
+            'state' => 'ON',
+            'zip' => '12345',
+        ], $overrides);
+    }
+
+    private function from($url)
+    {
+        session()->setPreviousUrl(url($url));
+        return $this;
+    }
+
+    /** @test */
+    public function name_is_required()
+    {
+        $response = $this->from(route('arenas.create'))->post(route('arenas.index'), $this->validParams([
+            'title' => '',
+        ]));
+
+        $response->assertStatus(302);
+        $response->assertRedirect('/backstage/concerts/new');
+        $response->assertSessionHasErrors('title');
+        $this->assertEquals(0, Concert::count());
     }
 
     /** @test */

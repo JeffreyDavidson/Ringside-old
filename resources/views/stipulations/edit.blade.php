@@ -13,14 +13,10 @@
             </div>
         </div>
         <div class="panel-body container-fluid">
-            <div class="row row-lg">
-                <div class="col-md-6">
-                    <form method="POST" action="{{ route('stipulations.update', $stipulation->id) }}">
-                        {{ method_field('PATCH') }}
-                        @include('stipulations.form', ['submitButtonText' => 'Edit Stipulation'])
-                    </form>
-                </div>
-            </div>
+            <form method="POST" action="{{ route('stipulations.update', $stipulation->id) }}">
+                {{ method_field('PATCH') }}
+                @include('stipulations.form', ['submitButtonText' => 'Edit Stipulation'])
+            </form>
         </div>
     </div>
 @endsection

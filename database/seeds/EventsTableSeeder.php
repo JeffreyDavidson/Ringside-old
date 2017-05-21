@@ -26,14 +26,14 @@ class EventsTableSeeder extends Seeder
         //perform check on the number of wrestlers hired before date.
         //if more than one create event with at most 10 matches
         //if 1 or less, go to next date
-        $lastDate = Carbon::parse('January 2, 2000');
+        $lastDate = Carbon::parse('first Sunday of January 2000');
         $i = 0;
         while($lastDate->lt(Carbon::now()->subDay(14))) {
             $event = factory(Event::class)->create([
                 'name' => 'Event ' . ++$i,
                 'slug' => 'event' . $i,
                 'arena_id' => Arena::inRandomOrder()->first()->id,
-                'date' => $lastDate->addDay(random_int(1,24) * 7)
+                'date' => $lastDate->addWeek(),
             ]);
 
             if($i == 1) {

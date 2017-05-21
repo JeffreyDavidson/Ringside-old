@@ -1,7 +1,10 @@
 @extends('layouts.app')
 
+@section('header')
+    <h1 class="page-title">{{ $wrestler->name }}</h1>
+@endsection
+
 @section('content')
-    <h1>{{ $wrestler->name }}</h1>
     <p>Hometown: {{ $wrestler->bio->hometown }}</p>
     <p>Height: {{ $wrestler->bio->formatted_height }}</p>
     <p>Weight: {{ $wrestler->bio->weight }} lbs.</p>
@@ -37,20 +40,30 @@
             {{ $injury->injured_at->format('F m, Y') }} to {{ $injury->healed_at->format('F m, Y') }}
         @endforeach
     @endif
-
-    @if($wrestler->matches->count() > 0)
-        <h2>Matches</h2>
-        <table class="table table-bordered">
-            <thead>
-                <th>Event</th>
-            </thead>
-            <tbody>
-                @foreach($wrestler->matches as $match)
-                    <tr>
-                        <td>{{ $match->event->name }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    @endif
+    <div class="panel panel-bordered panel-primary">
+        <div class="panel-heading clearfix">
+            <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-trophy"></i>List of Matches</h3>
+            <div class="panel-actions">
+                <a class="btn btn-default pull-right" href="{{ route('wrestlers.index') }}">Back to Wrestlers</a>
+            </div>
+        </div>
+        <div class="panel-body container-fluid">
+            <table class="table table-striped table-bordered datatable" cellspacing="0" width="100%">
+                <thead>
+                    <th>ID</th>
+                    <th>Event</th>
+                    <th>Actions</th>
+                </thead>
+                <tbody>
+                    @foreach($wrestler->matches as $match)
+                        <tr>
+                            <td>{{ $match->id }}</td>
+                            <td>{{ $match->event->name }}</td>
+                            <td> </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
 @endsection

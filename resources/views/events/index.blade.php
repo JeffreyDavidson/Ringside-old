@@ -13,7 +13,7 @@
             </div>
         </div>
         <div class="panel-body container-fluid">
-            <table id="wrestlersList" class="table table-striped table-bordered" cellspacing="0" width="100%">
+            <table class="table table-striped table-bordered datatable" cellspacing="0" width="100%">
                 <thead>
                     <th>ID</th>
                     <th>Name</th>
@@ -45,19 +45,4 @@
             </table>
         </div>
     </div>
-@endsection
-
-@section('footer-scripts')
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('#wrestlersList').DataTable({
-                "pagingType": "full_numbers",
-                "columnDefs": [
-                    { "width": "20px", "targets": 0 },
-                    { "width": "150px", "targets": -1 },
-                    { "targets": -1, "orderable": false }
-                ]
-            });
-        } );
-    </script>
 @endsection

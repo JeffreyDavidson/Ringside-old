@@ -1,13 +1,12 @@
 @extends('layouts.app')
 
 @section('header')
-    <h1 class="page-title">Event Details</h1>
+    <h1 class="page-title">{{ $event->name }}</h1>
+    <p>{{ $event->formatted_date }}</p>
+    <p>{{ $event->arena->name }}</p>
 @endsection
 
 @section('content')
-    <h1>{{ $event->name }}</h1>
-    <p>{{ $event->formatted_date }}</p>
-    <p>{{ $event->arena->name }}</p>
     @foreach($event->matches as $match)
         <div class="panel panel-bordered panel-primary">
             <div class="panel-heading">

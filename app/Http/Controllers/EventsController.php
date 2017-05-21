@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EventFormRequest;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -37,18 +38,11 @@ class EventsController extends Controller
     /**
      * Store a newly created event.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  EventFormRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(EventFormRequest $request)
     {
-        $this->validate($request, [
-            'name' => 'required|unique:arenas,name',
-            'slug' => 'required|unique:events,slug',
-            'date' => 'required|date_format:"m/d/Y"',
-            'arena_id' => 'required'
-        ]);
-
         $event = Event::create([
             'name' => request('name'),
             'slug' => request('slug'),
