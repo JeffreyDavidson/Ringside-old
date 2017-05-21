@@ -12,7 +12,7 @@
     "require-dev": {
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "~5.7",
+        "phpunit/phpunit": "~6.1",
         "barryvdh/laravel-debugbar": "^2.3",
         "laravel/browser-kit-testing": "^1.0"
     },
