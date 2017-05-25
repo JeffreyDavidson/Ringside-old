@@ -12,12 +12,12 @@ class StipulationTest extends TestCase
     use DatabaseMigrations;
 
     /** @test */
-    public function a_stipulation_can_belong_to_many_matches()
+    public function stipulations_belong_to_matches()
     {
         $stipulation = factory(Stipulation::class)->create();
-        $match = factory(Match::class)->create(['stipulation_id' => $stipulation->id]);
 
-        $this->assertInstanceOf(Stipulation::class, $match->stipulations->first());
-        $this->assertEquals($stipulation->id, $match->stipulations->first()->id);
+        $this->assertInstanceOf(
+            'Illuminate\Database\Eloquent\Collection', $stipulation->matches
+        );
     }
 }

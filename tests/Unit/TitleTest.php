@@ -2,9 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Exceptions\WrestlerCanNotBeHealedException;
-use App\Models\Wrestler;
-use App\Models\Manager;
+use App\Models\Event;
 use App\Models\Title;
 use Carbon\Carbon;
 use Tests\TestCase;
@@ -15,11 +13,37 @@ class TitleTest extends TestCase
     use DatabaseMigrations;
 
     /** @test */
-    public function a_title_can_only_be_defended_at_event_if_it_was_indroduced_before_the_event()
+    function titles_can_belong_to_matches()
     {
-        $title = factory(Title::class)->create(['introduced_at' => Carbon::parse('-3 weeks')]);
+        $title = factory(TItle::class)->create();
 
-        $this->assertGreaterThanOrEqual($title->introduced_at, Carbon::now());
+        $this->assertInstanceOf(
+            'Illuminate\Database\Eloquent\Collection', $title->matches
+        );
     }
 
+    /** @test */
+    function titles_can_have_many_champions()
+    {
+        $title = factory(TItle::class)->create();
+
+        $this->assertInstanceOf(
+            'Illuminate\Database\Eloquent\Collection', $title->champions
+        );
+    }
+
+    /** @test */
+    function can_get_all_valid_titles_for_an_event()
+    {
+        $validTitleA = factory(Title::class)->create(['introduced_at' => Carbon::parse('-3 weeks')]);
+        $validTitleB = factory(Title::class)->create(['introduced_at' => Carbon::parse('-2 weeks')]);
+        $invalidTitle = factory(Title::class)->create(['introduced_at' => Carbon::parse('+1 week')]);
+        $event = factory(Event::class)->create(['date' => Carbon::tomorrow()]);
+
+        $validTitles = Title::valid($event->date)->get();
+
+        $this->assertTrue($validTitles->contains($validTitleA));
+        $this->assertTrue($validTitles->contains($validTitleB));
+        $this->assertFalse($validTitles->contains($invalidTitle));
+    }
 }

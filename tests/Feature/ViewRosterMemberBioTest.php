@@ -30,13 +30,13 @@ class ViewARosterMemberBioTest extends TestCase
             'signature_move' => 'Powerbomb'
         ]);
 
-        $this->visit('wrestlers/'.$wrestler->id);
+        $response = $this->get('wrestlers/'.$wrestler->id);
 
-        $this->see('Wrestler 1');
-        $this->see('Kansas City, Missouri');
-        $this->see('6\'1"');
-        $this->see('251 lbs.');
-        $this->see('Powerbomb');
+        $response->assertSee('Wrestler 1');
+        $response->assertSee('Kansas City, Missouri');
+        $response->assertSee('6\'1"');
+        $response->assertSee('251 lbs.');
+        $response->assertSee('Powerbomb');
     }
 
     /** @test */

@@ -16,7 +16,7 @@ class EventsController extends Controller
      */
     public function index()
     {
-        $events = Event::with('arena')->get();
+        $events = Event::with('venue')->get();
 
         if ($this->wantsJson() || $this->ajax()) {
             return response()->json($events);
@@ -47,7 +47,7 @@ class EventsController extends Controller
             'name' => request('name'),
             'slug' => request('slug'),
             'date' => request('date'),
-            'arena_id' => request('arena_id')
+            'venue_id' => request('venue_id')
         ]);
 
         if ($this->wantsJson() || $this->ajax()) {
@@ -97,7 +97,7 @@ class EventsController extends Controller
             'slug' => ['required', Rule::unique('events' ,'slug')->ignore($event->id)],
             'date' => 'required|date_format:"m/d/Y"',
             'time' => 'required|date_format:"H:ia"',
-            'arena_id' => 'required|exists:staff,arena_id,deleted_at,NULL'
+            'venue_id' => 'required|exists:staff,venue_id,deleted_at,NULL'
         ]);
 
         $event->update([

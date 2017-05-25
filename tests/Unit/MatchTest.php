@@ -16,7 +16,7 @@ class MatchTest extends TestCase
     use DatabaseMigrations;
 
     /** @test */
-    public function a_match_must_have_a_type()
+    function a_match_must_have_a_type()
     {
         $type = factory(MatchType::class)->create();
         $match = factory(Match::class)->create(['match_type_id' => $type->id]);
@@ -25,42 +25,47 @@ class MatchTest extends TestCase
     }
 
     /** @test */
-    public function a_match_can_have_titles_competed_in_it()
+    function matches_can_have_titles()
     {
-        $titles = factory(Title::class, 2)->create();
         $match = factory(Match::class)->create();
 
-        $match->addTitles($titles);
-
-        $this->assertCount(2, $match->titles);
+        $this->assertInstanceOf(
+            'Illuminate\Database\Eloquent\Collection', $match->titles
+        );
     }
 
     /** @test */
-    public function a_match_can_have_stipulations_added_to_it()
+    function matches_can_have_referees()
     {
-        $stipulations = factory(Stipulation::class, 2)->create();
         $match = factory(Match::class)->create();
 
-        $match->addStipulations($stipulations);
-
-        $this->assertCount(2, $match->stipulations);
+        $this->assertInstanceOf(
+            'Illuminate\Database\Eloquent\Collection', $match->referees
+        );
     }
 
     /** @test */
-    public function a_match_must_contain_at_least_two_wrestlers()
+    function matches_can_have_stipulations()
     {
-        $wrestlers = factory(Wrestler::class, 2)->create();
         $match = factory(Match::class)->create();
 
-        $wrestlers->each(function($wrestler) use ($match) {
-			$match->addWrestler($wrestler);
-		});
-
-        $this->assertCount(2, $match->wrestlers);
+        $this->assertInstanceOf(
+            'Illuminate\Database\Eloquent\Collection', $match->stipulations
+        );
     }
 
     /** @test */
-    public function a_match_is_apart_of_an_event()
+    function matches_have_many_wrestlers()
+    {
+        $match = factory(Match::class)->create();
+
+        $this->assertInstanceOf(
+            'Illuminate\Database\Eloquent\Collection', $match->wrestlers
+        );
+    }
+
+    /** @test */
+    function a_match_is_apart_of_an_event()
     {
         $event = factory(Event::class)->create();
         $match = factory(Match::class)->create(['event_id' => $event->id]);

@@ -36,9 +36,9 @@
                         </a>
                     </li>
                     <li class="site-menu-item has-sub">
-                        <a href="{{ route('arenas.index') }}">
+                        <a href="{{ route('venues.index') }}">
                             <i class="site-menu-icon icon fa-building" aria-hidden="true"></i>
-                            <span class="site-menu-title">Arenas</span>
+                            <span class="site-menu-title">Venues</span>
                         </a>
                     </li>
                 </ul>

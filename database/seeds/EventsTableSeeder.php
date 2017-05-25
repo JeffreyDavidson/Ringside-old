@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Arena;
+use App\Models\Venue;
 use App\Models\Event;
 use App\Models\Match;
 use App\Models\Stipulation;
@@ -32,7 +32,7 @@ class EventsTableSeeder extends Seeder
             $event = factory(Event::class)->create([
                 'name' => 'Event ' . ++$i,
                 'slug' => 'event' . $i,
-                'arena_id' => Arena::inRandomOrder()->first()->id,
+                'venue_id' => Venue::inRandomOrder()->first()->id,
                 'date' => $lastDate->addWeek(),
             ]);
 

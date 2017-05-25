@@ -11,12 +11,15 @@
 |
 */
 
+
+
 Route::get('/', function () {
     return view('dashboard');
 })->name('dashboard');
 
 Route::get('login', function() {
-    return 'hello';
+    \Auth::loginUsingId(1);
+    return redirect(route('dashboard'));
 })->name('login');
 
 Route::group(['middleware' => 'auth'], function () {
@@ -29,7 +32,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('events', 'EventsController');
     Route::resource('titles', 'TitlesController');
     Route::resource('stipulations', 'StipulationsController');
-    Route::resource('arenas', 'ArenasController');
+    Route::resource('venues', 'VenuesController');
     Route::resource('wrestler-statuses', 'WrestlerStatusesController', ['only' => ['index']]);
 
 });

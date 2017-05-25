@@ -4,7 +4,7 @@ namespace Tests\Unit;
 
 use App\Models\Event;
 use App\Models\Match;
-use App\Models\Arena;
+use App\Models\Venue;
 use App\Exceptions\MatchesHaveSameMatchNumberAtEventException;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -26,13 +26,13 @@ class EventTest extends TestCase
     }
 
     /** @test */
-    public function an_event_takes_place_at_an_arena()
+    public function an_event_takes_place_at_a_venue()
     {
-        $arena = factory(Arena::class)->create();
+        $venue = factory(Venue::class)->create();
 
-        $event = factory(Event::class)->create(['arena_id' => $arena->id]);
+        $event = factory(Event::class)->create(['venue_id' => $venue->id]);
 
-        $this->assertEquals($arena->id, $event->arena_id);
+        $this->assertEquals($venue->id, $event->venue_id);
     }
 
     /** @test */

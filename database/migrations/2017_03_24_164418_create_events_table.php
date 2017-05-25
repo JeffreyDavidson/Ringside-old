@@ -18,10 +18,10 @@ class CreateEventsTable extends Migration
             $table->string('name');
             $table->string('slug');
             $table->dateTime('date');
-            $table->unsignedInteger('arena_id');
+            $table->unsignedInteger('venue_id');
             $table->timestamps();
 
-            $table->foreign('arena_id')->references('id')->on('arenas');
+            $table->foreign('venue_id')->references('id')->on('venues');
         });
     }
 

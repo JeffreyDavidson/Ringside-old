@@ -167,7 +167,7 @@ class Title extends Model
     /**
      * Get the current champion for the title.
      *
-     * @return Wrestler $wrestler
+     * @return Wrestler $wrestler|null
      */
 	public function getCurrentChampion() {
 		return $this->champions()->whereNull('lost_on')->first() ? $this->champions()->whereNull('lost_on')->first()->wrestler : null;

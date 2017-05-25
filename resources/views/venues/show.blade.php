@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('header')
-    <h1 class="page-title">{{ $arena->name }}</h1>
+    <h1 class="page-title">{{ $venue->name }}</h1>
 @endsection
 
 @section('content')
-    <p>{{ $arena->address }}</p>
-    <p>{{ $arena->city }}, {{ $arena->state }} {{ $arena->postcode }}</p>
+    <p>{{ $venue->address }}</p>
+    <p>{{ $venue->city }}, {{ $venue->state }} {{ $venue->postcode }}</p>
     <div class="panel panel-bordered">
 
     </div>
@@ -14,7 +14,7 @@
         <div class="panel-heading clearfix">
             <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-calendar"></i>List of Events</h3>
             <div class="panel-actions">
-                <a class="btn btn-default pull-right" href="{{ route('arenas.index') }}">Back To All Arenas</a>
+                <a class="btn btn-default pull-right" href="{{ route('venues.index') }}">Back To All Venues</a>
             </div>
         </div>
         <div class="panel-body container-fluid">
@@ -28,14 +28,14 @@
                     <th>Actions</th>
                 </thead>
                 <tbody>
-                @foreach($arena->events as $event)
+                @foreach($venue->events as $event)
                     <tr>
                         <td>{{ $event->id }}</td>
                         <td>{{ $event->name }}</td>
                         <td>{{ $event->formatted_date }}</td>
                         <td>{{ $event->matches->last()->formatted_wrestlers }}</td>
                         <td>
-                            <a class="btn btn-sm btn-icon btn-flat btn-default" href="{{ route('events.show', $event->id) }}" data-toggle="tooltip" data-original-title="Show">
+                            <a class="btn btn-sm btn-icon btn-flat btn-default" href="{{ route('events.show', $event) }}" data-toggle="tooltip" data-original-title="Show">
                                 <i class="icon wb-eye" aria-hidden="true"></i>
                             </a>
                         </td>

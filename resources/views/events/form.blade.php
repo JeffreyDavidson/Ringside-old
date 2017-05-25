@@ -24,14 +24,14 @@
 </div>
 
 <div class="form-group">
-    <label class="form-control-label" for="arena_id">Arena</label>
-    <select class="form-control" id="arena_id" name="arena_id">
+    <label class="form-control-label" for="arena_id">Venue</label>
+    <select class="form-control" id="venue_id" name="venue_id">
         <option value="0">Choose One</option>
-        @foreach(App\Models\Arena::all() as $arena)
-            <option value="{{ $arena->id }}" {{ $event->arena_id == $arena->id ? 'selected' : '' }}>{{ $arena->name }}</option>
+        @foreach(App\Models\Venue::all() as $venue)
+            <option value="{{ $venue->id }}" {{ $event->venue_id == $venue->id ? 'selected' : '' }}>{{ $venue->name }}</option>
         @endforeach
     </select>
-    @if ($errors->has('arena_id')) <small class="help-block">{{ $errors->first('arena_id') }}</small> @endif
+    @if ($errors->has('venue_id')) <small class="help-block">{{ $errors->first('venue_id') }}</small> @endif
 </div>
 
 <h2>Match #1</h2>

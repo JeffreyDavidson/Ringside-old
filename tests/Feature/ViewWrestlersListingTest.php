@@ -18,9 +18,9 @@ class ViewWrestlersListingTest extends TestCase
     {
         factory(Wrestler::class)->states('active')->create(['name' => 'Wrestler 1']);
 
-        $this->visit('wrestlers');
+        $response = $this->get(route('wrestlers.index'));
 
-        $this->see('Wrestler 1');
+        $response->assertSee('Wrestler 1');
     }
 
     /** @test */
@@ -28,7 +28,7 @@ class ViewWrestlersListingTest extends TestCase
     {
         factory(Wrestler::class)->states('inactive')->create(['name' => 'Wrestler 1']);
 
-        $this->visit('wrestlers/inactive');
+        $this->get(route('wrestlers/inactive'));
 
         $this->see('Wrestler 1');
     }
@@ -40,7 +40,7 @@ class ViewWrestlersListingTest extends TestCase
 
         $wrestler->injure();
 
-        $this->visit('wrestlers/injured');
+        $this->get(route('wrestlers.injured'));
 
         $this->see('Wrestler 1');
     }

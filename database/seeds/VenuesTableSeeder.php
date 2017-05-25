@@ -1,9 +1,9 @@
 <?php
 
-use App\Models\Arena;
+use App\Models\Venue;
 use Illuminate\Database\Seeder;
 
-class ArenasTableSeeder extends Seeder
+class VenuesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -13,7 +13,7 @@ class ArenasTableSeeder extends Seeder
     public function run()
     {
         for($i = 1; $i <= 100; $i++) {
-            factory(Arena::class)->create(['name' => 'Arena '.$i]);
+            factory(Venue::class)->create(['name' => 'Venue '.$i]);
         }
     }
 }

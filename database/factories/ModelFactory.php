@@ -120,9 +120,14 @@ $factory->define(App\Models\Title::class, function (Faker\Generator $faker) {
         'name' => $faker->sentence(3),
         'slug' => $faker->sentence(3),
         'introduced_at' => $faker->date(),
+    ];
+});
+
+$factory->state(App\Models\Title::class, 'retired', function ($faker) {
+    return [
         'retired_at' => function (array $title) use ($faker) {
-            return $faker->boolean(80) ? $faker->dateTimeBetween($title['introduced_at']) : null;
-        }
+            return $faker->dateTimeBetween($title['introduced_at']);
+        },
     ];
 });
 
@@ -143,8 +148,8 @@ $factory->define(App\Models\Event::class, function (Faker\Generator $faker) {
         'name' => $faker->sentence(3),
         'slug' => $faker->sentence(3),
         'date' => $faker->dateTimeBetween('-10 years'),
-        'arena_id' => function () {
-            return factory(App\Models\Arena::class)->create()->id;
+        'venue_id' => function () {
+            return factory(App\Models\Venue::class)->create()->id;
         },
     ];
 });
@@ -186,7 +191,7 @@ $factory->define(App\Models\MatchDecision::class, function (Faker\Generator $fak
     ];
 });
 
-$factory->define(App\Models\Arena::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\Venue::class, function (Faker\Generator $faker) {
 
     return [
         'name' => $faker->sentence(3),

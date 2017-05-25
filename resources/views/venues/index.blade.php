@@ -1,15 +1,15 @@
 @extends('layouts.app')
 
 @section('header')
-    <h1 class="page-title">Arenas</h1>
+    <h1 class="page-title">Venues</h1>
 @endsection
 
 @section('content')
     <div class="panel panel-bordered panel-primary">
         <div class="panel-heading clearfix">
-            <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-building"></i>List of Arenas</h3>
+            <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-building"></i>List of Venues</h3>
             <div class="panel-actions">
-                <a class="btn btn-default pull-right" href="{{ route('arenas.create') }}">Create Arena</a>
+                <a class="btn btn-default pull-right" href="{{ route('venues.create') }}">Create Venue</a>
             </div>
         </div>
         <div class="panel-body container-fluid">
@@ -24,22 +24,22 @@
                     <th>Actions</th>
                 </thead>
                 <tbody>
-                @foreach($arenas as $arena)
+                @foreach($venues as $venue)
                     <tr>
-                        <td>{{ $arena->id }}</td>
-                        <td>{{ $arena->name }}</td>
-                        <td>{{ $arena->address }}</td>
-                        <td>{{ $arena->city }}</td>
-                        <td>{{ $arena->state }}</td>
-                        <td>{{ $arena->postcode }}</td>
+                        <td>{{ $venue->id }}</td>
+                        <td>{{ $venue->name }}</td>
+                        <td>{{ $venue->address }}</td>
+                        <td>{{ $venue->city }}</td>
+                        <td>{{ $venue->state }}</td>
+                        <td>{{ $venue->postcode }}</td>
                         <td>
-                            <a class="btn btn-sm btn-icon btn-flat btn-default" href="{{ route('arenas.edit', $arena->id) }}" data-toggle="tooltip" data-original-title="Edit">
+                            <a class="btn btn-sm btn-icon btn-flat btn-default" href="{{ route('venues.edit', $venue) }}" data-toggle="tooltip" data-original-title="Edit">
                                 <i class="icon wb-wrench" aria-hidden="true"></i>
                             </a>
-                            <a class="btn btn-sm btn-icon btn-flat btn-default" href="{{ route('arenas.show', $arena->id) }}" data-toggle="tooltip" data-original-title="Show">
+                            <a class="btn btn-sm btn-icon btn-flat btn-default" href="{{ route('venues.show', $venue) }}" data-toggle="tooltip" data-original-title="Show">
                                 <i class="icon wb-eye" aria-hidden="true"></i>
                             </a>
-                            <form style="display: inline-block;" action="{{ route('arenas.destroy', $arena->id) }}" method="POST">
+                            <form style="display: inline-block;" action="{{ route('venues.destroy', $venue) }}" method="POST">
                                 {{ csrf_field() }}
                                 {{ method_field('DELETE') }}
                                 <button style="cursor: pointer" class="btn btn-sm btn-icon btn-flat btn-default" type="submit" data-toggle="tooltip" data-original-title="Delete">

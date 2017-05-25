@@ -17,10 +17,6 @@ class StipulationsController extends Controller
     {
         $stipulations = Stipulation::all();
 
-        if ($this->wantsJson() || $this->ajax()) {
-            return response()->json($stipulations);
-        }
-
         return response()->view('stipulations.index', ['stipulations' => $stipulations]);
     }
 
@@ -47,14 +43,10 @@ class StipulationsController extends Controller
             'slug' => 'required|unique:stipulations,slug'
         ]);
 
-        $stipulation = Stipulation::create([
+        Stipulation::create([
             'name' => request('name'),
             'slug' => request('slug')
         ]);
-
-        if ($this->wantsJson() || $this->ajax()) {
-            return response()->json($stipulation);
-        }
 
         return redirect(route('stipulations.index'));
     }
@@ -68,10 +60,6 @@ class StipulationsController extends Controller
     public function show(Stipulation $stipulation)
     {
         $stipulation->load('matches', 'matches.event');
-
-        if ($this->wantsJson() || $this->ajax()) {
-            return response()->json($stipulation);
-        }
 
         return response()->view('stipulations.show', ['stipulation' => $stipulation]);
     }
@@ -105,10 +93,6 @@ class StipulationsController extends Controller
             'name' => request('name'),
             'slug' => request('slug')
         ]);
-
-        if ($this->wantsJson() || $this->ajax()) {
-            return response()->json($stipulation);
-        }
 
         return redirect(route('stipulations.index'));
     }

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Arena extends Model
+class Venue extends Model
 {
     use SoftDeletes;
 
@@ -17,7 +17,7 @@ class Arena extends Model
     protected $guarded = [];
 
     /**
-     * An arena may host many events.
+     * A venue may host many events.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */

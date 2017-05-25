@@ -43,9 +43,9 @@ class Event extends Model
                 ->with('type', 'referees', 'stipulations', 'wrestlers', 'titles');
     }
 
-    public function arena()
+    public function venue()
     {
-        return $this->belongsTo(Arena::class)->withTrashed();
+        return $this->belongsTo(Venue::class)->withTrashed();
     }
 
     public function addMatches($matches)
