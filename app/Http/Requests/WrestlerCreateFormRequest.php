@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class EventFormRequest extends FormRequest
+class WrestlerCreateFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +24,15 @@ class EventFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|unique:arenas,name',
-            'slug' => 'required|unique:events,slug',
-            'date' => 'required|date_format:"m/d/Y"',
-            'venue_id' => 'required|not_in:0',
+            'name' => 'required|unique:wrestlers,name',
+            'slug' => 'required|unique:wrestlers,slug',
+            'status_id' => 'required|integer|not_in:0|exists:wrestler_statuses,id',
+            'hometown' => 'required',
+            'feet' => 'required|integer',
+            'inches' => 'required|integer|max:11',
+            'weight' => 'required|integer',
+            'signature_move' => 'required',
+            'hired_at' => 'required|date',
         ];
     }
 
@@ -39,8 +44,7 @@ class EventFormRequest extends FormRequest
     public function messages()
     {
         return [
-            'venue_id.required' => 'The venue field is required.',
-            'venue_id.not_in'  => 'The selected venue is invalid.',
+            'status_id.not_in'  => 'The selected status is invalid.',
         ];
     }
 }

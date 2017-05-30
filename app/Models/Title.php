@@ -101,9 +101,20 @@ class Title extends Model
      *
      * @return Wrestler $wrestler
      */
-    public function getLongestTitleReignAttribute()
+    public function longest_title_reign()
     {
-        return 'longest title reign';
+        $wrestlers = $this->champions()
+            ->join('wrestlers', 'wrestlers.id', '=', 'title_wrestler.wrestler_id')
+            ->selectRaw("DATEDIFF(IFNULL(DATE(title_wrestler.lost_on), NOW()), DATE(title_wrestler.won_on)) as length")
+            ->addSelect('wrestlers.name')
+            ->orderBy('length', 'desc')
+            ->get();
+
+        $longest = $wrestlers->first()->length;
+
+        return $wrestlers->filter(function($item) use ($longest) {
+            return $item->length == $longest;
+        });
     }
 
     /**

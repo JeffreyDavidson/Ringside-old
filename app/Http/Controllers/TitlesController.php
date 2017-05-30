@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TitleCreateFormRequest;
+use App\Http\Requests\TitleEditFormRequest;
 use App\Models\Title;
-use Illuminate\Validation\Rule;
-use Illuminate\Http\Request;
 
 class TitlesController extends Controller
 {
@@ -16,10 +16,6 @@ class TitlesController extends Controller
     public function index()
     {
         $titles = Title::all();
-
-        if ($this->wantsJson() || $this->ajax()) {
-            return response()->json($titles);
-        }
 
         return response()->view('titles.index', ['titles' => $titles]);
     }
@@ -37,26 +33,16 @@ class TitlesController extends Controller
     /**
      * Store a newly created title.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param TitleCreateFormRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TitleCreateFormRequest $request)
     {
-        $this->validate($request, [
-            'name' => 'required|unique:titles,name',
-            'slug' => 'required|unique:titles,slug',
-            'introduced_at' => 'required|date'
-        ]);
-        
-        $title = Title::create([
+        Title::create([
             'name' => request('name'),
             'slug' => request('slug'),
             'introduced_at' => request('introduced_at')
         ]);
-
-        if ($this->wantsJson() || $this->ajax()) {
-            return response()->json($title);
-        }
 
         return redirect(route('titles.index'));
     }
@@ -69,10 +55,6 @@ class TitlesController extends Controller
      */
     public function show(Title $title)
     {
-        if ($this->wantsJson() || $this->ajax()) {
-            return response()->json($title);
-        }
-
         return view('titles.show', ['title' => $title]);
     }
 
@@ -90,27 +72,17 @@ class TitlesController extends Controller
     /**
      * Update the specified title.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  TitleEditFormRequest  $request
      * @param  Title $title
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Title $title)
+    public function update(TitleEditFormRequest $request, Title $title)
     {
-        $this->validate($request, [
-            'name' => ['required', Rule::unique('titles' ,'name')->ignore($title->id)],
-            'slug' => ['required', Rule::unique('titles' ,'slug')->ignore($title->id)],
-            'introduced_at' => 'required|date'
-        ]);
-
         $title->update([
             'name' => request('name'),
             'slug' => request('slug'),
             'introduced_at' => request('introduced_at')
         ]);
-
-        if ($this->wantsJson() || $this->ajax()) {
-            return response()->json($title);
-        }
 
         return redirect(route('titles.index'));
     }

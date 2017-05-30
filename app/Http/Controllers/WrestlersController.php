@@ -2,24 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\WrestlerCreateFormRequest;
+use App\Http\Requests\WrestlerEditFormRequest;
 use App\Models\Wrestler;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class WrestlersController extends Controller
 {
     /**
-     * Display a listing of all the wrstlers.
+     * Display a listing of all the wrestlers.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
         $wrestlers = Wrestler::all();
-
-        if ($this->wantsJson() || $this->ajax()) {
-            return response()->json($wrestlers);
-        }
 
         return response()->view('wrestlers.index', ['wrestlers' => $wrestlers]);
     }
@@ -37,40 +33,17 @@ class WrestlersController extends Controller
     /**
      * Store a newly created wrestler.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param WrestlerCreateFormRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(WrestlerCreateFormRequest $request)
     {
-        $this->validate($request, [
-            'name' => 'required|unique:wrestlers,name',
-            'slug' => 'required|unique:wrestlers,slug',
-            'status_id' => 'required|integer|exists:wrestler_statuses,id',
-            'hometown' => 'required',
-            'feet' => 'required|integer',
-            'inches' => 'required|integer',
-            'weight' => 'required|integer',
-            'signature_move' => 'required',
-            'hired_at' => 'required|date',
-        ]);
-
-        $wrestler = Wrestler::create([
+        Wrestler::create([
             'name' => request('name'),
             'slug' => request('slug'),
             'status_id' => request('status_id'),
             'hired_at' => request('hired_at'),
         ]);
-
-        $wrestler->bio()->create([
-            'hometown' => request('hometown'),
-            'height' => request('feet') * 12 + request('inches'),
-            'weight' => request('weight'),
-            'signature_move' => request('signature_move'),
-        ]);
-
-        if ($this->wantsJson() || $this->ajax()) {
-            return response()->json($wrestler);
-        }
 
         return redirect(route('wrestlers.index'));
     }
@@ -84,10 +57,6 @@ class WrestlersController extends Controller
     public function show(Wrestler $wrestler)
     {
         $wrestler->load('currentManagers', 'previousManagers', 'titles.title', 'bio');
-
-        if ($this->wantsJson() || $this->ajax()) {
-            return response()->json($wrestler);
-        }
 
         return response()->view('wrestlers.show', ['wrestler' => $wrestler]);
     }
@@ -106,32 +75,12 @@ class WrestlersController extends Controller
     /**
      * Update the specified wrestler.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param WrestlerEditFormRequest $request
      * @param  Wrestler $wrestler
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Wrestler $wrestler)
+    public function update(WrestlerEditFormRequest $request, Wrestler $wrestler)
     {
-        $this->validate($request, [
-            'name' => ['required', Rule::unique('wrestlers' ,'name')->ignore($wrestler->id)],
-            'slug' => ['required', Rule::unique('wrestlers' ,'slug')->ignore($wrestler->id)],
-            'status_id' => 'required',
-            'hometown' => 'required',
-            'feet' => 'required|integer',
-            'inches' => 'required|integer',
-            'weight' => 'required|integer',
-            'signature_move' => 'required',
-            'hired_at' => 'required|date',
-        ]);
-
-        if ($wrestler->matches->count() > 0)
-        {
-            dd($wrestler->matches);
-            $this->validate($request, [
-                'hired_at' => 'before_or_equal:'.$wrestler->matches->first()->event->date,
-            ]);
-        }
-
         $wrestler->update([
             'name' => request('name'),
             'slug' => request('slug'),
@@ -145,10 +94,6 @@ class WrestlersController extends Controller
             'weight' => request('weight'),
             'signature_move' => request('signature_move'),
         ]);
-
-        if ($this->wantsJson() || $this->ajax()) {
-            return response()->json($wrestler);
-        }
 
         return redirect(route('wrestlers.index'));
     }

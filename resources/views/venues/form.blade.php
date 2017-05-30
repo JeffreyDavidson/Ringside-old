@@ -26,10 +26,10 @@
             <select name="state" class="form-control" id="state" value="{{ old('state') ?? $venue->state }}">
                 <option value="0">Choose One</option>
                 @foreach(App\Http\Utilities\State::all() as $state)
-                    <option value="value" @if($state == (old('state') ?? $venue->state)) selected @endif>{{$state}}</option>
+                    <option value="{{ $state }}" @if($state == (old('state') ?? $venue->state)) {{ 'selected="selected"' }} @endif>{{$state}}</option>
                 @endforeach
             </select>
-            @if ($errors->has('name')) <small class="form-control-feedback">{{ $errors->first('state') }}</small> @endif
+            @if ($errors->has('state')) <small class="form-control-feedback">{{ $errors->first('state') }}</small> @endif
         </div>
     </div>
     <div class="col-md-3">

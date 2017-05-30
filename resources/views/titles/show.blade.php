@@ -13,7 +13,7 @@
     <h2>Records</h2>
     <p>Longest Title Reign:
         @foreach ($title->longest_title_reign() as $reign)
-            {{ $reign->name }} {{  "(".$reign->length.")" }}
+            {{ $reign->name }} {{  "(".$reign->length." days)" }}
         @endforeach
     </p>
     <p>Most Title Defenses:

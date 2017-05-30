@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Wrestler;
+use App\Observers\WrestlerObserver;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Dusk\DuskServiceProvider;
 
@@ -14,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
+        Wrestler::observe(WrestlerObserver::class);
     }
 
     /**
