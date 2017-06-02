@@ -35,8 +35,7 @@
 </div>
 
 <h2>Match #1</h2>
-@include('matches.form')
-
+@include('matches.form', ['match' => new \App\Models\Match])
 
 <div class="form-group">
     <button type="submit" class="btn btn-primary">

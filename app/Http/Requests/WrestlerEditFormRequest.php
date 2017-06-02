@@ -33,7 +33,7 @@ class WrestlerEditFormRequest extends FormRequest
                 'integer',
                 'not_in:0',
                 'exists:wrestler_statuses,id',
-                Rule::in([WrestlerStatus::available($this->wrestler->status(), false)])
+                Rule::in(WrestlerStatus::available($this->wrestler->status(), false)->values()->toArray())
             ],
             'hometown' => 'required',
             'feet' => 'required|integer',
@@ -72,7 +72,7 @@ class WrestlerEditFormRequest extends FormRequest
     {
         return [
             'status_id.not_in'  => 'The selected status is invalid.',
-            'status_id.'.Rule::in  => 'The selected status is invalid.',
+            'status_id.in'  => 'The selected status is invalid.',
         ];
     }
 }

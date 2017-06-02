@@ -27,7 +27,8 @@ class EventCreateFormRequest extends FormRequest
             'name' => 'required|unique:arenas,name',
             'slug' => 'required|unique:events,slug',
             'date' => 'required|date_format:"m/d/Y"',
-            'venue_id' => 'required|not_in:0',
+            'venue_id' => 'required|integer|not_in:0',
+
         ];
     }
 

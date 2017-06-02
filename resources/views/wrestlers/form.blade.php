@@ -17,7 +17,7 @@
     <select class="form-control" id="status_id" name="status_id">
         <option value="0">Choose One</option>
         @foreach($statuses as $status)
-            <option value="{{ $status->id }}" {{ ($wrestler->status() == $status->id) ? 'selected="selected"' : '' }}>{{ $status->name }}</option>
+            <option value="{{ $status->id }}" {{ $wrestler->status() == $status->id ? 'selected="selected"' : '' }}>{{ $status->name }}</option>
         @endforeach
     </select>
     @if ($errors->has('status_id')) <small class="form-control-feedback">{{ $errors->first('status_id') }}</small> @endif
