@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\VenueCreateFormRequest;
+use App\Http\Requests\VenueEditFormRequest;
 use App\Models\Venue;
-use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 
 class VenuesController extends Controller
@@ -33,28 +34,20 @@ class VenuesController extends Controller
     /**
      * Store a newly created venue.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param VenueCreateFormRequest|Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(VenueCreateFormRequest $request)
     {
-        $this->validate($request, [
-            'name' => 'required|unique:venues,name',
-            'address' => 'required',
-            'city' => 'required',
-            'state' => 'required|not_in:0',
-            'postcode' => 'required|numeric|digits:5'
-        ]);
-
         Venue::create([
-            'name' => request('name'),
-            'address' => request('address'),
-            'city' => request('city'),
-            'state' => request('state'),
-            'postcode' => request('postcode'),
+            'name' => $request->name,
+            'address' => $request->address,
+            'city' => $request->city,
+            'state' => $request->state,
+            'postcode' => $request->postcode,
         ]);
 
-        return redirect(route('venues.index'));
+        return redirect()->route('venues.index');
     }
 
     /**
@@ -82,29 +75,21 @@ class VenuesController extends Controller
     /**
      * Update the specified venue.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param VenueEditFormRequest $request
      * @param  Venue $venue
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Venue $venue)
+    public function update(VenueEditFormRequest $request, Venue $venue)
     {
-        $this->validate($request, [
-            'name' => ['required', Rule::unique('venues' ,'name')->ignore($venue->id)],
-            'address' => 'required',
-            'city' => 'required',
-            'state' => 'required|not_in:0',
-            'postcode' => 'required|digits:5'
-        ]);
-
         $venue->update([
-            'name' => request('name'),
-            'address' => request('address'),
-            'city' => request('city'),
-            'state' => request('state'),
-            'postcode' => request('postcode')
+            'name' => $request->name,
+            'address' => $request->address,
+            'city' => $request->city,
+            'state' => $request->state,
+            'postcode' => $request->postcode,
         ]);
 
-        return redirect(route('venues.index'));
+        return redirect()->route('venues.index');
     }
 
     /**
@@ -117,6 +102,6 @@ class VenuesController extends Controller
     {
         $venue->delete();
 
-        return redirect(route('venues.index'));
+        return redirect()->route('venues.index');
     }
 }

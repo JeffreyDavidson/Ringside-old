@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\EventFormRequest;
+use App\Http\Requests\EventCreateFormRequest;
+use App\Http\Requests\EventEditFormRequest;
 use App\Models\Event;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class EventsController extends Controller
 {
@@ -17,10 +16,6 @@ class EventsController extends Controller
     public function index()
     {
         $events = Event::with('venue')->get();
-
-        if ($this->wantsJson() || $this->ajax()) {
-            return response()->json($events);
-        }
 
         return response()->view('events.index', ['events' => $events]);
     }
@@ -38,23 +33,19 @@ class EventsController extends Controller
     /**
      * Store a newly created event.
      *
-     * @param  EventFormRequest  $request
+     * @param  EventCreateFormRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(EventFormRequest $request)
+    public function store(EventCreateFormRequest $request)
     {
-        $event = Event::create([
-            'name' => request('name'),
-            'slug' => request('slug'),
-            'date' => request('date'),
-            'venue_id' => request('venue_id')
+        Event::create([
+            'name' => $request->name,
+            'slug' => $request->slug,
+            'date' => $request->date,
+            'venue_id' => $request->venue_id,
         ]);
 
-        if ($this->wantsJson() || $this->ajax()) {
-            return response()->json($event);
-        }
-
-        return redirect(route('events.index'));
+        return redirect()->route('events.index');
     }
 
     /**
@@ -65,10 +56,6 @@ class EventsController extends Controller
      */
     public function show(Event $event)
     {
-        if ($this->wantsJson() || $this->ajax()) {
-            return response()->json($event);
-        }
-
         return response()->view('events.show', ['event' => $event]);
     }
 
@@ -86,33 +73,21 @@ class EventsController extends Controller
     /**
      * Update the specified event.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param EventEditFormRequest $request
      * @param  Event $event
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Event $event)
+    public function update(EventEditFormRequest $request, Event $event)
     {
-        $this->validate($request, [
-            'name' => ['required', Rule::unique('events' ,'name')->ignore($event->id)],
-            'slug' => ['required', Rule::unique('events' ,'slug')->ignore($event->id)],
-            'date' => 'required|date_format:"m/d/Y"',
-            'time' => 'required|date_format:"H:ia"',
-            'venue_id' => 'required|exists:staff,venue_id,deleted_at,NULL'
-        ]);
-
         $event->update([
-            'name' => request('name'),
-            'address' => request('address'),
-            'city' => request('city'),
-            'state' => request('state'),
-            'postcode' => request('postcode')
+            'name' => $request->name,
+            'address' => $request->address,
+            'city' => $request->city,
+            'state' => $request->state,
+            'postcode' => $request->postcode,
         ]);
 
-        if ($this->wantsJson() || $this->ajax()) {
-            return response()->json($event);
-        }
-
-        return redirect(route('events.index'));
+        return redirect()->route('events.index');
     }
 
     /**
@@ -125,6 +100,6 @@ class EventsController extends Controller
     {
         $event->delete();
 
-        return redirect(route('events.index'));
+        return redirect()->route('events.index');
     }
 }

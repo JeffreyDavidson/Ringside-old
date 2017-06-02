@@ -10,7 +10,7 @@
     <p>Weight: {{ $wrestler->bio->weight }} lbs.</p>
 
     @if($wrestler->bio->signature_move)
-        <p>{{ $wrestler->bio->signature_move }}</p>
+        <p>Signature Move: {{ $wrestler->bio->signature_move }}</p>
     @endif
 
     @if($wrestler->currentManagers->count() > 0)

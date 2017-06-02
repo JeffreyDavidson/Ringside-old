@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StipulationCreateFormRequest;
+use App\Http\Requests\StipulationEditFormRequest;
 use App\Models\Stipulation;
-use Illuminate\Validation\Rule;
-use Illuminate\Http\Request;
 
 class StipulationsController extends Controller
 {
@@ -33,22 +33,17 @@ class StipulationsController extends Controller
     /**
      * Store a newly created stipulation.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param StipulationCreateFormRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StipulationCreateFormRequest $request)
     {
-        $this->validate($request, [
-            'name' => 'required|unique:stipulations,name',
-            'slug' => 'required|unique:stipulations,slug'
-        ]);
-
         Stipulation::create([
-            'name' => request('name'),
-            'slug' => request('slug')
+            'name' => $request->name,
+            'slug' => $request->slug,
         ]);
 
-        return redirect(route('stipulations.index'));
+        return redirect()->route('stipulations.index');
     }
 
     /**
@@ -78,23 +73,18 @@ class StipulationsController extends Controller
     /**
      * Update the specified stipulation.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param StipulationEditFormRequest $request
      * @param  Stipulation $stipulation
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Stipulation $stipulation)
+    public function update(StipulationEditFormRequest $request, Stipulation $stipulation)
     {
-        $this->validate($request, [
-            'name' => ['required', Rule::unique('stipulations' ,'name')->ignore($stipulation->id)],
-            'slug' => ['required', Rule::unique('stipulations' ,'slug')->ignore($stipulation->id)]
-        ]);
-
         $stipulation->update([
-            'name' => request('name'),
-            'slug' => request('slug')
+            'name' => $request->name,
+            'slug' => $request->slug,
         ]);
 
-        return redirect(route('stipulations.index'));
+        return redirect()->route('stipulations.index');
     }
 
     /**
@@ -107,6 +97,6 @@ class StipulationsController extends Controller
     {
         $stipulation->delete();
 
-        return redirect(route('stipulations.index'));
+        return redirect()->route('stipulations.index');
     }
 }

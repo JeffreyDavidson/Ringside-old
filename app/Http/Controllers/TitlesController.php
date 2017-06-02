@@ -39,12 +39,12 @@ class TitlesController extends Controller
     public function store(TitleCreateFormRequest $request)
     {
         Title::create([
-            'name' => request('name'),
-            'slug' => request('slug'),
-            'introduced_at' => request('introduced_at')
+            'name' => $request->name,
+            'slug' => $request->slug,
+            'introduced_at' => $request->introduced_at,
         ]);
 
-        return redirect(route('titles.index'));
+        return redirect()->route('titles.index');
     }
 
     /**
@@ -55,7 +55,7 @@ class TitlesController extends Controller
      */
     public function show(Title $title)
     {
-        return view('titles.show', ['title' => $title]);
+        return response()->view('titles.show', ['title' => $title]);
     }
 
     /**
@@ -79,12 +79,12 @@ class TitlesController extends Controller
     public function update(TitleEditFormRequest $request, Title $title)
     {
         $title->update([
-            'name' => request('name'),
-            'slug' => request('slug'),
-            'introduced_at' => request('introduced_at')
+            'name' => $request->name,
+            'slug' => $request->slug,
+            'introduced_at' => $request->introduced_at,
         ]);
 
-        return redirect(route('titles.index'));
+        return redirect()->route('titles.index');
     }
 
     /**
@@ -97,6 +97,6 @@ class TitlesController extends Controller
     {
         $title->delete();
 
-        return redirect(route('titles.index'));
+        return redirect()->route('titles.index');
     }
 }

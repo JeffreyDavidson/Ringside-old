@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\WrestlerCreateFormRequest;
 use App\Http\Requests\WrestlerEditFormRequest;
 use App\Models\Wrestler;
+use App\Models\WrestlerStatus;
 
 class WrestlersController extends Controller
 {
@@ -27,7 +28,9 @@ class WrestlersController extends Controller
      */
     public function create()
     {
-        return response()->view('wrestlers.create', ['wrestler' => new Wrestler]);
+        $statuses = WrestlerStatus::whereIn('name', ['Active', 'Inactive'])->get();
+
+        return response()->view('wrestlers.create', ['wrestler' => new Wrestler, 'statuses' => $statuses]);
     }
 
     /**
@@ -39,13 +42,13 @@ class WrestlersController extends Controller
     public function store(WrestlerCreateFormRequest $request)
     {
         Wrestler::create([
-            'name' => request('name'),
-            'slug' => request('slug'),
-            'status_id' => request('status_id'),
-            'hired_at' => request('hired_at'),
+            'name' => $request->name,
+            'slug' => $request->slug,
+            'status_id' => $request->status_id,
+            'hired_at' => $request->hired_at,
         ]);
 
-        return redirect(route('wrestlers.index'));
+        return redirect()->route('wrestlers.index');
     }
 
     /**
@@ -69,7 +72,9 @@ class WrestlersController extends Controller
      */
     public function edit(Wrestler $wrestler)
     {
-        return response()->view('wrestlers.edit', ['wrestler' => $wrestler]);
+        $statuses = WrestlerStatus::available($wrestler->status());
+
+        return response()->view('wrestlers.edit', ['wrestler' => $wrestler, 'statuses' => $statuses]);
     }
 
     /**
@@ -81,21 +86,32 @@ class WrestlersController extends Controller
      */
     public function update(WrestlerEditFormRequest $request, Wrestler $wrestler)
     {
+        if ($wrestler->status() != $request->status_id) {
+            if ($wrestler->status() == WrestlerStatus::RETIRED) {
+                $wrestler->unretire();
+            } else if ($wrestler->status() == WrestlerStatus::INJURED) {
+                $wrestler->heal();
+            } else if ($wrestler->status() == WrestlerStatus::SUSPENDED) {
+                $wrestler->rejoin();
+            }
+        }
+
         $wrestler->update([
-            'name' => request('name'),
-            'slug' => request('slug'),
-            'status_id' => request('status_id'),
-            'hired_at' => request('hired_at')
+            'name' => $request->name,
+            'slug' => $request->slug,
+            'status_id' => $request->status_id,
+            'hired_at' => $request->hired_at,
         ]);
 
-        $wrestler->bio()->update([
-            'hometown' => request('hometown'),
-            'height' => request('feet') * 12 + request('inches'),
-            'weight' => request('weight'),
-            'signature_move' => request('signature_move'),
-        ]);
+        if ($request->status_id == WrestlerStatus::INJURED) {
+            $wrestler->injure();
+        } else if ($request->status_id == WrestlerStatus::SUSPENDED) {
+            $wrestler->suspend();
+        } else if ($request->status_id == WrestlerStatus::RETIRED) {
+            $wrestler->retire();
+        }
 
-        return redirect(route('wrestlers.index'));
+        return redirect()->route('wrestlers.index');
     }
 
     /**
@@ -108,6 +124,6 @@ class WrestlersController extends Controller
     {
         $wrestler->delete();
 
-        return redirect(route('wrestlers.index'));
+        return redirect()->route('wrestlers.index');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\WrestlerStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -27,7 +28,13 @@ class WrestlerEditFormRequest extends FormRequest
         return [
             'name' => ['required', Rule::unique('wrestlers' ,'name')->ignore($this->wrestler->id)],
             'slug' => ['required', Rule::unique('wrestlers' ,'slug')->ignore($this->wrestler->id)],
-            'status_id' => 'required|integer|not_in:0|exists:wrestler_statuses,id',
+            'status_id' => [
+                'required',
+                'integer',
+                'not_in:0',
+                'exists:wrestler_statuses,id',
+                Rule::in([WrestlerStatus::available($this->wrestler->status(), false)])
+            ],
             'hometown' => 'required',
             'feet' => 'required|integer',
             'inches' => 'required|integer|max:11',
@@ -65,6 +72,7 @@ class WrestlerEditFormRequest extends FormRequest
     {
         return [
             'status_id.not_in'  => 'The selected status is invalid.',
+            'status_id.'.Rule::in  => 'The selected status is invalid.',
         ];
     }
 }

@@ -16,7 +16,7 @@
     <label class="form-control-label" for="status_id">Status</label>
     <select class="form-control" id="status_id" name="status_id">
         <option value="0">Choose One</option>
-        @foreach(App\Models\WrestlerStatus::all() as $status)
+        @foreach($statuses as $status)
             <option value="{{ $status->id }}" {{ ($wrestler->status() == $status->id) ? 'selected="selected"' : '' }}>{{ $status->name }}</option>
         @endforeach
     </select>

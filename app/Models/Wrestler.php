@@ -6,13 +6,14 @@ use App\Traits\HasManagers;
 use App\Traits\HasStatuses;
 use App\Traits\HasTitles;
 use App\Traits\HasRetirements;
+use App\Traits\HasSuspensions;
 use App\Traits\HasInjuries;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Wrestler extends Model
 {
-	use HasStatuses, HasManagers, HasTitles, HasRetirements, HasInjuries;
+	use HasStatuses, HasManagers, HasTitles, HasRetirements, HasSuspensions, HasInjuries;
 
     /**
      * Don't auto-apply mass assignment protection.
@@ -77,6 +78,16 @@ class Wrestler extends Model
 	{
 		return $this->hasMany(WrestlerInjury::class);
 	}
+
+    /**
+     * A wrestler can have many injuries.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function suspensions()
+    {
+        return $this->hasMany(WrestlerSuspension::class);
+    }
 
     /**
      * A wrestler can have many retirements.
@@ -150,5 +161,20 @@ class Wrestler extends Model
     public function setHeightAttribute($value)
     {
         return $this->attributes['height'] = $value;
+    }
+
+    public function availableStatuses()
+    {
+        if ($this->status() == WrestlerStatus::ACTIVE) {
+            return;
+        } elseif ($this->status() == WrestlerStatus::INACTIVE) {
+            return;
+        } elseif ($this->status() == WrestlerStatus::INJURED) {
+            return;
+        } elseif ($this->status() == WrestlerStatus::SUSPENDED) {
+            return;
+        } else {
+            return;
+        }
     }
 }
