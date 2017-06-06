@@ -21,7 +21,7 @@ class TitleHistory extends Model
 
     public function title()
     {
-        return $this->belongsTo(Title::class);
+        return $this->belongsTo(Title::class)->withTrashed();
     }
 
     public function wrestler()

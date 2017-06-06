@@ -29,9 +29,11 @@
 
     @if($wrestler->titles->count() > 0)
         <h2>Titles Held</h2>
+        <ul>
         @foreach($wrestler->titles->groupByTitle() as $titles)
-            {{ "{$titles->first()->title->name} ({$titles->count()}x)" }}
+            <li>{{ "{$titles->first()->title->name} ({$titles->count()}x)" }}</li>
         @endforeach
+        </ul>
     @endif
 
     @if($wrestler->injuries->count() > 0)

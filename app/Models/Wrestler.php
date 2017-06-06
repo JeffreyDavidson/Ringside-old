@@ -163,18 +163,16 @@ class Wrestler extends Model
         return $this->attributes['height'] = $value;
     }
 
-    public function availableStatuses()
+    public function statusChanged()
     {
-        if ($this->status() == WrestlerStatus::ACTIVE) {
-            return;
-        } elseif ($this->status() == WrestlerStatus::INACTIVE) {
-            return;
-        } elseif ($this->status() == WrestlerStatus::INJURED) {
-            return;
-        } elseif ($this->status() == WrestlerStatus::SUSPENDED) {
-            return;
-        } else {
-            return;
+        if ($this->status() == WrestlerStatus::RETIRED) {
+            $this->unretire();
+        } else if ($this->status() == WrestlerStatus::INJURED) {
+            $this->heal();
+        } else if ($this->status() == WrestlerStatus::SUSPENDED) {
+            $this->rejoin();
         }
     }
+
+
 }

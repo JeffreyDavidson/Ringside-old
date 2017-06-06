@@ -34,8 +34,10 @@
     @if ($errors->has('venue_id')) <small class="form-control-feedback">{{ $errors->first('venue_id') }}</small> @endif
 </div>
 
-<h2>Match #1</h2>
-@include('matches.form', ['match' => new \App\Models\Match])
+@for ($x = 1; $x <= 1; $x++)
+    <h2>Match #{{ $x }}</h2>
+    @include('matches.form', ['match' => new \App\Models\Match])
+@endfor
 
 <div class="form-group">
     <button type="submit" class="btn btn-primary">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\WrestlerStatusChanged;
 use App\Http\Requests\WrestlerCreateFormRequest;
 use App\Http\Requests\WrestlerEditFormRequest;
 use App\Models\Wrestler;
@@ -28,7 +29,7 @@ class WrestlersController extends Controller
      */
     public function create()
     {
-        $statuses = WrestlerStatus::whereIn('name', ['Active', 'Inactive'])->get();
+        $statuses = WrestlerStatus::available();
 
         return response()->view('wrestlers.create', ['wrestler' => new Wrestler, 'statuses' => $statuses]);
     }
@@ -86,22 +87,16 @@ class WrestlersController extends Controller
      */
     public function update(WrestlerEditFormRequest $request, Wrestler $wrestler)
     {
-        if ($wrestler->status() != $request->status_id) {
-            if ($wrestler->status() == WrestlerStatus::RETIRED) {
-                $wrestler->unretire();
-            } else if ($wrestler->status() == WrestlerStatus::INJURED) {
-                $wrestler->heal();
-            } else if ($wrestler->status() == WrestlerStatus::SUSPENDED) {
-                $wrestler->rejoin();
-            }
-        }
-
         $wrestler->update([
             'name' => $request->name,
             'slug' => $request->slug,
             'status_id' => $request->status_id,
             'hired_at' => $request->hired_at,
         ]);
+
+        if ($wrestler->status() != $request->status_id) {
+            $wrestler->statusChanged();
+        }
 
         if ($request->status_id == WrestlerStatus::INJURED) {
             $wrestler->injure();

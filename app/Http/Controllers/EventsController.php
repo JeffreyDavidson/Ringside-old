@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\EventCreateFormRequest;
 use App\Http\Requests\EventEditFormRequest;
 use App\Models\Event;
+use Illuminate\Http\Request;
 
 class EventsController extends Controller
 {
@@ -44,6 +45,12 @@ class EventsController extends Controller
             'date' => $request->date,
             'venue_id' => $request->venue_id,
         ]);
+
+        foreach ($request->matches as $match) {
+            $match->match_nuumber = '';
+            $match->match_type_id = '';
+            $match->preview = '';
+        }
 
         return redirect()->route('events.index');
     }

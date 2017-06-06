@@ -10,22 +10,24 @@
     @if ($title->retired_at)
         <p>Retired At: {{ $title->formatted_retired_at }}</p>
     @endif
-    <h2>Records</h2>
-    <p>Longest Title Reign:
-        @foreach ($title->longest_title_reign() as $reign)
-            {{ $reign->name }} {{  "(".$reign->length." days)" }}
-        @endforeach
-    </p>
-    <p>Most Title Defenses:
-        @foreach ($title->most_title_defenses() as $defense)
-            {{ $defense->name }} {{  "(".$defense->count.")" }}
-        @endforeach
-    </p>
-    <p>Most Title Reigns:
-        @foreach ($title->most_title_reigns() as $reign)
-            {{ $reign->name }} {{  "(".$reign->count.")" }}
-        @endforeach
-    </p>
+    @if ($title->matches->count() > 0)
+        <h2>Records</h2>
+        <p>Longest Title Reign:
+            @foreach ($title->longest_title_reign() as $reign)
+                {{ $reign->name }} {{  "(".$reign->length." days)" }}
+            @endforeach
+        </p>
+        <p>Most Title Defenses:
+            @foreach ($title->most_title_defenses() as $defense)
+                {{ $defense->name }} {{  "(".$defense->count.")" }}
+            @endforeach
+        </p>
+        <p>Most Title Reigns:
+            @foreach ($title->most_title_reigns() as $reign)
+                {{ $reign->name }} {{  "(".$reign->count.")" }}
+            @endforeach
+        </p>
+    @endif
     <div class="panel panel-bordered panel-primary">
         <div class="panel-heading clearfix">
             <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-trophy"></i>Champions</h3>
