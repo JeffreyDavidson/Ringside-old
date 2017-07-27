@@ -23,16 +23,15 @@ Route::get('login', function() {
 })->name('login');
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('wrestlers/active', 'ActiveWrestlersController@index')->name('wrestlers.active');
-    Route::get('wrestlers/inactive', 'InactiveWrestlersController@index')->name('wrestlers.inactive');
-    Route::get('wrestlers/injured', 'InjuredWrestlersController@index')->name('wrestlers.injured');
-    Route::get('wrestlers/suspended', 'SuspendedWrestlersController@index')->name('wrestlers.suspended');
-    Route::get('wrestlers/retired', 'RetiredWrestlersController@index')->name('wrestlers.retired');
+//    Route::get('wrestlers/active', 'ActiveWrestlersController@index')->name('wrestlers.active');
+//    Route::get('wrestlers/inactive', 'InactiveWrestlersController@index')->name('wrestlers.inactive');
+//    Route::get('wrestlers/injured', 'InjuredWrestlersController@index')->name('wrestlers.injured');
+//    Route::get('wrestlers/suspended', 'SuspendedWrestlersController@index')->name('wrestlers.suspended');
+//    Route::get('wrestlers/retired', 'RetiredWrestlersController@index')->name('wrestlers.retired');
     Route::resource('wrestlers', 'WrestlersController');
     Route::resource('events', 'EventsController');
     Route::resource('titles', 'TitlesController');
     Route::resource('stipulations', 'StipulationsController');
     Route::resource('venues', 'VenuesController');
     Route::resource('wrestler-statuses', 'WrestlerStatusesController', ['only' => ['index']]);
-
 });

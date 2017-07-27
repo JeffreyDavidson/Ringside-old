@@ -22,6 +22,7 @@
 
     @if($wrestler->currentManagers->count() > 0)
         <h2>Previous Managers</h2>
+        {{dd($wrestler->previousManagers) }}
         @foreach($wrestler->previousManagers as $manager)
             {{ $manager->name }}
         @endforeach

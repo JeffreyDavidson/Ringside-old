@@ -18,13 +18,13 @@ trait HasManagers {
 		return $this->managers()->wherePivot('fired_on', '=', null);
 	}
 
-	public function hireManager($manager)
+	public function hireManager($manager, $date = null)
 	{
-		return $this->managers()->attach($manager->id, ['hired_on' => Carbon::now()]);
+		return $this->managers()->attach($manager->id, ['hired_on' => $date ?: Carbon::now()]);
 	}
 
-	public function fireManager($manager)
+	public function fireManager($manager, $date = null)
 	{
-		return $this->managers()->updateExistingPivot($manager->id, ['fired_on' => Carbon::now()]);
+		return $this->managers()->updateExistingPivot($manager->id, ['fired_on' => $date ?: Carbon::now()]);
 	}
 }

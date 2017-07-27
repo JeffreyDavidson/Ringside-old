@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
 use App\Models\Wrestler;
 use App\Models\Manager;
 use App\Models\Title;
@@ -42,26 +43,27 @@ class ViewARosterMemberBioTest extends TestCase
     /** @test */
     public function view_list_of_managers_on_wrestler_bio()
     {
+        $this->disableExceptionHandling();
+        $user = factory(User::class)->create();
         $wrestler = factory(Wrestler::class)->states('active')->create();
 
-        $wrestler->bio()->save(factory(WrestlerBio::class)->create(['wrestler_id' => $wrestler->id]));
+        tap($wrestler, function($instance) {
+            $instance->bio()->save(factory(WrestlerBio::class)->make());
+        });
 
-        $manager1 = factory(Manager::class)->create(['name' => 'Manager 1']);
-        $manager2 = factory(Manager::class)->create(['name' => 'Manager 2']);
+        $firedManager = factory(Manager::class)->create(['name' => 'Fired Manager']);
+        $hiredManager = factory(Manager::class)->create(['name' => 'Hired Manager']);
 
-        $wrestler->hireManager($manager1);
-        $wrestler->fireManager($manager1);
+        $wrestler->hireManager($firedManager, Carbon::now());
+        $wrestler->fireManager($firedManager, Carbon::now('+1 day'));
+        $wrestler->hireManager($hiredManager, Carbon::now('+2 days'));
 
-        Carbon::setTestNow(Carbon::parse('+1 day'));
+        $response = $this->actingAs($user)->get('wrestlers/'. $wrestler->id);
 
-        $wrestler->hireManager($manager2);
+        $response->assertStatus(200);
 
-        $this->visit('wrestlers/'.$wrestler->id);
-
-        $this->see('Manager 1');
-        $this->see('Manager 2');
-
-        Carbon::setTestNow();
+        $response->assertSee('Fired Manager');
+        $response->assertSee('Hired Manager');
     }
 
     /** @test */

@@ -52,6 +52,25 @@ class WrestlerTest extends TestCase
     }
 
     /** @test */
+    public function a_wrestler_can_hire_a_new_manager()
+    {
+        $wrestler = factory(Wrestler::class)->create();
+        $firedManager = factory(Manager::class)->create(['id' => 1]);
+        $hiredManager = factory(Manager::class)->create(['id' => 2]);
+
+        $wrestler->hireManager($firedManager);
+        $wrestler->fireManager($firedManager);
+        $wrestler->hireManager($hiredManager);
+
+        Carbon::setTestNow(Carbon::parse('+1 day'));
+
+        $this->assertEquals(1, $wrestler->previousManagers()->first()->id);
+        $this->assertEquals(2, $wrestler->currentManagers()->first()->id);
+
+        Carbon::setTestNow();
+    }
+
+    /** @test */
     public function a_wrestler_can_have_injuries()
     {
         $wrestler = factory(Wrestler::class)->create();

@@ -2,25 +2,26 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
 use App\Models\Wrestler;
-use Carbon\Carbon;
+use App\Models\WrestlerBio;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class ViewWrestlersListingTest extends TestCase
+class ViewWrestlerListTest extends TestCase
 {
     use DatabaseMigrations;
 
     /** @test */
     public function view_listing_of_active_wrestlers()
     {
-        factory(Wrestler::class)->states('active')->create(['name' => 'Wrestler 1']);
+        $user = factory(User::class)->create();
+        $wrestler = factory(Wrestler::class)->states('active')->create();
 
-        $response = $this->get(route('wrestlers.index'));
+        $response = $this->actingAs($user)->get('wrestlers');
 
-        $response->assertSee('Wrestler 1');
+        $response->assertStatus(200);
+        $response->data('wrestlers')->assertContains($wrestler);
     }
 
     /** @test */

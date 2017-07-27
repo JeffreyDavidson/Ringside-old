@@ -27,6 +27,8 @@ class VenuesController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Venue::class);
+
         return response()->view('venues.create', ['venue' => new Venue]);
     }
 

@@ -126,7 +126,7 @@ class Title extends Model
     {
         $wrestlers = $this->champions()
             ->join('wrestlers', 'wrestlers.id', '=', 'title_wrestler.wrestler_id')
-            ->join('match_title', 'title_wrestler.id', '=', 'match_title.title_id')
+            ->join('match_title', 'title_wrestler.title_id', '=', 'match_title.title_id')
             ->selectRaw('COUNT(*) as count')
             ->addSelect('wrestlers.name')
             ->groupBy('wrestler_id')->orderBy('count', 'desc')

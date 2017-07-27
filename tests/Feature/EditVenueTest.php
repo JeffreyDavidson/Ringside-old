@@ -9,7 +9,7 @@ use App\Models\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
-class AddVenueTest extends TestCase
+class EditVenueTest extends TestCase
 {
     use DatabaseMigrations;
 

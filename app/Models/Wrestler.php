@@ -139,20 +139,6 @@ class Wrestler extends Model
     }
 
     /**
-     * Set the hired at field for the wrestler.
-     *
-     * @return date
-     */
-    public function setHiredAtAttribute($date)
-    {
-        if($date instanceof Carbon) {
-            return $this->attributes['hired_at'] = $date;
-        }
-
-        return $this->attributes['hired_at'] = Carbon::parse($date);
-    }
-
-    /**
      * Set the height field for the wrestler.
      *
      * @param $value integer

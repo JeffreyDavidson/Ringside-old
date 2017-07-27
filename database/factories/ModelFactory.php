@@ -21,7 +21,46 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
         'password' => $password ?: $password = bcrypt('secret'),
+        'role_id' => $faker->numberBetween(1, 4),
         'remember_token' => str_random(10),
+    ];
+});
+
+$factory->state(App\Models\User::class, 'basic', function ($faker) {
+    return [
+        'role_id' => 1,
+    ];
+});
+
+$factory->state(App\Models\User::class, 'editor', function ($faker) {
+    return [
+        'role_id' => 2,
+    ];
+});
+
+$factory->state(App\Models\User::class, 'admin', function ($faker) {
+    return [
+        'role_id' => 3,
+    ];
+});
+
+$factory->state(App\Models\User::class, 'super-admin', function ($faker) {
+    return [
+        'role_id' => 4,
+    ];
+});
+
+$factory->define(App\Models\Permission::class, function (Faker\Generator $faker) {
+    return [
+        'name' => $faker->word,
+        'slug' => $faker->word,
+    ];
+});
+
+$factory->define(App\Models\Role::class, function (Faker\Generator $faker) {
+    return [
+        'name' => $faker->word,
+        'slug' => $faker->word,
     ];
 });
 

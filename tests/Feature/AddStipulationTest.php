@@ -4,6 +4,8 @@ namespace Tests\Feature;
 
 use App\Models\Stipulation;
 use App\Models\User;
+use App\Models\Role;
+use App\Models\Permission;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -29,10 +31,29 @@ class AddStipulationTest extends TestCase
     function users_can_view_the_add_stipulation_form()
     {
         $user = factory(User::class)->create();
+        $role = factory(Role::class)->create(['name' => 'editor']);
+        $createStipulation = factory(Permission::class)->create(['name' => 'create_stipulation']);
+
+        $role->givePermissionTo($createStipulation);
+        $user->assignRole('editor');
 
         $response = $this->actingAs($user)->get(route('stipulations.create'));
 
         $response->assertStatus(200);
+    }
+
+    /** @test */
+    function users_cannot_view_the_add_stipulation_form()
+    {
+        $user = factory(User::class)->create();
+        factory(Role::class)->create(['name' => 'editor']);
+        factory(Permission::class)->create(['name' => 'create_stipulation']);
+
+        $user->assignRole('editor');
+
+        $response = $this->actingAs($user)->get(route('stipulations.create'));
+
+        $response->assertStatus(404);
     }
 
     /** @test */
@@ -70,17 +91,19 @@ class AddStipulationTest extends TestCase
             'name' => 'My Stipulation',
         ]));
 
-        tap(Stipulation::first(), function ($venue) use ($response) {
+        tap(Stipulation::first(), function ($stipulation) use ($response) {
             $response->assertStatus(302);
             $this->assertEquals(1, Stipulation::count());
             $response->assertRedirect(route('stipulations.index'));
 
-            $this->assertEquals('My Stipulation', $venue->name);
+            $this->assertEquals('My Stipulation', $stipulation->name);
         });
 
-        $response = $this->actingAs($user)->from(route('stipulations.create'))->post(route('stipulations.index'), $this->validParams([
-            'name' => 'My Stipulation',
-        ]));
+        $response = $this->actingAs($user)
+            ->from(route('stipulations.create'))
+            ->post(route('stipulations.index'), $this->validParams([
+                'name' => 'My Stipulation',
+            ]));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('stipulations.create'));

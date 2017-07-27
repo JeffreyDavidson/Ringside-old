@@ -5,6 +5,9 @@ use Illuminate\Database\Seeder;
 class DatabaseSeeder extends Seeder
 {
     protected $toTruncate = [
+        'roles',
+        'permissions',
+        'permission_role',
         'users',
         'wrestler_statuses',
         'wrestlers',
@@ -39,6 +42,7 @@ class DatabaseSeeder extends Seeder
         foreach ($this->toTruncate as $table) {
             DB::table($table)->truncate();
         }
+        $this->call(RolesAndPermissionTableSeeder::class);
         $this->call(UsersTableSeeder::class);
         $this->call(WrestlerStatusesTableSeeder::class);
 //        $this->call(WrestlersTableSeeder::class);

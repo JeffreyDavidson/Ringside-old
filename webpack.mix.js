@@ -25,6 +25,7 @@ mix.styles([
         'resources/assets/vendor/datatables-bootstrap/dataTables.bootstrap.css',
         'resources/assets/vendor/datatables-responsive/dataTables.responsive.css',
         'resources/assets/vendor/bootstrap-datepicker/bootstrap-datepicker.min.css',
+        'resources/assets/vendor/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js'
     ], 'public/css/plugins.css')
     .styles([
         'resources/assets/fonts/brand-icons/brand-icons.min.css',

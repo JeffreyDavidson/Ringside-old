@@ -42,12 +42,21 @@ class WrestlersController extends Controller
      */
     public function store(WrestlerCreateFormRequest $request)
     {
-        Wrestler::create([
+        $wrestler = Wrestler::create([
             'name' => $request->name,
             'slug' => $request->slug,
             'status_id' => $request->status_id,
             'hired_at' => $request->hired_at,
         ]);
+
+        tap($wrestler, function ($instance) {
+            $instance->bio()->create([
+                'hometown' => request('hometown'),
+                'height' => (request('feet', 0) * 12) + request('inches', 0),
+                'weight' => request('weight'),
+                'signature_move' => request('signature_move'),
+            ]);
+        });
 
         return redirect()->route('wrestlers.index');
     }
@@ -93,6 +102,16 @@ class WrestlersController extends Controller
             'status_id' => $request->status_id,
             'hired_at' => $request->hired_at,
         ]);
+
+        tap($wrestler, function ($instance) {
+            $instance->bio()->update([
+                'hometown' => request('hometown'),
+                'height' => (request('feet', 0) * 12) + request('inches', 0),
+                'weight' => request('weight'),
+                'signature_move' => request('signature_move'),
+            ]);
+        });
+
 
         if ($wrestler->status() != $request->status_id) {
             $wrestler->statusChanged();
