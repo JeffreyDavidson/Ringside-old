@@ -13,13 +13,18 @@ class RolesAndPermissionTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(Role::class)->create(['name' => 'Wrestler',  'slug' => 'wrestler']);
+        factory(Role::class)->create(['name' => 'User',  'slug' => 'user']);
         factory(Role::class)->create(['name' => 'Editor',  'slug' => 'editor']);
-        factory(Role::class)->create(['name' => 'Admin',  'slug' => 'admin']);
-        factory(Role::class)->create(['name' => 'Super Administrator',  'slug' => 'super_admin']);
+        $admin = factory(Role::class)->create(['name' => 'Admin',  'slug' => 'admin']);
+        $superAdmin = factory(Role::class)->create(['name' => 'Super Administrator',  'slug' => 'super-admin']);
 
-        factory(Permission::class)->create(['name' => 'Create A Venue',  'slug' => 'create-venue']);
+        $createVenue = factory(Permission::class)->create(['name' => 'Create A Venue',  'slug' => 'create-venue']);
+        $createStipulation = factory(Permission::class)->create(['name' => 'Create A Stipulation',  'slug' => 'create-stipulation']);
 
+        $admin->givePermissionTo($createVenue);
+        $admin->givePermissionTo($createStipulation);
 
+        $superAdmin->givePermissionTo($createVenue);
+        $superAdmin->givePermissionTo($createStipulation);
     }
 }

@@ -27,6 +27,11 @@ class StipulationsController extends Controller
      */
     public function create()
     {
+//        dd(auth()->user()->permissions());
+//        dd(\Gate::forUser(auth()->user()));
+//        dd($user->can('create-stipulation'));
+        $this->authorize('create', Stipulation::class);
+
         return response()->view('stipulations.create', ['stipulation' => new Stipulation]);
     }
 
@@ -38,6 +43,8 @@ class StipulationsController extends Controller
      */
     public function store(StipulationCreateFormRequest $request)
     {
+        $this->authorize('create', Stipulation::class);
+
         Stipulation::create([
             'name' => $request->name,
             'slug' => $request->slug,

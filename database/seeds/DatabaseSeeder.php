@@ -54,7 +54,7 @@ class DatabaseSeeder extends Seeder
         $this->call(StipulationsTableSeeder::class);
         $this->call(MatchDecisionsTableSeeder::class);
         $this->call(VenuesTableSeeder::class);
-        $this->call(EventsTableSeeder::class);
+//        $this->call(EventsTableSeeder::class);
 //        $this->call(ManagersTableSeeder::class);
 //        $this->call(TitleHistoryTableSeeder::class);
 
