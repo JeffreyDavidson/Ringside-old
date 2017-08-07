@@ -39,6 +39,7 @@ class AddStipulationTest extends TestCase
     /** @test */
     function users_who_have_permission_can_view_the_add_stipulation_form()
     {
+        $this->disableExceptionHandling();
         $response = $this->actingAs($this->user)->get(route('stipulations.create'));
 
         $response->assertStatus(200);

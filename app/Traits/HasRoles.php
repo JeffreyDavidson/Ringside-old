@@ -29,8 +29,9 @@ trait HasRoles {
      * @param  Permission $permission
      * @return boolean
      */
-    public function hasPermission(Permission $permission)
+    public function hasPermission($permission)
     {
+        dd($this->role);
         return $this->hasRole($permission->roles);
     }
 }

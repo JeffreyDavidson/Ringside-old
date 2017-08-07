@@ -18,7 +18,7 @@ class StipulationPolicy
     {
 //        dd($user);
 //        dd(\Gate::forUser($user));
-        return $user->can('create-stipulation');
+        return $user->hasPermission('create-stipulation');
     }
 
     public function edit(User $user)
