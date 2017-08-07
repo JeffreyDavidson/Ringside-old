@@ -49,4 +49,10 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
             }
         });
     }
+
+    protected function from($url)
+    {
+        session()->setPreviousUrl(url($url));
+        return $this;
+    }
 }

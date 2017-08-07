@@ -15,6 +15,8 @@ class StipulationsController extends Controller
      */
     public function index()
     {
+        $this->authorize('index', Stipulation::class);
+
         $stipulations = Stipulation::all();
 
         return response()->view('stipulations.index', ['stipulations' => $stipulations]);
@@ -27,9 +29,6 @@ class StipulationsController extends Controller
      */
     public function create()
     {
-//        dd(auth()->user()->permissions());
-//        dd(\Gate::forUser(auth()->user()));
-//        dd($user->can('create-stipulation'));
         $this->authorize('create', Stipulation::class);
 
         return response()->view('stipulations.create', ['stipulation' => new Stipulation]);
@@ -61,6 +60,8 @@ class StipulationsController extends Controller
      */
     public function show(Stipulation $stipulation)
     {
+        $this->authorize('show', Stipulation::class);
+
         $stipulation->load('matches', 'matches.event');
 
         return response()->view('stipulations.show', ['stipulation' => $stipulation]);
@@ -74,6 +75,8 @@ class StipulationsController extends Controller
      */
     public function edit(Stipulation $stipulation)
     {
+        $this->authorize('edit', Stipulation::class);
+
         return response()->view('stipulations.edit', ['stipulation' => $stipulation]);
     }
 
@@ -86,6 +89,8 @@ class StipulationsController extends Controller
      */
     public function update(StipulationEditFormRequest $request, Stipulation $stipulation)
     {
+        $this->authorize('edit', Stipulation::class);
+
         $stipulation->update([
             'name' => $request->name,
             'slug' => $request->slug,
@@ -102,6 +107,8 @@ class StipulationsController extends Controller
      */
     public function destroy(Stipulation $stipulation)
     {
+        $this->authorize('delete', Stipulation::class);
+
         $stipulation->delete();
 
         return redirect()->route('stipulations.index');

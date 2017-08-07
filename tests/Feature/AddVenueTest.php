@@ -37,12 +37,6 @@ class AddVenueTest extends TestCase
         ], $overrides);
     }
 
-    private function from($url)
-    {
-        session()->setPreviousUrl(url($url));
-        return $this;
-    }
-
     /** @test */
     function basic_users_cannot_view_the_add_venue_form()
     {

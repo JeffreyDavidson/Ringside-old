@@ -27,9 +27,9 @@ class ApplicationPolicy
 
     public function init()
     {
-//        dd($this->getPermissions());
         foreach($this->getPermissions() as $permission) {
             $this->gate->define($permission->slug, function ($user) use ($permission) {
+//                var_dump($user->hasPermission($permission));
                 return $user->hasPermission($permission);
             });
         }

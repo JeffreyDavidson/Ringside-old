@@ -32,14 +32,8 @@ class AddStipulationTest extends TestCase
     {
         return array_merge([
             'name' => 'My Stipulation',
-            'slug' => 'mystip',
+            'slug' => 'my-stip',
         ], $overrides);
-    }
-
-    private function from($url)
-    {
-        session()->setPreviousUrl(url($url));
-        return $this;
     }
 
     /** @test */
@@ -53,11 +47,14 @@ class AddStipulationTest extends TestCase
     /** @test */
     function users_who_dont_have_permission_cannot_view_the_add_stipulation_form()
     {
-        $user = factory(User::class)->create();
+        $userWithoutPermission = factory(User::class)->create();
         factory(Role::class)->create(['name' => 'editor']);
-        $user->assignRole('editor');
+        $userWithoutPermission->assignRole('editor');
+//        dd($userWithoutPermission);
 
-        $response = $this->actingAs($user)->get(route('stipulations.create'));
+        var_dump($userWithoutPermission->hasPermission($this->permission));
+
+        $response = $this->actingAs($userWithoutPermission)->get(route('stipulations.create'));
 
         $response->assertStatus(403);
     }
@@ -130,7 +127,7 @@ class AddStipulationTest extends TestCase
     function slug_must_be_unique()
     {
         $response = $this->actingAs($this->user)->post(route('stipulations.index'), $this->validParams([
-            'slug' => 'mystip',
+            'slug' => 'my-stip',
         ]));
 
         tap(Stipulation::first(), function ($stipulation) use ($response) {
@@ -138,11 +135,11 @@ class AddStipulationTest extends TestCase
             $this->assertEquals(1, Stipulation::count());
             $response->assertRedirect(route('stipulations.index'));
 
-            $this->assertEquals('mystip', $stipulation->slug);
+            $this->assertEquals('my-stip', $stipulation->slug);
         });
 
         $response = $this->actingAs($this->user)->from(route('stipulations.create'))->post(route('stipulations.index'), $this->validParams([
-            'slug' => 'mystip',
+            'slug' => 'my-stip',
         ]));
 
         $response->assertStatus(302);
@@ -158,7 +155,7 @@ class AddStipulationTest extends TestCase
 
         $response = $this->actingAs($this->user)->post(route('stipulations.index'), [
             'name' => 'My Stipulation',
-            'slug' => 'mystip',
+            'slug' => 'my-stip',
         ]);
 
         tap(Stipulation::first(), function ($stipulation) use ($response) {
@@ -166,7 +163,7 @@ class AddStipulationTest extends TestCase
             $response->assertRedirect(route('stipulations.index'));
 
             $this->assertEquals('My Stipulation', $stipulation->name);
-            $this->assertEquals('mystip', $stipulation->slug);
+            $this->assertEquals('my-stip', $stipulation->slug);
         });
     }
 }

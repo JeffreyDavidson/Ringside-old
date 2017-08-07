@@ -23,24 +23,30 @@
                             <span class="site-menu-title">Events</span>
                         </a>
                     </li>
-                    <li class="site-menu-item has-sub">
-                        <a href="{{ route('titles.index') }}">
-                            <i class="site-menu-icon icon fa-trophy" aria-hidden="true"></i>
-                            <span class="site-menu-title">Titles</span>
-                        </a>
-                    </li>
-                    <li class="site-menu-item has-sub">
-                        <a href="{{ route('stipulations.index') }}">
-                            <i class="site-menu-icon icon fa-gavel" aria-hidden="true"></i>
-                            <span class="site-menu-title">Stipulations</span>
-                        </a>
-                    </li>
-                    <li class="site-menu-item has-sub">
-                        <a href="{{ route('venues.index') }}">
-                            <i class="site-menu-icon icon fa-building" aria-hidden="true"></i>
-                            <span class="site-menu-title">Venues</span>
-                        </a>
-                    </li>
+                    @can('index', \App\Models\Title::class)
+                        <li class="site-menu-item">
+                            <a href="{{ route('titles.index') }}">
+                                <i class="site-menu-icon icon fa-trophy" aria-hidden="true"></i>
+                                <span class="site-menu-title">Titles</span>
+                            </a>
+                        </li>
+                    @endcan
+                    @can('index', \App\Models\Stipulation::class)
+                        <li class="site-menu-item">
+                            <a href="{{ route('stipulations.index') }}">
+                                <i class="site-menu-icon icon fa-gavel" aria-hidden="true"></i>
+                                <span class="site-menu-title">Stipulations</span>
+                            </a>
+                        </li>
+                    @endcan
+                    @can('index', \App\Models\Venue::class)
+                        <li class="site-menu-item">
+                            <a href="{{ route('venues.index') }}">
+                                <i class="site-menu-icon icon fa-building" aria-hidden="true"></i>
+                                <span class="site-menu-title">Venues</span>
+                            </a>
+                        </li>
+                    @endcan
                 </ul>
             </div>
         </div>
