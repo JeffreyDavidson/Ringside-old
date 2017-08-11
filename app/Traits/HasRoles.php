@@ -9,29 +9,19 @@ trait HasRoles {
 
 	abstract public function role();
 
-    public function assignRole($role)
+    public function assignRole(Role $role)
     {
-        return $this->update(['role_id' => Role::whereName($role)->firstOrFail()]);
-    }
-
-    public function hasRole($role)
-    {
-        if (is_string($role)) {
-            return $this->roles->contains('slug', $role);
-        }
-
-        return !! $role->intersect($this->roles)->count();
+        return $this->role()->associate($role);
     }
 
     /**
      * Determine if the user may perform the given permission.
      *
-     * @param  Permission $permission
+     * @param  string $permissionSlug
      * @return boolean
      */
-    public function hasPermission($permission)
+    public function hasPermission($permissionSlug)
     {
-        dd($this->role);
-        return $this->hasRole($permission->roles);
+        return $this->role->permissions->contains('slug', $permissionSlug);
     }
 }

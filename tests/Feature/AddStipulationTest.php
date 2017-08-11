@@ -25,7 +25,7 @@ class AddStipulationTest extends TestCase
         $this->permission = factory(Permission::class)->create(['slug' => 'create-stipulation']);
 
         $this->role->givePermissionTo($this->permission);
-        $this->user->assignRole('admin');
+        $this->user->assignRole($this->role);
     }
 
     private function validParams($overrides = [])
@@ -49,11 +49,8 @@ class AddStipulationTest extends TestCase
     function users_who_dont_have_permission_cannot_view_the_add_stipulation_form()
     {
         $userWithoutPermission = factory(User::class)->create();
-        factory(Role::class)->create(['name' => 'editor']);
-        $userWithoutPermission->assignRole('editor');
-//        dd($userWithoutPermission);
-
-        var_dump($userWithoutPermission->hasPermission($this->permission));
+        $role = factory(Role::class)->create(['name' => 'editor']);
+        $userWithoutPermission->assignRole($role);
 
         $response = $this->actingAs($userWithoutPermission)->get(route('stipulations.create'));
 
