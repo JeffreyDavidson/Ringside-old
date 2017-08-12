@@ -11,28 +11,26 @@ class StipulationPolicy
 
     public function index(User $user)
     {
-        return $user->can('view-stipulations');
+        return $user->hasPermission('view-stipulations');
     }
 
     public function create(User $user)
     {
-//        dd($user);
-//        dd(\Gate::forUser($user));
         return $user->hasPermission('create-stipulation');
     }
 
     public function edit(User $user)
     {
-        return $user->can('edit-stipulation');
+        return $user->hasPermission('edit-stipulation');
     }
 
     public function show(User $user)
     {
-        return $user->can('show-stipulation');
+        return $user->hasPermission('show-stipulation');
     }
 
     public function delete(User $user)
     {
-        return $user->can('delete-stipulation');
+        return $user->hasPermission('delete-stipulation');
     }
 }

@@ -15,6 +15,8 @@ class VenuesController extends Controller
      */
     public function index()
     {
+        $this->authorize('index', Venue::class);
+
         $venues = Venue::all();
 
         return response()->view('venues.index', ['venues' => $venues]);
@@ -40,6 +42,8 @@ class VenuesController extends Controller
      */
     public function store(VenueCreateFormRequest $request)
     {
+        $this->authorize('create', Venue::class);
+
         Venue::create([
             'name' => $request->name,
             'address' => $request->address,
@@ -70,6 +74,8 @@ class VenuesController extends Controller
      */
     public function edit(Venue $venue)
     {
+        $this->authorize('edit', Venue::class);
+
         return response()->view('venues.edit', ['venue' => $venue]);
     }
 
@@ -82,6 +88,8 @@ class VenuesController extends Controller
      */
     public function update(VenueEditFormRequest $request, Venue $venue)
     {
+        $this->authorize('edit', Venue::class);
+
         $venue->update([
             'name' => $request->name,
             'address' => $request->address,

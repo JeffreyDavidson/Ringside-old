@@ -17,11 +17,12 @@ class AddStipulationTest extends TestCase
     private $role;
     private $permission;
 
-    public function setUp(){
+    public function setUp()
+    {
         parent::setUp();
 
         $this->user = factory(User::class)->create();
-        $this->role = factory(Role::class)->create(['name' => 'admin']);
+        $this->role = factory(Role::class)->create(['slug' => 'admin']);
         $this->permission = factory(Permission::class)->create(['slug' => 'create-stipulation']);
 
         $this->role->givePermissionTo($this->permission);
@@ -39,7 +40,6 @@ class AddStipulationTest extends TestCase
     /** @test */
     function users_who_have_permission_can_view_the_add_stipulation_form()
     {
-        $this->disableExceptionHandling();
         $response = $this->actingAs($this->user)->get(route('stipulations.create'));
 
         $response->assertStatus(200);

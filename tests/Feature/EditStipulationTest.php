@@ -13,17 +13,20 @@ class EditStipulationTest extends TestCase
 {
     use DatabaseMigrations;
 
-    private $permission;
+    private $user;
     private $role;
+    private $permission;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->permission = factory(Permission::class)->create(['name' => 'Edit Stipulation ', 'slug' => 'edit-stipulation']);
-        $this->role = factory(Role::class)->create(['name' => 'Administrator', 'slug' => 'admin']);
-        factory(Role::class)->create(['name' => 'Basic User', 'slug' => 'basic']);
+        $this->user = factory(User::class)->create();
+        $this->role = factory(Role::class)->create(['slug' => 'admin']);
+        $this->permission = factory(Permission::class)->create(['slug' => 'edit-stipulation']);
+
         $this->role->givePermissionTo($this->permission);
+        $this->user->assignRole($this->role);
     }
 
     private function oldAttributes($overrides = [])
@@ -45,10 +48,9 @@ class EditStipulationTest extends TestCase
     /** @test */
     function users_who_have_permission_can_view_the_edit_stipulation_form()
     {
-        $user = factory(User::class)->create();
         $stipulation = factory(Stipulation::class)->create($this->oldAttributes());
 
-        $response = $this->actingAs($user)->get('venues/create');
+        $response = $this->actingAs($this->user)->get(route('venues.edit', $stipulation->id));
 
         $response->assertStatus(200);
         $this->assertTrue($response->data('stipulation')->is($stipulation));
@@ -58,6 +60,8 @@ class EditStipulationTest extends TestCase
     function users_who_dont_have_permission_cannot_view_the_edit_stipulation_form()
     {
         $userWithoutPermission = factory(User::class)->create();
+        $role = factory(Role::class)->create(['name' => 'editor']);
+        $userWithoutPermission->assignRole($role);
         $stipulation = factory(Stipulation::class)->create($this->oldAttributes());
 
         $response = $this->actingAs($userWithoutPermission)->get(route('stipulations.edit', $stipulation->id));
@@ -73,16 +77,15 @@ class EditStipulationTest extends TestCase
         $response = $this->get(route('stipulations.edit', $stipulation->id));
 
         $response->assertStatus(302);
-        $response->assertRedirect('/login');
+        $response->assertRedirect(route('login'));
     }
 
     /** @test */
     function name_is_required()
     {
-        $user = factory(User::class)->create();
         $stipulation = factory(Stipulation::class)->create(['name' => 'Old Name']);
 
-        $response = $this->actingAs($user)
+        $response = $this->actingAs($this->user)
             ->from(route('stipulations.edit', $stipulation->id))
             ->patch(route('stipulations.update', $stipulation->id), $this->validParams(['name' => '']));
 
@@ -96,10 +99,9 @@ class EditStipulationTest extends TestCase
     /** @test */
     function slug_is_required()
     {
-        $user = factory(User::class)->create();
         $stipulation = factory(Stipulation::class)->create(['slug' => 'old-slug']);
 
-        $response = $this->actingAs($user)
+        $response = $this->actingAs($this->user)
             ->from(route('stipulations.edit', $stipulation->id))
             ->patch(route('stipulations.update', $stipulation->id), $this->validParams(['slug' => '']));
 
@@ -107,6 +109,58 @@ class EditStipulationTest extends TestCase
         $response->assertSessionHasErrors('slug');
         tap($stipulation->fresh(), function ($stipulation) {
             $this->assertEquals('old-slug', $stipulation->slug);
+        });
+    }
+
+    /** @test */
+    function name_must_be_unique()
+    {
+        $stipulation = factory(Stipulation::class)->create(['name' => 'Old Name']);
+
+        $response = $this->actingAs($this->user)
+            ->from(route('stipulations.edit', $stipulation->id))
+            ->patch(route('stipulations.update', $stipulation->id), $this->validParams(['name' => '']));
+
+        $response->assertRedirect(route('stipulations.edit', $stipulation->id));
+        $response->assertSessionHasErrors('name');
+        tap($stipulation->fresh(), function ($stipulation) {
+            $this->assertEquals('Old Name', $stipulation->name);
+        });
+    }
+
+    /** @test */
+    function slug_must_be_unique()
+    {
+        $stipulation = factory(Stipulation::class)->create(['slug' => 'old-slug']);
+
+        $response = $this->actingAs($this->user)
+            ->from(route('stipulations.edit', $stipulation->id))
+            ->patch(route('stipulations.update', $stipulation->id), $this->validParams(['slug' => '']));
+
+        $response->assertRedirect(route('stipulations.edit', $stipulation->id));
+        $response->assertSessionHasErrors('slug');
+        tap($stipulation->fresh(), function ($stipulation) {
+            $this->assertEquals('old-slug', $stipulation->slug);
+        });
+    }
+
+    /** @test */
+    function editing_a_valid_stipulation()
+    {
+        $stipulation = factory(Stipulation::class)->create([
+            'name' => 'Old Name',
+            'slug' => 'old-slug',
+        ]);
+
+        $response = $this->actingAs($this->user)->patch(route('stipulations.update', $stipulation->id), [
+            'title' => 'New Name',
+            'subtitle' => 'new-slug',
+        ]);
+
+        $response->assertRedirect(route('stipulations.index'));
+        tap($stipulation->fresh(), function ($stipulation) {
+            $this->assertEquals('New Name', $stipulation->name);
+            $this->assertEquals('new-slug', $stipulation->slug);
         });
     }
 }

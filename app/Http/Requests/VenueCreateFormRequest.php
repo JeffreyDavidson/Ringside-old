@@ -14,7 +14,7 @@ class VenueCreateFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return Gate::allows('create_venue');
+        return true;
     }
 
     /**

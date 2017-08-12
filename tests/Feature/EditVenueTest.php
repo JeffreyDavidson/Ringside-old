@@ -13,17 +13,31 @@ class EditVenueTest extends TestCase
 {
     use DatabaseMigrations;
 
-    private $permission;
+    private $user;
     private $role;
+    private $permission;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->permission = factory(Permission::class)->create(['name' => 'Create A Venue', 'slug' => 'create_venue']);
-        $this->role = factory(Role::class)->create(['name' => 'Administrator', 'slug' => 'admin']);
-        factory(Role::class)->create(['name' => 'Basic User', 'slug' => 'basic']);
+        $this->user = factory(User::class)->create();
+        $this->role = factory(Role::class)->create(['slug' => 'admin']);
+        $this->permission = factory(Permission::class)->create(['slug' => 'edit-venue']);
+
         $this->role->givePermissionTo($this->permission);
+        $this->user->assignRole($this->role);
+    }
+
+    private function oldAttributes($overrides = [])
+    {
+        return array_merge([
+            'name' => 'My Venue',
+            'address' => 'Old Address',
+            'city' => 'Old City',
+            'state' => 'AB',
+            'postcode' => '98765'
+        ], $overrides);
     }
 
     private function validParams($overrides = [])
@@ -38,29 +52,33 @@ class EditVenueTest extends TestCase
     }
 
     /** @test */
-    function basic_users_cannot_view_the_add_venue_form()
+    function users_who_have_permission_can_view_the_edit_venue_form()
     {
-        $user = factory(User::class)->states('basic')->create();
+        $venue = factory(Venue::class)->create($this->oldAttributes());
 
-        $response = $this->actingAs($user)->get('venues/create');
+        $response = $this->actingAs($this->user)->get(route('venues.edit', $venue->id));
+
+        $response->assertStatus(200);
+        $this->assertTrue($response->data('venue')->is($venue));
+    }
+
+    /** @test */
+    function users_who_dont_have_permission_cannot_view_the_edit_venue_form()
+    {
+        $userWithoutPermission = factory(User::class)->create();
+        $role = factory(Role::class)->create(['name' => 'editor']);
+        $userWithoutPermission->assignRole($role);
+        $venue = factory(Venue::class)->create($this->oldAttributes());
+
+        $response = $this->actingAs($userWithoutPermission)->get(route('venues.edit', $venue->id));
 
         $response->assertStatus(403);
     }
 
     /** @test */
-    function admins_can_view_the_add_venue_form()
-    {
-        $user = factory(User::class)->states('admin')->create();
-
-        $response = $this->actingAs($user)->get('venues/create');
-
-        $response->assertStatus(200);
-    }
-
-    /** @test */
     function guests_cannot_view_the_add_venue_form()
     {
-        $response = $this->get('venues/create');
+        $response = $this->get(route('venues.create'));
 
         $response->assertStatus(302);
         $response->assertRedirect('/login');
@@ -69,14 +87,12 @@ class EditVenueTest extends TestCase
     /** @test */
     function name_is_required()
     {
-        $user = factory(User::class)->states('admin')->create();
-
-        $response = $this->actingAs($user)
-                        ->from('venues/create')
-                        ->post('venues', $this->validParams(['name' => '']));
+        $response = $this->actingAs($this->user)
+                        ->from(route('venues.create'))
+                        ->post(route('venues.index', $this->validParams(['name' => ''])));
 
         $response->assertStatus(302);
-        $response->assertRedirect('venues/create');
+        $response->assertRedirect(route('venues.create'));
         $response->assertSessionHasErrors('name');
         $this->assertEquals(0, Venue::count());
     }
@@ -84,21 +100,22 @@ class EditVenueTest extends TestCase
     /** @test */
     function name_must_be_unique()
     {
-        $user = factory(User::class)->states('admin')->create();
+        $venue = factory(Venue::class)->create(['name' => 'Old Name']);
+        $response = $this->actingAs($this->user)
+            ->from(route('venues.edit', $venue->id))
+            ->patch(route('venues.update', $venue->id));
 
-        $response = $this->actingAs($user)->post('venues', $this->validParams(['name' => 'My Venue']));
+        $response->assertStatus(302);
+        $response->assertRedirect(route('venues.index'));
+        $this->assertEquals(1, Venue::count());
 
         tap(Venue::first(), function ($venue) use ($response) {
-            $response->assertStatus(302);
-            $this->assertEquals(1, Venue::count());
-            $response->assertRedirect('venues');
-
             $this->assertEquals('My Venue', $venue->name);
         });
 
-        $response = $this->actingAs($user)
-                        ->from('venues/create')
-                        ->post('venues', $this->validParams(['name' => 'My Venue']));
+        $response = $this->actingAs($this->user)
+                        ->from(route('venues.create'))
+                        ->post(route('venues.index', $this->validParams(['name' => 'My Venue'])));
 
         $response->assertStatus(302);
         $response->assertRedirect('venues/create');
@@ -109,14 +126,12 @@ class EditVenueTest extends TestCase
     /** @test */
     function address_is_required()
     {
-        $user = factory(User::class)->states('admin')->create();
-
-        $response = $this->actingAs($user)
-                        ->from('venues/create')
-                        ->post('venues', $this->validParams(['address' => '']));
+        $response = $this->actingAs($this->user)
+                        ->from(route('venues.create'))
+                        ->post(route('venues.index', $this->validParams(['address' => ''])));
 
         $response->assertStatus(302);
-        $response->assertRedirect('venues/create');
+        $response->assertRedirect(route('venues.create'));
         $response->assertSessionHasErrors('address');
         $this->assertEquals(0, Venue::count());
     }
@@ -124,14 +139,12 @@ class EditVenueTest extends TestCase
     /** @test */
     function city_is_required()
     {
-        $user = factory(User::class)->states('admin')->create();
-
-        $response = $this->actingAs($user)
-                        ->from('venues/create')
-                        ->post('venues', $this->validParams(['city' => '']));
+        $response = $this->actingAs($this->user)
+                        ->from(route('venues.create'))
+                        ->post(route('venues.index', $this->validParams(['city' => ''])));
 
         $response->assertStatus(302);
-        $response->assertRedirect('venues/create');
+        $response->assertRedirect(route('venues.create'));
         $response->assertSessionHasErrors('city');
         $this->assertEquals(0, Venue::count());
     }
@@ -139,14 +152,12 @@ class EditVenueTest extends TestCase
     /** @test */
     function state_is_required()
     {
-        $user = factory(User::class)->states('admin')->create();
-
-        $response = $this->actingAs($user)
-                        ->from('venues/create')
-                        ->post('venues', $this->validParams(['state' => '']));
+        $response = $this->actingAs($this->user)
+                        ->from(route('venues.create'))
+                        ->post(route('venues.index', $this->validParams(['state' => ''])));
 
         $response->assertStatus(302);
-        $response->assertRedirect('venues/create');
+        $response->assertRedirect(route('venues.create'));
         $response->assertSessionHasErrors('state');
         $this->assertEquals(0, Venue::count());
     }
@@ -154,14 +165,12 @@ class EditVenueTest extends TestCase
     /** @test */
     function state_must_have_a_valid_selection()
     {
-        $user = factory(User::class)->states('admin')->create();
-
-        $response = $this->actingAs($user)
-                        ->from('venues/create')
-                        ->post('venues', $this->validParams(['state' => '0']));
+        $response = $this->actingAs($this->user)
+                        ->from(route('venues.create'))
+                        ->post(route('venues.index', $this->validParams(['state' => '0'])));
 
         $response->assertStatus(302);
-        $response->assertRedirect('venues/create');
+        $response->assertRedirect(route('venues.create'));
         $response->assertSessionHasErrors('state');
         $this->assertEquals(0, Venue::count());
     }
@@ -212,26 +221,27 @@ class EditVenueTest extends TestCase
     }
 
     /** @test */
-    function adding_a_valid_venue()
+    function editing_a_valid_venue()
     {
-        $this->disableExceptionHandling();
+        $venue = factory(Venue::class)->create([
+            'name' => 'Old Name',
+            'address' => 'Old Address',
+            'city' => 'Old City',
+            'state' => 'AB',
+            'postcode' => '98765'
+        ]);
 
-        $user = factory(User::class)->states('admin')->create();
+        $response = $this->actingAs($this->user)->patch(route('stipulations.update', $venue->id), [
+            'name' => 'New Name',
+            'address' => '123 Main St.',
+            'city' => 'Laraville',
+            'state' => 'ON',
+            'postcode' => '12345'
+        ]);
 
-        $response = $this->actingAs($user)
-                        ->post('venues', [
-                            'name' => 'My Venue',
-                            'address' => '123 Main St.',
-                            'city' => 'Laraville',
-                            'state' => 'ON',
-                            'postcode' => '12345'
-                        ]);
-
+        $response->assertRedirect(route('venues.index'));
         tap(Venue::first(), function ($venue) use ($response) {
-            $response->assertStatus(302);
-            $response->assertRedirect('venues');
-
-            $this->assertEquals('My Venue', $venue->name);
+            $this->assertEquals('New Venue', $venue->name);
             $this->assertEquals('123 Main St.', $venue->address);
             $this->assertEquals('Laraville', $venue->city);
             $this->assertEquals('ON', $venue->state);
