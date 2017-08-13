@@ -107,7 +107,6 @@ class StipulationsController extends Controller
      */
     public function destroy(Stipulation $stipulation)
     {
-        dd('testing');
         $this->authorize('delete', Stipulation::class);
 
         $stipulation->delete();

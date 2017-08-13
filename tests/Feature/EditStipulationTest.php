@@ -50,7 +50,7 @@ class EditStipulationTest extends TestCase
     {
         $stipulation = factory(Stipulation::class)->create($this->oldAttributes());
 
-        $response = $this->actingAs($this->user)->get(route('venues.edit', $stipulation->id));
+        $response = $this->actingAs($this->user)->get(route('stipulations.edit', $stipulation->id));
 
         $response->assertStatus(200);
         $this->assertTrue($response->data('stipulation')->is($stipulation));
@@ -153,8 +153,8 @@ class EditStipulationTest extends TestCase
         ]);
 
         $response = $this->actingAs($this->user)->patch(route('stipulations.update', $stipulation->id), [
-            'title' => 'New Name',
-            'subtitle' => 'new-slug',
+            'name' => 'New Name',
+            'slug' => 'new-slug',
         ]);
 
         $response->assertRedirect(route('stipulations.index'));
