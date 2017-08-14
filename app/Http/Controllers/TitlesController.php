@@ -15,6 +15,8 @@ class TitlesController extends Controller
      */
     public function index()
     {
+        $this->authorize('index', Title::class);
+
         $titles = Title::all();
 
         return response()->view('titles.index', ['titles' => $titles]);
@@ -27,6 +29,8 @@ class TitlesController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Title::class);
+
         return response()->view('titles.create', ['title' => new Title]);
     }
 
@@ -38,6 +42,8 @@ class TitlesController extends Controller
      */
     public function store(TitleCreateFormRequest $request)
     {
+        $this->authorize('create', Title::class);
+
         Title::create([
             'name' => $request->name,
             'slug' => $request->slug,
@@ -55,6 +61,8 @@ class TitlesController extends Controller
      */
     public function show(Title $title)
     {
+        $this->authorize('show', Title::class);
+
         return response()->view('titles.show', ['title' => $title]);
     }
 
@@ -66,6 +74,8 @@ class TitlesController extends Controller
      */
     public function edit(Title $title)
     {
+        $this->authorize('edit', Title::class);
+
         return response()->view('titles.edit', ['title' => $title]);
     }
 
@@ -78,6 +88,8 @@ class TitlesController extends Controller
      */
     public function update(TitleEditFormRequest $request, Title $title)
     {
+        $this->authorize('edit', Title::class);
+
         $title->update([
             'name' => $request->name,
             'slug' => $request->slug,
@@ -95,6 +107,8 @@ class TitlesController extends Controller
      */
     public function destroy(Title $title)
     {
+        $this->authorize('delete', Title::class);
+
         $title->delete();
 
         return redirect()->route('titles.index');

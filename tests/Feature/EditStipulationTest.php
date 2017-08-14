@@ -16,6 +16,7 @@ class EditStipulationTest extends TestCase
     private $user;
     private $role;
     private $permission;
+    private $stipulation;
 
     public function setUp()
     {
@@ -24,6 +25,7 @@ class EditStipulationTest extends TestCase
         $this->user = factory(User::class)->create();
         $this->role = factory(Role::class)->create(['slug' => 'admin']);
         $this->permission = factory(Permission::class)->create(['slug' => 'edit-stipulation']);
+        $this->stipulation = factory(Stipulation::class)->create($this->oldAttributes());
 
         $this->role->givePermissionTo($this->permission);
         $this->user->assignRole($this->role);
@@ -40,20 +42,18 @@ class EditStipulationTest extends TestCase
     private function validParams($overrides = [])
     {
         return array_merge([
-            'name' => 'My Stipulation',
-            'slug' => 'my-stip',
+            'name' => 'Stipulation Name',
+            'slug' => 'stipulation-slug',
         ], $overrides);
     }
 
     /** @test */
     function users_who_have_permission_can_view_the_edit_stipulation_form()
     {
-        $stipulation = factory(Stipulation::class)->create($this->oldAttributes());
-
-        $response = $this->actingAs($this->user)->get(route('stipulations.edit', $stipulation->id));
+        $response = $this->actingAs($this->user)->get(route('stipulations.edit', $this->stipulation->id));
 
         $response->assertStatus(200);
-        $this->assertTrue($response->data('stipulation')->is($stipulation));
+        $this->assertTrue($response->data('stipulation')->is($this->stipulation));
     }
 
     /** @test */
@@ -62,9 +62,8 @@ class EditStipulationTest extends TestCase
         $userWithoutPermission = factory(User::class)->create();
         $role = factory(Role::class)->create(['name' => 'editor']);
         $userWithoutPermission->assignRole($role);
-        $stipulation = factory(Stipulation::class)->create($this->oldAttributes());
 
-        $response = $this->actingAs($userWithoutPermission)->get(route('stipulations.edit', $stipulation->id));
+        $response = $this->actingAs($userWithoutPermission)->get(route('stipulations.edit', $this->stipulation->id));
 
         $response->assertStatus(403);
     }
@@ -72,9 +71,7 @@ class EditStipulationTest extends TestCase
     /** @test */
     function guests_cannot_view_the_edit_stipulation_form()
     {
-        $stipulation = factory(Stipulation::class)->create($this->oldAttributes());
-
-        $response = $this->get(route('stipulations.edit', $stipulation->id));
+        $response = $this->get(route('stipulations.edit', $this->stipulation->id));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));
@@ -83,15 +80,15 @@ class EditStipulationTest extends TestCase
     /** @test */
     function name_is_required()
     {
-        $stipulation = factory(Stipulation::class)->create(['name' => 'Old Name']);
-
         $response = $this->actingAs($this->user)
-            ->from(route('stipulations.edit', $stipulation->id))
-            ->patch(route('stipulations.update', $stipulation->id), $this->validParams(['name' => '']));
+                        ->from(route('stipulations.edit', $this->stipulation->id))
+                        ->patch(route('stipulations.update', $this->stipulation->id), $this->validParams([
+                            'name' => ''
+                        ]));
 
-        $response->assertRedirect(route('stipulations.edit', $stipulation->id));
+        $response->assertRedirect(route('stipulations.edit', $this->stipulation->id));
         $response->assertSessionHasErrors('name');
-        tap($stipulation->fresh(), function ($stipulation) {
+        tap($this->stipulation->fresh(), function ($stipulation) {
             $this->assertEquals('Old Name', $stipulation->name);
         });
     }
@@ -99,15 +96,15 @@ class EditStipulationTest extends TestCase
     /** @test */
     function slug_is_required()
     {
-        $stipulation = factory(Stipulation::class)->create(['slug' => 'old-slug']);
-
         $response = $this->actingAs($this->user)
-            ->from(route('stipulations.edit', $stipulation->id))
-            ->patch(route('stipulations.update', $stipulation->id), $this->validParams(['slug' => '']));
+                        ->from(route('stipulations.edit', $this->stipulation->id))
+                        ->patch(route('stipulations.update', $this->stipulation->id), $this->validParams([
+                            'slug' => ''
+                        ]));
 
-        $response->assertRedirect(route('stipulations.edit', $stipulation->id));
+        $response->assertRedirect(route('stipulations.edit', $this->stipulation->id));
         $response->assertSessionHasErrors('slug');
-        tap($stipulation->fresh(), function ($stipulation) {
+        tap($this->stipulation->fresh(), function ($stipulation) {
             $this->assertEquals('old-slug', $stipulation->slug);
         });
     }
@@ -115,15 +112,18 @@ class EditStipulationTest extends TestCase
     /** @test */
     function name_must_be_unique()
     {
-        $stipulation = factory(Stipulation::class)->create(['name' => 'Old Name']);
+        factory(Stipulation::class)->create($this->validParams());
 
         $response = $this->actingAs($this->user)
-            ->from(route('stipulations.edit', $stipulation->id))
-            ->patch(route('stipulations.update', $stipulation->id), $this->validParams(['name' => '']));
+                        ->from(route('stipulations.edit', $this->stipulation->id))
+                        ->patch(route('stipulations.update', $this->stipulation->id), $this->validParams([
+                            'name' => 'Stipulation Name'
+                        ]));
 
-        $response->assertRedirect(route('stipulations.edit', $stipulation->id));
+        $response->assertRedirect(route('stipulations.edit', $this->stipulation->id));
         $response->assertSessionHasErrors('name');
-        tap($stipulation->fresh(), function ($stipulation) {
+        $this->assertEquals(1, Stipulation::where('name', 'Old Name')->count());
+        tap($this->stipulation->fresh(), function ($stipulation) {
             $this->assertEquals('Old Name', $stipulation->name);
         });
     }
@@ -131,15 +131,18 @@ class EditStipulationTest extends TestCase
     /** @test */
     function slug_must_be_unique()
     {
-        $stipulation = factory(Stipulation::class)->create(['slug' => 'old-slug']);
+        factory(Stipulation::class)->create(['slug' => 'stipulation-slug']);
 
         $response = $this->actingAs($this->user)
-            ->from(route('stipulations.edit', $stipulation->id))
-            ->patch(route('stipulations.update', $stipulation->id), $this->validParams(['slug' => '']));
+                        ->from(route('stipulations.edit', $this->stipulation->id))
+                        ->patch(route('stipulations.update', $this->stipulation->id), $this->validParams([
+                            'slug' => 'stipulation-slug'
+                        ]));
 
-        $response->assertRedirect(route('stipulations.edit', $stipulation->id));
+        $response->assertRedirect(route('stipulations.edit', $this->stipulation->id));
         $response->assertSessionHasErrors('slug');
-        tap($stipulation->fresh(), function ($stipulation) {
+        $this->assertEquals(1, Stipulation::where('slug', 'stipulation-slug')->count());
+        tap($this->stipulation->fresh(), function ($stipulation) {
             $this->assertEquals('old-slug', $stipulation->slug);
         });
     }
@@ -147,18 +150,15 @@ class EditStipulationTest extends TestCase
     /** @test */
     function editing_a_valid_stipulation()
     {
-        $stipulation = factory(Stipulation::class)->create([
-            'name' => 'Old Name',
-            'slug' => 'old-slug',
-        ]);
-
-        $response = $this->actingAs($this->user)->patch(route('stipulations.update', $stipulation->id), [
-            'name' => 'New Name',
-            'slug' => 'new-slug',
-        ]);
+        $response = $this->actingAs($this->user)
+                        ->from(route('stipulations.edit', $this->stipulation->id))
+                        ->patch(route('stipulations.update', $this->stipulation->id), [
+                            'name' => 'New Name',
+                            'slug' => 'new-slug',
+                        ]);
 
         $response->assertRedirect(route('stipulations.index'));
-        tap($stipulation->fresh(), function ($stipulation) {
+        tap($this->stipulation->fresh(), function ($stipulation) {
             $this->assertEquals('New Name', $stipulation->name);
             $this->assertEquals('new-slug', $stipulation->slug);
         });

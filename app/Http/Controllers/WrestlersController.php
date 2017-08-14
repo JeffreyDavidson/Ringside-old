@@ -17,6 +17,8 @@ class WrestlersController extends Controller
      */
     public function index()
     {
+        $this->authorize('index', Wrestler::class);
+
         $wrestlers = Wrestler::all();
 
         return response()->view('wrestlers.index', ['wrestlers' => $wrestlers]);
@@ -29,6 +31,8 @@ class WrestlersController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Wrestler::class);
+
         $statuses = WrestlerStatus::available();
 
         return response()->view('wrestlers.create', ['wrestler' => new Wrestler, 'statuses' => $statuses]);
@@ -42,6 +46,8 @@ class WrestlersController extends Controller
      */
     public function store(WrestlerCreateFormRequest $request)
     {
+        $this->authorize('create', Wrestler::class);
+
         $wrestler = Wrestler::create([
             'name' => $request->name,
             'slug' => $request->slug,
@@ -69,6 +75,8 @@ class WrestlersController extends Controller
      */
     public function show(Wrestler $wrestler)
     {
+        $this->authorize('show', Wrestler::class);
+
         $wrestler->load('currentManagers', 'previousManagers', 'titles.title', 'bio');
 
         return response()->view('wrestlers.show', ['wrestler' => $wrestler]);
@@ -82,6 +90,8 @@ class WrestlersController extends Controller
      */
     public function edit(Wrestler $wrestler)
     {
+        $this->authorize('edit', Wrestler::class);
+
         $statuses = WrestlerStatus::available($wrestler->status());
 
         return response()->view('wrestlers.edit', ['wrestler' => $wrestler, 'statuses' => $statuses]);
@@ -96,6 +106,8 @@ class WrestlersController extends Controller
      */
     public function update(WrestlerEditFormRequest $request, Wrestler $wrestler)
     {
+        $this->authorize('edit', Wrestler::class);
+
         $wrestler->update([
             'name' => $request->name,
             'slug' => $request->slug,

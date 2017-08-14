@@ -32,15 +32,16 @@ class AddStipulationTest extends TestCase
     private function validParams($overrides = [])
     {
         return array_merge([
-            'name' => 'My Stipulation',
-            'slug' => 'my-stip',
+            'name' => 'Stipulation Name',
+            'slug' => 'stipulation-slug',
         ], $overrides);
     }
 
     /** @test */
     function users_who_have_permission_can_view_the_add_stipulation_form()
     {
-        $response = $this->actingAs($this->user)->get(route('stipulations.create'));
+        $response = $this->actingAs($this->user)
+                        ->get(route('stipulations.create'));
 
         $response->assertStatus(200);
     }
@@ -52,7 +53,8 @@ class AddStipulationTest extends TestCase
         $role = factory(Role::class)->create(['name' => 'editor']);
         $userWithoutPermission->assignRole($role);
 
-        $response = $this->actingAs($userWithoutPermission)->get(route('stipulations.create'));
+        $response = $this->actingAs($userWithoutPermission)
+                        ->get(route('stipulations.create'));
 
         $response->assertStatus(403);
     }
@@ -84,36 +86,28 @@ class AddStipulationTest extends TestCase
     /** @test */
     function name_must_be_unique()
     {
-        $response = $this->actingAs($this->user)->post(route('stipulations.index'), $this->validParams([
-            'name' => 'My Stipulation',
-        ]));
-
-        tap(Stipulation::first(), function ($stipulation) use ($response) {
-            $response->assertStatus(302);
-            $this->assertEquals(1, Stipulation::count());
-            $response->assertRedirect(route('stipulations.index'));
-
-            $this->assertEquals('My Stipulation', $stipulation->name);
-        });
+        factory(Stipulation::class)->create(['name' => 'Stipulation Name']);
 
         $response = $this->actingAs($this->user)
-            ->from(route('stipulations.create'))
-            ->post(route('stipulations.index'), $this->validParams([
-                'name' => 'My Stipulation',
-            ]));
+                        ->from(route('stipulations.create'))
+                        ->post(route('stipulations.index'), $this->validParams([
+                            'name' => 'Stipulation Name',
+                        ]));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('stipulations.create'));
         $response->assertSessionHasErrors('name');
-        $this->assertEquals(1, Stipulation::count());
+        $this->assertEquals(1, Stipulation::where('name', 'Stipulation Name')->count());
     }
 
     /** @test */
     function slug_is_required()
     {
-        $response = $this->actingAs($this->user)->from(route('stipulations.create'))->post(route('stipulations.index'), $this->validParams([
-            'slug' => '',
-        ]));
+        $response = $this->actingAs($this->user)
+                        ->from(route('stipulations.create'))
+                        ->post(route('stipulations.index'), $this->validParams([
+                            'slug' => '',
+                        ]));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('stipulations.create'));
@@ -124,44 +118,36 @@ class AddStipulationTest extends TestCase
     /** @test */
     function slug_must_be_unique()
     {
-        $response = $this->actingAs($this->user)->post(route('stipulations.index'), $this->validParams([
-            'slug' => 'my-stip',
-        ]));
+        factory(Stipulation::class)->create(['slug' => 'stipulation-slug']);
 
-        tap(Stipulation::first(), function ($stipulation) use ($response) {
-            $response->assertStatus(302);
-            $this->assertEquals(1, Stipulation::count());
-            $response->assertRedirect(route('stipulations.index'));
-
-            $this->assertEquals('my-stip', $stipulation->slug);
-        });
-
-        $response = $this->actingAs($this->user)->from(route('stipulations.create'))->post(route('stipulations.index'), $this->validParams([
-            'slug' => 'my-stip',
-        ]));
+        $response = $this->actingAs($this->user)
+                        ->from(route('stipulations.create'))
+                        ->post(route('stipulations.index'), $this->validParams([
+                            'slug' => 'stipulation-slug'
+                        ]));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('stipulations.create'));
         $response->assertSessionHasErrors('slug');
-        $this->assertEquals(1, Stipulation::count());
+        $this->assertEquals(1, Stipulation::where('slug', 'stipulation-slug')->count());
     }
 
     /** @test */
     function adding_a_valid_stipulation()
     {
-        $this->disableExceptionHandling();
-
-        $response = $this->actingAs($this->user)->post(route('stipulations.index'), [
-            'name' => 'My Stipulation',
-            'slug' => 'my-stip',
-        ]);
+        $response = $this->actingAs($this->user)
+                        ->from(route('stipulations.create'))
+                        ->post(route('stipulations.index'), $this->validParams([
+                            'name' => 'Stipulation Name',
+                            'slug' => 'stipulation-slug',
+                        ]));
 
         tap(Stipulation::first(), function ($stipulation) use ($response) {
             $response->assertStatus(302);
             $response->assertRedirect(route('stipulations.index'));
 
-            $this->assertEquals('My Stipulation', $stipulation->name);
-            $this->assertEquals('my-stip', $stipulation->slug);
+            $this->assertEquals('Stipulation Name', $stipulation->name);
+            $this->assertEquals('stipulation-slug', $stipulation->slug);
         });
     }
 }

@@ -32,13 +32,12 @@ class ViewVenueListTest extends TestCase
     /** @test */
     function users_who_have_permission_can_view_the_list_of_venues()
     {
-        $this->disableExceptionHandling();
-
         $venueA = factory(Venue::class)->create();
         $venueB = factory(Venue::class)->create();
         $venueC = factory(Venue::class)->create();
 
-        $response = $this->actingAs($this->user)->get(route('venues.index'));
+        $response = $this->actingAs($this->user)
+                        ->get(route('venues.index'));
 
         $response->assertStatus(200);
         $response->data('venues')->assertEquals([
@@ -55,7 +54,8 @@ class ViewVenueListTest extends TestCase
         $role = factory(Role::class)->create(['name' => 'editor']);
         $userWithoutPermission->assignRole($role);
 
-        $response = $this->actingAs($userWithoutPermission)->get(route('venues.index'));
+        $response = $this->actingAs($userWithoutPermission)
+                        ->get(route('venues.index'));
 
         $response->assertStatus(403);
     }

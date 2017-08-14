@@ -13,26 +13,6 @@ class TitleTest extends TestCase
     use DatabaseMigrations;
 
     /** @test */
-    function titles_can_belong_to_matches()
-    {
-        $title = factory(TItle::class)->create();
-
-        $this->assertInstanceOf(
-            'Illuminate\Database\Eloquent\Collection', $title->matches
-        );
-    }
-
-    /** @test */
-    function titles_can_have_many_champions()
-    {
-        $title = factory(TItle::class)->create();
-
-        $this->assertInstanceOf(
-            'Illuminate\Database\Eloquent\Collection', $title->champions
-        );
-    }
-
-    /** @test */
     function can_get_all_valid_titles_for_an_event()
     {
         $validTitleA = factory(Title::class)->create(['introduced_at' => Carbon::parse('-3 weeks')]);

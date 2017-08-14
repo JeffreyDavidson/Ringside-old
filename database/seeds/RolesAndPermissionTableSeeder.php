@@ -18,6 +18,12 @@ class RolesAndPermissionTableSeeder extends Seeder
         $admin = Role::create(['name' => 'Admin',  'slug' => 'admin']);
         $superAdmin = Role::create(['name' => 'Super Administrator',  'slug' => 'super-admin']);
 
+        $viewWrestlers = Permission::create(['name' => 'View Wrestlers',  'slug' => 'view-wrestlers']);
+        $createWrestler = Permission::create(['name' => 'Create Wrestler',  'slug' => 'create-wrestler']);
+        $editWrestler = Permission::create(['name' => 'Edit Wrestler',  'slug' => 'edit-wrestler']);
+        $showWrestler = Permission::create(['name' => 'Show Wrestler',  'slug' => 'show-wrestler']);
+        $deleteWrestler = Permission::create(['name' => 'Delete Wrestler',  'slug' => 'delete-wrestler']);
+
         $viewTitles = Permission::create(['name' => 'View Titles',  'slug' => 'view-titles']);
         $createTitle = Permission::create(['name' => 'Create Title',  'slug' => 'create-title']);
         $editTitle = Permission::create(['name' => 'Edit Title',  'slug' => 'edit-title']);
@@ -36,6 +42,11 @@ class RolesAndPermissionTableSeeder extends Seeder
         $showVenue = Permission::create(['name' => 'Show Venue',  'slug' => 'show-venue']);
         $deleteVenue = Permission::create(['name' => 'Delete Venue',  'slug' => 'delete-venue']);
 
+        $admin->givePermissionTo($viewWrestlers);
+        $admin->givePermissionTo($createWrestler);
+        $admin->givePermissionTo($editWrestler);
+        $admin->givePermissionTo($showWrestler);
+        $admin->givePermissionTo($deleteWrestler);
         $admin->givePermissionTo($viewTitles);
         $admin->givePermissionTo($createTitle);
         $admin->givePermissionTo($editTitle);
@@ -52,16 +63,25 @@ class RolesAndPermissionTableSeeder extends Seeder
         $admin->givePermissionTo($showVenue);
         $admin->givePermissionTo($deleteVenue);
 
-
-        $superAdmin->givePermissionTo($viewVenues);
-        $superAdmin->givePermissionTo($createVenue);
-        $superAdmin->givePermissionTo($editVenue);
-        $superAdmin->givePermissionTo($showVenue);
-        $superAdmin->givePermissionTo($deleteVenue);
+        $superAdmin->givePermissionTo($viewWrestlers);
+        $superAdmin->givePermissionTo($createWrestler);
+        $superAdmin->givePermissionTo($editWrestler);
+        $superAdmin->givePermissionTo($showWrestler);
+        $superAdmin->givePermissionTo($deleteWrestler);
+        $superAdmin->givePermissionTo($viewTitles);
+        $superAdmin->givePermissionTo($createTitle);
+        $superAdmin->givePermissionTo($editTitle);
+        $superAdmin->givePermissionTo($showTitle);
+        $superAdmin->givePermissionTo($deleteTitle);
         $superAdmin->givePermissionTo($viewStipulations);
         $superAdmin->givePermissionTo($createStipulation);
         $superAdmin->givePermissionTo($editStipulation);
         $superAdmin->givePermissionTo($showStipulation);
         $superAdmin->givePermissionTo($deleteStipulation);
+        $superAdmin->givePermissionTo($viewVenues);
+        $superAdmin->givePermissionTo($createVenue);
+        $superAdmin->givePermissionTo($editVenue);
+        $superAdmin->givePermissionTo($showVenue);
+        $superAdmin->givePermissionTo($deleteVenue);
     }
 }

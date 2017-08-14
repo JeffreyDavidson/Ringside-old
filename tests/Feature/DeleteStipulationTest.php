@@ -16,6 +16,7 @@ class DeleteStipulationTest extends TestCase
     private $user;
     private $role;
     private $permission;
+    private $stipulation;
 
     public function setUp()
     {
@@ -24,6 +25,7 @@ class DeleteStipulationTest extends TestCase
         $this->user = factory(User::class)->create();
         $this->role = factory(Role::class)->create(['slug' => 'admin']);
         $this->permission = factory(Permission::class)->create(['slug' => 'delete-stipulation']);
+        $this->stipulation =factory(Stipulation::class)->create();
 
         $this->role->givePermissionTo($this->permission);
         $this->user->assignRole($this->role);
@@ -32,32 +34,32 @@ class DeleteStipulationTest extends TestCase
     /** @test */
     function users_who_have_permission_can_delete_a_stipulation()
     {
-        $stipulation = factory(Stipulation::class)->create();
-
-        $response = $this->actingAs($this->user)->delete(route('stipulations.destroy', $stipulation->id));
+        $response = $this->actingAs($this->user)
+                        ->from(route('stipulations.index'))
+                        ->delete(route('stipulations.destroy', $this->stipulation->id));
 
         $response->assertStatus(302);
     }
 
     /** @test */
-    function users_who_dont_have_permission_cannot_view_the_add_stipulation_form()
+    function users_who_dont_have_permission_cannot_delete_a_stipulation()
     {
-        $stipulation = factory(Stipulation::class)->create();
         $userWithoutPermission = factory(User::class)->create();
         $role = factory(Role::class)->create(['name' => 'editor']);
         $userWithoutPermission->assignRole($role);
 
-        $response = $this->actingAs($userWithoutPermission)->delete(route('stipulations.destroy', $stipulation->id));
+        $response = $this->actingAs($userWithoutPermission)
+                        ->from(route('stipulations.index'))
+                        ->delete(route('stipulations.destroy', $this->stipulation->id));
 
         $response->assertStatus(403);
     }
 
     /** @test */
-    function guests_cannot_view_the_add_stipulation_form()
+    function guests_cannot_delete_a_stipulation()
     {
-        $stipulation = factory(Stipulation::class)->create();
-
-        $response = $this->delete(route('stipulations.destroy', $stipulation->id));
+        $response = $this->from(route('stipulations.index'))
+                        ->delete(route('stipulations.destroy', $this->stipulation->id));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));

@@ -2,9 +2,10 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
 use App\Models\Wrestler;
-use App\Models\WrestlerBio;
+use App\Models\User;
+use App\Models\Role;
+use App\Models\Permission;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -12,58 +13,59 @@ class ViewWrestlerListTest extends TestCase
 {
     use DatabaseMigrations;
 
-    /** @test */
-    public function view_listing_of_active_wrestlers()
-    {
-        $user = factory(User::class)->create();
-        $wrestler = factory(Wrestler::class)->states('active')->create();
+    private $user;
+    private $role;
+    private $permission;
 
-        $response = $this->actingAs($user)->get('wrestlers');
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->user = factory(User::class)->create();
+        $this->role = factory(Role::class)->create(['slug' => 'admin']);
+        $this->permission = factory(Permission::class)->create(['slug' => 'view-wrestlers']);
+
+        $this->role->givePermissionTo($this->permission);
+        $this->user->assignRole($this->role);
+    }
+
+    /** @test */
+    function users_who_have_permission_can_view_the_list_of_wrestlers()
+    {
+        $wrestlerA = factory(Wrestler::class)->create();
+        $wrestlerB = factory(Wrestler::class)->create();
+        $wrestlerC = factory(Wrestler::class)->create();
+
+        $response = $this->actingAs($this->user)
+                        ->get(route('wrestlers.index'));
 
         $response->assertStatus(200);
-        $response->data('wrestlers')->assertContains($wrestler);
+        $response->data('wrestlers')->assertEquals([
+            $wrestlerA,
+            $wrestlerB,
+            $wrestlerC,
+        ]);
     }
 
     /** @test */
-    public function view_listing_of_inactive_wrestlers()
+    function users_who_dont_have_permission_cannot_view_the_list_of_wrestlers()
     {
-        factory(Wrestler::class)->states('inactive')->create(['name' => 'Wrestler 1']);
+        $userWithoutPermission = factory(User::class)->create();
+        $role = factory(Role::class)->create(['name' => 'editor']);
+        $userWithoutPermission->assignRole($role);
 
-        $this->get(route('wrestlers/inactive'));
+        $response = $this->actingAs($userWithoutPermission)
+                        ->get(route('wrestlers.index'));
 
-        $this->see('Wrestler 1');
+        $response->assertStatus(403);
     }
 
     /** @test */
-    public function view_listing_of_injured_wrestlers()
+    function guests_cannot_view_wrestler_list()
     {
-        $wrestler = factory(Wrestler::class)->states('active')->create(['name' => 'Wrestler 1']);
+        $response = $this->get(route('wrestlers.index'));
 
-        $wrestler->injure();
-
-        $this->get(route('wrestlers.injured'));
-
-        $this->see('Wrestler 1');
+        $response->assertStatus(302);
+        $response->assertRedirect(route('login'));
     }
-
-    /** @test */
-    public function view_listing_of_suspended_wrestlers()
-    {
-        factory(Wrestler::class)->states('suspended')->create(['name' => 'Wrestler 1']);
-
-        $this->visit('wrestlers/suspended');
-
-        $this->see('Wrestler 1');
-    }
-
-    /** @test */
-    public function view_listing_of_retired_wrestlers()
-    {
-        factory(Wrestler::class)->states('retired')->create(['name' => 'Wrestler 1']);
-
-        $this->visit('wrestlers/retired');
-
-        $this->see('Wrestler 1');
-    }
-
 }

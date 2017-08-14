@@ -5,32 +5,32 @@ namespace App\Policies;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class TitlePolicy
+class WrestlerPolicy
 {
     use HandlesAuthorization;
 
     public function index(User $user)
     {
-        return $user->hasPermission('view-titles');
+        return $user->hasPermission('view-wrestlers');
     }
 
     public function create(User $user)
     {
-        return $user->hasPermission('create-title');
+        return $user->hasPermission('create-wrestler');
     }
 
     public function show(User $user)
     {
-        return $user->hasPermission('show-title');
+        return $user->hasPermission('show-wrestler');
     }
 
     public function edit(User $user)
     {
-        return $user->hasPermission('edit-title');
+        return $user->hasPermission('edit-wrestler');
     }
 
     public function delete(User $user)
     {
-        return $user->hasPermission('delete-title');
+        return $user->hasPermission('delete-wrestler');
     }
 }

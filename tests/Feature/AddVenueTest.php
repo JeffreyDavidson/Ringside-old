@@ -32,7 +32,7 @@ class AddVenueTest extends TestCase
     private function validParams($overrides = [])
     {
         return array_merge([
-            'name' => 'My Venue',
+            'name' => 'Venue Name',
             'address' => '123 Main St.',
             'city' => 'Laraville',
             'state' => 'ON',
@@ -43,7 +43,8 @@ class AddVenueTest extends TestCase
     /** @test */
     function users_who_have_permission_can_view_the_add_venue_form()
     {
-        $response = $this->actingAs($this->user)->get(route('venues.create'));
+        $response = $this->actingAs($this->user)
+                        ->get(route('venues.create'));
 
         $response->assertStatus(200);
     }
@@ -55,7 +56,8 @@ class AddVenueTest extends TestCase
         $role = factory(Role::class)->create(['name' => 'editor']);
         $userWithoutPermission->assignRole($role);
 
-        $response = $this->actingAs($userWithoutPermission)->get(route('venues.create'));
+        $response = $this->actingAs($userWithoutPermission)
+                        ->get(route('venues.create'));
 
         $response->assertStatus(403);
     }
@@ -87,26 +89,18 @@ class AddVenueTest extends TestCase
     /** @test */
     function name_must_be_unique()
     {
-        $response = $this->actingAs($this->user)
-                        ->from(route('venues.create'))
-                        ->post(route('venues.index', $this->validParams(['name' => 'My Venue'])));
-
-        tap(Venue::first(), function ($venue) use ($response) {
-            $response->assertStatus(302);
-            $this->assertEquals(1, Venue::count());
-            $response->assertRedirect('venues');
-
-            $this->assertEquals('My Venue', $venue->name);
-        });
+        factory(Venue::class)->create(['name' => 'Venue Name']);
 
         $response = $this->actingAs($this->user)
                         ->from(route('venues.create'))
-                        ->post(route('venues.index', $this->validParams(['name' => 'My Venue'])));
+                        ->post(route('venues.index', $this->validParams([
+                            'name' => 'Venue Name'
+                        ])));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('venues.create'));
         $response->assertSessionHasErrors('name');
-        $this->assertEquals(1, Venue::count());
+        $this->assertEquals(1, Venue::where('name', 'Venue Name')->count());
     }
 
     /** @test */
@@ -114,7 +108,9 @@ class AddVenueTest extends TestCase
     {
         $response = $this->actingAs($this->user)
                         ->from(route('venues.create'))
-                        ->post(route('venues.index', $this->validParams(['address' => ''])));
+                        ->post(route('venues.index', $this->validParams([
+                            'address' => ''
+                        ])));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('venues.create'));
@@ -127,7 +123,9 @@ class AddVenueTest extends TestCase
     {
         $response = $this->actingAs($this->user)
                         ->from(route('venues.create'))
-                        ->post(route('venues.index', $this->validParams(['city' => ''])));
+                        ->post(route('venues.index', $this->validParams([
+                            'city' => ''
+                        ])));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('venues.create'));
@@ -140,7 +138,9 @@ class AddVenueTest extends TestCase
     {
         $response = $this->actingAs($this->user)
                         ->from(route('venues.create'))
-                        ->post(route('venues.index', $this->validParams(['state' => ''])));
+                        ->post(route('venues.index', $this->validParams([
+                            'state' => ''
+                        ])));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('venues.create'));
@@ -153,7 +153,9 @@ class AddVenueTest extends TestCase
     {
         $response = $this->actingAs($this->user)
                         ->from(route('venues.create'))
-                        ->post(route('venues.index', $this->validParams(['state' => '0'])));
+                        ->post(route('venues.index', $this->validParams([
+                            'state' => '0'
+                        ])));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('venues.create'));
@@ -166,7 +168,9 @@ class AddVenueTest extends TestCase
     {
         $response = $this->actingAs($this->user)
                         ->from(route('venues.create'))
-                        ->post(route('venues.index', $this->validParams(['postcode' => ''])));
+                        ->post(route('venues.index', $this->validParams([
+                            'postcode' => ''
+                        ])));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('venues.create'));
@@ -179,7 +183,9 @@ class AddVenueTest extends TestCase
     {
         $response = $this->actingAs($this->user)
                         ->from(route('venues.create'))
-                        ->post(route('venues.index', $this->validParams(['postcode' => 'not a number'])));
+                        ->post(route('venues.index', $this->validParams([
+                            'postcode' => 'not a number'
+                        ])));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('venues.create'));
@@ -192,7 +198,9 @@ class AddVenueTest extends TestCase
     {
         $response = $this->actingAs($this->user)
                         ->from(route('venues.create'))
-                        ->post(route('venues.index', $this->validParams(['postcode' => time()])));
+                        ->post(route('venues.index', $this->validParams([
+                            'postcode' => time()
+                        ])));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('venues.create'));
@@ -204,8 +212,9 @@ class AddVenueTest extends TestCase
     function adding_a_valid_venue()
     {
         $response = $this->actingAs($this->user)
+                        ->from(route('venues.create'))
                         ->post(route('venues.index', [
-                            'name' => 'My Venue',
+                            'name' => 'Venue Name',
                             'address' => '123 Main St.',
                             'city' => 'Laraville',
                             'state' => 'ON',
@@ -216,7 +225,7 @@ class AddVenueTest extends TestCase
             $response->assertStatus(302);
             $response->assertRedirect(route('venues.index'));
 
-            $this->assertEquals('My Venue', $venue->name);
+            $this->assertEquals('Venue Name', $venue->name);
             $this->assertEquals('123 Main St.', $venue->address);
             $this->assertEquals('Laraville', $venue->city);
             $this->assertEquals('ON', $venue->state);

@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Models\Role;
+use App\Models\Permission;
 use App\Models\Wrestler;
 use App\Models\Manager;
 use App\Models\Title;
@@ -11,20 +13,67 @@ use App\Models\Event;
 use App\Models\WrestlerBio;
 use Carbon\Carbon;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class ViewARosterMemberBioTest extends TestCase
+class ViewWrestlerBioTest extends TestCase
 {
     use DatabaseMigrations;
+
+    private $user;
+    private $role;
+    private $permission;
+    private $wrestler;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->user = factory(User::class)->create();
+        $this->role = factory(Role::class)->create(['slug' => 'admin']);
+        $this->permission = factory(Permission::class)->create(['slug' => 'show-wrestler']);
+        $this->wrestler = factory(Wrestler::class)->create();
+        $this->wrestler->bio()->save(factory(WrestlerBio::class)->create());
+
+        $this->role->givePermissionTo($this->permission);
+        $this->user->assignRole($this->role);
+    }
+
+    /** @test */
+    function users_who_have_permission_can_view_a_wrestler_bio()
+    {
+        $this->disableExceptionHandling();
+        $response = $this->actingAs($this->user)
+                        ->get(route('wrestlers.show', $this->wrestler->id));
+
+        $response->assertStatus(200);
+    }
+
+    /** @test */
+    function users_who_dont_have_permission_cannot_view_a_wrestler_bio()
+    {
+        $userWithoutPermission = factory(User::class)->create();
+        $role = factory(Role::class)->create(['name' => 'editor']);
+        $userWithoutPermission->assignRole($role);
+
+        $response = $this->actingAs($userWithoutPermission)
+                        ->get(route('wrestlers.show', $this->wrestler->id));
+
+        $response->assertStatus(403);
+    }
+
+    /** @test */
+    function guests_cannot_view_the_add_stipulation_form()
+    {
+        $response = $this->get(route('wrestlers.show', $this->wrestler->id));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('login'));
+    }
 
     /** @test */
     public function view_wrestler_bio()
     {
-        $wrestler = factory(Wrestler::class)->states('active')->create(['name' => 'Wrestler 1']);
-
-        $wrestler->bio()->create([
+        $this->wrestler->bio()->create([
             'hometown' => 'Kansas City, Missouri',
             'height' => 73,
             'weight' => 251,
@@ -43,25 +92,17 @@ class ViewARosterMemberBioTest extends TestCase
     /** @test */
     public function view_list_of_managers_on_wrestler_bio()
     {
-        $this->disableExceptionHandling();
-        $user = factory(User::class)->create();
-        $wrestler = factory(Wrestler::class)->states('active')->create();
-
-        tap($wrestler, function($instance) {
-            $instance->bio()->save(factory(WrestlerBio::class)->make());
-        });
-
         $firedManager = factory(Manager::class)->create(['name' => 'Fired Manager']);
         $hiredManager = factory(Manager::class)->create(['name' => 'Hired Manager']);
 
-        $wrestler->hireManager($firedManager, Carbon::now());
-        $wrestler->fireManager($firedManager, Carbon::now('+1 day'));
-        $wrestler->hireManager($hiredManager, Carbon::now('+2 days'));
+        $this->wrestler->hireManager($firedManager, Carbon::now());
+        $this->wrestler->fireManager($firedManager, Carbon::now('+1 day'));
+        $this->wrestler->hireManager($hiredManager, Carbon::now('+2 days'));
 
-        $response = $this->actingAs($user)->get('wrestlers/'. $wrestler->id);
+        $response = $this->actingAs($this->user)
+                        ->get(route('wrestlers.show', $this->wrestler->id));
 
         $response->assertStatus(200);
-
         $response->assertSee('Fired Manager');
         $response->assertSee('Hired Manager');
     }
@@ -107,5 +148,4 @@ class ViewARosterMemberBioTest extends TestCase
         $this->visit('wrestlers/'.$wrestler1->id);
         $this->see('My Event');
     }
-
 }
