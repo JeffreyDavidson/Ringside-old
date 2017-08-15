@@ -48,21 +48,16 @@ class WrestlersController extends Controller
     {
         $this->authorize('create', Wrestler::class);
 
-        $wrestler = Wrestler::create([
+        Wrestler::create([
             'name' => $request->name,
             'slug' => $request->slug,
             'status_id' => $request->status_id,
             'hired_at' => $request->hired_at,
+            'hometown' => request('hometown'),
+            'height' => (request('feet', 0) * 12) + request('inches', 0),
+            'weight' => request('weight'),
+            'signature_move' => request('signature_move'),
         ]);
-
-        tap($wrestler, function ($instance) {
-            $instance->bio()->create([
-                'hometown' => request('hometown'),
-                'height' => (request('feet', 0) * 12) + request('inches', 0),
-                'weight' => request('weight'),
-                'signature_move' => request('signature_move'),
-            ]);
-        });
 
         return redirect()->route('wrestlers.index');
     }
@@ -77,7 +72,7 @@ class WrestlersController extends Controller
     {
         $this->authorize('show', Wrestler::class);
 
-        $wrestler->load('currentManagers', 'previousManagers', 'titles.title', 'bio');
+        $wrestler->load('currentManagers', 'previousManagers', 'titles.title');
 
         return response()->view('wrestlers.show', ['wrestler' => $wrestler]);
     }
@@ -113,17 +108,11 @@ class WrestlersController extends Controller
             'slug' => $request->slug,
             'status_id' => $request->status_id,
             'hired_at' => $request->hired_at,
+            'hometown' => request('hometown'),
+            'height' => (request('feet', 0) * 12) + request('inches', 0),
+            'weight' => request('weight'),
+            'signature_move' => request('signature_move'),
         ]);
-
-        tap($wrestler, function ($instance) {
-            $instance->bio()->update([
-                'hometown' => request('hometown'),
-                'height' => (request('feet', 0) * 12) + request('inches', 0),
-                'weight' => request('weight'),
-                'signature_move' => request('signature_move'),
-            ]);
-        });
-
 
         if ($wrestler->status() != $request->status_id) {
             $wrestler->statusChanged();

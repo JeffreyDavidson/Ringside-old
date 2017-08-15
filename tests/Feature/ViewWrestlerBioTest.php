@@ -31,8 +31,15 @@ class ViewWrestlerBioTest extends TestCase
         $this->user = factory(User::class)->create();
         $this->role = factory(Role::class)->create(['slug' => 'admin']);
         $this->permission = factory(Permission::class)->create(['slug' => 'show-wrestler']);
-        $this->wrestler = factory(Wrestler::class)->create();
-        $this->wrestler->bio()->save(factory(WrestlerBio::class)->create());
+        $this->wrestler = factory(Wrestler::class)->create([
+            'name' => 'Wrestler 1',
+            'slug' => 'wrestler1',
+            'hired_at' => '2017-08-04',
+            'hometown' => 'Kansas City, Missouri',
+            'height' => 73,
+            'weight' => 251,
+            'signature_move' => 'Powerbomb'
+        ]);
 
         $this->role->givePermissionTo($this->permission);
         $this->user->assignRole($this->role);
@@ -41,7 +48,6 @@ class ViewWrestlerBioTest extends TestCase
     /** @test */
     function users_who_have_permission_can_view_a_wrestler_bio()
     {
-        $this->disableExceptionHandling();
         $response = $this->actingAs($this->user)
                         ->get(route('wrestlers.show', $this->wrestler->id));
 
@@ -71,16 +77,10 @@ class ViewWrestlerBioTest extends TestCase
     }
 
     /** @test */
-    public function view_wrestler_bio()
+    public function view_bio_information_of_wrestler()
     {
-        $this->wrestler->bio()->create([
-            'hometown' => 'Kansas City, Missouri',
-            'height' => 73,
-            'weight' => 251,
-            'signature_move' => 'Powerbomb'
-        ]);
-
-        $response = $this->get('wrestlers/'.$wrestler->id);
+        $response = $this->actingAs($this->user)
+                        ->get(route('wrestlers.show', $this->wrestler->id));
 
         $response->assertSee('Wrestler 1');
         $response->assertSee('Kansas City, Missouri');
@@ -92,10 +92,11 @@ class ViewWrestlerBioTest extends TestCase
     /** @test */
     public function view_list_of_managers_on_wrestler_bio()
     {
-        $firedManager = factory(Manager::class)->create(['name' => 'Fired Manager']);
+        $firedManagerA = factory(Manager::class)->create(['name' => 'Fired Manager A']);
+        $firedManagerB = factory(Manager::class)->create(['name' => 'Fired Manager B']);
         $hiredManager = factory(Manager::class)->create(['name' => 'Hired Manager']);
 
-        $this->wrestler->hireManager($firedManager, Carbon::now());
+        $this->wrestler->hireManager($firedManagerA, Carbon::now());
         $this->wrestler->fireManager($firedManager, Carbon::now('+1 day'));
         $this->wrestler->hireManager($hiredManager, Carbon::now('+2 days'));
 

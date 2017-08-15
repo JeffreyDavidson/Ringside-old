@@ -30,16 +30,6 @@ class Wrestler extends Model
     protected $dates = ['hired_at'];
 
     /**
-     * A wrestler can have one bio.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function bio()
-    {
-        return $this->hasOne(WrestlerBio::class);
-    }
-
-    /**
      * A wrestler can have many managers.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -115,12 +105,20 @@ class Wrestler extends Model
      */
     public function getHeightInFeetAttribute()
     {
-        if ($this->bio)
+        if ($this->height)
         {
-            return floor($this->bio->height/12);
+            return floor($this->height/12);
         }
 
         return null;
+    }
+
+    public function getFormattedHeightAttribute()
+    {
+        $feet = floor($this->height / 12);
+        $inches = ($this->height % 12);
+
+        return $feet.'\''.$inches.'"';
     }
 
     /**
@@ -130,9 +128,9 @@ class Wrestler extends Model
      */
     public function getHeightInInchesAttribute()
     {
-        if ($this->bio)
+        if ($this->height)
         {
-            return $this->bio->height % 12;
+            return $this->height % 12;
         }
 
         return null;

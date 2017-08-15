@@ -11,7 +11,6 @@ class DatabaseSeeder extends Seeder
         'users',
         'wrestler_statuses',
         'wrestlers',
-        'wrestler_bios',
         'wrestler_injuries',
         'wrestler_retirements',
         'titles',

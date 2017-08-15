@@ -70,7 +70,11 @@ $factory->define(App\Models\Wrestler::class, function (Faker\Generator $faker) {
         'name' => $faker->name,
         'slug' => $faker->name,
         'status_id' => $faker->numberBetween(1, 5),
-        'hired_at' => $faker->dateTimeBetween('-30 years','-1 year')
+        'hired_at' => $faker->dateTimeBetween('-30 years','-1 year'),
+        'hometown' => $faker->city . ', ' . $faker->state,
+        'height' => $faker->numberBetween(63, 84),
+        'weight' => $faker->numberBetween(175, 400),
+        'signature_move' => $faker->unique()->sentence(3)
     ];
 });
 
@@ -100,19 +104,6 @@ $factory->define(App\Models\WrestlerRetirement::class, function (Faker\Generator
         },
         'retired_at' => Carbon::now('-2 years'),
         'ended_at' => Carbon::now('-2 days'),
-    ];
-});
-
-$factory->define(App\Models\WrestlerBio::class, function (Faker\Generator $faker) {
-
-    return [
-        'wrestler_id' => function () {
-            return factory(App\Models\Wrestler::class)->create()->id;
-        },
-        'hometown' => $faker->city . ', ' . $faker->state,
-        'height' => $faker->numberBetween(63, 84),
-        'weight' => $faker->numberBetween(175, 400),
-        'signature_move' => $faker->unique()->sentence(3)
     ];
 });
 
@@ -240,7 +231,6 @@ $factory->define(App\Models\Venue::class, function (Faker\Generator $faker) {
         'postcode' => substr($faker->postcode, 0, 5)
     ];
 });
-
 
 $factory->define(App\Models\Referee::class, function (Faker\Generator $faker) {
 

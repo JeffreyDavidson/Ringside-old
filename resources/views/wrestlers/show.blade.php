@@ -5,12 +5,12 @@
 @endsection
 
 @section('content')
-    <p>Hometown: {{ $wrestler->bio->hometown }}</p>
-    <p>Height: {{ $wrestler->bio->formatted_height }}</p>
-    <p>Weight: {{ $wrestler->bio->weight }} lbs.</p>
+    <p>Hometown: {{ $wrestler->hometown }}</p>
+    <p>Height: {{ $wrestler->formatted_height }}</p>
+    <p>Weight: {{ $wrestler->weight }} lbs.</p>
 
-    @if($wrestler->bio->signature_move)
-        <p>Signature Move: {{ $wrestler->bio->signature_move }}</p>
+    @if($wrestler->signature_move)
+        <p>Signature Move: {{ $wrestler->signature_move }}</p>
     @endif
 
     @if($wrestler->currentManagers->count() > 0)
