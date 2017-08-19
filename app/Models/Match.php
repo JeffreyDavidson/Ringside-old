@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Exceptions\WrestlerNotQualifiedException;
+use App\Collections\MatchCollection;
 use Illuminate\Database\Eloquent\Model;
 
 class Match extends Model
@@ -175,5 +176,16 @@ class Match extends Model
     public function getFormattedWrestlersAttribute()
     {
         return $this->wrestlers->implode('name', ' vs. ');
+    }
+
+    /**
+     * Create a new Eloquent Collection instance.
+     *
+     * @param  array  $models
+     * @return \App\Collections\MatchCollection
+     */
+    public function newCollection(array $models = [])
+    {
+        return new MatchCollection($models);
     }
 }

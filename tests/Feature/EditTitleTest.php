@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\Event;
+use App\Models\Match;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\Title;
@@ -37,6 +39,8 @@ class EditTitleTest extends TestCase
         return array_merge([
             'name' => 'Old Name',
             'slug' => 'old-slug',
+            //'introduced_at' => '2016-12-18'
+            'introduced_at' => Carbon::parse('December 18, 2016')
         ], $overrides);
     }
 
@@ -45,6 +49,7 @@ class EditTitleTest extends TestCase
         return array_merge([
             'name' => 'Title Name',
             'slug' => 'title-slug',
+            'introduced_at' => '2017-08-04'
         ], $overrides);
     }
 
@@ -151,6 +156,41 @@ class EditTitleTest extends TestCase
     }
 
     /** @test */
+    function introduced_at_date_must_be_a_valid_date()
+    {
+        $response = $this->actingAs($this->user)
+                ->from(route('titles.edit', $this->title->id))
+                ->patch(route('titles.update', $this->title->id), $this->validParams([
+                    'introduced_at' => 'not-a-date',
+                ]));
+
+        $response->assertRedirect(route('titles.edit', $this->title->id));
+        $response->assertSessionHasErrors('introduced_at');
+        tap($this->title->fresh(), function ($title) {
+            $this->assertEquals('old-slug', $title->slug);
+        });
+    }
+
+    /** @test */
+    function introduced_at_date_must_be_before_first_competed_for_match()
+    {
+        $event = factory(Event::class)->create(['date' => Carbon::parse('last week')]);
+        $match = factory(Match::class)->create(['event_id' => $event->id]);
+        $match->addTitles($this->title);
+
+        $response = $this->actingAs($this->user)
+            ->from(route('titles.edit', $this->title->id))
+            ->patch(route('titles.update', $this->title->id), $this->validParams([
+                'introduced_at' => Carbon::parse('today'),
+            ]));
+        $response->assertRedirect(route('titles.edit', $this->title->id));
+        $response->assertSessionHasErrors('introduced_at');
+        tap($this->title->fresh(), function ($title) {
+            $this->assertEquals(Carbon::parse('December 18, 2016'), $title->introduced_at);
+        });
+    }
+
+    /** @test */
     function editing_a_valid_title()
     {
         $response = $this->actingAs($this->user)
@@ -158,14 +198,14 @@ class EditTitleTest extends TestCase
                         ->patch(route('titles.update', $this->title->id), [
                             'name' => 'New Name',
                             'slug' => 'new-slug',
-                            'introduced_at' => '2017-12-18'
+                            'introduced_at' => '2016-12-18'
                         ]);
 
         $response->assertRedirect(route('titles.index'));
         tap($this->title->fresh(), function ($title) {
             $this->assertEquals('New Name', $title->name);
             $this->assertEquals('new-slug', $title->slug);
-            $this->assertEquals(Carbon::parse('2017-12-18'), $title->introduced_at);
+            $this->assertEquals(Carbon::parse('2016-12-18'), $title->introduced_at);
         });
     }
 }
