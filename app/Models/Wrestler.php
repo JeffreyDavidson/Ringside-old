@@ -98,53 +98,12 @@ class Wrestler extends Model
         return $this->getAttribute('status_id');
     }
 
-    /**
-     * Get the wrestler's height in feet.
-     *
-     * @return integer
-     */
-    public function getHeightInFeetAttribute()
+    public function getHeightAttribute($height)
     {
-        if ($this->height)
-        {
-            return floor($this->height/12);
-        }
-
-        return null;
-    }
-
-    public function getFormattedHeightAttribute()
-    {
-        $feet = floor($this->height / 12);
-        $inches = ($this->height % 12);
+        $feet = floor($height / 12);
+        $inches = ($height % 12);
 
         return $feet.'\''.$inches.'"';
-    }
-
-    /**
-     * Get the wrestler's remaining height in inches.
-     *
-     * @return integer
-     */
-    public function getHeightInInchesAttribute()
-    {
-        if ($this->height)
-        {
-            return $this->height % 12;
-        }
-
-        return null;
-    }
-
-    /**
-     * Set the height field for the wrestler.
-     *
-     * @param $value integer
-     * @return integer
-     */
-    public function setHeightAttribute($value)
-    {
-        return $this->attributes['height'] = $value;
     }
 
     public function statusChanged()

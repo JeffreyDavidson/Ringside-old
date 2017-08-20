@@ -53,10 +53,10 @@ class WrestlersController extends Controller
             'slug' => $request->slug,
             'status_id' => $request->status_id,
             'hired_at' => $request->hired_at,
-            'hometown' => request('hometown'),
-            'height' => (request('feet', 0) * 12) + request('inches', 0),
-            'weight' => request('weight'),
-            'signature_move' => request('signature_move'),
+            'hometown' => $request->hometown,
+            'height' => $request->height,
+            'weight' => $request->weight,
+            'signature_move' => $request->signature_move,
         ]);
 
         return redirect()->route('wrestlers.index');

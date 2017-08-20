@@ -43,6 +43,11 @@ class WrestlerCreateFormRequest extends FormRequest
         ];
     }
 
+    public function height()
+    {
+        return ($this->feet * 12) + $this->inches;
+    }
+
     /**
      * Get the error messages for the defined validation rules.
      *

@@ -244,4 +244,12 @@ class WrestlerTest extends TestCase
         $this->assertTrue($retiredWrestlers->contains($wrestler));
     }
 
+    /** @test */
+    public function a_wrestlers_bio_can_format_its_height()
+    {
+        $bio = factory(Wrestler::class)->make(['height' => '73']);
+
+        $this->assertEquals('6\'1"', $bio->height);
+    }
+
 }
