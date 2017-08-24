@@ -63,6 +63,7 @@ class EventsController extends Controller
      */
     public function show(Event $event)
     {
+        //dd($event->matches);
         return response()->view('events.show', ['event' => $event]);
     }
 

@@ -13,15 +13,24 @@ class MatchPresenter extends Presenter {
 
     public function referees()
     {
-        //dd($this->model->referees);
-        return $this->model->referees->map(function ($item, $key) {
-            dd($item);
-            //dd($item->full_name);
-            //dd($item->full_name);
-            //dd($item->present()->model->full_name);
-            //dd($item->present()->full_name);
-            //dd($item->model->present()->full_name);
-            return $item->present()->full_name;
-        });
+        return $this->model->referees->map(function ($item) {
+            return $item->present()->full_name();
+        })->implode(', ');
+    }
+
+    public function stipulations()
+    {
+        return $this->model->stipulations->implode('name', ', ');
+    }
+
+    public function match_number($loop)
+    {
+        if ($loop->first) {
+            return 'Opening Match';
+        } elseif ($loop->last) {
+            return 'Main Event';
+        } else {
+            return 'Match #'.$this->model->match_number;
+        }
     }
 }

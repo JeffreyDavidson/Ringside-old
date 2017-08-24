@@ -8,8 +8,8 @@ use App\Models\Stipulation;
 use App\Models\Title;
 use App\Models\Referee;
 use App\Models\Wrestler;
+use App\Models\TitleChampion;
 use Carbon\Carbon;
-use Carbon\CarbonInterval;
 use Illuminate\Database\Seeder;
 
 class EventsTableSeeder extends Seeder
@@ -77,48 +77,45 @@ class EventsTableSeeder extends Seeder
         return rand(0,100) < $percent;
     }
 
-    public function addTitles($event, $match) {
-        if($this->chance(5)) {
-            $wrestler2 = '';
-            $match->addTitles($title = Title::valid($event->date)->get()->random());
+    public function addTitles($match) {
+        if($this->chance(10)) {
+            $match->addTitle($title = Title::valid($match->event->date)->inRandomOrder()->first());
 
-//			Add first Wrestler
-            $match->addWrestler($wrestler = $this->getWrestler($title));
+            //if ( $this->chance(1) ) {
+            //    $title2 = '';
+            //
+            //    //Start Excludes list
+            //    $excludes = $wrestler->titles->map(function ($item) {
+            //        return $item->title_id;
+            //    })->push($title->id);
+            //
+            //    do {
+            //        $builder = Title::valid($event->date)->whereNotIn('id', $excludes)->get();
+            //        if($builder->count() != 0) {
+            //            $title2 = null;
+            //            break;
+            //        }
+            //
+            //        $title2 = $builder->random();
+            //        $wrestler2 = $this->getWrestler($title2);
+            //        $excludes->push($title2->id);
+            //    } while ( $wrestler->id === $wrestler2->id );
+            //
+            //    if($title2) {
+            //        $match->addTitles($title2);
+            //    } else {
+            //        $wrestler2 = $this->getWrestler();
+            //    }
+            //} else {
+            //    $wrestler2 = $this->getWrestler();
+            //}
 
-            if ( $this->chance(1) ) {
-                $title2 = '';
-
-                //Start Excludes list
-                $excludes = $wrestler->titles->map(function ($item) {
-                    return $item->title_id;
-                })->push($title->id);
-
-                do {
-                    $builder = Title::valid($event->date)->whereNotIn('id', $excludes)->get();
-                    if($builder->count() != 0) {
-                        $title2 = null;
-                        break;
-                    }
-
-                    $title2 = $builder->random();
-                    $wrestler2 = $this->getWrestler($title2);
-                    $excludes->push($title2->id);
-                } while ( $wrestler->id === $wrestler2->id );
-
-                if($title2) {
-                    $match->addTitles($title2);
-                } else {
-                    $wrestler2 = $this->getWrestler();
-                }
-            } else {
-                $wrestler2 = $this->getWrestler();
-            }
-
-            $match->addWrestler($wrestler2);
-        } else {
-            $match->addWrestler($this->getWrestler());
-            $match->addWrestler($this->getWrestler());
+            //$match->addWrestler($wrestler2);
         }
+        //else {
+        //    $match->addWrestler($this->getWrestler());
+        //    $match->addWrestler($this->getWrestler());
+        //}
     }
 
     public function addMatches($event)
@@ -132,13 +129,28 @@ class EventsTableSeeder extends Seeder
 
             $this->addReferees($match);
             $this->addStipulations($match);
-            //$this->addTitles($match);
+            $this->addTitles($match);
+            $this->addWrestlers($match);
             //$match->setWinner();
 
         }
     }
 
-    public function addReferees($match) {
+    public function addWrestlers($match)
+    {
+        if ($match->isTitleMatch()) {
+            $champion = TitleChampion::getCurrentChampion();
+            if ($champion != null) {
+                $match->addWrestler($champion);
+                $match->addWrestler(Wrestler::inRandomOrder()->except($champion)->first());
+            } else {
+                $match->addWrestlers(Wrestler::inRandomOrder()->take(2)->get());
+            }
+        }
+    }
+
+    public function addReferees($match)
+    {
         if ($match->needsMoreThanOneReferee()) {
             $referees = Referee::inRandomOrder()->take(4)->get();
             $match->addReferees($referees);
@@ -151,10 +163,6 @@ class EventsTableSeeder extends Seeder
         if($this->chance(3)) {
             $stipulation = Stipulation::inRandomOrder()->first();
             $match->addStipulation($stipulation);
-
-            if($this->chance(1)) {
-                $match->addStipulation(Stipulation::where('id', '!=', $stipulation->id)->inRandomOrder()->first());
-            }
         }
     }
 }

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Laracodes\Presenter\Traits\Presentable;
 use App\Collections\TitleHistories;
 
-class TitleHistory extends Model
+class TitleChampion extends Model
 {
     use Presentable;
 
@@ -33,20 +33,13 @@ class TitleHistory extends Model
         return $this->belongsTo(Wrestler::class);
     }
 
-    /**
-     * Create a new Eloquent Collection instance.
-     *
-     * @param  array $models
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function newCollection(array $models = [])
-    {
-        return new TitleHistories($models);
-    }
-
     public function loseTitle($date = null)
     {
         return $this->update(['lost_on' => $date]);
+    }
+
+    public static function getCurrentChampion()
+    {
+        return $this->wrestler->whereNotNull('lost_on');
     }
 }

@@ -11,13 +11,7 @@
         <div class="panel panel-bordered panel-primary">
             <div class="panel-heading">
                 <div class="panel-title">
-                    @if ($loop->first)
-                        Opening Match
-                    @elseif ($loop->last)
-                        Main Event
-                    @else
-                        Match #{{ $match->match_number }}
-                    @endif
+                    {{ $match->present()->match_number($loop) }}
                 </div>
             </div>
             <div class="panel-body">
@@ -29,20 +23,11 @@
                         @endforeach
                     @endif
                 </p>
-                <p>
-                    @if ($match->stipulations)
-                        @foreach ($match->stipulations as $stipulation)
-                            {{ $stipulation->name }} Match
-                        @endforeach
-                    @endif
-                </p>
+                @if ($match->stipulations->count() > 0)
+                    <p>{{ $match->present()->stipulations }} Match</p>
+                @endif
                 <p>
                     Referee(s): {{ $match->present()->referees }}
-                </p>
-                <p>
-                    @if ($match->titles)
-
-                    @endif
                 </p>
                 <p>
                     {{ $match->present()->wrestlers }}
