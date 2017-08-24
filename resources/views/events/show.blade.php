@@ -2,8 +2,8 @@
 
 @section('header')
     <h1 class="page-title">{{ $event->name }}</h1>
-    <p>{{ $event->formatted_date }}</p>
-    <p>{{ $event->arena->name }}</p>
+    <p>{{ $event->present()->date }}</p>
+    <p>{{ $event->venue->name }}</p>
 @endsection
 
 @section('content')
@@ -37,21 +37,15 @@
                     @endif
                 </p>
                 <p>
-                    @if ($match->referees)
-                        @if ($match->referees->count() == 1)
-                            Referee: {{  $match->referees->first()->full_name }}
-                        @elseif ($match->referees->count() == 2)
-                            Referees: {{ $match->referees->implode('full_name', ' & ') }}
-                        @else
-                            Referees: {{ $match->referees->implode('full_name', ', ') }}
-                        @endif
-                    @endif
+                    Referee(s): {{ $match->present()->referees }}
                 </p>
                 <p>
                     @if ($match->titles)
 
                     @endif
-                    {{ $match->wrestlers->implode('name', ' vs. ') }}
+                </p>
+                <p>
+                    {{ $match->present()->wrestlers }}
                 </p>
                 <p>{{ $match->preview }}</p>
             </div>

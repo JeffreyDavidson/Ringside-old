@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Presenters;
+
+use Laracodes\Presenter\Presenter;
+
+class EventPresenter extends Presenter {
+
+    public function date()
+    {
+        return $this->model->date->format('F j, Y');
+    }
+
+    public function formattedFormDate()
+    {
+        return $this->model->date ? $this->model->date->format('m/d/Y') : null;
+    }
+
+    public function time()
+    {
+        return $this->model->date ? $this->model->date->format('h:ia') : null;
+    }
+}

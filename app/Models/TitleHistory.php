@@ -3,10 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Laracodes\Presenter\Traits\Presentable;
 use App\Collections\TitleHistories;
 
 class TitleHistory extends Model
 {
+    use Presentable;
+
+    protected $presenter = 'App\Presenters\TitleHistoryPresenter';
 
     protected $table = 'title_wrestler';
 
@@ -44,15 +48,5 @@ class TitleHistory extends Model
     public function loseTitle($date = null)
     {
         return $this->update(['lost_on' => $date]);
-    }
-
-    public function getFormattedWonOnAttribute()
-    {
-        return $this->won_on->format('F j, Y');
-    }
-
-    public function getFormattedLostOnAttribute()
-    {
-        return $this->lost_on ? $this->lost_on->format('F j, Y') : 'Present';
     }
 }

@@ -25,10 +25,10 @@ class VenueCreateFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|unique:venues,name',
-            'address' => 'required',
-            'city' => 'required',
-            'state' => 'required|not_in:0',
+            'name' => 'required|alpha_num_spaces|unique:venues,name',
+            'address' => 'required|alpha_num_spaces',
+            'city' => 'required|alpha_spaces',
+            'state' => 'required|alpha|not_in:0',
             'postcode' => 'required|numeric|digits:5'
         ];
     }

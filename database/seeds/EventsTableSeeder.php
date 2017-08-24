@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\MatchType;
 use App\Models\Venue;
 use App\Models\Event;
 use App\Models\Match;
@@ -7,15 +8,12 @@ use App\Models\Stipulation;
 use App\Models\Title;
 use App\Models\Referee;
 use App\Models\Wrestler;
-use App\Models\WrestlerBio;
 use Carbon\Carbon;
+use Carbon\CarbonInterval;
 use Illuminate\Database\Seeder;
 
 class EventsTableSeeder extends Seeder
 {
-    protected $wrestlerCount = 0;
-    protected $wrestlers;
-
     /**
      * Run the database seeds.
      *
@@ -23,90 +21,60 @@ class EventsTableSeeder extends Seeder
      */
     public function run()
     {
-        //perform check on the number of wrestlers hired before date.
-        //if more than one create event with at most 10 matches
-        //if 1 or less, go to next date
-        $lastDate = Carbon::parse('first Sunday of January 2000');
-        $i = 0;
-        while($lastDate->lt(Carbon::now()->subDay(14))) {
+        $start = Carbon::parse('First Monday of January 2000');
+        $now = Carbon::now();
+
+        $dates = array_merge(
+            $this->dates($start, $now, 'monday'),
+            $this->dates($start, $now, 'thursday'),
+            $this->dates($start, $now, 'sunday', true)
+        );
+
+        function date_sort($a, $b) {
+            return strtotime($a) - strtotime($b);
+        }
+
+        usort($dates, "date_sort");
+        $id = 0;
+        $events = array_reduce($dates, function ($events, $date) use (&$id) {
+            $id++;
             $event = factory(Event::class)->create([
-                'name' => 'Event ' . ++$i,
-                'slug' => 'event' . $i,
+                'name' => 'Event '.$id,
+                'slug' => 'event'.$id,
                 'venue_id' => Venue::inRandomOrder()->first()->id,
-                'date' => $lastDate->addWeek(),
+                'date' => $date
             ]);
 
-            if($i == 1) {
-                $this->createWrestler($lastDate);
-                $this->createWrestler($lastDate);
-            } else {
-                foreach(range(0,6) as $k) {
-                    while ( $this->chance(15) ) {
-                        $this->createWrestler($lastDate->copy()->subDay(7 - $k));
-                    }
-                }
-            }
+            $this->addMatches($event);
 
-            $this->wrestlers = Wrestler::where('hired_at', '<', $lastDate)->active()->get();
-            $matchCount = $this->wrestlers->count() < 9 ? $this->wrestlers->count() - 1 : 8;
+            return $event;
+        }, []);
 
-            for($j = 1; $j <= $matchCount; $j++) {
-                $event->matches()->save($match = factory(Match::class)->create([
-                    'match_number'  => $j,
-                    'match_type_id' => 1,
-                ]));
-
-                $this->addTitles($event, $match);
-
-                $match->load('wrestlers');
-                $wrestlers = $match->wrestlers;
-                $match->setWinner($wrestlers->random());
-                $this->wrestlers->push($match->getWinner());
-
-                $this->addReferees($match);
-                $this->addStipulations($match);
-            }
-        }
     }
 
     /*
      * Helpers
      */
 
-    public function chance(int $percent) {
-        return rand(0,100) < $percent;
-    }
+    protected function dates(Carbon $from, Carbon $to, $day, $last = false)
+    {
+        $step = $from->copy()->startOfMonth();
+        $modification = sprintf($last ? 'last %s of next month' : 'next %s', $day);
 
-    public function createWrestler($date) {
-        $wrestler = factory(Wrestler::class)->states($this->getStatus())->create([
-            'name' => 'Wrestler ' . ++$this->wrestlerCount,
-            'slug' => 'wrestler' . $this->wrestlerCount,
-            'hired_at' => $date
-        ]);
-
-        $wrestler->bio()->save(factory(WrestlerBio::class)->create([
-            'wrestler_id' => $wrestler->id,
-            'signature_move' => 'Signature Move ' . $this->wrestlerCount
-        ]));
-
-        return $wrestler;
-    }
-
-    public function getStatus() {
-        return collect(['active', 'active', 'active', 'active', 'active', 'active', 'inactive', 'injured', 'suspended', 'retired'])->random();
-    }
-
-    public function getWrestler($title = null) {
-        if($title) {
-            if($wrestler = $title->getCurrentChampion()) {
-                $this->wrestlers = $this->wrestlers->filter(function($item) use($wrestler) {
-                    return $item->id != $wrestler->id;
-                });
-                return $wrestler;
+        $dates = [];
+        while ($step->modify($modification)->lte($to)) {
+            if ($step->lt($from)) {
+                continue;
             }
+
+            $dates[$step->timestamp] = $step->copy();
         }
 
-        return ($this->wrestlers = $this->wrestlers->shuffle())->pop();
+        return $dates;
+    }
+
+    public function chance(int $percent) {
+        return rand(0,100) < $percent;
     }
 
     public function addTitles($event, $match) {
@@ -153,19 +121,39 @@ class EventsTableSeeder extends Seeder
         }
     }
 
+    public function addMatches($event)
+    {
+        $matchesCount = rand(6, 10);
+        for($matchNumber = 1; $matchNumber <= $matchesCount; $matchNumber++) {
+            $match = $event->matches()->save(factory(Match::class)->create([
+                'match_type_id' => MatchType::inRandomOrder()->first()->id,
+                'match_number' => $matchNumber,
+            ]));
+
+            $this->addReferees($match);
+            $this->addStipulations($match);
+            //$this->addTitles($match);
+            //$match->setWinner();
+
+        }
+    }
+
     public function addReferees($match) {
-        $match->addReferees($referee = Referee::get()->random());
-        if ($this->chance(1)) {
-            $match->addReferees(Referee::get()->except($referee->id)->random());
+        if ($match->needsMoreThanOneReferee()) {
+            $referees = Referee::inRandomOrder()->take(4)->get();
+            $match->addReferees($referees);
+        } else {
+            $match->addReferee(Referee::inRandomOrder()->first());
         }
     }
 
     public function addStipulations($match) {
-        if($this->chance(5)) {
-            $match->addStipulations($stipulation = Stipulation::get()->random());
+        if($this->chance(3)) {
+            $stipulation = Stipulation::inRandomOrder()->first();
+            $match->addStipulation($stipulation);
 
             if($this->chance(1)) {
-                $match->addStipulations(Stipulation::get()->except($stipulation->id)->random());
+                $match->addStipulation(Stipulation::where('id', '!=', $stipulation->id)->inRandomOrder()->first());
             }
         }
     }

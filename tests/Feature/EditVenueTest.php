@@ -37,7 +37,7 @@ class EditVenueTest extends TestCase
             'name' => 'Old Name',
             'address' => 'Old Address',
             'city' => 'Old City',
-            'state' => 'AB',
+            'state' => 'Old State',
             'postcode' => '98765'
         ], $overrides);
     }
@@ -46,9 +46,9 @@ class EditVenueTest extends TestCase
     {
         return array_merge([
             'name' => 'Venue Name',
-            'address' => '123 Main St.',
+            'address' => '123 Main Street',
             'city' => 'Laraville',
-            'state' => 'ON',
+            'state' => 'Florida',
             'postcode' => '12345'
         ], $overrides);
     }
@@ -101,6 +101,21 @@ class EditVenueTest extends TestCase
     }
 
     /** @test */
+    function name_must_only_contain_letters_numbers_and_spaces()
+    {
+        $response = $this->actingAs($this->user)
+                        ->from(route('venues.edit', $this->venue->id))
+                        ->patch(route('venues.update', $this->venue->id), $this->validParams([
+                            'name' => 'Club 83%#(@0@(*U$',
+                        ]));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('venues.edit', $this->venue->id));
+        $response->assertSessionHasErrors('name');
+        $this->assertEquals(1, Venue::count());
+    }
+
+    /** @test */
     function name_must_be_unique()
     {
         factory(Venue::class)->create($this->validParams());
@@ -136,6 +151,21 @@ class EditVenueTest extends TestCase
     }
 
     /** @test */
+    function address_must_only_contain_letters_numbers_and_spaces()
+    {
+        $response = $this->actingAs($this->user)
+                        ->from(route('venues.edit', $this->venue->id))
+                        ->patch(route('venues.update', $this->venue->id), $this->validParams([
+                            'address' => 'Address 83%#(@0@(*U$',
+                        ]));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('venues.edit', $this->venue->id));
+        $response->assertSessionHasErrors('address');
+        $this->assertEquals(1, Venue::count());
+    }
+
+    /** @test */
     function city_is_required()
     {
         $response = $this->actingAs($this->user)
@@ -151,12 +181,42 @@ class EditVenueTest extends TestCase
     }
 
     /** @test */
+    function city_must_only_contain_letters_and_spaces()
+    {
+        $response = $this->actingAs($this->user)
+                        ->from(route('venues.edit', $this->venue->id))
+                        ->patch(route('venues.update', $this->venue->id, $this->validParams([
+                            'city' => '90210'
+                        ])));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('venues.edit', $this->venue->id));
+        $response->assertSessionHasErrors('city');
+        $this->assertEquals(1, Venue::count());
+    }
+
+    /** @test */
     function state_is_required()
     {
         $response = $this->actingAs($this->user)
                         ->from(route('venues.edit', $this->venue->id))
                         ->patch(route('venues.update', $this->venue->id), $this->validParams([
                             'state' => ''
+                        ]));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('venues.edit', $this->venue->id));
+        $response->assertSessionHasErrors('state');
+        $this->assertEquals(1, Venue::count());
+    }
+
+    /** @test */
+    function state_must_only_contain_letters()
+    {
+        $response = $this->actingAs($this->user)
+                        ->from(route('venues.edit', $this->venue->id))
+                        ->patch(route('venues.update', $this->venue->id), $this->validParams([
+                            'state' => 'abcd789'
                         ]));
 
         $response->assertStatus(302);
@@ -232,18 +292,18 @@ class EditVenueTest extends TestCase
                         ->from(route('venues.edit', $this->venue->id))
                         ->patch(route('venues.update', $this->venue->id), [
                             'name' => 'New Venue Name',
-                            'address' => '456 Main Dr.',
+                            'address' => '456 Main Drive',
                             'city' => 'Beverly Hills',
-                            'state' => 'CA',
+                            'state' => 'California',
                             'postcode' => '90210'
                         ]);
 
         $response->assertRedirect(route('venues.index'));
         tap(Venue::first(), function ($venue) use ($response) {
             $this->assertEquals('New Venue Name', $venue->name);
-            $this->assertEquals('456 Main Dr.', $venue->address);
+            $this->assertEquals('456 Main Drive', $venue->address);
             $this->assertEquals('Beverly Hills', $venue->city);
-            $this->assertEquals('CA', $venue->state);
+            $this->assertEquals('California', $venue->state);
             $this->assertEquals('90210', $venue->postcode);
         });
     }

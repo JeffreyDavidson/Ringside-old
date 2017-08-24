@@ -9,7 +9,7 @@
 <div class="form-group @if ($errors->has('address')) {{ 'has-danger' }} @endif">
     <label class="form-control-label" for="address">Address</label>
     <input type="text" class="form-control" id="address" name="address" value="{{ old('address') ?? $venue->address }}"/>
-    @if ($errors->has('name')) <small class="form-control-feedback">{{ $errors->first('address') }}</small> @endif
+    @if ($errors->has('address')) <small class="form-control-feedback">{{ $errors->first('address') }}</small> @endif
 </div>
 
 <div class="row">
@@ -17,7 +17,7 @@
         <div class="form-group @if ($errors->has('city')) {{ 'has-danger' }} @endif">
             <label class="form-control-label" for="city">City</label>
             <input type="text" class="form-control" id="city" name="city" value="{{ old('city') ?? $venue->city }}"/>
-            @if ($errors->has('name')) <small class="form-control-feedback">{{ $errors->first('city') }}</small> @endif
+            @if ($errors->has('city')) <small class="form-control-feedback">{{ $errors->first('city') }}</small> @endif
         </div>
     </div>
     <div class="col-md-3">

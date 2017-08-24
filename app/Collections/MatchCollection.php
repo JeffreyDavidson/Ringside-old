@@ -6,8 +6,13 @@ use Illuminate\Database\Eloquent\Collection;
 
 class MatchCollection extends Collection
 {
-    public function matchDate()
+    public function eventDate()
     {
-        return $this->first()->event->date;
+        return $this->event->date;
+    }
+
+    public function mainEventWrestlers()
+    {
+        return $this->wrestlers;
     }
 }

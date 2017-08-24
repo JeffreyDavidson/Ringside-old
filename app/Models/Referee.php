@@ -2,17 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\Model;
 
 class Referee extends Model
 {
-    /**
-     * Get the referee's full name.
-     *
-     * @return string
-     */
-    public function getFullNameAttribute()
-    {
-        return preg_replace('/\s+/', ' ',$this->first_name.' '.$this->last_name);
-    }
+    use Presentable, SoftDeletes;
+
+    protected $presenter = 'App\Presenters\RefereePresenter';
 }

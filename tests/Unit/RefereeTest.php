@@ -11,7 +11,7 @@ class RefereeTest extends TestCase
     use DatabaseMigrations;
 
     /** @test */
-    public function an_arena_can_hold_many_event()
+    public function it_can_have_their_name_concatenated()
     {
         $referee = factory(Referee::class)->make(['first_name' => 'Jeffrey', 'last_name' => 'Davidson']);
 

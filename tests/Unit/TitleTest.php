@@ -15,10 +15,10 @@ class TitleTest extends TestCase
     /** @test */
     function can_get_all_valid_titles_for_an_event()
     {
-        $validTitleA = factory(Title::class)->create(['introduced_at' => Carbon::parse('-3 weeks')]);
-        $validTitleB = factory(Title::class)->create(['introduced_at' => Carbon::parse('-2 weeks')]);
-        $invalidTitle = factory(Title::class)->create(['introduced_at' => Carbon::parse('+1 week')]);
-        $event = factory(Event::class)->create(['date' => Carbon::tomorrow()]);
+        $validTitleA = factory(Title::class)->create(['introduced_at' => Carbon::parse('3 weeks ago')]);
+        $validTitleB = factory(Title::class)->create(['introduced_at' => Carbon::parse('2 weeks ago')]);
+        $invalidTitle = factory(Title::class)->create(['introduced_at' => Carbon::parse('next week')]);
+        $event = factory(Event::class)->create(['date' => Carbon::parse('tomorrow')]);
 
         $validTitles = Title::valid($event->date)->get();
 

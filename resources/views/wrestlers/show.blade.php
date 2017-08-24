@@ -6,7 +6,7 @@
 
 @section('content')
     <p>Hometown: {{ $wrestler->hometown }}</p>
-    <p>Height: {{ $wrestler->formatted_height }}</p>
+    <p>Height: {!!  $wrestler->height !!}</p>
     <p>Weight: {{ $wrestler->weight }} lbs.</p>
 
     @if($wrestler->signature_move)
@@ -22,7 +22,6 @@
 
     @if($wrestler->currentManagers->count() > 0)
         <h2>Previous Managers</h2>
-        {{dd($wrestler->previousManagers) }}
         @foreach($wrestler->previousManagers as $manager)
             {{ $manager->name }}
         @endforeach
@@ -55,6 +54,7 @@
                 <thead>
                     <th>ID</th>
                     <th>Event</th>
+                    <th>Opponent(s)</th>
                     <th>Actions</th>
                 </thead>
                 <tbody>
@@ -62,6 +62,7 @@
                         <tr>
                             <td>{{ $match->id }}</td>
                             <td>{{ $match->event->name }}</td>
+                            {{--<td>{{ $match->competitors }}</td>--}}
                             <td> </td>
                         </tr>
                     @endforeach

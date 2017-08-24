@@ -41,19 +41,18 @@ class TitleEditFormRequest extends FormRequest
         $validator->after(function($validator) {
             $attr = $validator->getData();
 
-            if($this->title->matches->isEmpty()) {
+            if(!$this->title->hasMatches()) {
                 return;
             }
 
-            $matchDate = $this->title->matches->matchDate();
-
+            $firstMatchDate = $this->title->firstMatchDate();
             $introducedAt = Carbon::parse($attr['introduced_at']);
 
-            if($introducedAt < $matchDate) {
+            if($introducedAt->lte($firstMatchDate)) {
                 return;
             }
 
-            $sErr = 'The introduced at date must be on or before '.$matchDate->format('F d, Y').'.';
+            $sErr = 'The introduced at date must be on or before '.$firstMatchDate->format('F d, Y').'.';
             $validator->errors()->add('introduced_at', $sErr);
         });
     }

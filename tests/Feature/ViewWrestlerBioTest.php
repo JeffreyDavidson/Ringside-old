@@ -68,7 +68,7 @@ class ViewWrestlerBioTest extends TestCase
     }
 
     /** @test */
-    function guests_cannot_view_the_add_stipulation_form()
+    function guests_cannot_view_a_wrestler_bio()
     {
         $response = $this->get(route('wrestlers.show', $this->wrestler->id));
 
@@ -90,63 +90,108 @@ class ViewWrestlerBioTest extends TestCase
     }
 
     /** @test */
-    public function view_list_of_managers_on_wrestler_bio()
+    public function view_list_of_current_managers_on_wrestler_bio()
     {
-        $firedManagerA = factory(Manager::class)->create(['name' => 'Fired Manager A']);
-        $firedManagerB = factory(Manager::class)->create(['name' => 'Fired Manager B']);
-        $hiredManager = factory(Manager::class)->create(['name' => 'Hired Manager']);
+        $managerA = factory(Manager::class)->create(['name' => 'Manager A']);
+        $managerB = factory(Manager::class)->create(['name' => 'Manager B']);
 
-        $this->wrestler->hireManager($firedManagerA, Carbon::now());
-        $this->wrestler->fireManager($firedManager, Carbon::now('+1 day'));
-        $this->wrestler->hireManager($hiredManager, Carbon::now('+2 days'));
+        $this->wrestler->hireManager($managerA, Carbon::parse('last week'));
+        $this->wrestler->hireManager($managerB, Carbon::parse('last week'));
+        $this->wrestler->fireManager($managerB, Carbon::parse('yesterday'));
 
         $response = $this->actingAs($this->user)
                         ->get(route('wrestlers.show', $this->wrestler->id));
 
         $response->assertStatus(200);
-        $response->assertSee('Fired Manager');
-        $response->assertSee('Hired Manager');
+        $response->assertSee('Manager A');
     }
 
     /** @test */
-    public function view_list_of_titles_held_on_wrestler_bio()
+    public function view_list_of_previous_managers_on_wrestler_bio()
     {
-        $wrestler = factory(Wrestler::class)->create();
+        $managerA = factory(Manager::class)->create(['name' => 'Manager A']);
+        $managerB = factory(Manager::class)->create(['name' => 'Manager B']);
 
-        $wrestler->bio()->save(factory(WrestlerBio::class)->create(['wrestler_id' => $wrestler->id]));
+        $this->wrestler->hireManager($managerA, Carbon::parse('last week'));
+        $this->wrestler->hireManager($managerB, Carbon::parse('last week'));
+        $this->wrestler->fireManager($managerA, Carbon::parse('yesterday'));
 
-        $title1 = factory(Title::class)->create(['name' => 'Title 1']);
-        $title2 = factory(Title::class)->create(['name' => 'Title 2']);
+        $response = $this->actingAs($this->user)
+            ->get(route('wrestlers.show', $this->wrestler->id));
 
-        $wrestler->winTitle($title1, Carbon::parse('-3 days'));
-        $wrestler->loseTitle($title1, Carbon::parse('-2 days'));
-        $wrestler->winTitle($title1, Carbon::parse('-2 days'));
-        $wrestler->loseTitle($title1, Carbon::parse('-1 day'));
-        $wrestler->winTitle($title2, Carbon::parse('-1 day'));
-
-        $wrestler->titles->map(function($i) { return $i->title->name; });
-
-        $this->visit('wrestlers/'.$wrestler->id);
-
-        $this->see('Title 1 (2x)');
-        $this->see('Title 2');
+        $response->assertStatus(200);
+        $response->assertSee('Manager A');
     }
 
     /** @test */
-    public function view_list_of_matches_on_wrestler_bio()
+    public function view_list_of_current_titles_held_on_wrestler_bio()
     {
-        $event = factory(Event::class)->create(['name' => 'My Event']);
+        $titleA = factory(Title::class)->create(['name' => 'Title A']);
+
+        $this->wrestler->winTitle($titleA, Carbon::parse('yesterday'));
+
+        $response = $this->actingAs($this->user)
+                        ->get(route('wrestlers.show', $this->wrestler->id));
+
+        $response->assertSee('Title A');
+    }
+
+    /** @test */
+    public function view_list_of_previous_titles_held_on_wrestler_bio()
+    {
+        $titleA = factory(Title::class)->create(['name' => 'Title A']);
+        $titleB = factory(Title::class)->create(['name' => 'Title B']);
+
+        $this->wrestler->winTitle($titleA, Carbon::parse('-3 days'));
+        $this->wrestler->loseTitle($titleA, Carbon::parse('-2 days'));
+        $this->wrestler->winTitle($titleA, Carbon::parse('-2 days'));
+        $this->wrestler->loseTitle($titleA, Carbon::parse('-1 day'));
+        $this->wrestler->winTitle($titleB, Carbon::parse('-1 day'));
+
+        $this->wrestler->titles->map(function($i) { return $i->title->name; });
+
+        $response = $this->actingAs($this->user)
+            ->get(route('wrestlers.show', $this->wrestler->id));
+
+        $response->assertSee('Title A (2x)');
+        $response->assertSee('Title B');
+    }
+
+    /** @test */
+    public function view_list_of_currently_scheduled_matches_on_wrestler_bio()
+    {
+        $event = factory(Event::class)->create(['name' => 'Event Name', 'date' => Carbon::parse('tomorrow')]);
         $match = factory(Match::class)->create(['event_id' => $event->id]);
-        $wrestler1 = factory(Wrestler::class)->create(['name' => 'Wrestler 1']);
 
-        $wrestler1->bio()->save(factory(WrestlerBio::class)->create(['wrestler_id' => $wrestler1->id]));
+        $wrestler2 = factory(Wrestler::class)->create(['name' => 'Wrestler 2', 'hired_at' => Carbon::parse('last month')]);
 
-        $wrestler2 = factory(Wrestler::class)->create(['name' => 'Wrestler 2']);
-
-        $match->addWrestler($wrestler1);
+        $match->addWrestler($this->wrestler);
         $match->addWrestler($wrestler2);
 
-        $this->visit('wrestlers/'.$wrestler1->id);
-        $this->see('My Event');
+        $response = $this->actingAs($this->user)
+                        ->get(route('wrestlers.show', $this->wrestler->id));
+
+        $response->assertSee('Event Name');
     }
+
+    /** @test */
+    public function view_list_of_previous_matches_on_wrestler_bio()
+    {
+        $event = factory(Event::class)->create(['name' => 'Event Name', 'date' => Carbon::parse('last week')]);
+        $match = factory(Match::class)->create(['event_id' => $event->id]);
+
+        $wrestler2 = factory(Wrestler::class)->create(['name' => 'Wrestler 2', 'hired_at' => Carbon::parse('last month')]);
+
+        $match->addWrestler($this->wrestler);
+        $match->addWrestler($wrestler2);
+
+        $response = $this->actingAs($this->user)
+            ->get(route('wrestlers.show', $this->wrestler->id));
+
+        $response->assertSee('Event Name');
+
+    }
+
+    //    TODO: Write test for viewing list of retirements
+    //    TODO: Write test for viewing list of injuries
 }

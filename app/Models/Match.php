@@ -3,11 +3,21 @@
 namespace App\Models;
 
 use App\Exceptions\WrestlerNotQualifiedException;
-use App\Collections\MatchCollection;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\Model;
 
 class Match extends Model
 {
+    use Presentable, SoftDeletes;
+
+    protected $presenter = 'App\Presenters\MatchPresenter';
+
+    protected $matchTypesWithMultipleReferees = [
+        'battleroyal',
+        'royalrumble',
+    ];
+
     /**
      * Don't auto-apply mass assignment protection.
      *
@@ -92,50 +102,72 @@ class Match extends Model
 	}
 
     /**
-     * Add titles to a match.
+     * Add a collection of wrestlers to a match.
+     *
+     * @param $wrestlers
+     */
+    public function addWrestlers(Collection $wrestlers)
+    {
+        $this->wrestlers()->saveMany($wrestlers);
+    }
+
+    /**
+     * Add a title to a match.
+     *
+     * @param Title $title
+     */
+    public function addTitle(Title $title)
+    {
+        $this->titles()->save($title);
+    }
+
+    /**
+     * Add a collection of titles to a match.
      *
      * @param $titles
      */
     public function addTitles($titles)
     {
-        if($titles instanceof Title) {
-            $titles = collect([$titles]);
-        } else if(is_array($titles) && $titles[0] instanceof Title) {
-            $titles = collect($titles);
-        }
-
         $this->titles()->saveMany($titles->all());
     }
 
     /**
-     * Add stipulations to a match.
+     * Add a stipulation to a match.
+     *
+     * @param Stipulation $stipulation
+     */
+    public function addStipulation(Stipulation $stipulation)
+    {
+        $this->stipulations()->save($stipulation);
+    }
+
+    /**
+     * Add a collection of stipulations to a match.
      *
      * @param $stipulations
      */
     public function addStipulations($stipulations)
     {
-        if($stipulations instanceof Stipulation) {
-            $stipulations = collect([$stipulations]);
-        } else if(is_array($stipulations) && $stipulations[0] instanceof Stipulation) {
-            $stipulations = collect($stipulations);
-        }
-
         $this->stipulations()->saveMany($stipulations->all());
     }
 
     /**
-     * Add referees to a match.
+     * Add a referee to a match.
+     *
+     * @param Referee $referee
+     */
+    public function addReferee(Referee $referee)
+    {
+        $this->referees()->save($referee);
+    }
+
+    /**
+     * Add a collection of referees to a match.
      *
      * @param $referees
      */
     public function addReferees($referees)
     {
-        if($referees instanceof Referee) {
-            $referees = collect([$referees]);
-        } else if(is_array($referees) && $referees[0] instanceof Referee) {
-            $referees = collect($referees);
-        }
-
         $this->referees()->saveMany($referees->all());
     }
 
@@ -173,19 +205,13 @@ class Match extends Model
 		return Wrestler::find($this->winner_id);
     }
 
-    public function getFormattedWrestlersAttribute()
+    public function getDateAttribute()
     {
-        return $this->wrestlers->implode('name', ' vs. ');
+        return $this->event->date;
     }
 
-    /**
-     * Create a new Eloquent Collection instance.
-     *
-     * @param  array  $models
-     * @return \App\Collections\MatchCollection
-     */
-    public function newCollection(array $models = [])
+    public function needsMoreThanOneReferee()
     {
-        return new MatchCollection($models);
+        return in_array($this->type->slug, $this->matchTypesWithMultipleReferees);
     }
 }

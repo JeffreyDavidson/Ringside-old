@@ -3,11 +3,15 @@
 namespace App\Models;
 
 use App\Exceptions\MatchesHaveSameMatchNumberAtEventException;
-use Carbon\Carbon;
+use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
+    use Presentable;
+
+    protected $presenter = 'App\Presenters\EventPresenter';
+
     /**
      * Don't auto-apply mass assignment protection.
      *
@@ -21,21 +25,6 @@ class Event extends Model
      * @var array
      */
     protected $dates = ['date'];
-
-    public function getFormattedDateAttribute()
-    {
-        return $this->date->format('F jS, Y');
-    }
-
-    public function getFormattedFormDateAttribute()
-    {
-        return $this->date ? $this->date->format('m/d/Y') : null;
-    }
-
-    public function getTimeAttribute()
-    {
-        return $this->date ? $this->date->format('h:ia') : null;
-    }
 
     public function matches()
     {
@@ -77,5 +66,10 @@ class Event extends Model
     public function setDateAttribute($date)
     {
 		return $this->attributes['date'] = $date;
+    }
+
+    public function mainEvent()
+    {
+        return $this->matches->last();
     }
 }

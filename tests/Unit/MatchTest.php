@@ -3,11 +3,13 @@
 namespace Tests\Unit;
 
 use App\Models\Match;
-use App\Models\Stipulation;
+use App\Models\Referee;
 use App\Models\MatchType;
+use App\Models\Stipulation;
 use App\Models\Title;
 use App\Models\Wrestler;
 use App\Models\Event;
+use Carbon\Carbon;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -16,60 +18,98 @@ class MatchTest extends TestCase
     use DatabaseMigrations;
 
     /** @test */
-    function a_match_must_have_a_type()
+    function can_have_a_title()
     {
-        $type = factory(MatchType::class)->create();
-        $match = factory(Match::class)->create(['match_type_id' => $type->id]);
+        $event = factory(Event::class)->create(['date' => Carbon::parse('tomorrow')]);
+        $match = factory(Match::class)->create(['event_id' => $event->id]);
+        $title = factory(Title::class)->create();
 
-        $this->assertEquals($match->type->id, $type->id);
+        $match->addTitle($title);
+
+        $this->assertCount(1, $match->titles);
     }
 
     /** @test */
-    function matches_can_have_titles()
+    function can_have_more_than_one_title()
     {
-        $match = factory(Match::class)->create();
+        $event = factory(Event::class)->create(['date' => Carbon::parse('tomorrow')]);
+        $match = factory(Match::class)->create(['event_id' => $event->id]);
+        $titles = factory(Title::class, 2)->create();
 
-        $this->assertInstanceOf(
-            'Illuminate\Database\Eloquent\Collection', $match->titles
-        );
+        $match->addTitles($titles);
+
+        $this->assertCount(2, $match->titles);
     }
 
     /** @test */
-    function matches_can_have_referees()
+    function must_have_a_referee()
     {
-        $match = factory(Match::class)->create();
+        $event = factory(Event::class)->create(['date' => Carbon::parse('tomorrow')]);
+        $match = factory(Match::class)->create(['event_id' => $event->id]);
+        $referee = factory(Referee::class)->create();
 
-        $this->assertInstanceOf(
-            'Illuminate\Database\Eloquent\Collection', $match->referees
-        );
+        $match->addReferee($referee);
+
+        $this->assertCount(1, $match->referees);
     }
 
     /** @test */
-    function matches_can_have_stipulations()
-    {
-        $match = factory(Match::class)->create();
-
-        $this->assertInstanceOf(
-            'Illuminate\Database\Eloquent\Collection', $match->stipulations
-        );
-    }
-
-    /** @test */
-    function matches_have_many_wrestlers()
-    {
-        $match = factory(Match::class)->create();
-
-        $this->assertInstanceOf(
-            'Illuminate\Database\Eloquent\Collection', $match->wrestlers
-        );
-    }
-
-    /** @test */
-    function a_match_is_apart_of_an_event()
+    function can_have_more_than_one_referee()
     {
         $event = factory(Event::class)->create();
         $match = factory(Match::class)->create(['event_id' => $event->id]);
+        $referees = factory(Referee::class, 2)->create();
 
-        $this->assertEquals($match->event_id, $event->id);
+        $match->addReferees($referees);
+
+        $this->assertCount(2, $match->referees);
+    }
+
+    /** @test */
+    function can_have_one_stipulation()
+    {
+        $event = factory(Event::class)->create();
+        $match = factory(Match::class)->create(['event_id' => $event->id]);
+        $stipulation = factory(Stipulation::class)->create();
+
+        $match->addStipulation($stipulation);
+
+        $this->assertCount(1, $match->stipulations);
+    }
+
+    /** @test */
+    function can_have_more_than_one_stipulation()
+    {
+        $event = factory(Event::class)->create(['date' => Carbon::parse('tomorrow')]);
+        $match = factory(Match::class)->create(['event_id' => $event->id]);
+        $stipulations = factory(Stipulation::class, 2)->create();
+
+        $match->addStipulations($stipulations);
+
+        $this->assertCount(2, $match->stipulations);
+    }
+
+    /** @test */
+    function can_add_more_than_one_wrestler()
+    {
+        $event = factory(Event::class)->create(['date' => Carbon::parse('tomorrow')]);
+        $match = factory(Match::class)->create(['event_id' => $event->id]);
+        $wrestlers = factory(Wrestler::class, 2)->create();
+
+        $match->addWrestlers($wrestlers);
+
+        $this->assertCount(2, $match->wrestlers);
+    }
+
+    /** @test */
+    function can_add_one_wrestler()
+    {
+        $event = factory(Event::class)->create(['date' => Carbon::parse('tomorrow')]);
+        $match = factory(Match::class)->create(['event_id' => $event->id]);
+        $wrestler = factory(Wrestler::class)->create();
+
+        $match->addWrestler($wrestler);
+
+        $this->assertCount(1, $match->wrestlers);
     }
 }

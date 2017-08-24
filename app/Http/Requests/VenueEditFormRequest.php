@@ -25,10 +25,10 @@ class VenueEditFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', Rule::unique('venues' ,'name')->ignore($this->venue->id)],
-            'address' => 'required',
-            'city' => 'required',
-            'state' => 'required|not_in:0',
+            'name' => ['required', 'alpha_num_spaces', Rule::unique('venues' ,'name')->ignore($this->venue->id)],
+            'address' => 'required|alpha_num_spaces',
+            'city' => 'required|alpha_spaces',
+            'state' => 'required|alpha|not_in:0',
             'postcode' => 'required|numeric|digits:5'
         ];
     }

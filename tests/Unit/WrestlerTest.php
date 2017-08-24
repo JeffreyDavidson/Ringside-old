@@ -17,61 +17,41 @@ class WrestlerTest extends TestCase
     use DatabaseMigrations;
 
     /** @test */
-    public function a_wrestler_can_have_managers()
+    public function can_have_many_managers()
     {
         $wrestler = factory(Wrestler::class)->create();
-
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $wrestler->managers);
-    }
-
-    /** @test */
-    public function an_active_wrestler_can_hire_a_manager()
-    {
-        $wrestler = factory(Wrestler::class)->states('active')->create();
-        $manager = factory(Manager::class)->create(['id' => 1]);
+        $manager = factory(Manager::class)->create();
 
         $wrestler->hireManager($manager);
 
-        $this->assertEquals(1, $wrestler->currentManagers->first()->id);
+        $this->assertCount(1, $wrestler->managers);
     }
 
     /** @test */
-    public function a_wrestler_can_fire_a_manager()
+    public function can_hire_a_manager()
     {
         $wrestler = factory(Wrestler::class)->create();
-        $manager = factory(Manager::class)->create(['id' => 1]);
+        $manager = factory(Manager::class)->create();
 
         $wrestler->hireManager($manager);
+
+        $this->assertCount(1, $wrestler->managers);
+    }
+
+    /** @test */
+    public function can_fire_a_manager()
+    {
+        $wrestler = factory(Wrestler::class)->create();
+        $manager = factory(Manager::class)->create();
+
+        $wrestler->hireManager($manager, Carbon::parse('yesterday'));
         $wrestler->fireManager($manager);
 
-        Carbon::setTestNow(Carbon::parse('+1 day'));
-
-        $this->assertEquals(1, $wrestler->previousManagers()->first()->id);
-
-        Carbon::setTestNow();
+        $this->assertEquals(1, $wrestler->previousManagers()->count());
     }
 
     /** @test */
-    public function a_wrestler_can_hire_a_new_manager()
-    {
-        $wrestler = factory(Wrestler::class)->create();
-        $firedManager = factory(Manager::class)->create(['id' => 1]);
-        $hiredManager = factory(Manager::class)->create(['id' => 2]);
-
-        $wrestler->hireManager($firedManager);
-        $wrestler->fireManager($firedManager);
-        $wrestler->hireManager($hiredManager);
-
-        Carbon::setTestNow(Carbon::parse('+1 day'));
-
-        $this->assertEquals(1, $wrestler->previousManagers()->first()->id);
-        $this->assertEquals(2, $wrestler->currentManagers()->first()->id);
-
-        Carbon::setTestNow();
-    }
-
-    /** @test */
-    public function a_wrestler_can_have_injuries()
+    public function can_have_injuries()
     {
         $wrestler = factory(Wrestler::class)->create();
 
@@ -79,7 +59,7 @@ class WrestlerTest extends TestCase
     }
 
     /** @test */
-    public function a_wrestler_can_have_titles()
+    public function can_have_titles()
     {
         $wrestler = factory(Wrestler::class)->create();
 
@@ -87,7 +67,7 @@ class WrestlerTest extends TestCase
     }
 
     /** @test * */
-    public function an_active_wrestler_can_win_a_title()
+    public function can_win_a_title()
     {
         $wrestler = factory(Wrestler::class)->states('active')->create();
         $title = factory(Title::class)->create();
@@ -98,7 +78,7 @@ class WrestlerTest extends TestCase
     }
 
     /** @test * */
-    public function a_wrestler_can_lose_a_title()
+    public function can_lose_a_title()
     {
         $wrestler = factory(Wrestler::class)->create();
         $title = factory(Title::class)->create();
@@ -110,6 +90,19 @@ class WrestlerTest extends TestCase
         $wrestler->loseTitle($title);
 
         $this->assertNotNull($wrestler->titles()->where('title_id', $title->id)->whereDate('won_on', Carbon::parse('-3 days')->toDateString())->first()->lost_on);
+    }
+
+    /** @test */
+    public function can_be_injured()
+    {
+        $wrestler = factory(Wrestler::class)->states('active')->create();
+
+        $this->assertCount(0, $wrestler->injuries);
+
+        $wrestler->injure();
+
+        $this->assertEquals(3, $wrestler->fresh()->status());
+        $this->assertCount(1, $wrestler->fresh()->injuries);
     }
 
     /** @test * */
@@ -129,7 +122,7 @@ class WrestlerTest extends TestCase
     }
 
     /** @test */
-    public function an_active_wrestler_can_have_matches()
+    public function can_have_matches()
     {
         $wrestler = factory(Wrestler::class)->states('active')->create();
 
@@ -137,26 +130,16 @@ class WrestlerTest extends TestCase
     }
 
     /** @test */
-    public function an_active_wrestler_can_be_injured()
-    {
-        $wrestler = factory(Wrestler::class)->states('active')->create();
-
-        $this->assertCount(0, $wrestler->injuries);
-
-        $wrestler->injure();
-
-        $this->assertEquals(3, $wrestler->fresh()->status());
-        $this->assertCount(1, $wrestler->fresh()->injuries);
-    }
-
-    /** @test */
     public function a_non_active_wrestler_cannot_be_injured()
     {
         $wrestler = factory(Wrestler::class)->create(['status_id' => collect(WrestlerStatus::INACTIVE, WrestlerStatus::INJURED, WrestlerStatus::SUSPENDED, WrestlerStatus::RETIRED)->random()]);
 
+        $this->assertCount(0, $wrestler->injuries);
+
         try {
             $wrestler->injure();
         } catch (WrestlerCanNotBeInjuredException $e) {
+            $this->assertCount(0, $wrestler->fresh()->injuries);
             return;
         }
 

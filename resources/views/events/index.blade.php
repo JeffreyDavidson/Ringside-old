@@ -26,7 +26,7 @@
                     <tr>
                         <td>{{ $event->id }}</td>
                         <td>{{ $event->name }}</td>
-                        <td>{{ $event->formatted_date }}</td>
+                        <td>{{ $event->present()->date }}</td>
                         <td>{{ $event->venue->name }}</td>
                         <td>
                             <a class="btn btn-sm btn-icon btn-flat btn-default" href="{{ route('events.edit', ['id' => $event->id]) }}" data-toggle="tooltip" data-original-title="Edit">

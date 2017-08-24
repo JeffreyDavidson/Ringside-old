@@ -23,6 +23,7 @@ class CreateMatchesTable extends Migration
             $table->unsignedInteger('winner_id')->index()->nullable();
             $table->unsignedInteger('loser_id')->index()->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->unique(['event_id', 'match_number']);
             $table->foreign('event_id')->references('id')->on('events');
