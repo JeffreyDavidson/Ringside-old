@@ -3,47 +3,52 @@
 namespace App\Traits;
 
 use Carbon\Carbon;
-use App\Exceptions\WrestlerCanNotBeHealedException;
-use App\Exceptions\WrestlerCanNotBeInjuredException;
+use App\Exceptions\WrestlerNotInjuredException;
+use App\Exceptions\WrestlerAlreadyInjuredException;
 
 trait HasInjuries {
 
-	abstract public function retirements();
+	abstract public function injuries();
 
-    public function hasInjuries() {
-        return $this->injuries()->whereNull('healed_at')->count > 0;
+    public function hasPreviousInjuries()
+    {
+        return $this->previousInjuries->isNotEmpty();
+    }
+
+    public function previousInjuries()
+    {
+        return $this->injuries()->whereNotNull('healed_at');
+    }
+
+    public function isInjured()
+    {
+        return $this->injuries()->whereNull('healed_at')->count() > 0;
     }
 
     public function injure($date = null)
     {
-        if(! $date) {
-            $date = Carbon::now();
+        if ($this->isInjured()) {
+            throw new WrestlerAlreadyInjuredException;
         }
 
-        if (! $this->isActive()) {
-            throw new WrestlerCanNotBeInjuredException;
-        }
+        $this->setStatusToInactive();
 
-        $this->setStatusToInjured();
-
-        $this->injuries()->create(['injured_at' => $date]);
+        $this->injuries()->create(['injured_at' => $date ?: Carbon::now()]);
 
         return $this;
     }
 
     public function heal($date = null)
     {
-        if(! $date) {
-            $date = Carbon::now();
-        }
-
         if (! $this->isInjured())
         {
-            throw new WrestlerCanNotBeHealedException;
+            throw new WrestlerNotInjuredException;
         }
 
         $this->setStatusToActive();
 
-        $this->injuries()->whereNull('healed_at')->first()->healed($date);
+        $this->injuries()->whereNull('healed_at')->first()->healed($date ?: Carbon::now());
+
+        return $this;
     }
 }
