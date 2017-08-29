@@ -8,6 +8,8 @@ class WrestlerRetirement extends Model
 {
     protected $guarded = [];
 
+    protected $dates = ['retired_at', 'ended_at'];
+
     protected $table = 'wrestler_retirements';
 
     public function unretire($date)
