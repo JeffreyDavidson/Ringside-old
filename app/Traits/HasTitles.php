@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-use App\Models\Title;
+use App\Exceptions\WrestlerNotTitleChampionException;
 use Carbon\Carbon;
 
 trait HasTitles {
@@ -31,7 +31,7 @@ trait HasTitles {
 
 	public function hasTitle($title)
     {
-	    return $this->currentTitlesHeld->contains($title);
+	    return $this->currentTitlesHeld()->contains($title);
 	}
 
 	public function winTitle($title, $date = null)
@@ -48,11 +48,12 @@ trait HasTitles {
 
 	public function loseTitle($title, $date = null)
     {
-		if($this->hasTitle($title)) {
-	    	    $this->titles()->where('title_id', $title->id)->whereNull('lost_on')->first()->loseTitle($date ?: Carbon::now());
-	        	return true;
+        if (!$this->hasTitle($title))
+        {
+            throw new WrestlerNotTitleChampionException;
         }
 
-		return false;
+        $this->currentTitlesHeld()->where('title_id', $title->id)->first()->loseTitle($date ?: Carbon::now());
+
 	}
 }

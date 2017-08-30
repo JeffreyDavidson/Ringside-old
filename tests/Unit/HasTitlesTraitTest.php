@@ -20,7 +20,7 @@ class HasTitlesTraitTest extends TestCase
         $wrestler->winTitle($title);
 
         $this->assertTrue($wrestler->isCurrentlyAChampion());
-        $this->assertTrue($wrestler->hasTitle($title));
+        $this->assertTrue($wrestler->fresh()->hasTitle($title));
     }
 
     /** @test */
@@ -33,7 +33,6 @@ class HasTitlesTraitTest extends TestCase
         $wrestler->loseTitle($title);
 
         $this->assertTrue($wrestler->hasPreviousTitlesHeld());
-        dd($wrestler->previousTitleHeld);
         $this->assertEquals(1, $wrestler->previousTitlesHeld->count());
     }
 
@@ -47,11 +46,11 @@ class HasTitlesTraitTest extends TestCase
         $wrestler->winTitle($titleA);
         $wrestler->winTitle($titleB);
 
-        $this->assertEquals(2, $wrestler->currentTitlesHeld->count());
+        $this->assertEquals(2, $wrestler->currentTitlesHeld()->count());
     }
 
     /**
-     * @expectedException \App\Exceptions\WrestlerAlreadySuspendedException
+     * @expectedException \App\Exceptions\WrestlerIsTitleChampionException
      *
      * @test */
     public function a_wrestler_who_who_has_a_title_cannot_win_the_same_title_without_losing_it()
