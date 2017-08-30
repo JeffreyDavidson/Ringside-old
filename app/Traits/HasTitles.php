@@ -9,38 +9,48 @@ trait HasTitles {
 
 	abstract public function titles();
 
-	public function hasTitle($title) {
-		if($title instanceof Title) {
-			$title = $title->id;
-		}
+    public function hasPreviousTitlesHeld()
+    {
+        return $this->previousTitlesHeld->isNotEmpty();
+    }
 
-	    return $this->titles()->whereNull('lost_on')->get()->map(function($item) {
-	    	return $item->title_id;
-	    })->contains($title);
+    public function previousTitlesHeld()
+    {
+        return $this->titles()->whereNotNull('lost_on');
+    }
+
+    public function isCurrentlyAChampion()
+    {
+        return $this->currentTitlesHeld()->count() > 0;
+    }
+
+    public function currentTitlesHeld()
+    {
+        return $this->titles()->whereNull('lost_on');
+    }
+
+	public function hasTitle($title)
+    {
+	    return $this->currentTitlesHeld->contains($title);
 	}
 
 	public function winTitle($title, $date = null)
 	{
-		if (! $date) {
-			$date = Carbon::now();
-		}
+        if ($this->hasTitle($title))
+        {
+            throw new WrestlerAlreadyHasTitleException;
+        }
 
-		if(! $this->hasTitle($title)) {
-			$this->titles()->create(['title_id' => $title->id, 'won_on' => $date]);
-		}
+        $this->titles()->create(['title_id' => $title->id, 'won_on' => $date ?: Carbon::now()]);
 
 		return $this;
 	}
 
 	public function loseTitle($title, $date = null)
-	{
-	    if (! $date) {
-			$date = Carbon::now();
-		}
-
+    {
 		if($this->hasTitle($title)) {
-	    	$this->titles()->where('title_id', $title->id)->whereNull('lost_on')->first()->loseTitle($date);
-	    	return true;
+	    	    $this->titles()->where('title_id', $title->id)->whereNull('lost_on')->first()->loseTitle($date ?: Carbon::now());
+	        	return true;
         }
 
 		return false;
