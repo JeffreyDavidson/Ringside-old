@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class WrestlerSuspension extends Model
@@ -10,8 +11,10 @@ class WrestlerSuspension extends Model
 
     protected $table = 'wrestler_suspensions';
 
-    public function rejoin($date)
+    protected $dates = ['suspended_at', 'ended_at'];
+
+    public function renew($date)
     {
-        return $this->update(['ended_at' => $date]);
+        return $this->update(['ended_at' => $date ?: Carbon::now()]);
     }
 }
