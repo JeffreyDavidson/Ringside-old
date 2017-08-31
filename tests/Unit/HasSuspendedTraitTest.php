@@ -50,7 +50,8 @@ class HasSuspensionsTraitTest extends TestCase
     /**
      * @expectedException \App\Exceptions\WrestlerAlreadySuspendedException
      *
-     * @test */
+     * @test
+     */
     public function a_wrestler_who_is_suspended_cannot_be_suspended()
     {
         $wrestler = factory(Wrestler::class)->create();

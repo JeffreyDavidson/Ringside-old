@@ -25,7 +25,7 @@ trait HasSuspensions
         return $this->suspensions()->whereNull('ended_at')->count() > 0;
     }
 
-    public function suspend($date = null)
+    public function suspend()
     {
         if ($this->isSuspended()) {
             throw new WrestlerAlreadySuspendedException;
@@ -33,12 +33,12 @@ trait HasSuspensions
 
         $this->setStatusToInactive();
 
-        $this->suspensions()->create(['suspended_at' => $date ?: Carbon::now()]);
+        $this->suspensions()->create(['suspended_at' => Carbon::now()]);
 
         return $this;
     }
 
-    public function renew($date = null)
+    public function renew()
     {
         if (! $this->isSuspended()) {
             throw new WrestlerNotSuspendedException;
@@ -46,6 +46,6 @@ trait HasSuspensions
 
         $this->setStatusToActive();
 
-        $this->suspensions()->whereNull('ended_at')->first()->renew($date ?: Carbon::now());
+        $this->suspensions()->whereNull('ended_at')->first()->renew();
     }
 }
