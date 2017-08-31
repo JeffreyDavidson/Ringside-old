@@ -38,21 +38,21 @@ trait HasTitles
         return $this->currentTitlesHeld->contains($title);
     }
 
-    public function winTitle($title, $date = null)
+    public function winTitle($title)
     {
         if ($this->hasTitle($title)) {
             throw new WrestlerAlreadyHasTitleException;
         }
 
-        $this->titles()->create(['title_id' => $title->id, 'won_on' => $date ?: Carbon::now()]);
+        $this->titles()->create(['title_id' => $title->id, 'won_on' => Carbon::now()]);
     }
 
-    public function loseTitle($title, $date = null)
+    public function loseTitle($title)
     {
         if (! $this->hasTitle($title)) {
             throw new WrestlerNotTitleChampionException;
         }
 
-        $this->currentTitlesHeld()->where('title_id', $title->id)->first()->loseTitle($date ?: Carbon::now());
+        $this->currentTitlesHeld()->where('title_id', $title->id)->first()->loseTitle();
     }
 }

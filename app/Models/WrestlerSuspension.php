@@ -13,8 +13,8 @@ class WrestlerSuspension extends Model
 
     protected $dates = ['suspended_at', 'ended_at'];
 
-    public function renew($date)
+    public function renew()
     {
-        return $this->update(['ended_at' => $date ?: Carbon::now()]);
+        return $this->update(['ended_at' => Carbon::now()]);
     }
 }

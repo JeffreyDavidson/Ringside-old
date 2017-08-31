@@ -25,7 +25,7 @@ trait HasRetirements
         return $this->retirements()->whereNull('ended_at')->count() > 0;
     }
 
-    public function retire($date = null)
+    public function retire()
     {
         if ($this->isRetired()) {
             throw new WrestlerAlreadyRetiredException;
@@ -33,12 +33,12 @@ trait HasRetirements
 
         $this->setStatusToInactive();
 
-        $this->retirements()->create(['retired_at' => $date ?: Carbon::now()]);
+        $this->retirements()->create(['retired_at' => Carbon::now()]);
 
         return $this;
     }
 
-    public function unretire($date = null)
+    public function unretire()
     {
         if (! $this->isRetired()) {
             throw new WrestlerNotRetiredException;
@@ -46,6 +46,6 @@ trait HasRetirements
 
         $this->setStatusToActive();
 
-        $this->retirements()->whereNull('ended_at')->first()->unretire($date ?: Carbon::now());
+        $this->retirements()->whereNull('ended_at')->first()->unretire();
     }
 }

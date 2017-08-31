@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class WrestlerRetirement extends Model
@@ -12,8 +13,8 @@ class WrestlerRetirement extends Model
 
     protected $table = 'wrestler_retirements';
 
-    public function unretire($date)
+    public function unretire()
     {
-        return $this->update(['ended_at' => $date]);
+        return $this->update(['ended_at' => Carbon::now()]);
     }
 }

@@ -50,12 +50,13 @@ class HasRetirementsTraitTest extends TestCase
     /**
      * @expectedException \App\Exceptions\WrestlerAlreadyRetiredException
      *
-     * @test */
+     * @test
+     */
     public function a_wrestler_who_is_retired_cannot_retire()
     {
         $wrestler = factory(Wrestler::class)->create();
-        $wrestler->retire();
 
+        $wrestler->retire();
         $wrestler->retire();
 
         $this->assertEquals(1, $wrestler->retirements->count());
