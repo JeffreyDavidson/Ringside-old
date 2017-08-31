@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class WrestlerInjury extends Model
@@ -15,9 +16,9 @@ class WrestlerInjury extends Model
      */
     protected $dates = ['injured_at', 'healed_at'];
 
-    public function healed($date)
+    public function healed()
     {
-        return $this->update(['healed_at' => $date]);
+        return $this->update(['healed_at' => Carbon::now()]);
     }
 
     public function injured()
