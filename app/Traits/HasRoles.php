@@ -9,6 +9,12 @@ trait HasRoles {
 
 	abstract public function role();
 
+    /**
+     * Assign a role to a user.
+     *
+     * @param  Role $role
+     * @return mixed
+     */
     public function assignRole(Role $role)
     {
         return $this->role()->associate($role);

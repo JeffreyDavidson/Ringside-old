@@ -4,8 +4,8 @@ namespace App\Traits;
 
 use App\Models\WrestlerStatus;
 
-trait HasStatuses {
-
+trait HasStatuses
+{
     public $status_id;
 
     abstract public function status();
@@ -30,11 +30,13 @@ trait HasStatuses {
         return $query->where('status_id', WrestlerStatus::INACTIVE);
     }
 
-    public function setStatusToActive() {
+    public function setStatusToActive()
+    {
         $this->update(['status_id' => WrestlerStatus::ACTIVE]);
     }
 
-    public function setStatusToInactive() {
+    public function setStatusToInactive()
+    {
         $this->update(['status_id' => WrestlerStatus::INACTIVE]);
     }
 }

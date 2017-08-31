@@ -6,9 +6,9 @@ use Carbon\Carbon;
 use App\Exceptions\WrestlerAlreadySuspendedException;
 use App\Exceptions\WrestlerNotSuspendedException;
 
-trait HasSuspensions {
-
-	abstract public function suspensions();
+trait HasSuspensions
+{
+    abstract public function suspensions();
 
     public function hasPreviousSuspensions()
     {
@@ -25,10 +25,9 @@ trait HasSuspensions {
         return $this->suspensions()->whereNull('ended_at')->count() > 0;
     }
 
-	public function suspend($date = null)
+    public function suspend($date = null)
     {
-        if ($this->isSuspended())
-        {
+        if ($this->isSuspended()) {
             throw new WrestlerAlreadySuspendedException;
         }
 
@@ -41,8 +40,7 @@ trait HasSuspensions {
 
     public function renew($date = null)
     {
-        if (! $this->isSuspended())
-        {
+        if (! $this->isSuspended()) {
             throw new WrestlerNotSuspendedException;
         }
 

@@ -7,9 +7,9 @@ use App\Exceptions\WrestlerNotTitleChampionException;
 
 use Carbon\Carbon;
 
-trait HasTitles {
-
-	abstract public function titles();
+trait HasTitles
+{
+    abstract public function titles();
 
     public function hasPreviousTitlesHeld()
     {
@@ -31,31 +31,28 @@ trait HasTitles {
         return $this->titles()->whereNull('lost_on');
     }
 
-	public function hasTitle($title)
+    public function hasTitle($title)
     {
         $this->load('currentTitlesHeld');
 
         return $this->currentTitlesHeld->contains($title);
-	}
+    }
 
-	public function winTitle($title, $date = null)
-	{
-	    if ($this->hasTitle($title))
-        {
+    public function winTitle($title, $date = null)
+    {
+        if ($this->hasTitle($title)) {
             throw new WrestlerAlreadyHasTitleException;
         }
 
         $this->titles()->create(['title_id' => $title->id, 'won_on' => $date ?: Carbon::now()]);
-	}
+    }
 
-	public function loseTitle($title, $date = null)
+    public function loseTitle($title, $date = null)
     {
-        if (!$this->hasTitle($title))
-        {
+        if (! $this->hasTitle($title)) {
             throw new WrestlerNotTitleChampionException;
         }
 
         $this->currentTitlesHeld()->where('title_id', $title->id)->first()->loseTitle($date ?: Carbon::now());
-
-	}
+    }
 }

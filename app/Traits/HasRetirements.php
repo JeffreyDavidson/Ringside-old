@@ -6,9 +6,9 @@ use App\Exceptions\WrestlerNotRetiredException;
 use Carbon\Carbon;
 use App\Exceptions\WrestlerAlreadyRetiredException;
 
-trait HasRetirements {
-
-	abstract public function retirements();
+trait HasRetirements
+{
+    abstract public function retirements();
 
     public function hasPreviousRetirements()
     {
@@ -25,10 +25,9 @@ trait HasRetirements {
         return $this->retirements()->whereNull('ended_at')->count() > 0;
     }
 
-	public function retire($date = null)
+    public function retire($date = null)
     {
-        if ($this->isRetired())
-        {
+        if ($this->isRetired()) {
             throw new WrestlerAlreadyRetiredException;
         }
 
@@ -41,8 +40,7 @@ trait HasRetirements {
 
     public function unretire($date = null)
     {
-        if (! $this->isRetired())
-        {
+        if (! $this->isRetired()) {
             throw new WrestlerNotRetiredException;
         }
 

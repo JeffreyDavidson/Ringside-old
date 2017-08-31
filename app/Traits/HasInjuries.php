@@ -6,9 +6,9 @@ use Carbon\Carbon;
 use App\Exceptions\WrestlerNotInjuredException;
 use App\Exceptions\WrestlerAlreadyInjuredException;
 
-trait HasInjuries {
-
-	abstract public function injuries();
+trait HasInjuries
+{
+    abstract public function injuries();
 
     public function hasPreviousInjuries()
     {
@@ -40,8 +40,7 @@ trait HasInjuries {
 
     public function heal($date = null)
     {
-        if (! $this->isInjured())
-        {
+        if (! $this->isInjured()) {
             throw new WrestlerNotInjuredException;
         }
 
