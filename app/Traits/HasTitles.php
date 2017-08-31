@@ -2,7 +2,9 @@
 
 namespace App\Traits;
 
+use App\Exceptions\WrestlerAlreadyHasTitleException;
 use App\Exceptions\WrestlerNotTitleChampionException;
+
 use Carbon\Carbon;
 
 trait HasTitles {
@@ -31,19 +33,19 @@ trait HasTitles {
 
 	public function hasTitle($title)
     {
-	    return $this->currentTitlesHeld()->contains($title);
+        $this->load('currentTitlesHeld');
+
+        return $this->currentTitlesHeld->contains($title);
 	}
 
 	public function winTitle($title, $date = null)
 	{
-        if ($this->hasTitle($title))
+	    if ($this->hasTitle($title))
         {
             throw new WrestlerAlreadyHasTitleException;
         }
 
         $this->titles()->create(['title_id' => $title->id, 'won_on' => $date ?: Carbon::now()]);
-
-		return $this;
 	}
 
 	public function loseTitle($title, $date = null)

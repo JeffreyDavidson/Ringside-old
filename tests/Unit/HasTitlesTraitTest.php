@@ -20,7 +20,7 @@ class HasTitlesTraitTest extends TestCase
         $wrestler->winTitle($title);
 
         $this->assertTrue($wrestler->isCurrentlyAChampion());
-        $this->assertTrue($wrestler->fresh()->hasTitle($title));
+        $this->assertTrue($wrestler->hasTitle($title));
     }
 
     /** @test */
@@ -32,8 +32,10 @@ class HasTitlesTraitTest extends TestCase
         $wrestler->winTitle($title);
         $wrestler->loseTitle($title);
 
-        $this->assertTrue($wrestler->hasPreviousTitlesHeld());
-        $this->assertEquals(1, $wrestler->previousTitlesHeld->count());
+        tap($wrestler->fresh(), function ($wrestler) {
+            $this->assertTrue($wrestler->hasPreviousTitlesHeld());
+            $this->assertEquals(1, $wrestler->previousTitlesHeld->count());
+        });
     }
 
     /** @test */
@@ -50,10 +52,10 @@ class HasTitlesTraitTest extends TestCase
     }
 
     /**
-     * @expectedException \App\Exceptions\WrestlerIsTitleChampionException
+     * @expectedException \App\Exceptions\WrestlerAlreadyHasTitleException
      *
      * @test */
-    public function a_wrestler_who_who_has_a_title_cannot_win_the_same_title_without_losing_it()
+    public function a_wrestler_who_has_a_title_cannot_win_the_same_title_without_losing_it()
     {
         $wrestler = factory(Wrestler::class)->create();
         $title = factory(Title::class)->create();
@@ -65,16 +67,17 @@ class HasTitlesTraitTest extends TestCase
     }
 
     /**
-     * @expectedException \App\Exceptions\WrestlerNotSuspendedException
+     * @expectedException \App\Exceptions\WrestlerNotTitleChampionException
      *
      * @test
      */
-    public function a_wrestler_who_is_not_suspended_cannot_be_renewed()
+    public function a_wrestler_does_not_have_a_title_cannot_lose_the_title()
     {
         $wrestler = factory(Wrestler::class)->create();
+        $title = factory(Title::class)->create();
 
-        $wrestler->renew();
+        $wrestler->loseTitle($title);
 
-        $this->assertEquals(0, $wrestler->retirements->count());
+        $this->assertEquals(0, $wrestler->previousTitlesHeld->count());
     }
 }
