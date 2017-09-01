@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
-class HasManagersTraitTest extends TestCase
+class HasRolesTraitTest extends TestCase
 {
     use DatabaseMigrations;
 
