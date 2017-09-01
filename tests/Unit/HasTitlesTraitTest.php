@@ -54,7 +54,8 @@ class HasTitlesTraitTest extends TestCase
     /**
      * @expectedException \App\Exceptions\WrestlerAlreadyHasTitleException
      *
-     * @test */
+     * @test
+     */
     public function a_wrestler_who_has_a_title_cannot_win_the_same_title_without_losing_it()
     {
         $wrestler = factory(Wrestler::class)->create();
