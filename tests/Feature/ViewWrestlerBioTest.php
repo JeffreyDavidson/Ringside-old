@@ -110,10 +110,8 @@ class ViewWrestlerBioTest extends TestCase
     public function view_list_of_previous_managers_on_wrestler_bio()
     {
         $managerA = factory(Manager::class)->create(['name' => 'Manager A']);
-        $managerB = factory(Manager::class)->create(['name' => 'Manager B']);
 
         $this->wrestler->hireManager($managerA, Carbon::parse('last week'));
-        $this->wrestler->hireManager($managerB, Carbon::parse('last week'));
         $this->wrestler->fireManager($managerA, Carbon::parse('yesterday'));
 
         $response = $this->actingAs($this->user)
@@ -126,12 +124,13 @@ class ViewWrestlerBioTest extends TestCase
     /** @test */
     public function view_list_of_current_titles_held_on_wrestler_bio()
     {
+        $wrestler = factory(Wrestler::class)->create();
         $titleA = factory(Title::class)->create(['name' => 'Title A']);
 
-        $this->wrestler->winTitle($titleA, Carbon::parse('yesterday'));
+        $wrestler->winTitle($titleA);
 
         $response = $this->actingAs($this->user)
-                        ->get(route('wrestlers.show', $this->wrestler->id));
+                        ->get(route('wrestlers.show', $wrestler->id));
 
         $response->assertSee('Title A');
     }
@@ -139,22 +138,19 @@ class ViewWrestlerBioTest extends TestCase
     /** @test */
     public function view_list_of_previous_titles_held_on_wrestler_bio()
     {
+        $wrestler = factory(Wrestler::class)->create();
         $titleA = factory(Title::class)->create(['name' => 'Title A']);
         $titleB = factory(Title::class)->create(['name' => 'Title B']);
 
-        $this->wrestler->winTitle($titleA, Carbon::parse('-3 days'));
-        $this->wrestler->loseTitle($titleA, Carbon::parse('-2 days'));
-        $this->wrestler->winTitle($titleA, Carbon::parse('-2 days'));
-        $this->wrestler->loseTitle($titleA, Carbon::parse('-1 day'));
-        $this->wrestler->winTitle($titleB, Carbon::parse('-1 day'));
-
-        $this->wrestler->titles->map(function($i) { return $i->title->name; });
+        $wrestler->winTitle($titleA);
+        $wrestler->loseTitle($titleA);
+        $wrestler->winTitle($titleB);
 
         $response = $this->actingAs($this->user)
-            ->get(route('wrestlers.show', $this->wrestler->id));
+            ->get(route('wrestlers.show', $wrestler->id));
 
-        $response->assertSee('Title A (2x)');
-        $response->assertSee('Title B');
+        $response->assertSee('Title A');
+        $response->assertDontSee('Title B');
     }
 
     /** @test */

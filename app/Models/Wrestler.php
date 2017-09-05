@@ -8,7 +8,6 @@ use App\Traits\HasTitles;
 use App\Traits\HasRetirements;
 use App\Traits\HasSuspensions;
 use App\Traits\HasInjuries;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Wrestler extends Model
@@ -46,7 +45,7 @@ class Wrestler extends Model
      */
     public function titles()
     {
-        return $this->hasMany(TitleHistory::class);
+        return $this->hasMany(Champion::class);
     }
 
     /**
@@ -70,7 +69,7 @@ class Wrestler extends Model
 	}
 
     /**
-     * A wrestler can have many injuries.
+     * A wrestler can have many suspensions.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -94,7 +93,8 @@ class Wrestler extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-	public function status() {
+	public function status()
+    {
         return $this->getAttribute('status_id');
     }
 
@@ -116,6 +116,4 @@ class Wrestler extends Model
             $this->rejoin();
         }
     }
-
-
 }

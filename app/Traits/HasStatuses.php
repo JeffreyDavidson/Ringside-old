@@ -25,6 +25,21 @@ trait HasStatuses
         return $query->where('status_id', WrestlerStatus::ACTIVE);
     }
 
+    public function scopeInjured($query)
+    {
+        return $query->where('status_id', WrestlerStatus::INJURED);
+    }
+
+    public function scopeSuspended($query)
+    {
+        return $query->where('status_id', WrestlerStatus::SUSPENDED);
+    }
+
+    public function scopeRetired($query)
+    {
+        return $query->where('status_id', WrestlerStatus::RETIRED);
+    }
+
     public function scopeInactive($query)
     {
         return $query->where('status_id', WrestlerStatus::INACTIVE);

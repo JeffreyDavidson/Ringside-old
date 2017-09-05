@@ -8,7 +8,7 @@ class EventPresenter extends Presenter {
 
     public function date()
     {
-        return $this->model->date->format('F j, Y');
+        return $this->model->date->format('F jS, Y');
     }
 
     public function formattedFormDate()

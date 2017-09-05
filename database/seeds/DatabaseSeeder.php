@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
         'wrestler_injuries',
         'wrestler_retirements',
         'titles',
-        'title_wrestler',
+        'champions',
         'managers',
         'events',
         'matches',
@@ -53,9 +53,9 @@ class DatabaseSeeder extends Seeder
         $this->call(StipulationsTableSeeder::class);
         $this->call(MatchDecisionsTableSeeder::class);
         $this->call(VenuesTableSeeder::class);
-        $this->call(EventsTableSeeder::class);
+        //$this->call(EventsTableSeeder::class);
 //        $this->call(ManagersTableSeeder::class);
-//        $this->call(TitleHistoryTableSeeder::class);
+        $this->call(ChampionsTableSeeder::class);
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }

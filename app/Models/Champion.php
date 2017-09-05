@@ -2,17 +2,16 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Laracodes\Presenter\Traits\Presentable;
-use App\Collections\TitleHistories;
+use App\Collections\TitleChampionsCollection;
 
-class TitleChampion extends Model
+class Champion extends Model
 {
     use Presentable;
 
     protected $presenter = 'App\Presenters\TitleHistoryPresenter';
-
-    protected $table = 'title_wrestler';
 
     /**
      * The attributes that should be mutated to dates.
@@ -33,13 +32,24 @@ class TitleChampion extends Model
         return $this->belongsTo(Wrestler::class);
     }
 
-    public function loseTitle($date = null)
+    public function loseTitle()
     {
-        return $this->update(['lost_on' => $date]);
+        return $this->update(['lost_on' => Carbon::now()]);
     }
 
     public static function getCurrentChampion()
     {
         return $this->wrestler->whereNotNull('lost_on');
+    }
+
+    /**
+     * Create a new Eloquent Collection instance.
+     *
+     * @param  array $models
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function newCollection(array $models = [])
+    {
+        return new TitleChampionsCollection($models);
     }
 }

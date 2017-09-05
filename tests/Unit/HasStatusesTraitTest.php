@@ -30,17 +30,33 @@ class HasStatusesTraitTest extends TestCase
     /** @test */
     public function it_can_get_all_active_users()
     {
-        factory(Wrestler::class)->create(['status_id' => 1]);
+        factory(Wrestler::class, 3)->create(['status_id' => WrestlerStatus::ACTIVE]);
 
-        $this->assertEquals(1, Wrestler::active()->get()->count());
+        $this->assertEquals(3, Wrestler::active()->get()->count());
     }
 
     /** @test */
     public function it_can_get_all_inactive_users()
     {
-        factory(Wrestler::class)->create(['status_id' => 2]);
+        factory(Wrestler::class, 3)->create(['status_id' => WrestlerStatus::INACTIVE]);
 
-        $this->assertEquals(1, Wrestler::inactive()->get()->count());
+        $this->assertEquals(3, Wrestler::inactive()->get()->count());
+    }
+
+    /** @test */
+    public function it_can_retrieve_all_injured_wrestlers()
+    {
+        factory(Wrestler::class, 3)->create(['status_id' => WrestlerStatus::INJURED]);
+
+        $this->assertEquals(3, Wrestler::injured()->get()->count());
+    }
+
+    /** @test */
+    public function it_can_retrieve_all_suspended_wrestlers()
+    {
+        factory(Wrestler::class, 3)->create(['status_id' => WrestlerStatus::SUSPENDED]);
+
+        $this->assertEquals(3, Wrestler::suspended()->get()->count());
     }
 
     /** @test */

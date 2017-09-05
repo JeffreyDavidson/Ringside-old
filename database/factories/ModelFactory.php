@@ -64,6 +64,14 @@ $factory->define(App\Models\Role::class, function (Faker\Generator $faker) {
     ];
 });
 
+$factory->define(App\Models\Champion::class, function (Faker\Generator $faker) {
+    return [
+        'title_id' => $faker->word,
+        'wrestler_id' => $faker->word,
+        'won_on' => Carbon::now()
+    ];
+});
+
 $factory->define(App\Models\Wrestler::class, function (Faker\Generator $faker) {
 
     return [
@@ -76,6 +84,26 @@ $factory->define(App\Models\Wrestler::class, function (Faker\Generator $faker) {
         'weight' => $faker->numberBetween(175, 400),
         'signature_move' => $faker->unique()->sentence(3)
     ];
+});
+
+$factory->state(App\Models\Wrestler::class, 'active', function ($faker) {
+    return ['status_id' => WrestlerStatus::SUSPENDED];
+});
+
+$factory->state(App\Models\Wrestler::class, 'inactive', function ($faker) {
+    return ['status_id' => WrestlerStatus::INACTIVE];
+});
+
+$factory->state(App\Models\Wrestler::class, 'injured', function ($faker) {
+    return ['status_id' => WrestlerStatus::INJURED];
+});
+
+$factory->state(App\Models\Wrestler::class, 'suspended', function ($faker) {
+    return ['status_id' => WrestlerStatus::SUSPENDED];
+});
+
+$factory->state(App\Models\Wrestler::class, 'retired', function ($faker) {
+    return ['status_id' => WrestlerStatus::RETIRED];
 });
 
 $factory->define(App\Models\WrestlerStatus::class, function (Faker\Generator $faker) {

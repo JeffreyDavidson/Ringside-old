@@ -106,7 +106,7 @@ class Match extends Model
      *
      * @param $wrestlers
      */
-    public function addWrestlers(Collection $wrestlers)
+    public function addWrestlers($wrestlers)
     {
         $this->wrestlers()->saveMany($wrestlers);
     }

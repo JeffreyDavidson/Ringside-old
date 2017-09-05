@@ -2,9 +2,9 @@
 
 namespace Tests\Unit;
 
-use App\Models\Manager;
-use App\Models\Wrestler;
-use Carbon\Carbon;
+use App\Models\Permission;
+use App\Models\Role;
+use App\Models\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -13,67 +13,26 @@ class HasRolesTraitTest extends TestCase
     use DatabaseMigrations;
 
     /** @test */
-    public function a_wrestler_has_a_manager()
+    public function a_user_can_be_assigned_a_role()
     {
-        $wrestler = factory(Wrestler::class)->create();
-        $manager = factory(Manager::class)->create();
+        $user = factory(User::class)->create();
+        $role = factory(Role::class)->create();
 
-        $wrestler->hireManager($manager);
+        $user->assignRole($role);
 
-        $this->assertTrue($wrestler->hasAManager());
+        $this->assertTrue($user->hasRole($role));
     }
 
     /** @test */
-    public function a_wrestler_has_previous_managers()
+    public function a_user_with_a_role_has_a_given_permission()
     {
-        $wrestler = factory(Wrestler::class)->create();
-        $managerA = factory(Manager::class)->create();
-        $managerB = factory(Manager::class)->create();
+        $user = factory(User::class)->create();
+        $role = factory(Role::class)->create();
+        $permission = factory(Permission::class)->create();
 
-        $wrestler->hireManager($managerA);
-        $wrestler->fireManager($managerA);
-        $wrestler->hireManager($managerB);
-        $wrestler->fireManager($managerB);
+        $user->assignRole($role);
+        $role->givePermissionTo($permission);
 
-        $this->assertTrue($wrestler->hasPreviousManagers->count());
-    }
-
-    /** @test */
-    public function a_wrestler_can_hire_a_manager()
-    {
-        $wrestler = factory(Wrestler::class)->create();
-        $manager = factory(Manager::class)->create();
-
-        $wrestler->hireManager($manager);
-
-        $this->assertEquals(1, $wrestler->currentManagers->count());
-        $this->assertNull($wrestler->managers()->first()->fired_on);
-    }
-
-    /** @test */
-    public function a_wrestler_can_fire_a_manager()
-    {
-        $wrestler = factory(Wrestler::class)->create();
-        $manager = factory(Manager::class)->create();
-
-        $wrestler->hireManager($manager, Carbon::parse('last week'));
-        $wrestler->fireManager($manager, Carbon::parse('yesterday'));
-        //dd($wrestler->previousManagers->first()->hired_on);
-        //dd($wrestler->previousManagers);
-
-        $this->assertNotNull($wrestler->previousManagers->first()->fired_on);
-    }
-
-    /** @test */
-    public function a_wrestler_can_have_multiple_managers()
-    {
-        $wrestler = factory(Wrestler::class)->create();
-        $managerA = factory(Manager::class)->create();
-        $managerB = factory(Manager::class)->create();
-
-        $wrestler->hireManager($managerA);
-        $wrestler->hireManager($managerB);
-
-        $this->assertEquals(2, $wrestler->currentManagers->count());
+        $this->assertTrue($user->hasPermission($permission->slug));
     }
 }

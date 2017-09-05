@@ -11,7 +11,7 @@ class HasInjuriesTraitTest extends TestCase
     use DatabaseMigrations;
 
     /** @test */
-    public function a_wrestler_can_be_injured()
+    public function an_wrestler_can_be_injured()
     {
         $wrestler = factory(Wrestler::class)->create();
 
@@ -23,7 +23,7 @@ class HasInjuriesTraitTest extends TestCase
     }
 
     /** @test */
-    public function a_wrestler_can_be_healed()
+    public function an_injured_wrestler_can_be_healed()
     {
         $wrestler = factory(Wrestler::class)->create();
 
@@ -51,7 +51,7 @@ class HasInjuriesTraitTest extends TestCase
      * @expectedException \App\Exceptions\WrestlerAlreadyInjuredException
      *
      * @test */
-    public function a_wrestler_who_is_injured_cannot_be_injured()
+    public function an_injured_wrestler_cannot_be_injured()
     {
         $wrestler = factory(Wrestler::class)->create();
         $wrestler->injure();
@@ -74,4 +74,6 @@ class HasInjuriesTraitTest extends TestCase
 
         $this->assertEquals(0, $wrestler->injuries->count());
     }
+
+
 }

@@ -5,12 +5,13 @@ namespace App\Traits;
 use App\Models\Permission;
 use App\Models\Role;
 
-trait HasRoles {
-
-	abstract public function role();
+trait HasRoles
+{
+    abstract public function role();
 
     /**
      * Assign a role to a user.
+     *
      *
      * @param  Role $role
      * @return mixed
@@ -21,7 +22,7 @@ trait HasRoles {
     }
 
     /**
-     * Determine if the user may perform the given permission.
+     * Determine if the user's role has the given permission.
      *
      * @param  string $permissionSlug
      * @return boolean
@@ -29,5 +30,16 @@ trait HasRoles {
     public function hasPermission($permissionSlug)
     {
         return $this->role->permissions->contains('slug', $permissionSlug);
+    }
+
+    /**
+     * Determine if the supplied role matches the role of the user.
+     *
+     * @param  Role $role
+     * @return boolean
+     */
+    public function hasRole(Role $role)
+    {
+        return $this->role == $role;
     }
 }

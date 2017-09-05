@@ -58,6 +58,11 @@ class Event extends Model
         }
     }
 
+    public function addMatch($match)
+    {
+        $this->matches()->save($match);
+    }
+
     /**
      * Set the date field for the title.
      *

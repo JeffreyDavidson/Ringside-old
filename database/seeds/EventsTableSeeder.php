@@ -8,7 +8,7 @@ use App\Models\Stipulation;
 use App\Models\Title;
 use App\Models\Referee;
 use App\Models\Wrestler;
-use App\Models\TitleChampion;
+use App\Models\Champion;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
@@ -139,7 +139,7 @@ class EventsTableSeeder extends Seeder
     public function addWrestlers($match)
     {
         if ($match->isTitleMatch()) {
-            $champion = TitleChampion::getCurrentChampion();
+            $champion = Champion::getCurrentChampion();
             if ($champion != null) {
                 $match->addWrestler($champion);
                 $match->addWrestler(Wrestler::inRandomOrder()->except($champion)->first());

@@ -72,7 +72,7 @@ class WrestlersController extends Controller
     {
         $this->authorize('show', Wrestler::class);
 
-        $wrestler->load('currentManagers', 'previousManagers', 'titles.title');
+        $wrestler->load('currentManagers', 'previousManagers', 'currentTitlesHeld', 'previousTitlesHeld');
 
         return response()->view('wrestlers.show', ['wrestler' => $wrestler]);
     }

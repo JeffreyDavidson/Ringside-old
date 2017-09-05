@@ -14,3 +14,4 @@ public/images
 /public/mix-manifest.json
 .gitignore
 .DS_Store
+/coverage

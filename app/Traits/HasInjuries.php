@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Models\WrestlerStatus;
 use Carbon\Carbon;
 use App\Exceptions\WrestlerNotInjuredException;
 use App\Exceptions\WrestlerAlreadyInjuredException;

@@ -20,6 +20,11 @@ trait HasManagers
         return $this->managers()->whereNotNull('fired_on')->withPivot('fired_on');
     }
 
+    public function hasCurrentManagers()
+    {
+        return $this->currentManagers->isNotEmpty();
+    }
+
     public function hasManager($manager)
     {
         $this->load('currentManagers');
@@ -32,21 +37,21 @@ trait HasManagers
         return $this->managers()->wherePivot('fired_on', '=', null);
     }
 
-    public function hireManager($manager, $date = null)
+    public function hireManager($manager)
     {
         if ($this->hasManager($manager)) {
             throw new WrestlerAlreadyHasManagerException;
         }
 
-        return $this->managers()->attach($manager->id, ['hired_on' => $date ?: Carbon::now()]);
+        return $this->managers()->attach($manager->id, ['hired_on' => Carbon::now()]);
     }
 
-    public function fireManager($manager, $date = null)
+    public function fireManager($manager)
     {
         if (! $this->hasManager($manager)) {
             throw new WrestlerNotHaveHiredManagerException;
         }
 
-        return $this->managers()->updateExistingPivot($manager->id, ['fired_on' => $date ?: Carbon::now()]);
+        return $this->managers()->updateExistingPivot($manager->id, ['fired_on' => Carbon::now()]);
     }
 }
