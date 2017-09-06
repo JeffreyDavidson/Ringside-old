@@ -13,6 +13,15 @@
         <p>Signature Move: {{ $wrestler->signature_move }}</p>
     @endif
 
+    @if($wrestler->isCurrentlyAChampion())
+        <h2>Current Titles</h2>
+        <ul>
+            @foreach($wrestler->currentTitlesHeld as $champion)
+                <li>{{ $champion->title->name }}</li>
+            @endforeach
+        </ul>
+    @endif
+
     @if($wrestler->hasCurrentManagers())
         <h2>Current Managers</h2>
         <ul>

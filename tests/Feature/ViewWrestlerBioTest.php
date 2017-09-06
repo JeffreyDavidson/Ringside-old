@@ -126,13 +126,16 @@ class ViewWrestlerBioTest extends TestCase
     {
         $wrestler = factory(Wrestler::class)->create();
         $titleA = factory(Title::class)->create(['name' => 'Title A']);
+        $titleB = factory(Title::class)->create(['name' => 'Title B']);
 
         $wrestler->winTitle($titleA);
+        $wrestler->winTitle($titleB);
 
         $response = $this->actingAs($this->user)
                         ->get(route('wrestlers.show', $wrestler->id));
 
         $response->assertSee('Title A');
+        $response->assertSee('Title B');
     }
 
     /** @test */
@@ -144,7 +147,6 @@ class ViewWrestlerBioTest extends TestCase
 
         $wrestler->winTitle($titleA);
         $wrestler->loseTitle($titleA);
-        $wrestler->winTitle($titleB);
 
         $response = $this->actingAs($this->user)
             ->get(route('wrestlers.show', $wrestler->id));

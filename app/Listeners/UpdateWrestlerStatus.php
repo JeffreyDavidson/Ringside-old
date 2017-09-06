@@ -31,7 +31,7 @@ class UpdateWrestlerStatus
         } else if ($event->wrestler->status() == WrestlerStatus::INJURED) {
             $event->wrestler->heal();
         } else if ($event->wrestler->status() == WrestlerStatus::SUSPENDED) {
-            $event->wrestler->rejoin();
+            $event->wrestler->renew();
         }
     }
 }

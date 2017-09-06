@@ -51,16 +51,18 @@ $factory->state(App\Models\User::class, 'super-admin', function ($faker) {
 });
 
 $factory->define(App\Models\Permission::class, function (Faker\Generator $faker) {
+    $name = $faker->sentence;
     return [
-        'name' => $faker->word,
-        'slug' => $faker->word,
+        'name' => $name,
+        'slug' => str_slug($name),
     ];
 });
 
 $factory->define(App\Models\Role::class, function (Faker\Generator $faker) {
+    $name = $faker->sentence;
     return [
-        'name' => $faker->word,
-        'slug' => $faker->word,
+        'name' => $name,
+        'slug' => str_slug($name),
     ];
 });
 
@@ -73,10 +75,10 @@ $factory->define(App\Models\Champion::class, function (Faker\Generator $faker) {
 });
 
 $factory->define(App\Models\Wrestler::class, function (Faker\Generator $faker) {
-
+    $name = $faker->sentence;
     return [
-        'name' => $faker->name,
-        'slug' => $faker->name,
+        'name' => $name,
+        'slug' => str_slug($name),
         'status_id' => $faker->numberBetween(1, 5),
         'hired_at' => $faker->dateTimeBetween('-30 years','-1 year'),
         'hometown' => $faker->city . ', ' . $faker->state,
@@ -173,10 +175,10 @@ $factory->define(App\Models\Manager::class, function (Faker\Generator $faker) {
 });
 
 $factory->define(App\Models\Title::class, function (Faker\Generator $faker) {
-
+    $name = $faker->sentence;
     return [
-        'name' => $faker->sentence(3),
-        'slug' => $faker->sentence(3),
+        'name' => $name,
+        'slug' => str_slug($name),
         'introduced_at' => $faker->date(),
     ];
 });
@@ -201,10 +203,10 @@ $factory->define(App\Models\Match::class, function (Faker\Generator $faker) {
 });
 
 $factory->define(App\Models\Event::class, function (Faker\Generator $faker) {
-
+    $name = $faker->sentence;
     return [
-        'name' => $faker->sentence(3),
-        'slug' => $faker->sentence(3),
+        'name' => $name,
+        'slug' => str_slug($name),
         'date' => $faker->dateTimeBetween('-10 years'),
         'venue_id' => function () {
             return factory(App\Models\Venue::class)->create()->id;
@@ -226,26 +228,26 @@ $factory->define(App\Models\TitleHistory::class, function (Faker\Generator $fake
 });
 
 $factory->define(App\Models\MatchType::class, function (Faker\Generator $faker) {
-
+    $name = $faker->sentence;
     return [
-        'name' => $faker->sentence(3),
-        'slug' => $faker->sentence(3),
+        'name' => $name,
+        'slug' => str_slug($name),
     ];
 });
 
 $factory->define(App\Models\Stipulation::class, function (Faker\Generator $faker) {
-
+    $name = $faker->sentence;
     return [
-        'name' => $faker->sentence(3),
-        'slug' => $faker->sentence(3),
+        'name' => $name,
+        'slug' => str_slug($name),
     ];
 });
 
 $factory->define(App\Models\MatchDecision::class, function (Faker\Generator $faker) {
-
+    $name = $faker->sentence;
     return [
-        'name' => $faker->sentence(3),
-        'slug' => $faker->sentence(3),
+        'name' => $name,
+        'slug' => str_slug($name),
     ];
 });
 

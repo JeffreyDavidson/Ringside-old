@@ -11,7 +11,7 @@ class RefereePresenter extends Presenter
      *
      * @return string
      */
-    public function full_name()
+    public function fullName()
     {
         return $this->model->first_name.' '.$this->model->last_name;
     }

@@ -52,6 +52,14 @@ class HasStatusesTraitTest extends TestCase
     }
 
     /** @test */
+    public function it_can_retrieve_all_retired_wrestlers()
+    {
+        factory(Wrestler::class, 3)->create(['status_id' => WrestlerStatus::RETIRED]);
+
+        $this->assertEquals(3, Wrestler::retired()->get()->count());
+    }
+
+    /** @test */
     public function it_can_retrieve_all_suspended_wrestlers()
     {
         factory(Wrestler::class, 3)->create(['status_id' => WrestlerStatus::SUSPENDED]);

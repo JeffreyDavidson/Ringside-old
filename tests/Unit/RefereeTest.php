@@ -15,6 +15,6 @@ class RefereeTest extends TestCase
     {
         $referee = factory(Referee::class)->make(['first_name' => 'Jeffrey', 'last_name' => 'Davidson']);
 
-        $this->assertEquals('Jeffrey Davidson', $referee->full_name);
+        $this->assertEquals('Jeffrey Davidson', $referee->present()->fullName);
     }
 }
