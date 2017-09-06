@@ -8,8 +8,8 @@
         "php": ">=5.6.4",
         "guilhermegonzaga/presenter": "^1.0",
         "laracasts/presenter": "^0.2.1",
-        "laravel/dusk": "^1.1",
-        "laravel/framework": "5.4.*",
+        "laravel/dusk": "^2.0",
+        "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0"
     },
     "require-dev": {
@@ -17,7 +17,8 @@
         "mockery/mockery": "0.9.*",
         "phpunit/phpunit": "~6.1",
         "barryvdh/laravel-debugbar": "^2.3",
-        "laravel/browser-kit-testing": "^1.0"
+        "laravel/browser-kit-testing": "^1.0",
+        "filp/whoops": "2.0"
     },
     "autoload": {
         "classmap": [
