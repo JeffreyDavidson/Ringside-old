@@ -15,8 +15,11 @@ class ViewStipulationTest extends TestCase
     use DatabaseMigrations;
 
     private $user;
+
     private $role;
+
     private $permission;
+
     private $stipulation;
 
     public function setUp()
@@ -38,11 +41,11 @@ class ViewStipulationTest extends TestCase
     /** @test */
     function users_who_have_permission_can_view_a_stipulation()
     {
-        $response = $this->actingAs($this->user)
-                        ->get(route('stipulations.show', $this->stipulation->id));
+        $response = $this->actingAs($this->user)->get(route('stipulations.show', $this->stipulation->id));
 
-        $response->assertStatus(200);
+        $response->assertSuccessful();
         $response->assertViewIs('stipulations.show');
+        $response->assertViewHas('stipulation');
     }
 
     /** @test */
@@ -52,8 +55,7 @@ class ViewStipulationTest extends TestCase
         $role = factory(Role::class)->create(['name' => 'editor']);
         $userWithoutPermission->assignRole($role);
 
-        $response = $this->actingAs($userWithoutPermission)
-                        ->get(route('stipulations.show', $this->stipulation->id));
+        $response = $this->actingAs($userWithoutPermission)->get(route('stipulations.show', $this->stipulation->id));
 
         $response->assertStatus(403);
     }
@@ -75,8 +77,10 @@ class ViewStipulationTest extends TestCase
         $matchB = factory(Match::class)->create();
         $matchB->addStipulation($this->stipulation);
 
-        $response = $this->get(route('stipulations.show', $this->stipulation->id));
+        $response = $this->actingAs($this->user)->get(route('stipulations.show', $this->stipulation->id));
 
-        $response->assertViewHas('matches');
+        $response->assertSuccessful();
+        $response->assertViewIs('stipulations.show');
+        $response->assertViewHas('stipulation');
     }
 }

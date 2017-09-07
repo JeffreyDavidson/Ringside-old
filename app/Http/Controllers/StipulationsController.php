@@ -62,7 +62,7 @@ class StipulationsController extends Controller
     {
         $this->authorize('show', Stipulation::class);
 
-        $stipulation->load('matches', 'matches.event');
+        $stipulation->load('matches.event');
 
         return response()->view('stipulations.show', ['stipulation' => $stipulation]);
     }

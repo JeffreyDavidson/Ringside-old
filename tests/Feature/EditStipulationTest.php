@@ -14,8 +14,11 @@ class EditStipulationTest extends TestCase
     use DatabaseMigrations;
 
     private $user;
+
     private $role;
+
     private $permission;
+
     private $stipulation;
 
     public function setUp()
@@ -52,7 +55,7 @@ class EditStipulationTest extends TestCase
     {
         $response = $this->actingAs($this->user)->get(route('stipulations.edit', $this->stipulation->id));
 
-        $response->assertStatus(200);
+        $response->assertSuccessful();
         $this->assertTrue($response->data('stipulation')->is($this->stipulation));
     }
 
@@ -80,11 +83,9 @@ class EditStipulationTest extends TestCase
     /** @test */
     function name_is_required()
     {
-        $response = $this->actingAs($this->user)
-                        ->from(route('stipulations.edit', $this->stipulation->id))
-                        ->patch(route('stipulations.update', $this->stipulation->id), $this->validParams([
-                            'name' => ''
-                        ]));
+        $response = $this->actingAs($this->user)->from(route('stipulations.edit', $this->stipulation->id))->patch(route('stipulations.update', $this->stipulation->id), $this->validParams([
+            'name' => '',
+        ]));
 
         $response->assertRedirect(route('stipulations.edit', $this->stipulation->id));
         $response->assertSessionHasErrors('name');
@@ -96,11 +97,9 @@ class EditStipulationTest extends TestCase
     /** @test */
     function slug_is_required()
     {
-        $response = $this->actingAs($this->user)
-                        ->from(route('stipulations.edit', $this->stipulation->id))
-                        ->patch(route('stipulations.update', $this->stipulation->id), $this->validParams([
-                            'slug' => ''
-                        ]));
+        $response = $this->actingAs($this->user)->from(route('stipulations.edit', $this->stipulation->id))->patch(route('stipulations.update', $this->stipulation->id), $this->validParams([
+            'slug' => '',
+        ]));
 
         $response->assertRedirect(route('stipulations.edit', $this->stipulation->id));
         $response->assertSessionHasErrors('slug');
@@ -114,11 +113,9 @@ class EditStipulationTest extends TestCase
     {
         factory(Stipulation::class)->create($this->validParams());
 
-        $response = $this->actingAs($this->user)
-                        ->from(route('stipulations.edit', $this->stipulation->id))
-                        ->patch(route('stipulations.update', $this->stipulation->id), $this->validParams([
-                            'name' => 'Stipulation Name'
-                        ]));
+        $response = $this->actingAs($this->user)->from(route('stipulations.edit', $this->stipulation->id))->patch(route('stipulations.update', $this->stipulation->id), $this->validParams([
+            'name' => 'Stipulation Name',
+        ]));
 
         $response->assertRedirect(route('stipulations.edit', $this->stipulation->id));
         $response->assertSessionHasErrors('name');
@@ -133,11 +130,9 @@ class EditStipulationTest extends TestCase
     {
         factory(Stipulation::class)->create(['slug' => 'stipulation-slug']);
 
-        $response = $this->actingAs($this->user)
-                        ->from(route('stipulations.edit', $this->stipulation->id))
-                        ->patch(route('stipulations.update', $this->stipulation->id), $this->validParams([
-                            'slug' => 'stipulation-slug'
-                        ]));
+        $response = $this->actingAs($this->user)->from(route('stipulations.edit', $this->stipulation->id))->patch(route('stipulations.update', $this->stipulation->id), $this->validParams([
+            'slug' => 'stipulation-slug',
+        ]));
 
         $response->assertRedirect(route('stipulations.edit', $this->stipulation->id));
         $response->assertSessionHasErrors('slug');
@@ -150,12 +145,10 @@ class EditStipulationTest extends TestCase
     /** @test */
     function editing_a_valid_stipulation()
     {
-        $response = $this->actingAs($this->user)
-                        ->from(route('stipulations.edit', $this->stipulation->id))
-                        ->patch(route('stipulations.update', $this->stipulation->id), [
-                            'name' => 'New Name',
-                            'slug' => 'new-slug',
-                        ]);
+        $response = $this->actingAs($this->user)->from(route('stipulations.edit', $this->stipulation->id))->patch(route('stipulations.update', $this->stipulation->id), [
+            'name' => 'New Name',
+            'slug' => 'new-slug',
+        ]);
 
         $response->assertRedirect(route('stipulations.index'));
         tap($this->stipulation->fresh(), function ($stipulation) {
