@@ -52,7 +52,7 @@ class HasRetirementsTraitTest extends TestCase
      *
      * @test
      */
-    public function a_wrestler_who_is_retired_cannot_retire()
+    public function a_wrestler_who_is_retired_cannot_retire_without_unretiring()
     {
         $wrestler = factory(Wrestler::class)->create();
 

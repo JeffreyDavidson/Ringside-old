@@ -33,9 +33,11 @@ trait HasTitles
 
     public function hasTitle($title)
     {
-        $this->load('currentTitlesHeld');
+        $this->load('currentTitlesHeld.title');
 
-        return $this->currentTitlesHeld->contains($title);
+        return $this->currentTitlesHeld->contains(function ($champion) use ($title) {
+            return $champion->title->is($title);
+        });
     }
 
     public function winTitle($title)

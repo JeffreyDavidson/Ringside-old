@@ -11,6 +11,11 @@ class Title extends Model
 {
     use Presentable, SoftDeletes;
 
+    /**
+     * Assign which presenter to be used for model.
+     *
+     * @var string
+     */
     protected $presenter = 'App\Presenters\TitlePresenter';
 
     /**
@@ -47,6 +52,11 @@ class Title extends Model
         return $this->belongsToMany(Match::class)->with('event');
     }
 
+    /**
+     * Retrieves date of event the match is being competed for.
+     *
+     * @return string
+     */
     public function firstMatchDate()
     {
         return $this->matches->first()->date;
@@ -180,6 +190,11 @@ class Title extends Model
             ->first() ? $this->champions()->whereNull('lost_on')->first()->wrestler : null;
     }
 
+    /**
+     * Checks to see if title has been competed for.
+     *
+     * @return boolean
+     */
     public function hasMatches()
     {
         return $this->matches->isNotEmpty();

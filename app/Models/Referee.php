@@ -10,5 +10,10 @@ class Referee extends Model
 {
     use Presentable, SoftDeletes;
 
+    /**
+     * Assign which presenter to be used for model.
+     *
+     * @var string
+     */
     protected $presenter = 'App\Presenters\RefereePresenter';
 }

@@ -11,8 +11,18 @@ class Match extends Model
 {
     use Presentable, SoftDeletes;
 
+    /**
+     * Assign which presenter to be used for model.
+     *
+     * @var string
+     */
     protected $presenter = 'App\Presenters\MatchPresenter';
 
+    /**
+     * List of matches that need multiple referees.
+     *
+     * @var array
+     */
     protected $matchTypesWithMultipleReferees = [
         'battleroyal',
         'royalrumble',
@@ -56,7 +66,7 @@ class Match extends Model
     }
 
     /**
-     * A match can be competed for  many titles.
+     * A match can have many titles competed for.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -91,15 +101,14 @@ class Match extends Model
      * @param Wrestler $wrestler
      * @throws WrestlerNotQualifiedException
      */
-	public function addWrestler(Wrestler $wrestler)
+    public function addWrestler(Wrestler $wrestler)
     {
-        if ($wrestler->hired_at > $this->event->date)
-        {
+        if ($wrestler->hired_at > $this->event->date) {
             throw new WrestlerNotQualifiedException;
         }
 
         $this->wrestlers()->save($wrestler);
-	}
+    }
 
     /**
      * Add a collection of wrestlers to a match.
@@ -108,7 +117,7 @@ class Match extends Model
      */
     public function addWrestlers($wrestlers)
     {
-        $this->wrestlers()->saveMany($wrestlers);
+        $this->wrestlers()->saveMany($wrestlers->all());
     }
 
     /**
@@ -172,17 +181,17 @@ class Match extends Model
     }
 
     /**
-     * Determine if the current match is a title match.
+     * Determines if the match has a title associated to it.
      *
      * @return boolean
      */
-	public function isTitleMatch()
+    public function isTitleMatch()
     {
         return $this->titles()->count() > 0;
     }
 
     /**
-     * Set the winner of the match.
+     * Sets the winner of the match.
      *
      * @param $winner
      */
@@ -190,10 +199,9 @@ class Match extends Model
     {
         $this->update(['winner_id' => $winner->id, 'loser_id' => $this->wrestlers->except($winner->id)->first()->id]);
 
-        if ($this->isTitleMatch())
-        {
+        if ($this->isTitleMatch()) {
             $this->titles->each(function ($title) use ($winner) {
-                if (!$winner->hasTitle($title)) {
+                if (! $winner->hasTitle($title)) {
                     $title->setNewChampion($winner, $this->event->date);
                 }
             });
@@ -202,14 +210,24 @@ class Match extends Model
 
     //public function getWinner()
     //{
-		//return Wrestler::find($this->winner_id);
+    //return Wrestler::find($this->winner_id);
     //}
 
+    /**
+     * Retrieves the date of the event for the match.
+     *
+     * @return string
+     */
     public function getDateAttribute()
     {
         return $this->event->date;
     }
 
+    /**
+     * Checks to if the match type needs multiple referees.
+     *
+     * @return boolean
+     */
     public function needsMoreThanOneReferee()
     {
         return in_array($this->type->slug, $this->matchTypesWithMultipleReferees);

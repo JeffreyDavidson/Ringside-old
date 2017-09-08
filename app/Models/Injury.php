@@ -5,8 +5,13 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
-class WrestlerInjury extends Model
+class Injury extends Model
 {
+    /**
+     * Don't auto-apply mass assignment protection.
+     *
+     * @var array
+     */
     protected $guarded = [];
 
     /**
@@ -16,13 +21,13 @@ class WrestlerInjury extends Model
      */
     protected $dates = ['injured_at', 'healed_at'];
 
+    /**
+     * Heals the wrestler from being injured.
+     *
+     * @return boolean
+     */
     public function healed()
     {
         return $this->update(['healed_at' => Carbon::now()]);
-    }
-
-    public function injured()
-    {
-        return $this;
     }
 }

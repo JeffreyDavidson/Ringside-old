@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Wrestler;
-use App\Models\WrestlerRetirement;
+use App\Models\Retirement;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
@@ -23,7 +23,7 @@ class WrestlersRetirementsTableSeeder extends Seeder
 //        });
 
         Wrestler::retired()->each(function($wrestler) {
-            WrestlerRetirement::create(['wrestler_id' => $wrestler->id, 'retired_at' => Carbon::now()->subMonths(3)]);
+            Retirement::create(['wrestler_id' => $wrestler->id, 'retired_at' => Carbon::now()->subMonths(3)]);
         });
     }
 

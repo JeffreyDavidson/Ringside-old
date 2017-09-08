@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Wrestler;
-use App\Models\WrestlerInjury;
+use App\Models\Injury;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
@@ -15,7 +15,7 @@ class WrestlersInjuriesTableSeeder extends Seeder
     public function run()
     {
         Wrestler::all()->random(100)->each(function($wrestler) {
-            factory(WrestlerInjury::class)->create([
+            factory(Injury::class)->create([
                 'wrestler_id' => $wrestler->id,
                 'healed_at' => $this->getHealedAtDate($injured_at = $this->getInjuredAtDate($wrestler)),
                 'injured_at' => $injured_at
@@ -23,7 +23,7 @@ class WrestlersInjuriesTableSeeder extends Seeder
         });
 
         Wrestler::injured()->each(function($wrestler) {
-            factory(WrestlerInjury::class)->create([
+            factory(Injury::class)->create([
                 'wrestler_id' => $wrestler->id,
                 'injured_at' => Carbon::now()->subMonths(3)
             ]);

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateWrestlerRetirementsTable extends Migration
+class CreateRetirementsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateWrestlerRetirementsTable extends Migration
      */
     public function up()
     {
-        Schema::create('wrestler_retirements', function (Blueprint $table) {
+        Schema::create('retirements', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('wrestler_id')->index();
             $table->dateTime('retired_at');
@@ -31,6 +31,6 @@ class CreateWrestlerRetirementsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('wrestler_retirements');
+        Schema::dropIfExists('retirements');
     }
 }

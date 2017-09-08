@@ -49,7 +49,7 @@ class Wrestler extends Model
     }
 
     /**
-     * A wrestler can have many wrestles.
+     * A wrestler can have many matches.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -65,7 +65,7 @@ class Wrestler extends Model
      */
 	public function injuries()
 	{
-		return $this->hasMany(WrestlerInjury::class);
+		return $this->hasMany(Injury::class);
 	}
 
     /**
@@ -75,7 +75,7 @@ class Wrestler extends Model
      */
     public function suspensions()
     {
-        return $this->hasMany(WrestlerSuspension::class);
+        return $this->hasMany(Suspension::class);
     }
 
     /**
@@ -85,19 +85,24 @@ class Wrestler extends Model
      */
 	public function retirements()
 	{
-		return $this->hasMany(WrestlerRetirement::class);
+		return $this->hasMany(Retirement::class);
 	}
 
     /**
-     * A wrestler can have many wrestles.
+     * Retrieves the status id attribute.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return mixed integer
      */
 	public function status()
     {
         return $this->getAttribute('status_id');
     }
 
+    /**
+     * Retrieves the height attribute.
+     *
+     * @return mixed string
+     */
     public function getHeightAttribute($height)
     {
         $feet = floor($height / 12);
@@ -106,6 +111,11 @@ class Wrestler extends Model
         return $feet.'\''.$inches.'"';
     }
 
+    /**
+     * Checks to see if wrestler is no longer retired, injured or suspended.
+     *
+     * @return void
+     */
     public function statusChanged()
     {
         if ($this->status() == WrestlerStatus::RETIRED) {

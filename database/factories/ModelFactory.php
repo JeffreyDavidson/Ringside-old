@@ -115,7 +115,7 @@ $factory->define(App\Models\WrestlerStatus::class, function (Faker\Generator $fa
     ];
 });
 
-$factory->define(App\Models\WrestlerInjury::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\Injury::class, function (Faker\Generator $faker) {
 
     return [
         'wrestler_id' => function () {
@@ -126,7 +126,7 @@ $factory->define(App\Models\WrestlerInjury::class, function (Faker\Generator $fa
     ];
 });
 
-$factory->define(App\Models\WrestlerRetirement::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\Retirement::class, function (Faker\Generator $faker) {
 
     return [
         'wrestler_id' => function () {

@@ -14,7 +14,9 @@ class AddStipulationTest extends TestCase
     use DatabaseMigrations;
 
     private $user;
+
     private $role;
+
     private $permission;
 
     public function setUp()
@@ -40,8 +42,7 @@ class AddStipulationTest extends TestCase
     /** @test */
     function users_who_have_permission_can_view_the_add_stipulation_form()
     {
-        $response = $this->actingAs($this->user)
-                        ->get(route('stipulations.create'));
+        $response = $this->actingAs($this->user)->get(route('stipulations.create'));
 
         $response->assertStatus(200);
     }
@@ -53,8 +54,7 @@ class AddStipulationTest extends TestCase
         $role = factory(Role::class)->create(['name' => 'editor']);
         $userWithoutPermission->assignRole($role);
 
-        $response = $this->actingAs($userWithoutPermission)
-                        ->get(route('stipulations.create'));
+        $response = $this->actingAs($userWithoutPermission)->get(route('stipulations.create'));
 
         $response->assertStatus(403);
     }
@@ -71,11 +71,9 @@ class AddStipulationTest extends TestCase
     /** @test */
     function name_is_required()
     {
-        $response = $this->actingAs($this->user)
-                        ->from(route('stipulations.create'))
-                        ->post(route('stipulations.index'), $this->validParams([
-                            'name' => '',
-                        ]));
+        $response = $this->actingAs($this->user)->from(route('stipulations.create'))->post(route('stipulations.index'), $this->validParams([
+                'name' => '',
+            ]));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('stipulations.create'));
@@ -88,11 +86,9 @@ class AddStipulationTest extends TestCase
     {
         factory(Stipulation::class)->create(['name' => 'Stipulation Name']);
 
-        $response = $this->actingAs($this->user)
-                        ->from(route('stipulations.create'))
-                        ->post(route('stipulations.index'), $this->validParams([
-                            'name' => 'Stipulation Name',
-                        ]));
+        $response = $this->actingAs($this->user)->from(route('stipulations.create'))->post(route('stipulations.index'), $this->validParams([
+                'name' => 'Stipulation Name',
+            ]));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('stipulations.create'));
@@ -103,11 +99,9 @@ class AddStipulationTest extends TestCase
     /** @test */
     function slug_is_required()
     {
-        $response = $this->actingAs($this->user)
-                        ->from(route('stipulations.create'))
-                        ->post(route('stipulations.index'), $this->validParams([
-                            'slug' => '',
-                        ]));
+        $response = $this->actingAs($this->user)->from(route('stipulations.create'))->post(route('stipulations.index'), $this->validParams([
+                'slug' => '',
+            ]));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('stipulations.create'));
@@ -120,11 +114,9 @@ class AddStipulationTest extends TestCase
     {
         factory(Stipulation::class)->create(['slug' => 'stipulation-slug']);
 
-        $response = $this->actingAs($this->user)
-                        ->from(route('stipulations.create'))
-                        ->post(route('stipulations.index'), $this->validParams([
-                            'slug' => 'stipulation-slug'
-                        ]));
+        $response = $this->actingAs($this->user)->from(route('stipulations.create'))->post(route('stipulations.index'), $this->validParams([
+                'slug' => 'stipulation-slug',
+            ]));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('stipulations.create'));
@@ -135,12 +127,10 @@ class AddStipulationTest extends TestCase
     /** @test */
     function adding_a_valid_stipulation()
     {
-        $response = $this->actingAs($this->user)
-                        ->from(route('stipulations.create'))
-                        ->post(route('stipulations.index'), $this->validParams([
-                            'name' => 'Stipulation Name',
-                            'slug' => 'stipulation-slug',
-                        ]));
+        $response = $this->actingAs($this->user)->from(route('stipulations.create'))->post(route('stipulations.index'), $this->validParams([
+                'name' => 'Stipulation Name',
+                'slug' => 'stipulation-slug',
+            ]));
 
         tap(Stipulation::first(), function ($stipulation) use ($response) {
             $response->assertStatus(302);
