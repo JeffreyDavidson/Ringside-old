@@ -7,6 +7,7 @@ use App\Http\Requests\WrestlerCreateFormRequest;
 use App\Http\Requests\WrestlerEditFormRequest;
 use App\Models\Wrestler;
 use App\Models\WrestlerStatus;
+use Carbon\Carbon;
 
 class WrestlersController extends Controller
 {
@@ -52,9 +53,9 @@ class WrestlersController extends Controller
             'name' => $request->name,
             'slug' => $request->slug,
             'status_id' => $request->status_id,
-            'hired_at' => $request->hired_at,
+            'hired_at' => Carbon::parse($request->hired_at),
             'hometown' => $request->hometown,
-            'height' => $request->height,
+            'height' => ($request->feet * 12) + $request->inches,
             'weight' => $request->weight,
             'signature_move' => $request->signature_move,
         ]);

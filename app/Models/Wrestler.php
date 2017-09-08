@@ -8,6 +8,7 @@ use App\Traits\HasTitles;
 use App\Traits\HasRetirements;
 use App\Traits\HasSuspensions;
 use App\Traits\HasInjuries;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Wrestler extends Model
@@ -125,5 +126,10 @@ class Wrestler extends Model
         } else if ($this->status() == WrestlerStatus::SUSPENDED) {
             $this->rejoin();
         }
+    }
+
+    public function setHiredAtAttribute($date)
+    {
+        $this->attributes['hired_at'] = Carbon::createFromFormat('Y-m-d', $date)->toDateTimeString();
     }
 }

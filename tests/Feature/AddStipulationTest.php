@@ -44,7 +44,8 @@ class AddStipulationTest extends TestCase
     {
         $response = $this->actingAs($this->user)->get(route('stipulations.create'));
 
-        $response->assertStatus(200);
+        $response->assertSuccessful();
+        $response->assertViewIs('stipulations.create');
     }
 
     /** @test */
@@ -72,8 +73,8 @@ class AddStipulationTest extends TestCase
     function name_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('stipulations.create'))->post(route('stipulations.index'), $this->validParams([
-                'name' => '',
-            ]));
+            'name' => '',
+        ]));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('stipulations.create'));
@@ -87,8 +88,8 @@ class AddStipulationTest extends TestCase
         factory(Stipulation::class)->create(['name' => 'Stipulation Name']);
 
         $response = $this->actingAs($this->user)->from(route('stipulations.create'))->post(route('stipulations.index'), $this->validParams([
-                'name' => 'Stipulation Name',
-            ]));
+            'name' => 'Stipulation Name',
+        ]));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('stipulations.create'));
@@ -100,8 +101,8 @@ class AddStipulationTest extends TestCase
     function slug_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('stipulations.create'))->post(route('stipulations.index'), $this->validParams([
-                'slug' => '',
-            ]));
+            'slug' => '',
+        ]));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('stipulations.create'));
@@ -115,8 +116,8 @@ class AddStipulationTest extends TestCase
         factory(Stipulation::class)->create(['slug' => 'stipulation-slug']);
 
         $response = $this->actingAs($this->user)->from(route('stipulations.create'))->post(route('stipulations.index'), $this->validParams([
-                'slug' => 'stipulation-slug',
-            ]));
+            'slug' => 'stipulation-slug',
+        ]));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('stipulations.create'));
@@ -128,9 +129,9 @@ class AddStipulationTest extends TestCase
     function adding_a_valid_stipulation()
     {
         $response = $this->actingAs($this->user)->from(route('stipulations.create'))->post(route('stipulations.index'), $this->validParams([
-                'name' => 'Stipulation Name',
-                'slug' => 'stipulation-slug',
-            ]));
+            'name' => 'Stipulation Name',
+            'slug' => 'stipulation-slug',
+        ]));
 
         tap(Stipulation::first(), function ($stipulation) use ($response) {
             $response->assertStatus(302);

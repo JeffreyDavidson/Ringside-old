@@ -24,6 +24,7 @@ class WrestlerCreateFormRequest extends FormRequest
      */
     public function rules()
     {
+        dd(request()->all());
         return [
             'name' => 'required|unique:wrestlers,name',
             'slug' => 'required|unique:wrestlers,slug',
@@ -31,15 +32,14 @@ class WrestlerCreateFormRequest extends FormRequest
                 'required',
                 'integer',
                 'not_in:0',
-                'exists:wrestler_statuses,id',
-                Rule::in([1, 2]),
+                'exists:wrestler_statuses,id'
             ],
             'hometown' => 'required',
             'feet' => 'required|integer',
             'inches' => 'required|integer|max:11',
             'weight' => 'required|integer',
             'signature_move' => 'required',
-            'hired_at' => 'required|date',
+            'hired_at' => 'required|date_format:m/d/Y',
         ];
     }
 
