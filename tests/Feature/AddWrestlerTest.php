@@ -7,7 +7,6 @@ use App\Models\User;
 use App\Models\Role;
 use App\Models\Permission;
 use App\Models\WrestlerStatus;
-use Carbon\Carbon;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -357,7 +356,7 @@ class AddWrestlerTest extends TestCase
             $this->assertEquals('Wrestler Name', $wrestler->name);
             $this->assertEquals('wrestler-slug', $wrestler->slug);
             $this->assertEquals('1', $wrestler->status());
-            $this->assertEquals(Carbon::parse('2017-09-08'), $wrestler->hired_at);
+            $this->assertEquals('2017-09-08', $wrestler->hired_at);
             $this->assertEquals('Laraville, FL', $wrestler->hometown);
             $this->assertEquals(63, $wrestler->height);
             $this->assertEquals(175, $wrestler->weight);

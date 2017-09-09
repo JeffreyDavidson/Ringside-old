@@ -32,14 +32,14 @@ class WrestlerCreateFormRequest extends FormRequest
                 'required',
                 'integer',
                 'not_in:0',
-                //'exists:wrestler_statuses,id'
+                'exists:wrestler_statuses,id'
             ],
-            //'hometown' => 'required',
-            //'feet' => 'required|integer',
-            //'inches' => 'required|integer|max:11',
-            //'weight' => 'required|integer',
-            //'signature_move' => 'required',
-            //'hired_at' => 'required|date_format:m/d/Y',
+            'hometown' => 'required',
+            'feet' => 'required|integer',
+            'inches' => 'required|integer|max:11',
+            'weight' => 'required|integer',
+            'signature_move' => 'required',
+            'hired_at' => 'required|date_format:m/d/Y',
         ];
     }
 
