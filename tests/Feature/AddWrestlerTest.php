@@ -356,9 +356,9 @@ class AddWrestlerTest extends TestCase
             $this->assertEquals('Wrestler Name', $wrestler->name);
             $this->assertEquals('wrestler-slug', $wrestler->slug);
             $this->assertEquals('1', $wrestler->status());
-            $this->assertEquals('2017-09-08', $wrestler->hired_at);
+            $this->assertEquals('2017-09-08', $wrestler->hired_at->format('2017-09-08'));
             $this->assertEquals('Laraville, FL', $wrestler->hometown);
-            $this->assertEquals(63, $wrestler->height);
+            $this->assertEquals("5'3\"", $wrestler->height);
             $this->assertEquals(175, $wrestler->weight);
             $this->assertEquals('Wrestler Signature Move', $wrestler->signature_move);
         });
