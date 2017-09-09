@@ -271,7 +271,6 @@ class AddVenueTest extends TestCase
     /** @test */
     function adding_a_valid_venue()
     {
-        $this->disableExceptionHandling();
         $response = $this->actingAs($this->user)
                         ->from(route('venues.create'))
                         ->post(route('venues.index', [

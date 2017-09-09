@@ -127,9 +127,4 @@ class Wrestler extends Model
             $this->rejoin();
         }
     }
-
-    public function setHiredAtAttribute($date)
-    {
-        $this->attributes['hired_at'] = Carbon::createFromFormat('Y-m-d', $date)->toDateTimeString();
-    }
 }

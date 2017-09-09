@@ -335,6 +335,9 @@ class AddWrestlerTest extends TestCase
     /** @test */
     function adding_a_valid_wrestler()
     {
+        factory(WrestlerStatus::class)->create(['name' => 'Active']);
+        factory(WrestlerStatus::class)->create(['name' => 'Inactive']);
+
         $response = $this->actingAs($this->user)->from(route('wrestlers.create'))->post(route('wrestlers.index'), $this->validParams([
             'name' => 'Wrestler Name',
             'slug' => 'wrestler-slug',
@@ -347,18 +350,18 @@ class AddWrestlerTest extends TestCase
             'signature_move' => 'Wrestler Signature Move',
         ]));
 
-        tap(Wrestler::first(), function ($stipulation) use ($response) {
+        tap(Wrestler::first(), function ($wrestler) use ($response) {
             $response->assertStatus(302);
             $response->assertRedirect(route('wrestlers.index'));
 
-            $this->assertEquals('Wrestler Name', $stipulation->name);
-            $this->assertEquals('wrestler-slug', $stipulation->slug);
-            $this->assertEquals('1', $stipulation->status());
-            $this->assertEquals('2017-09-08', $stipulation->hired_at);
-            $this->assertEquals('Laraville, FL', $stipulation->hometown);
-            $this->assertEquals(63, $stipulation->height);
-            $this->assertEquals(175, $stipulation->weight);
-            $this->assertEquals('Wrestler Signature Move', $stipulation->signature_move);
+            $this->assertEquals('Wrestler Name', $wrestler->name);
+            $this->assertEquals('wrestler-slug', $wrestler->slug);
+            $this->assertEquals('1', $wrestler->status());
+            $this->assertEquals(Carbon::parse('2017-09-08'), $wrestler->hired_at);
+            $this->assertEquals('Laraville, FL', $wrestler->hometown);
+            $this->assertEquals(63, $wrestler->height);
+            $this->assertEquals(175, $wrestler->weight);
+            $this->assertEquals('Wrestler Signature Move', $wrestler->signature_move);
         });
     }
 }

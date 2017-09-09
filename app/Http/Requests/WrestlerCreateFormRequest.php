@@ -24,7 +24,7 @@ class WrestlerCreateFormRequest extends FormRequest
      */
     public function rules()
     {
-        dd(request()->all());
+        //dd(request()->all());
         return [
             'name' => 'required|unique:wrestlers,name',
             'slug' => 'required|unique:wrestlers,slug',
@@ -32,21 +32,21 @@ class WrestlerCreateFormRequest extends FormRequest
                 'required',
                 'integer',
                 'not_in:0',
-                'exists:wrestler_statuses,id'
+                //'exists:wrestler_statuses,id'
             ],
-            'hometown' => 'required',
-            'feet' => 'required|integer',
-            'inches' => 'required|integer|max:11',
-            'weight' => 'required|integer',
-            'signature_move' => 'required',
-            'hired_at' => 'required|date_format:m/d/Y',
+            //'hometown' => 'required',
+            //'feet' => 'required|integer',
+            //'inches' => 'required|integer|max:11',
+            //'weight' => 'required|integer',
+            //'signature_move' => 'required',
+            //'hired_at' => 'required|date_format:m/d/Y',
         ];
     }
 
-    public function height()
-    {
-        return ($this->feet * 12) + $this->inches;
-    }
+    //public function height()
+    //{
+    //    return ($this->feet * 12) + $this->inches;
+    //}
 
     /**
      * Get the error messages for the defined validation rules.
