@@ -11,7 +11,6 @@
     <input type="text" class="form-control" id="slug" name="slug" value="{{ old('slug') ?? $wrestler->slug }}"/>
     @if ($errors->has('slug')) <small class="form-control-feedback">{{ $errors->first('slug') }}</small> @endif
 </div>
-
 <div class="form-group @if ($errors->has('status_id')) {{ 'has-danger' }} @endif">
     <label class="form-control-label" for="status_id">Status</label>
     <select class="form-control" id="status_id" name="status_id">

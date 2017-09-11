@@ -24,6 +24,7 @@ class CreateWrestlersTable extends Migration
             $table->integer('weight');
             $table->string('signature_move')->unique()->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('status_id')->references('id')->on('wrestler_statuses');
         });

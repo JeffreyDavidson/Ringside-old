@@ -109,11 +109,12 @@ class WrestlersController extends Controller
             'slug' => $request->slug,
             'status_id' => $request->status_id,
             'hired_at' => $request->hired_at,
-            'hometown' => request('hometown'),
-            'height' => (request('feet', 0) * 12) + request('inches', 0),
-            'weight' => request('weight'),
-            'signature_move' => request('signature_move'),
+            'hometown' => $request->hometown,
+            'height' => ($request->feet * 12) + $request->inches,
+            'weight' => $request->weight,
+            'signature_move' => $request->signature_move,
         ]);
+
 
         if ($wrestler->status() != $request->status_id) {
             $wrestler->statusChanged();
@@ -138,6 +139,8 @@ class WrestlersController extends Controller
      */
     public function destroy(Wrestler $wrestler)
     {
+        $this->authorize('delete', Wrestler::class);
+
         $wrestler->delete();
 
         return redirect()->route('wrestlers.index');

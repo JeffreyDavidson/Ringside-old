@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\WrestlerStatus;
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -52,14 +53,20 @@ class WrestlerEditFormRequest extends FormRequest
     {
         $validator->after(function($validator) {
             $attr = $validator->getData();
-            if($this->wrestler->matches->isNotEmpty()) {
-                $date = $this->wrestler->matches->first()->event->date;
-                $hiredAt = \Carbon\Carbon::parse($attr['hired_at']);
-                if($hiredAt >= $date) {
-                    $sErr = 'The hired at date must be on or before '.$date->format('F d, Y').'.';
-                    $validator->errors()->add('hired_at', $sErr);
-                }
+
+            if (!$this->wrestler->hasMatches()) {
+                return;
             }
+
+            $firstMatchDate = $this->wrestler->firstMatchDate();
+            $hiredAt = Carbon::parse($attr['hired_at']);
+
+            if($hiredAt->lte($firstMatchDate)) {
+                return;
+            }
+
+            $sErr = 'The hired at date must be on or before '.$firstMatchDate->format('F d, Y').'.';
+            $validator->errors()->add('hired_at', $sErr);
         });
     }
 

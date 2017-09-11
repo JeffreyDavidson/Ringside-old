@@ -103,7 +103,7 @@ class Match extends Model
      */
     public function addWrestler(Wrestler $wrestler)
     {
-        if ($wrestler->hired_at > $this->event->date) {
+        if ($wrestler->hired_at->gt($this->event->date)) {
             throw new WrestlerNotQualifiedException;
         }
 

@@ -8,12 +8,20 @@ use App\Traits\HasTitles;
 use App\Traits\HasRetirements;
 use App\Traits\HasSuspensions;
 use App\Traits\HasInjuries;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Laracodes\Presenter\Traits\Presentable;
 
 class Wrestler extends Model
 {
-	use HasStatuses, HasManagers, HasTitles, HasRetirements, HasSuspensions, HasInjuries;
+	use HasStatuses, HasManagers, HasTitles, HasRetirements, HasSuspensions, HasInjuries, SoftDeletes, Presentable;
+
+    /**
+     * Assign which presenter to be used for model.
+     *
+     * @var string
+     */
+    protected $presenter = 'App\Presenters\WrestlerPresenter';
 
     /**
      * Don't auto-apply mass assignment protection.
@@ -99,17 +107,20 @@ class Wrestler extends Model
         return $this->getAttribute('status_id');
     }
 
-    /**
-     * Retrieves the height attribute.
-     *
-     * @return mixed string
-     */
-    public function getHeightAttribute($height)
+    public function height()
     {
-        $feet = floor($height / 12);
-        $inches = ($height % 12);
+        return ($this->feet * 12) + $this->inches;
+    }
 
-        return $feet.'\''.$inches.'"';
+    /**
+     * Retrieves date of the wrestler's first match.
+     *
+     * @return string
+     */
+    public function firstMatchDate()
+    {
+        //dd($this->matches->first()->date);
+        return $this->matches->first()->date;
     }
 
     /**
@@ -126,5 +137,10 @@ class Wrestler extends Model
         } else if ($this->status() == WrestlerStatus::SUSPENDED) {
             $this->rejoin();
         }
+    }
+
+    public function hasMatches()
+    {
+        return $this->matches->isNotEmpty();
     }
 }
