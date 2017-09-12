@@ -44,7 +44,7 @@ class EditWrestlerTest extends TestCase
             'name' => 'Old Name',
             'slug' => 'old-slug',
             'status_id' => 1,
-            'hired_at' => '2017-09-10',
+            'hired_at' => '2017-10-09',
             'hometown' => 'Old City, Old State',
             'height' => 63,
             'weight' => 175,
@@ -58,7 +58,7 @@ class EditWrestlerTest extends TestCase
             'name' => 'Wrestler Name',
             'slug' => 'wrestler-slug',
             'status_id' => 1,
-            'hired_at' => '2017-09-10',
+            'hired_at' => '2017-10-09',
             'hometown' => 'Laraville, FL',
             'height' => 63,
             'weight' => 175,
@@ -71,6 +71,9 @@ class EditWrestlerTest extends TestCase
     {
         factory(WrestlerStatus::class)->create(['name' => 'Active']);
         factory(WrestlerStatus::class)->create(['name' => 'Inactive']);
+        factory(WrestlerStatus::class)->create(['name' => 'Injured']);
+        factory(WrestlerStatus::class)->create(['name' => 'Suspended']);
+        factory(WrestlerStatus::class)->create(['name' => 'Retired']);
 
         $response = $this->actingAs($this->user)->get(route('wrestlers.edit', $this->wrestler->id));
 
@@ -205,8 +208,7 @@ class EditWrestlerTest extends TestCase
             'hired_at' => '2017-09-10',
             'status_id' => 1,
             'hometown' => 'Laraville, FL',
-            'feet' => 5,
-            'inches' => 3,
+            'height' => 63,
             'weight' => 175,
             'signature_move' => 'Wrestler Signature Move',
         ]));
@@ -230,13 +232,16 @@ class EditWrestlerTest extends TestCase
         $this->disableExceptionHandling();
         factory(WrestlerStatus::class)->create(['name' => 'Active']);
         factory(WrestlerStatus::class)->create(['name' => 'Inactive']);
+        factory(WrestlerStatus::class)->create(['name' => 'Injured']);
+        factory(WrestlerStatus::class)->create(['name' => 'Suspended']);
+        factory(WrestlerStatus::class)->create(['name' => 'Retired']);
 
         $event = factory(Event::class)->create(['date' => '2017-10-11']);
         $match = factory(Match::class)->create(['event_id' => $event->id]);
         $match->addWrestler($this->wrestler);
-        $response = $this->actingAs($this->user)->from(route('wrestlers.edit', $this->wrestler->id))->patch(route('wrestlers.update', $this->wrestler->id), [
-                'hired_at' => '2017-10-01',
-            ]);
+        $response = $this->actingAs($this->user)->from(route('wrestlers.edit', $this->wrestler->id))->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
+                'hired_at' => '10/01/2017',
+            ]));
 
         $response->assertRedirect(route('wrestlers.index'));
         tap($this->wrestler->fresh(), function ($wrestler) {

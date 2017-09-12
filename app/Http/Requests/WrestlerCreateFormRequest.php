@@ -24,7 +24,6 @@ class WrestlerCreateFormRequest extends FormRequest
      */
     public function rules()
     {
-        //dd(request()->all());
         return [
             'name' => 'required|unique:wrestlers,name',
             'slug' => 'required|unique:wrestlers,slug',
