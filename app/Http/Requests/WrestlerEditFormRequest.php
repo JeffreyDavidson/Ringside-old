@@ -26,6 +26,7 @@ class WrestlerEditFormRequest extends FormRequest
      */
     public function rules()
     {
+        //dd($this->all());
         return [
             'name' => ['required', Rule::unique('wrestlers' ,'name')->ignore($this->wrestler->id)],
             'slug' => ['required', Rule::unique('wrestlers' ,'slug')->ignore($this->wrestler->id)],

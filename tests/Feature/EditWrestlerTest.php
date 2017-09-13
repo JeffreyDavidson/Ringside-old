@@ -58,9 +58,10 @@ class EditWrestlerTest extends TestCase
             'name' => 'Wrestler Name',
             'slug' => 'wrestler-slug',
             'status_id' => 1,
-            'hired_at' => '2017-10-09',
+            'hired_at' => '10/09/2017',
             'hometown' => 'Laraville, FL',
-            'height' => 63,
+            'feet' => 5,
+            'inches' => 3,
             'weight' => 175,
             'signature_move' => 'Wrestler Signature Move',
         ], $overrides);
@@ -178,20 +179,23 @@ class EditWrestlerTest extends TestCase
         });
     }
 
-    /** @test */
+    /**
+     * @expectedException \App\Exceptions\WrestlerAlreadyRetiredException
+     * @test
+     */
     function hired_at_date_must_be_before_first_competed_for_match()
     {
-        $event = factory(Event::class)->create(['date' => '2017-09-11']);
+        $event = factory(Event::class)->create(['date' => '2017-11-09']);
         $match = factory(Match::class)->create(['event_id' => $event->id]);
         $match->addWrestler($this->wrestler);
 
         $response = $this->actingAs($this->user)->from(route('wrestlers.edit', $this->wrestler->id))->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
-            'hired_at' => '2017-09-12',
+            'hired_at' => '2017-11-10',
         ]));
         $response->assertRedirect(route('wrestlers.edit', $this->wrestler->id));
         $response->assertSessionHasErrors('hired_at');
         tap($this->wrestler->fresh(), function ($wrestler) {
-            $this->assertEquals(Carbon::parse('2017-09-10'), $wrestler->hired_at);
+            $this->assertEquals(Carbon::parse('2017-10-09'), $wrestler->hired_at);
         });
     }
 
@@ -201,14 +205,18 @@ class EditWrestlerTest extends TestCase
         $this->disableExceptionHandling();
         factory(WrestlerStatus::class)->create(['name' => 'Active']);
         factory(WrestlerStatus::class)->create(['name' => 'Inactive']);
+        factory(WrestlerStatus::class)->create(['name' => 'Injured']);
+        factory(WrestlerStatus::class)->create(['name' => 'Suspended']);
+        factory(WrestlerStatus::class)->create(['name' => 'Retired']);
 
         $response = $this->actingAs($this->user)->from(route('wrestlers.edit', $this->wrestler->id))->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
             'name' => 'New Name',
             'slug' => 'new-slug',
-            'hired_at' => '2017-09-10',
+            'hired_at' => '09/08/2017',
             'status_id' => 1,
             'hometown' => 'Laraville, FL',
-            'height' => 63,
+            'feet' => 5,
+            'inches' => 3,
             'weight' => 175,
             'signature_move' => 'Wrestler Signature Move',
         ]));
