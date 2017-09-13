@@ -137,36 +137,6 @@ $factory->define(App\Models\Retirement::class, function (Faker\Generator $faker)
     ];
 });
 
-$factory->state(App\Models\Wrestler::class, 'active', function ($faker) {
-    return [
-        'status_id' => 1,
-    ];
-});
-
-$factory->state(App\Models\Wrestler::class, 'inactive', function ($faker) {
-    return [
-        'status_id' => 2,
-    ];
-});
-
-$factory->state(App\Models\Wrestler::class, 'injured', function ($faker) {
-    return [
-        'status_id' => 3,
-    ];
-});
-
-$factory->state(App\Models\Wrestler::class, 'suspended', function ($faker) {
-    return [
-        'status_id' => 4,
-    ];
-});
-
-$factory->state(App\Models\Wrestler::class, 'retired', function ($faker) {
-    return [
-        'status_id' => 5,
-    ];
-});
-
 $factory->define(App\Models\Manager::class, function (Faker\Generator $faker) {
 
     return [
@@ -217,7 +187,7 @@ $factory->define(App\Models\Event::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\Models\TitleHistory::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\Champion::class, function (Faker\Generator $faker) {
 
     return [
         'wrestler_id' => function () {

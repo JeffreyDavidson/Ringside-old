@@ -10,6 +10,8 @@ use App\Models\Wrestler;
 use App\Models\User;
 use App\Models\WrestlerStatus;
 use Carbon\Carbon;
+
+use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -120,6 +122,7 @@ class EditWrestlerTest extends TestCase
     /** @test */
     function name_must_be_unique()
     {
+        $this->disableExceptionHandling();
         factory(Wrestler::class)->create($this->validParams());
 
         $response = $this->actingAs($this->user)->from(route('wrestlers.edit', $this->wrestler->id))->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
