@@ -11,7 +11,6 @@ use App\Models\User;
 use App\Models\WrestlerStatus;
 use Carbon\Carbon;
 
-use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -35,7 +34,6 @@ class EditWrestlerTest extends TestCase
         $this->role = factory(Role::class)->create(['slug' => 'admin']);
         $this->permission = factory(Permission::class)->create(['slug' => 'edit-wrestler']);
         $this->wrestler = factory(Wrestler::class)->create($this->oldAttributes());
-
         $this->role->givePermissionTo($this->permission);
         $this->user->assignRole($this->role);
     }
@@ -60,9 +58,9 @@ class EditWrestlerTest extends TestCase
             'name' => 'Wrestler Name',
             'slug' => 'wrestler-slug',
             'status_id' => 1,
-            'hired_at' => '10/09/2017',
+            'hired_at' => '2017-10-09',
             'hometown' => 'Laraville, FL',
-            'feet' => 5,
+            'height' => 5,
             'inches' => 3,
             'weight' => 175,
             'signature_move' => 'Wrestler Signature Move',
