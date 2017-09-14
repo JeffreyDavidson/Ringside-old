@@ -8,6 +8,7 @@ use App\Traits\HasTitles;
 use App\Traits\HasRetirements;
 use App\Traits\HasSuspensions;
 use App\Traits\HasInjuries;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracodes\Presenter\Traits\Presentable;
@@ -142,5 +143,15 @@ class Wrestler extends Model
     public function hasMatches()
     {
         return $this->matches->isNotEmpty();
+    }
+
+    /**
+    * Set the hired at field for the wrestler.
+    *
+    * @return date
+    */
+    public function setHiredAtAttribute($date)
+    {
+        return $this->attributes['hired_at'] = Carbon::parse($date);
     }
 }

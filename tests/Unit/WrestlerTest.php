@@ -16,11 +16,4 @@ class WrestlerTest extends TestCase
 {
     use DatabaseMigrations;
 
-    /** @test */
-    public function can_have_matches()
-    {
-        $wrestler = factory(Wrestler::class)->states('active')->create();
-
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $wrestler->matches);
-    }
 }
