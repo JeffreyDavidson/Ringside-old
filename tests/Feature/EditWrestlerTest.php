@@ -187,7 +187,6 @@ class EditWrestlerTest extends TestCase
     /** @test */
     function hired_at_date_must_be_before_first_competed_for_match()
     {
-        $this->disableExceptionHandling();
         factory(WrestlerStatus::class)->create(['name' => 'Active']);
         factory(WrestlerStatus::class)->create(['name' => 'Inactive']);
         factory(WrestlerStatus::class)->create(['name' => 'Injured']);
@@ -246,6 +245,7 @@ class EditWrestlerTest extends TestCase
     /** @test */
     function editing_a_valid_wrestler_with_matches()
     {
+        $this->disableExceptionHandling();
         factory(WrestlerStatus::class)->create(['name' => 'Active']);
         factory(WrestlerStatus::class)->create(['name' => 'Inactive']);
         factory(WrestlerStatus::class)->create(['name' => 'Injured']);
@@ -255,6 +255,7 @@ class EditWrestlerTest extends TestCase
         $event = factory(Event::class)->create(['date' => '2017-10-11']);
         $match = factory(Match::class)->create(['event_id' => $event->id]);
         $match->addWrestler($this->wrestler);
+
 
         $response = $this->actingAs($this->user)->from(route('wrestlers.edit', $this->wrestler->id))->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
                 'hired_at' => '2017-10-01',

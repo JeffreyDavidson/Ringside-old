@@ -27,7 +27,7 @@ class WrestlerEditFormRequest extends FormRequest
      */
     public function rules()
     {
-        //dd($this->all());
+        dd($this->all());
         return [
             'name' => ['required', Rule::unique('wrestlers' ,'name')->ignore($this->wrestler->id)],
             'slug' => ['required', Rule::unique('wrestlers' ,'slug')->ignore($this->wrestler->id)],
@@ -40,8 +40,8 @@ class WrestlerEditFormRequest extends FormRequest
             ],
             'weight' => 'required|integer',
             'hometown' => 'required',
-            //'feet' => 'required|integer',
-            //'inches' => 'required|integer|max:11',
+            'feet' => 'required|integer',
+            'inches' => 'required|integer|max:11',
             'signature_move' => 'required',
             'hired_at' => ['required', 'date', new BeforeFirstMatchDate($this->wrestler)]
         ];
