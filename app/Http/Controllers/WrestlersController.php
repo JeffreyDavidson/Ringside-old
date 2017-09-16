@@ -103,7 +103,6 @@ class WrestlersController extends Controller
     public function update(WrestlerEditFormRequest $request, Wrestler $wrestler)
     {
         $this->authorize('edit', Wrestler::class);
-
         $wrestler->update([
             'name' => $request->name,
             'slug' => $request->slug,

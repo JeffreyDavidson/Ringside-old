@@ -108,11 +108,6 @@ class Wrestler extends Model
         return $this->getAttribute('status_id');
     }
 
-    public function height()
-    {
-        return ($this->feet * 12) + $this->inches;
-    }
-
     /**
      * Retrieves date of the wrestler's first match.
      *
@@ -120,7 +115,6 @@ class Wrestler extends Model
      */
     public function firstMatchDate()
     {
-        //dd($this->matches->first()->date);
         return $this->matches->first()->date;
     }
 
@@ -143,15 +137,5 @@ class Wrestler extends Model
     public function hasMatches()
     {
         return $this->matches->isNotEmpty();
-    }
-
-    /**
-    * Set the hired at field for the wrestler.
-    *
-    * @return date
-    */
-    public function setHiredAtAttribute($date)
-    {
-        return $this->attributes['hired_at'] = Carbon::parse($date);
     }
 }

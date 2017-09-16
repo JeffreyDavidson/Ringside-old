@@ -80,3 +80,7 @@
         {{ $submitButtonText ?? 'Create Wrestler' }}
     </button>
 </div>
+
+@foreach ($errors->all() as $message) {
+    {{ dd($message) }}
+@endforeach

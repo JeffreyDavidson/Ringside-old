@@ -48,7 +48,7 @@ class EditWrestlerTest extends TestCase
             'height' => 63,
             'weight' => 175,
             'signature_move' => 'Old Signature Move',
-            'hired_at' => '10/09/2017',
+            'hired_at' => Carbon::parse('10/09/2017'),
         ], $overrides);
     }
 
@@ -60,11 +60,9 @@ class EditWrestlerTest extends TestCase
             'status_id' => 1,
             'hometown' => 'Laraville, FL',
             'height' => 63,
-            //'feet' => 5,
-            //'inches' => 3,
             'weight' => 175,
             'signature_move' => 'Wrestler Signature Move',
-            'hired_at' => '10/09/2017',
+            'hired_at' => '2017-10-09 12:00:00',
         ], $overrides);
     }
 
@@ -121,7 +119,6 @@ class EditWrestlerTest extends TestCase
     /** @test */
     function name_must_be_unique()
     {
-        $this->disableExceptionHandling();
         factory(Wrestler::class)->create($this->validParams());
 
         $response = $this->actingAs($this->user)->from(route('wrestlers.edit', $this->wrestler->id))->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
@@ -170,6 +167,12 @@ class EditWrestlerTest extends TestCase
     /** @test */
     function hired_at_date_must_be_a_valid_date()
     {
+        factory(WrestlerStatus::class)->create(['name' => 'Active']);
+        factory(WrestlerStatus::class)->create(['name' => 'Inactive']);
+        factory(WrestlerStatus::class)->create(['name' => 'Injured']);
+        factory(WrestlerStatus::class)->create(['name' => 'Suspended']);
+        factory(WrestlerStatus::class)->create(['name' => 'Retired']);
+
         $response = $this->actingAs($this->user)->from(route('wrestlers.edit', $this->wrestler->id))->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
             'hired_at' => 'not-a-date',
         ]));
@@ -177,19 +180,25 @@ class EditWrestlerTest extends TestCase
         $response->assertRedirect(route('wrestlers.edit', $this->wrestler->id));
         $response->assertSessionHasErrors('hired_at');
         tap($this->wrestler->fresh(), function ($wrestler) {
-            $this->assertEquals('old-slug', $wrestler->slug);
+            $this->assertEquals(Carbon::parse('2017-10-09'), $wrestler->hired_at);
         });
     }
 
     /** @test */
     function hired_at_date_must_be_before_first_competed_for_match()
     {
+        $this->disableExceptionHandling();
+        factory(WrestlerStatus::class)->create(['name' => 'Active']);
+        factory(WrestlerStatus::class)->create(['name' => 'Inactive']);
+        factory(WrestlerStatus::class)->create(['name' => 'Injured']);
+        factory(WrestlerStatus::class)->create(['name' => 'Suspended']);
+        factory(WrestlerStatus::class)->create(['name' => 'Retired']);
         $event = factory(Event::class)->create(['date' => '2017-11-09']);
         $match = factory(Match::class)->create(['event_id' => $event->id]);
         $match->addWrestler($this->wrestler);
 
         $response = $this->actingAs($this->user)->from(route('wrestlers.edit', $this->wrestler->id))->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
-            'hired_at' => '11/10/2017',
+            'hired_at' => '2017-11-10',
         ]));
 
         $response->assertRedirect(route('wrestlers.edit', $this->wrestler->id));
@@ -218,7 +227,7 @@ class EditWrestlerTest extends TestCase
             'inches' => 3,
             'weight' => 175,
             'signature_move' => 'Wrestler Signature Move',
-            'hired_at' => '09/10/2017',
+            'hired_at' => '2017-09-10',
         ]));
 
         $response->assertRedirect(route('wrestlers.index'));
@@ -237,7 +246,6 @@ class EditWrestlerTest extends TestCase
     /** @test */
     function editing_a_valid_wrestler_with_matches()
     {
-        $this->disableExceptionHandling();
         factory(WrestlerStatus::class)->create(['name' => 'Active']);
         factory(WrestlerStatus::class)->create(['name' => 'Inactive']);
         factory(WrestlerStatus::class)->create(['name' => 'Injured']);
@@ -249,7 +257,7 @@ class EditWrestlerTest extends TestCase
         $match->addWrestler($this->wrestler);
 
         $response = $this->actingAs($this->user)->from(route('wrestlers.edit', $this->wrestler->id))->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
-                'hired_at' => '10/01/2017',
+                'hired_at' => '2017-10-01',
             ]));
 
         $response->assertRedirect(route('wrestlers.index'));

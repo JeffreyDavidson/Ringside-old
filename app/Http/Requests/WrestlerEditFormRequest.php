@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\WrestlerStatus;
+use App\Rules\BeforeFirstMatchDate;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -39,38 +40,12 @@ class WrestlerEditFormRequest extends FormRequest
             ],
             'weight' => 'required|integer',
             'hometown' => 'required',
-            'feet' => 'required|integer',
-            'inches' => 'required|integer|max:11',
+            //'feet' => 'required|integer',
+            //'inches' => 'required|integer|max:11',
             'signature_move' => 'required',
-            'hired_at' => 'required|date_format:m/d/Y',
+            'hired_at' => ['required', 'date', new BeforeFirstMatchDate($this->wrestler)]
         ];
     }
-
-    /**
-     * Find out if the hired at date for the title is before the date of the first title's match.
-     *
-     */
-    //public function withValidator($validator)
-    //{
-    //    $validator->after(function($validator) {
-    //        $attr = $validator->getData();
-    //
-    //        if (!$this->wrestler->hasMatches()) {
-    //            return;
-    //        }
-    //
-    //        $firstMatchDate = $this->wrestler->firstMatchDate();
-    //        $hiredAt = Carbon::parse($attr['hired_at']);
-    //        //dd($firstMatchDate);
-    //        dd($hiredAt);
-    //        if($hiredAt->lte($firstMatchDate)) {
-    //            return;
-    //        }
-    //
-    //        $sErr = 'The hired at date must be on or before '.$firstMatchDate->format('F d, Y').'.';
-    //        $validator->errors()->add('hired_at', $sErr);
-    //    });
-    //}
 
     /**
      * Get the error messages for the defined validation rules.
