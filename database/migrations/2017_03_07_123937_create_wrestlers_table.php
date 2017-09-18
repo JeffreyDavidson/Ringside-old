@@ -22,7 +22,7 @@ class CreateWrestlersTable extends Migration
             $table->string('hometown');
             $table->integer('height');
             $table->integer('weight');
-            $table->string('signature_move')->unique()->nullable();
+            $table->string('signature_move')->unique();
             $table->timestamps();
             $table->softDeletes();
 

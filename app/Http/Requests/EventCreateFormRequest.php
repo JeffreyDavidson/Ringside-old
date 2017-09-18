@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\QualifiedForMatch;
 use Illuminate\Foundation\Http\FormRequest;
 
 class EventCreateFormRequest extends FormRequest
@@ -23,16 +24,17 @@ class EventCreateFormRequest extends FormRequest
      */
     public function rules()
     {
+        //dd($this->all());
         return [
             'name' => 'required|unique:events,name',
             'slug' => 'required|unique:events,slug',
-            'date' => 'required|date_format:"m/d/Y"',
-            'venue_id' => 'required|integer|not_in:0',
+            'date' => 'required|date',
+            'venue_id' => 'required|integer|not_in:0|exists:venues,id',
             'matches.*.match_type_id' => 'required|integer|not_in:0|exists:match_types,id',
-            'matches.*.stipulations' => 'array|not_in:0',
-            'matches.*.titles' => 'array|not_in:0',
+            'matches.*.stipulations' => 'array',
+            'matches.*.titles' => 'array',
             'matches.*.referees' => 'required|array|not_in:0|exists:referees,id',
-            'matches.*.wrestlers' => 'required|array|not_in:0|exists:wrestlers,id',
+            'matches.*.wrestlers' => ['required', 'array', 'not_in:0', 'exists:wrestlers,id', new QualifiedForMatch()],
             'matches.*.preview' => 'required',
         ];
     }

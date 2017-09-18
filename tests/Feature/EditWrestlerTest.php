@@ -59,7 +59,9 @@ class EditWrestlerTest extends TestCase
             'slug' => 'wrestler-slug',
             'status_id' => 1,
             'hometown' => 'Laraville, FL',
-            'height' => 63,
+            //'height' => 63,
+            'feet' => 6,
+            'inches' => 3,
             'weight' => 175,
             'signature_move' => 'Wrestler Signature Move',
             'hired_at' => '2017-10-09 12:00:00',
@@ -121,9 +123,11 @@ class EditWrestlerTest extends TestCase
     {
         factory(Wrestler::class)->create($this->validParams());
 
-        $response = $this->actingAs($this->user)->from(route('wrestlers.edit', $this->wrestler->id))->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
-            'name' => 'Wrestler Name',
-        ]));
+        $response = $this->actingAs($this->user)
+            ->from(route('wrestlers.edit', $this->wrestler->id))
+            ->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
+                'name' => 'Wrestler Name',
+            ]));
 
         $response->assertRedirect(route('wrestlers.edit', $this->wrestler->id));
         $response->assertSessionHasErrors('name');

@@ -4,14 +4,14 @@ namespace App\Presenters;
 
 use Laracodes\Presenter\Presenter;
 
-class TitleHistoryPresenter extends Presenter {
+class ChampionPresenter extends Presenter {
 
-    public function wonOn()
+    public function formattedWonOn()
     {
         return $this->model->won_on->format('F j, Y');
     }
 
-    public function lostOn()
+    public function formattedLostOn()
     {
         return $this->model->lost_on ? $this->model->lost_on->format('F j, Y') : 'Present';
     }

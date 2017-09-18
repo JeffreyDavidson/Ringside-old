@@ -16,7 +16,7 @@ class HasStatusesTraitTest extends TestCase
     {
         $wrestler = factory(Wrestler::class)->create(['status_id' => 1]);
 
-        $this->assertEquals(WrestlerStatus::ACTIVE, $wrestler->status());
+        $this->assertTrue($wrestler->isActive());
     }
 
     /** @test */
@@ -24,7 +24,7 @@ class HasStatusesTraitTest extends TestCase
     {
         $wrestler = factory(Wrestler::class)->create(['status_id' => 2]);
 
-        $this->assertEquals(WrestlerStatus::INACTIVE, $wrestler->status());
+        $this->assertTrue($wrestler->isInactive());
     }
 
     /** @test */

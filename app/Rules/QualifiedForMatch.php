@@ -6,7 +6,7 @@ use App\Models\Wrestler;
 use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Rule;
 
-class BeforeFirstMatchDate implements Rule
+class QualifiedForMatch implements Rule
 {
     /**
      * @var \App\Models\Wrestler
@@ -32,12 +32,7 @@ class BeforeFirstMatchDate implements Rule
      */
     public function passes($attribute, $value)
     {
-        if ($this->wrestler->hasMatches()) {
-            return Carbon::parse($value)
-                ->lte($this->wrestler->firstMatchDate());
-        }
-
-        return true;
+        return $this->wrestler->hired_at->lte(Carbon::parse($value));
     }
 
     /**
@@ -47,6 +42,6 @@ class BeforeFirstMatchDate implements Rule
      */
     public function message()
     {
-        return 'The hired at date cannot be AFTER the wrestler\'s first match.';
+        return 'This wrestler is not qualified for the match.';
     }
 }

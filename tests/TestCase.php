@@ -45,8 +45,6 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
         });
     }
 
-
-
     protected function disableExceptionHandling()
     {
         $this->app->instance(ExceptionHandler::class, new class extends Handler {

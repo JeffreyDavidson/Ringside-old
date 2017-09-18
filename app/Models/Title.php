@@ -39,7 +39,7 @@ class Title extends Model
      */
     public function champions()
     {
-        return $this->hasMany(TitleHistory::class);
+        return $this->hasMany(Champion::class);
     }
 
     /**
@@ -97,7 +97,7 @@ class Title extends Model
     /**
      * Get the longest title reign held by a wrestler.
      *
-     * @return Wrestler $wrestler
+     * @return static
      */
     public function longest_title_reign()
     {
@@ -106,12 +106,13 @@ class Title extends Model
         $longest = $this->longest_title_reign_query()->first()->length;
 
         return $wrestlers->where('length', $longest);
-
-        //return $wrestlers->filter(function($item) use ($longest) {
-        //    return $item->length == $longest;
-        //});
     }
 
+    /**
+     * Returns collection of champions by length of reign.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
+     */
     public function longest_title_reign_query()
     {
         return $this->champions()
@@ -125,7 +126,7 @@ class Title extends Model
     /**
      * Get the wrestler who has defended the title the most times.
      *
-     * @return Wrestler $wrestler
+     * @return static
      */
     public function most_title_defenses()
     {
@@ -134,12 +135,13 @@ class Title extends Model
         $most = $wrestlers->first()->count;
 
         return $wrestlers->where('count', $most);
-
-        //return $wrestlers->filter(function($item) use($most) {
-        //    return $item->count == $most;
-        //});
     }
 
+    /**
+     * Returns collection of champions by most title defenses.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
+     */
     public function most_title_defences_query()
     {
         return $this->champions()
@@ -163,12 +165,13 @@ class Title extends Model
         $most = $wrestlers->first()->count;
 
         return $wrestlers->where('count', $most);
-
-        //return $wrestlers->filter(function($item) use($most) {
-        //    return $item->count == $most;
-        //});
     }
 
+    /**
+     * Returns collection of champions by most title reigns.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
+     */
     public function most_title_reigns_query()
     {
         return $this->champions()

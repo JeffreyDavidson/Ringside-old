@@ -16,6 +16,8 @@ class EventsController extends Controller
      */
     public function index()
     {
+        $this->authorize('index', Event::class);
+
         $events = Event::with('venue')->get();
 
         return response()->view('events.index', ['events' => $events]);
@@ -28,6 +30,8 @@ class EventsController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Event::class);
+
         return response()->view('events.create', ['event' => new Event]);
     }
 
@@ -39,6 +43,8 @@ class EventsController extends Controller
      */
     public function store(EventCreateFormRequest $request)
     {
+        $this->authorize('create', Event::class);
+
         Event::create([
             'name' => $request->name,
             'slug' => $request->slug,
@@ -46,11 +52,11 @@ class EventsController extends Controller
             'venue_id' => $request->venue_id,
         ]);
 
-        foreach ($request->matches as $match) {
-            $match->match_nuumber = '';
-            $match->match_type_id = '';
-            $match->preview = '';
-        }
+        //foreach ($request->matches as $match) {
+        //    $match->match_nuumber = '';
+        //    $match->match_type_id = '';
+        //    $match->preview = '';
+        //}
 
         return redirect()->route('events.index');
     }

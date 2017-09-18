@@ -11,7 +11,7 @@ class Champion extends Model
 {
     use Presentable;
 
-    protected $presenter = 'App\Presenters\TitleHistoryPresenter';
+    protected $presenter = 'App\Presenters\ChampionPresenter';
 
     /**
      * The attributes that should be mutated to dates.

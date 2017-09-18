@@ -18,15 +18,15 @@ class MatchTest extends TestCase
     use DatabaseMigrations;
 
     /** @test */
-    function can_have_a_title()
+    function a_match_can_have_a_title_being_competed_for()
     {
-        $event = factory(Event::class)->create(['date' => Carbon::parse('tomorrow')]);
-        $match = factory(Match::class)->create(['event_id' => $event->id]);
+        $match = factory(Match::class)->create();
         $title = factory(Title::class)->create();
 
         $match->addTitle($title);
 
         $this->assertCount(1, $match->titles);
+        $this->assertTrue($match->isTitleMatch());
     }
 
     /** @test */
@@ -111,5 +111,49 @@ class MatchTest extends TestCase
         $match->addWrestler($wrestler);
 
         $this->assertCount(1, $match->wrestlers);
+    }
+
+    /** @test */
+    function some_matches_need_more_than_one_referee()
+    {
+        $matchTypeA = factory(MatchType::class)->create(['slug' => 'battleroyal']);
+        $matchTypeB = factory(MatchType::class)->create(['slug' => 'royalrumble']);
+
+        $matchA = factory(Match::class)->create(['match_type_id' => $matchTypeA->id]);
+        $matchB = factory(Match::class)->create(['match_type_id' => $matchTypeB->id]);
+
+        $this->assertTrue($matchA->needsMoreThanOneReferee());
+        $this->assertTrue($matchB->needsMoreThanOneReferee());
+    }
+
+    /** @test */
+    function a_winner_can_be_set_for_a_title_match()
+    {
+        $wrestlerA = factory(Wrestler::class)->create();
+        $wrestlerB = factory(Wrestler::class)->create();
+        $match = factory(Match::class)->create();
+        $title = factory(Title::class)->create();
+        $match->addWrestlers([$wrestlerA, $wrestlerB]);
+        $match->addTitle($title);
+
+        $match->setWinner($wrestlerA);
+
+        $this->assertEquals($wrestlerA->id, $match->winner_id);
+        $this->assertEquals($wrestlerB->id, $match->loser_id);
+        $this->assertEquals($title->fresh()->champions->first()->id, $wrestlerA->id);
+    }
+
+    /** @test */
+    function a_winner_can_be_set_for_a_nontitle_match()
+    {
+        $wrestlerA = factory(Wrestler::class)->create();
+        $wrestlerB = factory(Wrestler::class)->create();
+        $match = factory(Match::class)->create();
+        $match->addWrestlers([$wrestlerA, $wrestlerB]);
+
+        $match->setWinner($wrestlerA);
+
+        $this->assertEquals($wrestlerA->id, $match->winner_id);
+        $this->assertEquals($wrestlerB->id, $match->loser_id);
     }
 }

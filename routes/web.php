@@ -30,5 +30,4 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('titles', 'TitlesController');
     Route::resource('stipulations', 'StipulationsController');
     Route::resource('venues', 'VenuesController');
-    Route::resource('wrestler-statuses', 'WrestlerStatusesController', ['only' => ['index']]);
 });

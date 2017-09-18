@@ -13,11 +13,11 @@ class EventPresenter extends Presenter {
 
     public function formattedFormDate()
     {
-        return $this->model->date ? $this->model->date->format('m/d/Y') : null;
+        return $this->model->date->format('m/d/Y');
     }
 
     public function time()
     {
-        return $this->model->date ? $this->model->date->format('h:ia') : null;
+        return $this->model->date->format('h:ia');
     }
 }

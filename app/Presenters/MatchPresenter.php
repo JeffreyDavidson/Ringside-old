@@ -14,7 +14,7 @@ class MatchPresenter extends Presenter {
     public function referees()
     {
         return $this->model->referees->map(function ($item) {
-            return $item->present()->full_name();
+            return $item->present()->fullName();
         })->implode(', ');
     }
 

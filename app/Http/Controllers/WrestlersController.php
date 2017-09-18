@@ -100,8 +100,9 @@ class WrestlersController extends Controller
      * @param  Wrestler $wrestler
      * @return \Illuminate\Http\Response
      */
-    public function update(WrestlerEditFormRequest $request, Wrestler $wrestler)
+    public function update($request, Wrestler $wrestler)
     {
+        dd('wtf');
         $this->authorize('edit', Wrestler::class);
 
         $wrestler->update([

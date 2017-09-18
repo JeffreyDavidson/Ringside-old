@@ -6,12 +6,12 @@ use Laracodes\Presenter\Presenter;
 
 class TitlePresenter extends Presenter {
 
-    public function introduced_at()
+    public function introducedAt()
     {
         return $this->model->introduced_at->format('F j, Y');
     }
 
-    public function retired_at()
+    public function retiredAt()
     {
         return $this->model->retired_at->format('F j, Y');
     }

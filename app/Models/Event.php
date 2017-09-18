@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Exceptions\MatchesHaveSameMatchNumberAtEventException;
 use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\Model;
 
@@ -31,46 +30,24 @@ class Event extends Model
      */
     protected $dates = ['date'];
 
+    /**
+     * An event has many matches.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function matches()
     {
         return $this->hasMany(Match::class)->with('type', 'referees', 'stipulations', 'wrestlers', 'titles');
     }
 
+    /**
+     * An event belongs to one venue.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function venue()
     {
         return $this->belongsTo(Venue::class)->withTrashed();
-    }
-
-    public function addMatches($matches)
-    {
-        if ($matches instanceof Match) {
-            $matches = collect([$matches]);
-        } else {
-            if (is_array($matches) && array_key_exists('match_number', $matches)) {
-                $matches = collect([Match::create($matches)]);
-            } else {
-                if (is_array($matches) && $matches[0] instanceof Match) {
-                    $matches = collect($matches);
-                } else {
-                    if (is_array($matches) && is_array($matches[0])) {
-                        $matches = collect($matches)->map(function ($match) {
-                            return Match::create($match);
-                        });
-                    }
-                }
-            }
-        }
-
-        try {
-            $this->matches()->saveMany($matches->all());
-        } catch (\PDOException $e) {
-            throw new MatchesHaveSameMatchNumberAtEventException;
-        }
-    }
-
-    public function addMatch($match)
-    {
-        $this->matches()->save($match);
     }
 
     /**
@@ -84,9 +61,9 @@ class Event extends Model
     }
 
     /**
-     * Assign which presenter to be used for model.
+     * The last match of an event is the main event.
      *
-     * @var string
+     * @return object
      */
     public function mainEvent()
     {

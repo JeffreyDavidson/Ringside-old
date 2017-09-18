@@ -103,10 +103,6 @@ class Match extends Model
      */
     public function addWrestler(Wrestler $wrestler)
     {
-        if ($wrestler->hired_at->gt($this->event->date)) {
-            throw new WrestlerNotQualifiedException;
-        }
-
         $this->wrestlers()->save($wrestler);
     }
 
@@ -117,7 +113,7 @@ class Match extends Model
      */
     public function addWrestlers($wrestlers)
     {
-        $this->wrestlers()->saveMany($wrestlers->all());
+        $this->wrestlers()->saveMany($wrestlers);
     }
 
     /**
@@ -157,7 +153,7 @@ class Match extends Model
      */
     public function addStipulations($stipulations)
     {
-        $this->stipulations()->saveMany($stipulations->all());
+        $this->stipulations()->saveMany($stipulations);
     }
 
     /**
@@ -177,7 +173,7 @@ class Match extends Model
      */
     public function addReferees($referees)
     {
-        $this->referees()->saveMany($referees->all());
+        $this->referees()->saveMany($referees);
     }
 
     /**
@@ -207,11 +203,6 @@ class Match extends Model
             });
         }
     }
-
-    //public function getWinner()
-    //{
-    //return Wrestler::find($this->winner_id);
-    //}
 
     /**
      * Retrieves the date of the event for the match.
