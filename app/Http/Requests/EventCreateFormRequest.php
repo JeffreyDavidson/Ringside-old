@@ -30,12 +30,13 @@ class EventCreateFormRequest extends FormRequest
             'slug' => 'required|unique:events,slug',
             'date' => 'required|date',
             'venue_id' => 'required|integer|not_in:0|exists:venues,id',
-            'matches.*.match_type_id' => 'required|integer|not_in:0|exists:match_types,id',
-            'matches.*.stipulations' => 'array',
-            'matches.*.titles' => 'array',
-            'matches.*.referees' => 'required|array|not_in:0|exists:referees,id',
+            'matches.*.match_type_id' => 'required',
+                //|integer|not_in:0|exists:match_types,id',
+            //'matches.*.stipulations' => 'array',
+            //'matches.*.titles' => 'array',
+            //'matches.*.referees' => 'required|array|not_in:0|exists:referees,id',
             //'matches.*.wrestlers' => ['required', 'array', 'not_in:0', 'exists:wrestlers,id', new QualifiedForMatch()],
-            'matches.*.preview' => 'required',
+            //'matches.*.preview' => 'required',
         ];
     }
 

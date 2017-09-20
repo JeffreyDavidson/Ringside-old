@@ -30,7 +30,7 @@ class EventsController extends Controller
      */
     public function create()
     {
-        $this->authorize('create', Event::class);
+        //$this->authorize('create', Event::class);
 
         return response()->view('events.create', ['event' => new Event]);
     }

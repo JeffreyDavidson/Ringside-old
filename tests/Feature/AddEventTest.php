@@ -41,11 +41,11 @@ class AddEventTest extends TestCase
             'date' => '2017-09-17',
             'venue_id' => 1,
             'matches.*.match_type_id' => 1,
-            'matches.*.stipulations' => [1],
-            'matches.*.titles' => [1, 2],
-            'matches.*.referees' => [1],
-            'matches.*.wrestlers' => [1, 2],
-            'matches.*.preview' => 'This is a preview of the match.',
+            //'matches.*.stipulations' => [1],
+            //'matches.*.titles' => [1, 2],
+            //'matches.*.referees' => [1],
+            //'matches.*.wrestlers' => [1, 2],
+            //'matches.*.preview' => 'This is a preview of the match.',
         ], $overrides);
     }
 
@@ -95,7 +95,9 @@ class AddEventTest extends TestCase
     /** @test */
     function name_must_be_unique()
     {
-        factory(Event::class)->create($this->validParams());
+        factory(Event::class)->create($this->validParams([
+            'name' => 'Event Name',
+        ]));
 
         $response = $this->actingAs($this->user)->from(route('events.create'))->post(route('events.index'), $this->validParams([
             'name' => 'Event Name',
@@ -123,7 +125,9 @@ class AddEventTest extends TestCase
     /** @test */
     function slug_must_be_unique()
     {
-        factory(Event::class)->create($this->validParams());
+        factory(Event::class)->create($this->validParams([
+            'slug' => 'event-slug',
+        ]));
 
         $response = $this->actingAs($this->user)->from(route('events.create'))->post(route('events.index'), $this->validParams([
             'slug' => 'event-slug',
@@ -216,14 +220,15 @@ class AddEventTest extends TestCase
     /** @test */
     function a_match_type_is_required()
     {
-        $this->disableExceptionHandling();
+        factory(Venue::class)->create();
+
         $response = $this->actingAs($this->user)->from(route('events.create'))->post(route('events.index'), $this->validParams([
             'matches.*.match_type_id' => '',
         ]));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('events.create'));
-        //$response->assertSessionHasErrors('matches.*.match_type_id');
+        $response->assertSessionHasErrors('matches.*.match_type_id');
         $this->assertEquals(0, Event::count());
     }
 

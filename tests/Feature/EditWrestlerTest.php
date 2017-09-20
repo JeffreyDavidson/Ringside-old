@@ -120,10 +120,14 @@ class EditWrestlerTest extends TestCase
     /** @test */
     function name_must_be_unique()
     {
-        factory(Wrestler::class)->create($this->validParams());
+        factory(Wrestler::class)->create($this->oldAttributes([
+            'name' => 'Wrestler B Name',
+            'slug' => 'wrestlerb-slug',
+            'signature_move' => 'Wrestler B Signature Move'
+        ]));
 
         $response = $this->actingAs($this->user)->from(route('wrestlers.edit', $this->wrestler->id))->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
-            'name' => 'Wrestler Name',
+            'name' => 'Wrestler B Name',
         ]));
 
         $response->assertRedirect(route('wrestlers.edit', $this->wrestler->id));
@@ -151,15 +155,19 @@ class EditWrestlerTest extends TestCase
     /** @test */
     function slug_must_be_unique()
     {
-        factory(Wrestler::class)->create($this->validParams());
+        factory(Wrestler::class)->create($this->oldAttributes([
+            'name' => 'Wrestler B Name',
+            'slug' => 'wrestlerb-slug',
+            'signature_move' => 'Wrestler B Signature Move'
+        ]));
 
         $response = $this->actingAs($this->user)->from(route('wrestlers.edit', $this->wrestler->id))->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
-            'slug' => 'wrestler-slug',
+            'slug' => 'wrestlerb-slug',
         ]));
 
         $response->assertRedirect(route('wrestlers.edit', $this->wrestler->id));
         $response->assertSessionHasErrors('slug');
-        $this->assertEquals(1, Wrestler::where('slug', 'wrestler-slug')->count());
+        $this->assertEquals(1, Wrestler::where('slug', 'old-slug')->count());
         tap($this->wrestler->fresh(), function ($wrestler) {
             $this->assertEquals('old-slug', $wrestler->slug);
         });

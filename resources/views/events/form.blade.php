@@ -36,7 +36,7 @@
 
 @for ($x = 1; $x <= 1; $x++)
     <h2>Match #{{ $x }}</h2>
-    @include('matches.form', ['match' => new \App\Models\Match])
+    @include('matches.form', ['match' => new \App\Models\Match, 'match_number' => $x])
 @endfor
 
 <div class="form-group">
