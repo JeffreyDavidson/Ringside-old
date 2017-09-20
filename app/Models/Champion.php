@@ -37,11 +37,6 @@ class Champion extends Model
         return $this->update(['lost_on' => Carbon::now()]);
     }
 
-    public static function getCurrentChampion()
-    {
-        return $this->wrestler->whereNotNull('lost_on');
-    }
-
     /**
      * Create a new Eloquent Collection instance.
      *

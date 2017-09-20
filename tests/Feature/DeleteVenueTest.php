@@ -14,8 +14,11 @@ class DeleteVenueTest extends TestCase
     use DatabaseMigrations;
 
     private $user;
+
     private $role;
+
     private $permission;
+
     private $venue;
 
     public function setUp()
@@ -32,13 +35,13 @@ class DeleteVenueTest extends TestCase
     }
 
     /** @test */
-    function users_who_have_permission_can_delete_a_venue()
+    function users_who_have_permission_can_soft_delete_a_venue()
     {
-        $response = $this->actingAs($this->user)
-                        ->from(route('venues.index'))
-                        ->delete(route('venues.destroy', $this->venue->id));
+        $response = $this->actingAs($this->user)->from(route('venues.index'))->delete(route('venues.destroy', $this->venue->id));
 
         $response->assertStatus(302);
+        $this->assertSoftDeleted('venues', $this->venue->toArray());
+        $response->assertRedirect(route('venues.index'));
     }
 
     /** @test */
@@ -48,9 +51,7 @@ class DeleteVenueTest extends TestCase
         $role = factory(Role::class)->create(['name' => 'editor']);
         $userWithoutPermission->assignRole($role);
 
-        $response = $this->actingAs($userWithoutPermission)
-                        ->from(route('venues.index'))
-                        ->delete(route('venues.destroy', $this->venue->id));
+        $response = $this->actingAs($userWithoutPermission)->from(route('venues.index'))->delete(route('venues.destroy', $this->venue->id));
 
         $response->assertStatus(403);
     }
@@ -58,8 +59,7 @@ class DeleteVenueTest extends TestCase
     /** @test */
     function guests_cannot_delete_a_venue()
     {
-        $response = $this->from(route('venues.index'))
-                        ->delete(route('venues.destroy', $this->venue->id));
+        $response = $this->from(route('venues.index'))->delete(route('venues.destroy', $this->venue->id));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));

@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Role;
 use App\Models\Permission;
 use App\Models\WrestlerStatus;
+use Carbon\Carbon;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -39,8 +40,9 @@ class AddWrestlerTest extends TestCase
             'slug' => 'wrestler-slug',
             'status_id' => 1,
             'hired_at' => '2017-09-08',
-            'hometown' => 'Laraville',
-            'height' => 63,
+            'hometown' => 'Laraville, ON',
+            'feet' => 6,
+            'inches' => 10,
             'weight' => 175,
             'signature_move' => 'Wrestler Signature Move',
         ], $overrides);
@@ -257,7 +259,7 @@ class AddWrestlerTest extends TestCase
     function inches_must_have_a_value_smaller_than_12()
     {
         $response = $this->actingAs($this->user)->from(route('wrestlers.create'))->post(route('wrestlers.index'), $this->validParams([
-            'status_id' => '12',
+            'inches' => '12',
         ]));
 
         $response->assertStatus(302);
@@ -336,18 +338,11 @@ class AddWrestlerTest extends TestCase
     {
         factory(WrestlerStatus::class)->create(['name' => 'Active']);
         factory(WrestlerStatus::class)->create(['name' => 'Inactive']);
+        factory(WrestlerStatus::class)->create(['name' => 'Injured']);
+        factory(WrestlerStatus::class)->create(['name' => 'Suspended']);
+        factory(WrestlerStatus::class)->create(['name' => 'Retired']);
 
-        $response = $this->actingAs($this->user)->from(route('wrestlers.create'))->post(route('wrestlers.index'), $this->validParams([
-            'name' => 'Wrestler Name',
-            'slug' => 'wrestler-slug',
-            'status_id' => 1,
-            'hired_at' => '09/08/2017',
-            'hometown' => 'Laraville, FL',
-            'feet' => 5,
-            'inches' => 3,
-            'weight' => 175,
-            'signature_move' => 'Wrestler Signature Move',
-        ]));
+        $response = $this->actingAs($this->user)->from(route('wrestlers.create'))->post(route('wrestlers.index'), $this->validParams());
 
         tap(Wrestler::first(), function ($wrestler) use ($response) {
             $response->assertStatus(302);
@@ -356,9 +351,9 @@ class AddWrestlerTest extends TestCase
             $this->assertEquals('Wrestler Name', $wrestler->name);
             $this->assertEquals('wrestler-slug', $wrestler->slug);
             $this->assertEquals('1', $wrestler->status());
-            $this->assertEquals('2017-09-08', $wrestler->hired_at->format('2017-09-08'));
-            $this->assertEquals('Laraville, FL', $wrestler->hometown);
-            $this->assertEquals(63, $wrestler->height);
+            $this->assertEquals(Carbon::parse('2017-09-08'), $wrestler->hired_at);
+            $this->assertEquals('Laraville, ON', $wrestler->hometown);
+            $this->assertEquals(82, $wrestler->height);
             $this->assertEquals(175, $wrestler->weight);
             $this->assertEquals('Wrestler Signature Move', $wrestler->signature_move);
         });

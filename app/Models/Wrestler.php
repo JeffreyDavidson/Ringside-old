@@ -123,16 +123,16 @@ class Wrestler extends Model
      *
      * @return void
      */
-    public function statusChanged()
-    {
-        if ($this->status() == WrestlerStatus::RETIRED) {
-            $this->unretire();
-        } else if ($this->status() == WrestlerStatus::INJURED) {
-            $this->heal();
-        } else if ($this->status() == WrestlerStatus::SUSPENDED) {
-            $this->rejoin();
-        }
-    }
+    //public function statusChanged()
+    //{
+    //    if ($this->status() == WrestlerStatus::RETIRED) {
+    //        $this->unretire();
+    //    } else if ($this->status() == WrestlerStatus::INJURED) {
+    //        $this->heal();
+    //    } else if ($this->status() == WrestlerStatus::SUSPENDED) {
+    //        $this->rejoin();
+    //    }
+    //}
 
     public function hasMatches()
     {

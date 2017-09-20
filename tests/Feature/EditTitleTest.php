@@ -194,11 +194,11 @@ class EditTitleTest extends TestCase
     {
         $response = $this->actingAs($this->user)
                         ->from(route('titles.edit', $this->title->id))
-                        ->patch(route('titles.update', $this->title->id), [
+                        ->patch(route('titles.update', $this->title->id), $this->validParams([
                             'name' => 'New Name',
                             'slug' => 'new-slug',
                             'introduced_at' => '2016-12-18'
-                        ]);
+                        ]));
 
         $response->assertRedirect(route('titles.index'));
         tap($this->title->fresh(), function ($title) {

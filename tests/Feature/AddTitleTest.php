@@ -15,7 +15,9 @@ class AddTitleTest extends TestCase
     use DatabaseMigrations;
 
     private $user;
+
     private $role;
+
     private $permission;
 
     public function setUp()
@@ -35,17 +37,17 @@ class AddTitleTest extends TestCase
         return array_merge([
             'name' => 'Title Name',
             'slug' => 'title-slug',
-            'introduced_at' => '2017-08-04'
+            'introduced_at' => '2017-08-04',
         ], $overrides);
     }
 
     /** @test */
     function users_who_have_permission_can_view_the_add_title_form()
     {
-        $response = $this->actingAs($this->user)
-                        ->get(route('titles.create'));
+        $response = $this->actingAs($this->user)->get(route('titles.create'));
 
         $response->assertStatus(200);
+        $response->assertViewIs('titles.create');
     }
 
     /** @test */
@@ -55,8 +57,7 @@ class AddTitleTest extends TestCase
         $role = factory(Role::class)->create(['name' => 'editor']);
         $userWithoutPermission->assignRole($role);
 
-        $response = $this->actingAs($userWithoutPermission)
-                        ->get(route('titles.create'));
+        $response = $this->actingAs($userWithoutPermission)->get(route('titles.create'));
 
         $response->assertStatus(403);
     }
@@ -73,11 +74,9 @@ class AddTitleTest extends TestCase
     /** @test */
     function name_is_required()
     {
-        $response = $this->actingAs($this->user)
-                        ->from(route('titles.create'))
-                        ->post(route('titles.index'), $this->validParams([
-                            'name' => '',
-                        ]));
+        $response = $this->actingAs($this->user)->from(route('titles.create'))->post(route('titles.index'), $this->validParams([
+            'name' => '',
+        ]));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('titles.create'));
@@ -90,11 +89,9 @@ class AddTitleTest extends TestCase
     {
         factory(Title::class)->create(['name' => 'Title Name']);
 
-        $response = $this->actingAs($this->user)
-                        ->from(route('titles.create'))
-                        ->post(route('titles.index'), $this->validParams([
-                            'name' => 'Title Name',
-                        ]));
+        $response = $this->actingAs($this->user)->from(route('titles.create'))->post(route('titles.index'), $this->validParams([
+            'name' => 'Title Name',
+        ]));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('titles.create'));
@@ -105,11 +102,9 @@ class AddTitleTest extends TestCase
     /** @test */
     function slug_is_required()
     {
-        $response = $this->actingAs($this->user)
-                        ->from(route('titles.create'))
-                        ->post(route('titles.index'), $this->validParams([
-                            'slug' => '',
-                        ]));
+        $response = $this->actingAs($this->user)->from(route('titles.create'))->post(route('titles.index'), $this->validParams([
+            'slug' => '',
+        ]));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('titles.create'));
@@ -122,11 +117,9 @@ class AddTitleTest extends TestCase
     {
         factory(Title::class)->create(['slug' => 'title-slug']);
 
-        $response = $this->actingAs($this->user)
-                        ->from(route('titles.create'))
-                        ->post(route('titles.index'), $this->validParams([
-                            'slug' => 'title-slug',
-                        ]));
+        $response = $this->actingAs($this->user)->from(route('titles.create'))->post(route('titles.index'), $this->validParams([
+            'slug' => 'title-slug',
+        ]));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('titles.create'));
@@ -135,13 +128,24 @@ class AddTitleTest extends TestCase
     }
 
     /** @test */
-    function date_must_be_a_valid_date()
+    function introduced_at_date_is_required()
     {
-        $response = $this->actingAs($this->user)
-                        ->from(route('titles.create'))
-                        ->post(route('titles.index'), $this->validParams([
-                            'introduced_at' => 'not-a-date',
-                        ]));
+        $response = $this->actingAs($this->user)->from(route('titles.create'))->post(route('titles.index'), $this->validParams([
+            'introduced_at' => '',
+        ]));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('titles.create'));
+        $response->assertSessionHasErrors('introduced_at');
+        $this->assertEquals(0, Title::count());
+    }
+
+    /** @test */
+    function introduced_at_date_must_be_a_valid_date()
+    {
+        $response = $this->actingAs($this->user)->from(route('titles.create'))->post(route('titles.index'), $this->validParams([
+            'introduced_at' => 'not-a-date',
+        ]));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('titles.create'));
@@ -152,13 +156,7 @@ class AddTitleTest extends TestCase
     /** @test */
     function adding_a_valid_title()
     {
-        $response = $this->actingAs($this->user)
-                        ->from(route('titles.create'))
-                        ->post(route('titles.index'), $this->validParams([
-                            'name' => 'Title Name',
-                            'slug' => 'title-slug',
-                            'introduced_at' => '2017-08-04'
-                        ]));
+        $response = $this->actingAs($this->user)->from(route('titles.create'))->post(route('titles.index'), $this->validParams());
 
         tap(Title::first(), function ($title) use ($response) {
             $response->assertStatus(302);

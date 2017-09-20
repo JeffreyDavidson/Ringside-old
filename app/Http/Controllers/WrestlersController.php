@@ -100,10 +100,20 @@ class WrestlersController extends Controller
      * @param  Wrestler $wrestler
      * @return \Illuminate\Http\Response
      */
-    public function update($request, Wrestler $wrestler)
+    public function update(WrestlerEditFormRequest $request, Wrestler $wrestler)
     {
-        dd('wtf');
         $this->authorize('edit', Wrestler::class);
+
+        /* TODO: Figure out if I should do a Rule or how I should handle the change better from going from status to status. */
+        //if ($wrestler->status() != $request->status_id) {
+        //    if ($wrestler->status() == WrestlerStatus::RETIRED) {
+        //        $wrestler->unretire();
+        //    } else if ($wrestler->status() == WrestlerStatus::INJURED) {
+        //        $wrestler->heal();
+        //    } else if ($wrestler->status() == WrestlerStatus::SUSPENDED) {
+        //        $wrestler->rejoin();
+        //    }
+        //}
 
         $wrestler->update([
             'name' => $request->name,
@@ -116,18 +126,13 @@ class WrestlersController extends Controller
             'signature_move' => $request->signature_move,
         ]);
 
-
-        if ($wrestler->status() != $request->status_id) {
-            $wrestler->statusChanged();
-        }
-
-        if ($request->status_id == WrestlerStatus::INJURED) {
-            $wrestler->injure();
-        } else if ($request->status_id == WrestlerStatus::SUSPENDED) {
-            $wrestler->suspend();
-        } else if ($request->status_id == WrestlerStatus::RETIRED) {
-            $wrestler->retire();
-        }
+        //if ($request->status_id == WrestlerStatus::INJURED) {
+        //    $wrestler->injure();
+        //} else if ($request->status_id == WrestlerStatus::SUSPENDED) {
+        //    $wrestler->suspend();
+        //} else if ($request->status_id == WrestlerStatus::RETIRED) {
+        //    $wrestler->retire();
+        //}
 
         return redirect()->route('wrestlers.index');
     }

@@ -128,10 +128,7 @@ class AddStipulationTest extends TestCase
     /** @test */
     function adding_a_valid_stipulation()
     {
-        $response = $this->actingAs($this->user)->from(route('stipulations.create'))->post(route('stipulations.index'), $this->validParams([
-            'name' => 'Stipulation Name',
-            'slug' => 'stipulation-slug',
-        ]));
+        $response = $this->actingAs($this->user)->from(route('stipulations.create'))->post(route('stipulations.index'), $this->validParams());
 
         tap(Stipulation::first(), function ($stipulation) use ($response) {
             $response->assertStatus(302);

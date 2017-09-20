@@ -68,19 +68,4 @@ class ViewStipulationTest extends TestCase
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));
     }
-
-    /** @test */
-    function a_stipulations_matches_can_be_viewed_on_page()
-    {
-        $matchA = factory(Match::class)->create();
-        $matchA->addStipulation($this->stipulation);
-        $matchB = factory(Match::class)->create();
-        $matchB->addStipulation($this->stipulation);
-
-        $response = $this->actingAs($this->user)->get(route('stipulations.show', $this->stipulation->id));
-
-        $response->assertSuccessful();
-        $response->assertViewIs('stipulations.show');
-        $response->assertViewHas('stipulation');
-    }
 }

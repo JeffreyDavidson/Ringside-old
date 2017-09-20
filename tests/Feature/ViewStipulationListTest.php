@@ -14,7 +14,9 @@ class ViewStipulationListTest extends TestCase
     use DatabaseMigrations;
 
     private $user;
+
     private $role;
+
     private $permission;
 
     public function setUp()
@@ -39,6 +41,7 @@ class ViewStipulationListTest extends TestCase
         $response = $this->actingAs($this->user)->get(route('stipulations.index'));
 
         $response->assertStatus(200);
+        $response->assertViewIs('stipulations.index');
         $response->data('stipulations')->assertEquals([
             $stipulationA,
             $stipulationB,
@@ -53,8 +56,7 @@ class ViewStipulationListTest extends TestCase
         $role = factory(Role::class)->create(['name' => 'editor']);
         $userWithoutPermission->assignRole($role);
 
-        $response = $this->actingAs($userWithoutPermission)
-                        ->get(route('stipulations.index'));
+        $response = $this->actingAs($userWithoutPermission)->get(route('stipulations.index'));
 
         $response->assertStatus(403);
     }

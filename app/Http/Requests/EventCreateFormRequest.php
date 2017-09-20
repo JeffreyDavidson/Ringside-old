@@ -34,9 +34,14 @@ class EventCreateFormRequest extends FormRequest
             'matches.*.stipulations' => 'array',
             'matches.*.titles' => 'array',
             'matches.*.referees' => 'required|array|not_in:0|exists:referees,id',
-            'matches.*.wrestlers' => ['required', 'array', 'not_in:0', 'exists:wrestlers,id', new QualifiedForMatch()],
+            //'matches.*.wrestlers' => ['required', 'array', 'not_in:0', 'exists:wrestlers,id', new QualifiedForMatch()],
             'matches.*.preview' => 'required',
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        //dd($validator->errors());
     }
 
     /**

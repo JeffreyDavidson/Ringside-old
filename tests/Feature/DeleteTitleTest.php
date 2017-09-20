@@ -14,8 +14,11 @@ class DeleteTitleTest extends TestCase
     use DatabaseMigrations;
 
     private $user;
+
     private $role;
+
     private $permission;
+
     private $title;
 
     public function setUp()
@@ -32,13 +35,13 @@ class DeleteTitleTest extends TestCase
     }
 
     /** @test */
-    function users_who_have_permission_can_delete_a_title()
+    function users_who_have_permission_can_soft_delete_a_title()
     {
-        $response = $this->actingAs($this->user)
-                        ->from(route('titles.index'))
-                        ->delete(route('titles.destroy', $this->title->id));
+        $response = $this->actingAs($this->user)->from(route('titles.index'))->delete(route('titles.destroy', $this->title->id));
 
         $response->assertStatus(302);
+        $this->assertSoftDeleted('titles', $this->title->toArray());
+        $response->assertRedirect(route('titles.index'));
     }
 
     /** @test */
@@ -48,9 +51,7 @@ class DeleteTitleTest extends TestCase
         $role = factory(Role::class)->create(['name' => 'editor']);
         $userWithoutPermission->assignRole($role);
 
-        $response = $this->actingAs($userWithoutPermission)
-                        ->from(route('titles.index'))
-                        ->delete(route('titles.destroy', $this->title->id));
+        $response = $this->actingAs($userWithoutPermission)->from(route('titles.index'))->delete(route('titles.destroy', $this->title->id));
 
         $response->assertStatus(403);
     }
@@ -58,8 +59,7 @@ class DeleteTitleTest extends TestCase
     /** @test */
     function guests_cannot_delete_a_title()
     {
-        $response = $this->from(route('titles.index'))
-                        ->delete(route('titles.destroy', $this->title->id));
+        $response = $this->from(route('titles.index'))->delete(route('titles.destroy', $this->title->id));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));

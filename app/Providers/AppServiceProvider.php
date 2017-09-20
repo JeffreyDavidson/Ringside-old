@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\Wrestler;
-use App\Observers\WrestlerObserver;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Dusk\DuskServiceProvider;

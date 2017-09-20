@@ -14,8 +14,11 @@ class DeleteStipulationTest extends TestCase
     use DatabaseMigrations;
 
     private $user;
+
     private $role;
+
     private $permission;
+
     private $stipulation;
 
     public function setUp()
@@ -25,20 +28,20 @@ class DeleteStipulationTest extends TestCase
         $this->user = factory(User::class)->create();
         $this->role = factory(Role::class)->create(['slug' => 'admin']);
         $this->permission = factory(Permission::class)->create(['slug' => 'delete-stipulation']);
-        $this->stipulation =factory(Stipulation::class)->create();
+        $this->stipulation = factory(Stipulation::class)->create();
 
         $this->role->givePermissionTo($this->permission);
         $this->user->assignRole($this->role);
     }
 
     /** @test */
-    function users_who_have_permission_can_delete_a_stipulation()
+    function users_who_have_permission_can_soft_delete_a_stipulation()
     {
-        $response = $this->actingAs($this->user)
-                        ->from(route('stipulations.index'))
-                        ->delete(route('stipulations.destroy', $this->stipulation->id));
+        $response = $this->actingAs($this->user)->from(route('stipulations.index'))->delete(route('stipulations.destroy', $this->stipulation->id));
 
         $response->assertStatus(302);
+        $this->assertSoftDeleted('stipulations', $this->stipulation->toArray());
+        $response->assertRedirect(route('stipulations.index'));
     }
 
     /** @test */
@@ -48,9 +51,7 @@ class DeleteStipulationTest extends TestCase
         $role = factory(Role::class)->create(['name' => 'editor']);
         $userWithoutPermission->assignRole($role);
 
-        $response = $this->actingAs($userWithoutPermission)
-                        ->from(route('stipulations.index'))
-                        ->delete(route('stipulations.destroy', $this->stipulation->id));
+        $response = $this->actingAs($userWithoutPermission)->from(route('stipulations.index'))->delete(route('stipulations.destroy', $this->stipulation->id));
 
         $response->assertStatus(403);
     }
@@ -58,8 +59,7 @@ class DeleteStipulationTest extends TestCase
     /** @test */
     function guests_cannot_delete_a_stipulation()
     {
-        $response = $this->from(route('stipulations.index'))
-                        ->delete(route('stipulations.destroy', $this->stipulation->id));
+        $response = $this->from(route('stipulations.index'))->delete(route('stipulations.destroy', $this->stipulation->id));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));

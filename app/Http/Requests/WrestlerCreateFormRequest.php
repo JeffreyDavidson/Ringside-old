@@ -38,7 +38,7 @@ class WrestlerCreateFormRequest extends FormRequest
             'inches' => 'required|integer|max:11',
             'weight' => 'required|integer',
             'signature_move' => 'required',
-            'hired_at' => 'required|date_format:m/d/Y',
+            'hired_at' => 'required|date',
         ];
     }
 

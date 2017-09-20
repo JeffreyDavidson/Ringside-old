@@ -40,6 +40,8 @@ class DeleteWrestlerTest extends TestCase
         $response = $this->actingAs($this->user)->from(route('wrestlers.index'))->delete(route('wrestlers.destroy', $this->wrestler->id));
 
         $response->assertStatus(302);
+        $this->assertSoftDeleted('wrestlers', $this->wrestler->toArray());
+        $response->assertRedirect(route('wrestlers.index'));
     }
 
     /** @test */
