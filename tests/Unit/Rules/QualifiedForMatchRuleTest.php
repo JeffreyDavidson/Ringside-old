@@ -18,9 +18,9 @@ class QualifiedForMatchRuleTest extends TestCase
         $wrestler = factory(Wrestler::class)->create(['hired_at' => '2017-10-10']);
         $event = factory(Event::class)->create(['date' => '2017-10-09']);
 
-        $validator = new QualifiedForMatch($wrestler);
+        $validator = new QualifiedForMatch($event->date);
 
-        $this->assertFalse($validator->passes('hired_at', $event->date));
+        $this->assertFalse($validator->passes(null , $wrestler->id));
         $this->assertEquals('This wrestler is not qualified for the match.', $validator->message());
     }
 
@@ -30,8 +30,8 @@ class QualifiedForMatchRuleTest extends TestCase
         $wrestler = factory(Wrestler::class)->create(['hired_at' => '2017-10-08']);
         $event = factory(Event::class)->create(['date' => '2017-10-09']);
 
-        $validator = new QualifiedForMatch($wrestler);
+        $validator = new QualifiedForMatch($event->date);
 
-        $this->assertTrue($validator->passes('hired_at', $event->date));
+        $this->assertTrue($validator->passes(null, $wrestler->id));
     }
 }

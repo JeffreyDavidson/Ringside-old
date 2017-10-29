@@ -13,14 +13,10 @@
             </div>
         </div>
         <div class="panel-body container-fluid">
-            <div class="row row-lg">
-                <div class="col-md-6">
-                    <form method="POST" action="{{ route('events.update', $event->id) }}">
-                        {{ method_field('PATCH') }}
-                        @include('events.form', ['submitButtonText' => 'Edit Event'])
-                    </form>
-                </div>
-            </div>
+            <form method="POST" action="{{ route('events.update', $event->id) }}">
+                {{ method_field('PATCH') }}
+                @include('events.form', ['submitButtonText' => 'Edit Event'])
+            </form>
         </div>
     </div>
 @endsection

@@ -25,4 +25,19 @@ class Venue extends Model
     {
         return $this->hasMany(Event::class);
     }
+
+    /**
+     * Returns a collection of events before the current date.
+     *
+     * @return \App\Models\Venue|\Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function pastEvents()
+    {
+        return $this->events->filter->date->isPast();
+    }
+
+    public function hasPastEvents()
+    {
+        return $this->pastEvents->isNotEmpty();
+    }
 }

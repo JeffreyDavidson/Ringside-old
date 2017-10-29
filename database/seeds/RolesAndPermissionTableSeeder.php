@@ -42,6 +42,12 @@ class RolesAndPermissionTableSeeder extends Seeder
         $showVenue = Permission::create(['name' => 'Show Venue',  'slug' => 'show-venue']);
         $deleteVenue = Permission::create(['name' => 'Delete Venue',  'slug' => 'delete-venue']);
 
+        $viewEvent = Permission::create(['name' => 'View Events',  'slug' => 'view-events']);
+        $createEvent = Permission::create(['name' => 'Create Event',  'slug' => 'create-event']);
+        $editEvent = Permission::create(['name' => 'Edit Event',  'slug' => 'edit-event']);
+        $showEvent = Permission::create(['name' => 'Show Event',  'slug' => 'show-event']);
+        $deleteEvent = Permission::create(['name' => 'Delete Event',  'slug' => 'delete-event']);
+
         $admin->givePermissionTo($viewWrestlers);
         $admin->givePermissionTo($createWrestler);
         $admin->givePermissionTo($editWrestler);
@@ -62,6 +68,11 @@ class RolesAndPermissionTableSeeder extends Seeder
         $admin->givePermissionTo($editVenue);
         $admin->givePermissionTo($showVenue);
         $admin->givePermissionTo($deleteVenue);
+        $admin->givePermissionTo($viewEvent);
+        $admin->givePermissionTo($createEvent);
+        $admin->givePermissionTo($editEvent);
+        $admin->givePermissionTo($showEvent);
+        $admin->givePermissionTo($deleteEvent);
 
         $superAdmin->givePermissionTo($viewWrestlers);
         $superAdmin->givePermissionTo($createWrestler);
@@ -83,5 +94,10 @@ class RolesAndPermissionTableSeeder extends Seeder
         $superAdmin->givePermissionTo($editVenue);
         $superAdmin->givePermissionTo($showVenue);
         $superAdmin->givePermissionTo($deleteVenue);
+        $superAdmin->givePermissionTo($viewEvent);
+        $superAdmin->givePermissionTo($createEvent);
+        $superAdmin->givePermissionTo($editEvent);
+        $superAdmin->givePermissionTo($showEvent);
+        $superAdmin->givePermissionTo($deleteEvent);
     }
 }

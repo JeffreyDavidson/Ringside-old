@@ -6,6 +6,8 @@ use Illuminate\Database\Seeder;
 
 class TitlesTableSeeder extends Seeder
 {
+    private $titleCount = 1;
+
     /**
      * Run the database seeds.
      *
@@ -13,10 +15,27 @@ class TitlesTableSeeder extends Seeder
      */
     public function run()
     {
-		factory(Title::class)->create(['name' => 'Title 1', 'slug' => 'title1', 'introduced_at' => Carbon::parse('January 1, 1990')]);
+        $startingDate = Carbon::parse('First Monday of January 1990');
+        $now = Carbon::now();
 
-        for($i = 2; $i <= 20; $i++) {
-            factory(Title::class)->create(['name' => 'Title '.$i, 'slug' => 'title'.$i]);
+        for ($this->titleCount; $this->titleCount <= 5; $this->titleCount++) {
+            factory(Title::class)->create([
+                'name' => 'Title '.$this->titleCount,
+                'slug' => 'title'.$this->titleCount,
+                'introduced_at' => $startingDate,
+            ]);
+        }
+
+        while ($startingDate->addYears(8)->lte($now))
+        {
+            for ($x = 1; $x <= 1; $x++) {
+                factory(Title::class)->create([
+                    'name' => 'Title ' . $this->titleCount,
+                    'slug' => 'title' . $this->titleCount,
+                    'introduced_at' => $startingDate,
+                ]);
+                $this->titleCount++;
+            }
         }
     }
 }

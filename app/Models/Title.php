@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
+use App\Queries\LongestTitleReignQuery;
+use App\Queries\MostTitleDefensesQuery;
+use App\Queries\MostTitleReignsQuery;
+use App\Traits\HasMatches;
 use Illuminate\Database\Eloquent\Model;
 use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Title extends Model
 {
-    use Presentable, SoftDeletes;
+    use HasMatches, Presentable, SoftDeletes;
 
     /**
      * Assign which presenter to be used for model.
@@ -53,16 +56,6 @@ class Title extends Model
     }
 
     /**
-     * Retrieves date of event the match is being competed for.
-     *
-     * @return string
-     */
-    public function firstMatchDate()
-    {
-        return $this->matches->first()->date;
-    }
-
-    /**
      * Retrieve valid titles to be competed for.
      *
      * @param Builder $query
@@ -70,9 +63,9 @@ class Title extends Model
      */
     public function scopeValid($query, $date)
     {
-        return $query->where('introduced_at', '<=', $date->toDateString())->where(function($query) use ($date) {
-			$query->whereNull('retired_at')->orWhere('retired_at', '>', $date->toDateString());
-		});
+        return $query->where('introduced_at', '<=', $date)->where(function ($query) use ($date) {
+            $query->whereNull('retired_at')->orWhere('retired_at', '>', $date);
+        });
     }
 
     /**
@@ -81,46 +74,13 @@ class Title extends Model
      * @param $wrestler
      * @param $date
      */
-    public function setNewChampion($wrestler, $date = null)
-	{
-		if(! $date) {
-			$date = Carbon::now();
-		}
-
-    	    if($formerChampion = $this->getCurrentChampion()) {
-			$formerChampion->loseTitle($this, $date);
-		}
-
-		$wrestler->winTitle($this, $date);
-    }
-
-    /**
-     * Get the longest title reign held by a wrestler.
-     *
-     * @return static
-     */
-    public function longest_title_reign()
+    public function setNewChampion($wrestler, $date)
     {
-        $wrestlers = $this->longest_title_reign_query();
+        if (!is_null($this->getCurrentChampion())) {
+            $this->getCurrentChampion()->loseTitle($this, $date);
+        }
 
-        $longest = $this->longest_title_reign_query()->first()->length;
-
-        return $wrestlers->where('length', $longest);
-    }
-
-    /**
-     * Returns collection of champions by length of reign.
-     *
-     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
-     */
-    public function longest_title_reign_query()
-    {
-        return $this->champions()
-            ->join('wrestlers', 'wrestlers.id', '=', 'title_wrestler.wrestler_id')
-            ->selectRaw("DATEDIFF(IFNULL(DATE(title_wrestler.lost_on), NOW()), DATE(title_wrestler.won_on)) as length")
-            ->addSelect('wrestlers.name')
-            ->orderBy('length', 'desc')
-            ->get();
+        $wrestler->winTitle($this, $date);
     }
 
     /**
@@ -130,27 +90,7 @@ class Title extends Model
      */
     public function most_title_defenses()
     {
-        $wrestlers = $this->most_title_defences_query();
-
-        $most = $wrestlers->first()->count;
-
-        return $wrestlers->where('count', $most);
-    }
-
-    /**
-     * Returns collection of champions by most title defenses.
-     *
-     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
-     */
-    public function most_title_defences_query()
-    {
-        return $this->champions()
-            ->join('wrestlers', 'wrestlers.id', '=', 'title_wrestler.wrestler_id')
-            ->join('match_title', 'title_wrestler.title_id', '=', 'match_title.title_id')
-            ->selectRaw('COUNT(*) as count')
-            ->addSelect('wrestlers.name')
-            ->groupBy('wrestler_id')->orderBy('count', 'desc')
-            ->get();
+        return MostTitleDefensesQuery::get($this);
     }
 
     /**
@@ -160,26 +100,7 @@ class Title extends Model
      */
     public function most_title_reigns()
     {
-        $wrestlers = $this->most_title_defences_query();
-
-        $most = $wrestlers->first()->count;
-
-        return $wrestlers->where('count', $most);
-    }
-
-    /**
-     * Returns collection of champions by most title reigns.
-     *
-     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
-     */
-    public function most_title_reigns_query()
-    {
-        return $this->champions()
-            ->join('wrestlers', 'wrestlers.id', '=', 'title_wrestler.wrestler_id')
-            ->selectRaw('COUNT(*) as count')
-            ->addSelect('wrestlers.name')
-            ->groupBy('wrestler_id')->orderBy('count', 'desc')
-            ->get();
+        return MostTitleReignsQuery::get($this);
     }
 
     /**
@@ -187,19 +108,13 @@ class Title extends Model
      *
      * @return Wrestler $wrestler|null
      */
-	public function getCurrentChampion() {
-		return $this->champions()
-            ->whereNull('lost_on')
-            ->first() ? $this->champions()->whereNull('lost_on')->first()->wrestler : null;
+    public function getCurrentChampion()
+    {
+        return $this->champions()->whereNull('lost_on')->first() ? $this->champions()->whereNull('lost_on')->first()->wrestler : null;
     }
 
-    /**
-     * Checks to see if title has been competed for.
-     *
-     * @return boolean
-     */
-    public function hasMatches()
+    public function longest_title_reign()
     {
-        return $this->matches->isNotEmpty();
+        return LongestTitleReignQuery::get($this);
     }
 }

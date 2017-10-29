@@ -47,16 +47,15 @@ class DatabaseSeeder extends Seeder
         $this->call(WrestlerStatusesTableSeeder::class);
         $this->call(WrestlersTableSeeder::class);
         $this->call(RefereesTableSeeder::class);
-//        $this->call(WrestlersInjuriesTableSeeder::class);
-//        $this->call(WrestlersRetirementsTableSeeder::class);
-        $this->call(TitlesTableSeeder::class);
+        $this->call(WrestlersInjuriesTableSeeder::class);
+        $this->call(WrestlersRetirementsTableSeeder::class);
         $this->call(MatchTypesTableSeeder::class);
         $this->call(StipulationsTableSeeder::class);
         $this->call(MatchDecisionsTableSeeder::class);
         $this->call(VenuesTableSeeder::class);
-        //$this->call(EventsTableSeeder::class);
-//        $this->call(ManagersTableSeeder::class);
-        $this->call(ChampionsTableSeeder::class);
+        $this->call(ManagersTableSeeder::class);
+        $this->call(TitlesTableSeeder::class);
+        $this->call(EventsTableSeeder::class);
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }

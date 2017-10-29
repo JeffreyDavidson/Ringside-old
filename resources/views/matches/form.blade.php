@@ -51,8 +51,8 @@
     {{--@if ($errors->has('matches.*.wrestlers')) <small class="form-control-feedback">{{ $errors->first('matches.*.wrestlers') }}</small> @endif--}}
 {{--</div>--}}
 
-{{--<div class="form-group @if ($errors->has('matches.*.preview')) {{ 'has-danger' }} @endif">--}}
-    {{--<label class="form-control-label" for="preview">Preview</label>--}}
-    {{--<textarea class="form-control" id="preview" name="matches[{{ $match_number }}][preview]" rows="5">{{  $match->preview }}</textarea>--}}
-    {{--@if ($errors->has('matches.*.preview')) <small class="form-control-feedback">{{ $errors->first('matches.*.preview') }}</small> @endif--}}
-{{--</div>--}}
+<div class="form-group @if ($errors->has('matches.'.$match_number.'.preview')) {{ 'has-danger' }} @endif">
+    <label class="form-control-label" for="preview">Preview</label>
+    <textarea class="form-control" id="preview" name="matches[{{ $match_number }}][preview]" rows="5">{{  $match->preview }}</textarea>
+    @if ($errors->has('matches.*.preview')) <small class="form-control-feedback">{{ $errors->first('matches.'.$match_number.'.preview') }}</small> @endif
+</div>

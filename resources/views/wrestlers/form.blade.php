@@ -25,7 +25,7 @@
 
 <div class="form-group @if ($errors->has('hometown')) {{ 'has-danger' }} @endif">
     <label class="form-control-label" for="slug">Hometown</label>
-    <input type="text" class="form-control" id="hometown" name="hometown" value="{{ old('hometown') ?? $wrestler->bio->hometown ?? ''}}"/>
+    <input type="text" class="form-control" id="hometown" name="hometown" value="{{ old('hometown') ?? $wrestler->hometown ?? ''}}"/>
     @if ($errors->has('hometown')) <small class="form-control-feedback">{{ $errors->first('hometown') }}</small> @endif
 </div>
 
@@ -51,7 +51,7 @@
     <div class="form-group col-sm-4 @if ($errors->has('weight')) {{ 'has-danger' }} @endif">
         <label class="form-control-label" for="weight">Weight</label>
         <div class="input-group">
-            <input type="text" class="form-control" id="weight" name="weight" value="{{ old('weight') ?? $wrestler->bio->weight ?? '' }}"/>
+            <input type="text" class="form-control" id="weight" name="weight" value="{{ old('weight') ?? $wrestler->weight ?? '' }}"/>
             <span class="input-group-addon">lbs.</span>
         </div>
         @if ($errors->has('weight')) <small class="form-control-feedback">{{ $errors->first('weight') }}</small> @endif
@@ -60,7 +60,7 @@
 
 <div class="form-group @if ($errors->has('signature_move')) {{ 'has-danger' }} @endif">
     <label class="form-control-label" for="signature_move">Signature Move</label>
-    <input type="text" class="form-control" id="signature_move" name="signature_move" value="{{ old('signature_move') ?? $wrestler->bio->signature_move ?? '' }}"/>
+    <input type="text" class="form-control" id="signature_move" name="signature_move" value="{{ old('signature_move') ?? $wrestler->signature_move ?? '' }}"/>
     @if ($errors->has('signature_move')) <small class="form-control-feedback">{{ $errors->first('signature_move') }}</small> @endif
 </div>
 
@@ -70,7 +70,7 @@
         <span class="input-group-addon">
             <i class="icon wb-calendar" aria-hidden="true"></i>
         </span>
-        <input type="date" data-plugin="datepicker" class="form-control" id="hired_at" name="hired_at" value="{{ old('hired_at') ?? ($wrestler->hired_at ?: \Carbon\Carbon::now())->format('m/d/Y') }}"/>
+        <input type="date" data-plugin="datepicker" class="form-control" id="hired_at" name="hired_at" value="{{ old('hired_at') ?? ($wrestler->hired_at ?: \Carbon\Carbon::now())->format('Y-m-d') }}"/>
     </div>
     @if ($errors->has('hired_at')) <small class="form-control-feedback">{{ $errors->first('hired_at') }}</small> @endif
 </div>
@@ -80,7 +80,3 @@
         {{ $submitButtonText ?? 'Create Wrestler' }}
     </button>
 </div>
-
-@foreach ($errors->all() as $message) {
-    {{ dd($message) }}
-@endforeach

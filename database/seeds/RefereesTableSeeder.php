@@ -1,10 +1,13 @@
 <?php
 
 use App\Models\Referee;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class RefereesTableSeeder extends Seeder
 {
+    private $refereeCount = 1;
+
     /**
      * Run the database seeds.
      *
@@ -12,6 +15,23 @@ class RefereesTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(Referee::class, 10)->create();
+        $startingDate = Carbon::parse('First Monday of January 2000');
+        $now = Carbon::now();
+
+        for ($this->refereeCount; $this->refereeCount <= 10; $this->refereeCount++) {
+            factory(Referee::class)->create([
+                'hired_at' => $startingDate,
+            ]);
+        }
+
+        while ($startingDate->addYears(3)->lte($now))
+        {
+            for ($x = 1; $x <= 5; $x++) {
+                factory(Referee::class)->create([
+                    'hired_at' => $startingDate,
+                ]);
+                $this->refereeCount++;
+            }
+        }
     }
 }

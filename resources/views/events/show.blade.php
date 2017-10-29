@@ -2,11 +2,21 @@
 
 @section('header')
     <h1 class="page-title">{{ $event->name }}</h1>
-    <p>{{ $event->present()->date }}</p>
-    <p>{{ $event->venue->name }}</p>
 @endsection
 
 @section('content')
+    <div class="panel panel-primary panel-bordered">
+        <div class="panel-heading clearfix">
+            <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-info-circle"></i>Basic Info</h3>
+            <div class="panel-actions">
+                <a class="btn btn-default pull-right" href="{{ route('events.index') }}">Back To All Events</a>
+            </div>
+        </div>
+        <div class="panel-body">
+            <p>{{ $event->present()->date }}</p>
+            <p>{{ $event->venue->name }}</p>
+        </div>
+    </div>
     @foreach($event->matches as $match)
         <div class="panel panel-bordered panel-primary">
             <div class="panel-heading">

@@ -30,7 +30,7 @@ class EventsController extends Controller
      */
     public function create()
     {
-        //$this->authorize('create', Event::class);
+        $this->authorize('create', Event::class);
 
         return response()->view('events.create', ['event' => new Event]);
     }
@@ -52,12 +52,6 @@ class EventsController extends Controller
             'venue_id' => $request->venue_id,
         ]);
 
-        //foreach ($request->matches as $match) {
-        //    $match->match_nuumber = '';
-        //    $match->match_type_id = '';
-        //    $match->preview = '';
-        //}
-
         return redirect()->route('events.index');
     }
 
@@ -69,7 +63,8 @@ class EventsController extends Controller
      */
     public function show(Event $event)
     {
-        //dd($event->matches);
+        $this->authorize('show', Event::class);
+
         return response()->view('events.show', ['event' => $event]);
     }
 
@@ -81,6 +76,8 @@ class EventsController extends Controller
      */
     public function edit(Event $event)
     {
+        $this->authorize('edit', Event::class);
+
         return response()->view('events.edit', ['event' => $event]);
     }
 
@@ -93,12 +90,13 @@ class EventsController extends Controller
      */
     public function update(EventEditFormRequest $request, Event $event)
     {
+        $this->authorize('edit', Event::class);
+
         $event->update([
             'name' => $request->name,
-            'address' => $request->address,
-            'city' => $request->city,
-            'state' => $request->state,
-            'postcode' => $request->postcode,
+            'slug' => $request->slug,
+            'date' => $request->date,
+            'venue_id' => $request->venue_id,
         ]);
 
         return redirect()->route('events.index');
@@ -112,6 +110,8 @@ class EventsController extends Controller
      */
     public function destroy(Event $event)
     {
+        $this->authorize('delete', Event::class);
+
         $event->delete();
 
         return redirect()->route('events.index');

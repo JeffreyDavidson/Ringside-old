@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
+use Barryvdh\Debugbar\ServiceProvider AS Debugbar;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Dusk\DuskServiceProvider;
@@ -34,11 +36,15 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         if ($this->app->isLocal()) {
-            $this->app->register(\Barryvdh\Debugbar\ServiceProvider::class);
+            $this->app->register(Debugbar::class);
         }
 
         if ($this->app->environment('local', 'testing')) {
             $this->app->register(DuskServiceProvider::class);
+        }
+
+        if ($this->app->environment() !== 'production') {
+            $this->app->register(IdeHelperServiceProvider::class);
         }
     }
 }

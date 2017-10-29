@@ -3,19 +3,19 @@
 namespace App\Models;
 
 use App\Traits\HasManagers;
+use App\Traits\HasMatches;
 use App\Traits\HasStatuses;
 use App\Traits\HasTitles;
 use App\Traits\HasRetirements;
 use App\Traits\HasSuspensions;
 use App\Traits\HasInjuries;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracodes\Presenter\Traits\Presentable;
 
 class Wrestler extends Model
 {
-	use HasStatuses, HasManagers, HasTitles, HasRetirements, HasSuspensions, HasInjuries, SoftDeletes, Presentable;
+    use HasStatuses, HasManagers, HasTitles, HasRetirements, HasSuspensions, HasInjuries, HasMatches, SoftDeletes, Presentable;
 
     /**
      * Assign which presenter to be used for model.
@@ -29,7 +29,7 @@ class Wrestler extends Model
      *
      * @var array
      */
-	protected $guarded = [];
+    protected $guarded = [];
 
     /**
      * The attributes that should be mutated to dates.
@@ -63,20 +63,20 @@ class Wrestler extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-	public function matches()
-	{
-		return $this->belongsToMany(Match::class);
-	}
+    public function matches()
+    {
+        return $this->belongsToMany(Match::class);
+    }
 
     /**
      * A wrestler can have many injuries.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-	public function injuries()
-	{
-		return $this->hasMany(Injury::class);
-	}
+    public function injuries()
+    {
+        return $this->hasMany(Injury::class);
+    }
 
     /**
      * A wrestler can have many suspensions.
@@ -93,49 +93,18 @@ class Wrestler extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-	public function retirements()
-	{
-		return $this->hasMany(Retirement::class);
-	}
+    public function retirements()
+    {
+        return $this->hasMany(Retirement::class);
+    }
 
     /**
      * Retrieves the status id attribute.
      *
-     * @return mixed integer
+     * @return integer
      */
-	public function status()
+    public function status()
     {
         return $this->getAttribute('status_id');
-    }
-
-    /**
-     * Retrieves date of the wrestler's first match.
-     *
-     * @return string
-     */
-    public function firstMatchDate()
-    {
-        return $this->matches->first()->date;
-    }
-
-    /**
-     * Checks to see if wrestler is no longer retired, injured or suspended.
-     *
-     * @return void
-     */
-    //public function statusChanged()
-    //{
-    //    if ($this->status() == WrestlerStatus::RETIRED) {
-    //        $this->unretire();
-    //    } else if ($this->status() == WrestlerStatus::INJURED) {
-    //        $this->heal();
-    //    } else if ($this->status() == WrestlerStatus::SUSPENDED) {
-    //        $this->rejoin();
-    //    }
-    //}
-
-    public function hasMatches()
-    {
-        return $this->matches->isNotEmpty();
     }
 }

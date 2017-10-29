@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\VenueCreateFormRequest;
 use App\Http\Requests\VenueEditFormRequest;
 use App\Models\Venue;
-use Illuminate\Http\Request;
-
 
 class VenuesController extends Controller
 {

@@ -9,6 +9,7 @@ use Illuminate\Database\Seeder;
 class WrestlersTableSeeder extends Seeder
 {
     private $wrestlerCount = 1;
+
     /**
      * Run the database seeds.
      *
@@ -16,10 +17,10 @@ class WrestlersTableSeeder extends Seeder
      */
     public function run()
     {
-        $startingDate = Carbon::parse('First Monday of January 2000');
+        $startingDate = Carbon::parse('First Monday of January 1990');
         $now = Carbon::now();
 
-        for ($this->wrestlerCount; $this->wrestlerCount <= 50; $this->wrestlerCount++) {
+        for ($this->wrestlerCount; $this->wrestlerCount <= 30; $this->wrestlerCount++) {
             factory(Wrestler::class)->create([
                 'name' => 'Wrestler '.$this->wrestlerCount,
                 'slug' => 'wrestler'.$this->wrestlerCount,

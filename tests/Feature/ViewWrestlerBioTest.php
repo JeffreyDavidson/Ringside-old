@@ -92,23 +92,20 @@ class ViewWrestlerBioTest extends TestCase
     /** @test */
     public function view_list_of_current_managers_on_wrestler_bio()
     {
-        $managerA = factory(Manager::class)->create(['name' => 'Manager A']);
-        $managerB = factory(Manager::class)->create(['name' => 'Manager B']);
+        $managerA = factory(Manager::class)->create(['first_name' => 'Jane', 'last_name' => 'Doe']);
 
         $this->wrestler->hireManager($managerA, Carbon::parse('last week'));
-        $this->wrestler->hireManager($managerB, Carbon::parse('last week'));
-        $this->wrestler->fireManager($managerB, Carbon::parse('yesterday'));
 
         $response = $this->actingAs($this->user)->get(route('wrestlers.show', $this->wrestler->id));
 
         $response->assertStatus(200);
-        $response->assertSee('Manager A');
+        $response->assertSee('Jane Doe');
     }
 
     /** @test */
     public function view_list_of_previous_managers_on_wrestler_bio()
     {
-        $managerA = factory(Manager::class)->create(['name' => 'Manager A']);
+        $managerA = factory(Manager::class)->create(['first_name' => 'John', 'last_name' => 'Smith']);
 
         $this->wrestler->hireManager($managerA, Carbon::parse('last week'));
         $this->wrestler->fireManager($managerA, Carbon::parse('yesterday'));
@@ -116,7 +113,7 @@ class ViewWrestlerBioTest extends TestCase
         $response = $this->actingAs($this->user)->get(route('wrestlers.show', $this->wrestler->id));
 
         $response->assertStatus(200);
-        $response->assertSee('Manager A');
+        $response->assertSee('John Smith');
     }
 
     /** @test */
@@ -126,8 +123,8 @@ class ViewWrestlerBioTest extends TestCase
         $titleA = factory(Title::class)->create(['name' => 'Title A']);
         $titleB = factory(Title::class)->create(['name' => 'Title B']);
 
-        $wrestler->winTitle($titleA);
-        $wrestler->winTitle($titleB);
+        $wrestler->winTitle($titleA, Carbon::yesterday());
+        $wrestler->winTitle($titleB, Carbon::yesterday());
 
         $response = $this->actingAs($this->user)->get(route('wrestlers.show', $wrestler->id));
 
@@ -142,8 +139,8 @@ class ViewWrestlerBioTest extends TestCase
         $titleA = factory(Title::class)->create(['name' => 'Title A']);
         factory(Title::class)->create(['name' => 'Title B']);
 
-        $wrestler->winTitle($titleA);
-        $wrestler->loseTitle($titleA);
+        $wrestler->winTitle($titleA, Carbon::yesterday());
+        $wrestler->loseTitle($titleA, Carbon::now());
 
         $response = $this->actingAs($this->user)->get(route('wrestlers.show', $wrestler->id));
 

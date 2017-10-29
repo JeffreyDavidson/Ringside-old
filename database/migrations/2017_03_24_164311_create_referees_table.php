@@ -17,6 +17,7 @@ class CreateRefereesTable extends Migration
             $table->increments('id');
             $table->string('first_name');
             $table->string('last_name');
+            $table->timestamp('hired_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

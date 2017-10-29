@@ -26,7 +26,7 @@
         <h2>Current Managers</h2>
         <ul>
             @foreach($wrestler->currentManagers as $manager)
-                <li>{{ $manager->name }}</li>
+                <li>{{ $manager->present()->fullName() }}</li>
             @endforeach
         </ul>
     @endif
@@ -35,7 +35,7 @@
         <h2>Previous Managers</h2>
         <ul>
             @foreach($wrestler->previousManagers as $manager)
-                <li>{{ $manager->name }}</li>
+                <li>{{ $manager->present()->fullName() }}</li>
             @endforeach
         </ul>
     @endif

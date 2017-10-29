@@ -11,16 +11,16 @@ class QualifiedForMatch implements Rule
     /**
      * @var \App\Models\Wrestler
      */
-    private $wrestler;
+    private $eventDate;
 
     /**
      * Create a new rule instance.
      *
-     * @param \App\Models\Wrestler $wrestler
+     * @param $eventDate
      */
-    public function __construct(Wrestler $wrestler)
+    public function __construct($eventDate)
     {
-        $this->wrestler = $wrestler;
+        $this->eventDate = $eventDate;
     }
 
     /**
@@ -32,7 +32,8 @@ class QualifiedForMatch implements Rule
      */
     public function passes($attribute, $value)
     {
-        return $this->wrestler->hired_at->lte(Carbon::parse($value));
+        $wrestler = Wrestler::find($value);
+        return $wrestler->hired_at->lte(Carbon::parse($this->eventDate));
     }
 
     /**

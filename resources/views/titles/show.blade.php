@@ -19,80 +19,24 @@
             @if ($title->retired_at)
                 <p>Retired At: {{ $title->present()->retired_at }}</p>
             @endif
-            @if ($title->matches->count() > 0)
-                <p>Records</p>
-                <p>Longest Title Reign:
-                    @foreach ($title->longest_title_reign() as $reign)
-                        {{ $reign->name }} {{  "(".$reign->length." days)" }}
-                    @endforeach
-                </p>
-                <p>Most Title Defenses:
-                    @foreach ($title->most_title_defenses() as $defense)
-                        {{ $defense->name }} {{  "(".$defense->count.")" }}
-                    @endforeach
-                </p>
-                <p>Most Title Reigns:
-                    @foreach ($title->most_title_reigns() as $reign)
-                        {{ $reign->name }} {{  "(".$reign->count.")" }}
-                    @endforeach
-                </p>
-            @endif
+            @include('titles.partials.records')
         </div>
     </div>
-    <div class="panel panel-bordered panel-primary">
-        <div class="panel-heading clearfix">
-            <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-trophy"></i>Champions</h3>
+    @if ($stipulation->hasPastMatches())
+        <div class="panel panel-bordered panel-primary">
+            <div class="panel-heading clearfix">
+                <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-trophy"></i>Previous Champions</h3>
+            </div>
+            <div class="panel-body container-fluid">
+                @include('titles.partials.champions')
+            </div>
         </div>
-        <div class="panel-body container-fluid">
-            <table class="table table-striped table-bordered datatable" cellspacing="0" width="100%">
-                <thead>
-                    <th>ID</th>
-                    <th>Champion</th>
-                    <th>Won On</th>
-                    <th>Lost On</th>
-                    <th>Length of Reign</th>
-                </thead>
-                <tbody>
-                @foreach($title->champions as $champion)
-                    <tr>
-                        <td>{{ $champion->id }}</td>
-                        <td>{{ $champion->wrestler->name }}</td>
-                        <td>{{ $champion->present()->won_on }}</td>
-                        <td>{{ $champion->present()->lost_on }}</td>
-                        <td>{{ $champion->present()->length_of_reign }}</td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
+        <div class="panel panel-bordered panel-primary">
+            <div class="panel-heading clearfix">
+                <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-calendar"></i>Matches</h3>
+            </div>
+            <div class="panel-body container-fluid">
+                @include('titles.partials.matches')
+            </div>
         </div>
-    </div>
-    <div class="panel panel-bordered panel-primary">
-        <div class="panel-heading clearfix">
-            <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-calendar"></i>Matches</h3>
-        </div>
-        <div class="panel-body container-fluid">
-            <table class="table table-striped table-bordered datatable" cellspacing="0" width="100%">
-                <thead>
-                    <th>ID</th>
-                    <th>Event</th>
-                    <th>Match</th>
-                    <th>Actions</th>
-                </thead>
-                <tbody>
-                @foreach($title->matches as $match)
-                    <tr>
-                        <td>{{ $match->id }}</td>
-                        <td>{{ $match->event->name }}</td>
-                        <td>{{ $match->present()->wrestlers }}</td>
-                        <td>
-                            <a class="btn btn-sm btn-icon btn-flat btn-default" href="{{ route('events.show', $match->event->id) }}" data-toggle="tooltip" data-original-title="Show">
-                                <i class="icon wb-eye" aria-hidden="true"></i>
-                            </a>
-                        </td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
 @endsection

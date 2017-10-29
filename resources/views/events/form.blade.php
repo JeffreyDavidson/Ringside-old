@@ -18,7 +18,7 @@
         <span class="input-group-addon">
             <i class="icon wb-calendar" aria-hidden="true"></i>
         </span>
-        <input type="date" data-plugin="datetimepicker" class="form-control" id="date" name="date" value="{{ old('date') ?? $event->formatted_form_date }}"/>
+        <input type="date" data-plugin="datepicker" class="form-control" id="date" name="date" value="{{ old('date') ?? ($event->date ?: \Carbon\Carbon::now())->format('Y-m-d') }}"/>
     </div>
     @if ($errors->has('date')) <small class="form-control-feedback">{{ $errors->first('date') }}</small> @endif
 </div>
@@ -33,11 +33,6 @@
     </select>
     @if ($errors->has('venue_id')) <small class="form-control-feedback">{{ $errors->first('venue_id') }}</small> @endif
 </div>
-
-@for ($x = 1; $x <= 1; $x++)
-    <h2>Match #{{ $x }}</h2>
-    @include('matches.form', ['match' => new \App\Models\Match, 'match_number' => $x])
-@endfor
 
 <div class="form-group">
     <button type="submit" class="btn btn-primary">

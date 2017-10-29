@@ -54,4 +54,21 @@ trait HasStatuses
     {
         $this->update(['status_id' => WrestlerStatus::INACTIVE]);
     }
+
+    // TODO: Adjust job of changing the status of the wrestler.
+    /**
+     * Checks to see if wrestler is no longer retired, injured or suspended.
+     *
+     * @return void
+     */
+    //public function statusChanged()
+    //{
+    //    if ($this->status() == WrestlerStatus::RETIRED) {
+    //        $this->unretire();
+    //    } else if ($this->status() == WrestlerStatus::INJURED) {
+    //        $this->heal();
+    //    } else if ($this->status() == WrestlerStatus::SUSPENDED) {
+    //        $this->rejoin();
+    //    }
+    //}
 }

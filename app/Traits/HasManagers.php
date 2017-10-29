@@ -4,7 +4,6 @@ namespace App\Traits;
 
 use App\Exceptions\WrestlerAlreadyHasManagerException;
 use App\Exceptions\WrestlerNotHaveHiredManagerException;
-use Carbon\Carbon;
 
 trait HasManagers
 {
@@ -43,7 +42,7 @@ trait HasManagers
             throw new WrestlerAlreadyHasManagerException;
         }
 
-        return $this->managers()->attach($manager->id, ['hired_on' => Carbon::now()]);
+        return $this->managers()->attach($manager->id, ['hired_on' => $this->freshTimestamp()]);
     }
 
     public function fireManager($manager)
@@ -52,6 +51,6 @@ trait HasManagers
             throw new WrestlerNotHaveHiredManagerException;
         }
 
-        return $this->managers()->updateExistingPivot($manager->id, ['fired_on' => Carbon::now()]);
+        return $this->managers()->updateExistingPivot($manager->id, ['fired_on' => $this->freshTimestamp()]);
     }
 }

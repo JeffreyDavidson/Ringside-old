@@ -20,6 +20,7 @@ class CreateEventsTable extends Migration
             $table->dateTime('date');
             $table->unsignedInteger('venue_id');
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('venue_id')->references('id')->on('venues');
         });

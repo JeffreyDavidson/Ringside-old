@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Suspension extends Model
@@ -28,6 +27,6 @@ class Suspension extends Model
      */
     public function renew()
     {
-        return $this->update(['ended_at' => Carbon::now()]);
+        return $this->update(['ended_at' => $this->freshTimestamp()]);
     }
 }

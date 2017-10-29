@@ -32,8 +32,7 @@ class BeforeFirstMatchDate implements Rule
      */
     public function passes($attribute, $value)
     {
-        //dd($this->wrestler->hasMatches());
-        if ($this->wrestler->hasMatches()) {
+        if ($this->wrestler->hasPastMatches()) {
             return Carbon::parse($value)
                 ->lte($this->wrestler->firstMatchDate());
         }

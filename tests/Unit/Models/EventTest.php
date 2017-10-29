@@ -6,12 +6,12 @@ use App\Models\Event;
 use App\Models\Match;
 use App\Models\Venue;
 use App\Exceptions\MatchesHaveSameMatchNumberAtEventException;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class EventTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     /** @test */
     public function an_event_have_many_matches()

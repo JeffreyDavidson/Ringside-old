@@ -41,7 +41,7 @@ class TitleEditFormRequest extends FormRequest
         $validator->after(function($validator) {
             $attr = $validator->getData();
 
-            if(!$this->title->hasMatches()) {
+            if(!$this->title->hasPastMatches()) {
                 return;
             }
 

@@ -14,42 +14,6 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 use Carbon\Carbon;
 
-$factory->define(App\Models\User::class, function (Faker\Generator $faker) {
-    static $password;
-
-    return [
-        'name' => $faker->name,
-        'email' => $faker->unique()->safeEmail,
-        'password' => $password ?: $password = bcrypt('secret'),
-        'role_id' => $faker->numberBetween(1, 4),
-        'remember_token' => str_random(10),
-    ];
-});
-
-$factory->state(App\Models\User::class, 'basic', function ($faker) {
-    return [
-        'role_id' => 1,
-    ];
-});
-
-$factory->state(App\Models\User::class, 'editor', function ($faker) {
-    return [
-        'role_id' => 2,
-    ];
-});
-
-$factory->state(App\Models\User::class, 'admin', function ($faker) {
-    return [
-        'role_id' => 3,
-    ];
-});
-
-$factory->state(App\Models\User::class, 'super-admin', function ($faker) {
-    return [
-        'role_id' => 4,
-    ];
-});
-
 $factory->define(App\Models\Permission::class, function (Faker\Generator $faker) {
     $name = $faker->sentence;
     return [
@@ -66,53 +30,9 @@ $factory->define(App\Models\Role::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\Models\Champion::class, function (Faker\Generator $faker) {
-    return [
-        'title_id' => $faker->word,
-        'wrestler_id' => $faker->word,
-        'won_on' => Carbon::now()
-    ];
-});
-
-$factory->define(App\Models\Wrestler::class, function (Faker\Generator $faker) {
-    $name = $faker->sentence;
-    return [
-        'name' => $name,
-        'slug' => str_slug($name),
-        'status_id' => $faker->numberBetween(1, 5),
-        'hometown' => $faker->city . ', ' . $faker->state,
-        'height' => $faker->numberBetween(63, 84),
-        'weight' => $faker->numberBetween(175, 400),
-        'signature_move' => $faker->unique()->sentence(3),
-        'hired_at' => $faker->dateTimeBetween('-30 years','-1 year'),
-    ];
-});
-
-$factory->state(App\Models\Wrestler::class, 'active', function ($faker) {
-    return ['status_id' => WrestlerStatus::SUSPENDED];
-});
-
-$factory->state(App\Models\Wrestler::class, 'inactive', function ($faker) {
-    return ['status_id' => WrestlerStatus::INACTIVE];
-});
-
-$factory->state(App\Models\Wrestler::class, 'injured', function ($faker) {
-    return ['status_id' => WrestlerStatus::INJURED];
-});
-
-$factory->state(App\Models\Wrestler::class, 'suspended', function ($faker) {
-    return ['status_id' => WrestlerStatus::SUSPENDED];
-});
-
-$factory->state(App\Models\Wrestler::class, 'retired', function ($faker) {
-    return ['status_id' => WrestlerStatus::RETIRED];
-});
-
 $factory->define(App\Models\WrestlerStatus::class, function (Faker\Generator $faker) {
 
-    return [
-        'name' => $faker->sentence(3),
-    ];
+    return ['name' => $faker->sentence(3)];
 });
 
 $factory->define(App\Models\Injury::class, function (Faker\Generator $faker) {
@@ -140,7 +60,8 @@ $factory->define(App\Models\Retirement::class, function (Faker\Generator $faker)
 $factory->define(App\Models\Manager::class, function (Faker\Generator $faker) {
 
     return [
-        'name' => $faker->name,
+        'first_name' => $faker->firstName,
+        'last_name' => $faker->lastName
     ];
 });
 

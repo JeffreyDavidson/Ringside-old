@@ -11,6 +11,8 @@ class Match extends Model
 {
     use Presentable, SoftDeletes;
 
+    protected $with = array('wrestlers', 'stipulations', 'referees', 'titles');
+
     /**
      * Assign which presenter to be used for model.
      *
@@ -36,7 +38,7 @@ class Match extends Model
     protected $guarded = [];
 
     /**
-     * A match can have many wrestles.
+     * A match can have many wrestlers.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -183,22 +185,21 @@ class Match extends Model
      */
     public function isTitleMatch()
     {
-        return $this->titles()->count() > 0;
+        return $this->titles->isNotEmpty();
     }
 
     /**
      * Sets the winner of the match.
      *
-     * @param $winner
+     * @param Wrestler $wrestler
      */
-    public function setWinner($winner)
+    public function setWinner(Wrestler $wrestler)
     {
-        $this->update(['winner_id' => $winner->id, 'loser_id' => $this->wrestlers->except($winner->id)->first()->id]);
-
+        $this->update(['winner_id' => $wrestler->id, 'loser_id' => $this->wrestlers->except($wrestler->id)->first()->id]);
         if ($this->isTitleMatch()) {
-            $this->titles->each(function ($title) use ($winner) {
-                if (! $winner->hasTitle($title)) {
-                    $title->setNewChampion($winner, $this->event->date);
+            $this->titles->each(function ($title) use ($wrestler) {
+                if (! $wrestler->hasTitle($title)) {
+                    $title->setNewChampion($wrestler, $this->event->date);
                 }
             });
         }
@@ -212,6 +213,11 @@ class Match extends Model
     public function getDateAttribute()
     {
         return $this->event->date;
+    }
+
+    public function isPast()
+    {
+        return $this->date->isPast();
     }
 
     /**

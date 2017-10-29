@@ -11,18 +11,22 @@
                         </a>
                     </li>
                     <li class="site-menu-category">Administrator</li>
-                    <li class="site-menu-item has-sub">
-                        <a href="{{ route('wrestlers.index') }}">
-                            <i class="site-menu-icon icon fa-group" aria-hidden="true"></i>
-                            <span class="site-menu-title">Wrestlers</span>
-                        </a>
-                    </li>
-                    <li class="site-menu-item has-sub">
-                        <a href="{{ route('events.index') }}">
-                            <i class="site-menu-icon icon fa-calendar" aria-hidden="true"></i>
-                            <span class="site-menu-title">Events</span>
-                        </a>
-                    </li>
+                    @can('index', \App\Models\Wrestler::class)
+                        <li class="site-menu-item has-sub">
+                            <a href="{{ route('wrestlers.index') }}">
+                                <i class="site-menu-icon icon fa-group" aria-hidden="true"></i>
+                                <span class="site-menu-title">Wrestlers</span>
+                            </a>
+                        </li>
+                    @endcan
+                    @can('index', \App\Models\Event::class)
+                        <li class="site-menu-item has-sub">
+                            <a href="{{ route('events.index') }}">
+                                <i class="site-menu-icon icon fa-calendar" aria-hidden="true"></i>
+                                <span class="site-menu-title">Events</span>
+                            </a>
+                        </li>
+                    @endcan
                     @can('index', \App\Models\Title::class)
                         <li class="site-menu-item">
                             <a href="{{ route('titles.index') }}">

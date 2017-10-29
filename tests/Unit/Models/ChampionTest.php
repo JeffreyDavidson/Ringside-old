@@ -19,7 +19,6 @@ class ChampionTest extends TestCase
         factory(Champion::class)->create(['title_id' => $title->id, 'wrestler_id' => 2, 'won_on' => '2017-02-16', 'lost_on' => '2017-03-16']);
         factory(Champion::class)->create(['title_id' => $title->id, 'wrestler_id' => 3, 'won_on' => '2017-03-16', 'lost_on' => '2017-04-16']);
 
-        //dd($title->champions);
-        $this->assertCount(3, $title->champions()->count());
+        $this->assertEquals(3, $title->champions()->count());
     }
 }

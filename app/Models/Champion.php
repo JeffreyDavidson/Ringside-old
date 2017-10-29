@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
+use App\Queries\LongestTitleRunQuery;
 use Illuminate\Database\Eloquent\Model;
 use Laracodes\Presenter\Traits\Presentable;
 use App\Collections\TitleChampionsCollection;
@@ -29,12 +29,12 @@ class Champion extends Model
 
     public function wrestler()
     {
-        return $this->belongsTo(Wrestler::class);
+        return $this->belongsTo(Wrestler::class)->withTrashed();
     }
 
-    public function loseTitle()
+    public function loseTitle($date)
     {
-        return $this->update(['lost_on' => Carbon::now()]);
+        return $this->update(['lost_on' => $date ?: $this->freshTimestamp()]);
     }
 
     /**

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Injury extends Model
@@ -26,8 +25,8 @@ class Injury extends Model
      *
      * @return boolean
      */
-    public function healed()
+    public function healed($healedAt)
     {
-        return $this->update(['healed_at' => Carbon::now()]);
+        return $this->update(['healed_at' => $healedAt ?: $this->freshTimestamp()]);
     }
 }

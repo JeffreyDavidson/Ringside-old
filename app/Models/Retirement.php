@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Retirement extends Model
@@ -28,6 +27,6 @@ class Retirement extends Model
      */
     public function unretire()
     {
-        return $this->update(['ended_at' => Carbon::now()]);
+        return $this->update(['ended_at' => $this->freshTimestamp()]);
     }
 }

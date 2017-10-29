@@ -156,7 +156,7 @@ class AddTitleTest extends TestCase
     /** @test */
     function adding_a_valid_title()
     {
-        $response = $this->actingAs($this->user)->from(route('titles.create'))->post(route('titles.index'), $this->validParams());
+        $response = $this->actingAs($this->user)->post(route('titles.index'), $this->validParams());
 
         tap(Title::first(), function ($title) use ($response) {
             $response->assertStatus(302);

@@ -2,8 +2,6 @@
 
 namespace App\Traits;
 
-use App\Models\WrestlerStatus;
-use Carbon\Carbon;
 use App\Exceptions\WrestlerNotInjuredException;
 use App\Exceptions\WrestlerAlreadyInjuredException;
 
@@ -26,7 +24,7 @@ trait HasInjuries
         return $this->injuries()->whereNull('healed_at')->count() > 0;
     }
 
-    public function injure()
+    public function injure($injuredAt = null)
     {
         if ($this->isInjured()) {
             throw new WrestlerAlreadyInjuredException;
@@ -34,10 +32,10 @@ trait HasInjuries
 
         $this->setStatusToInactive();
 
-        $this->injuries()->create(['injured_at' => Carbon::now()]);
+        $this->injuries()->create(['injured_at' => $injuredAt ?: $this->freshTimestamp()]);
     }
 
-    public function heal()
+    public function heal($healedAt = null)
     {
         if (! $this->isInjured()) {
             throw new WrestlerNotInjuredException;
@@ -45,7 +43,7 @@ trait HasInjuries
 
         $this->setStatusToActive();
 
-        $this->injuries()->whereNull('healed_at')->first()->healed();
+        $this->injuries()->whereNull('healed_at')->first()->healed($healedAt);
 
         return $this;
     }
