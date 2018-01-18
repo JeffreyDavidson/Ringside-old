@@ -22,7 +22,7 @@ trait HasMatches
      */
     public function pastMatches()
     {
-         return $this->matches->filter->isPast();
+        return $this->matches->filter->isPast();
     }
 
     /**

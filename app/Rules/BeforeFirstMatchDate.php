@@ -2,39 +2,37 @@
 
 namespace App\Rules;
 
-use App\Models\Wrestler;
 use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Rule;
 
 class BeforeFirstMatchDate implements Rule
 {
     /**
-     * @var \App\Models\Wrestler
+     * @var
      */
-    private $wrestler;
+    private $model;
 
     /**
      * Create a new rule instance.
      *
-     * @param \App\Models\Wrestler $wrestler
+     * @param $model
      */
-    public function __construct(Wrestler $wrestler)
+    public function __construct($model)
     {
-        $this->wrestler = $wrestler;
+        $this->model = $model;
     }
 
     /**
      * Determine if the validation rule passes.
      *
-     * @param  string  $attribute
-     * @param  mixed  $value
+     * @param  string $attribute
+     * @param  mixed $value
      * @return bool
      */
     public function passes($attribute, $value)
     {
-        if ($this->wrestler->hasPastMatches()) {
-            return Carbon::parse($value)
-                ->lte($this->wrestler->firstMatchDate());
+        if ($this->model->hasPastMatches()) {
+            return Carbon::parse($value)->lte($this->model->firstMatchDate());
         }
 
         return true;
@@ -47,6 +45,6 @@ class BeforeFirstMatchDate implements Rule
      */
     public function message()
     {
-        return 'The hired at date cannot be AFTER the wrestler\'s first match.';
+        return 'The :attribute cannot be after ' . $this->model->firstMatchDate()->toDateString();
     }
 }

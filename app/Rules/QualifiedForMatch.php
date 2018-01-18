@@ -30,9 +30,8 @@ class QualifiedForMatch implements Rule
      * @param  mixed  $value
      * @return bool
      */
-    public function passes($attribute, $value)
+    public function passes($attribute, $wrestler)
     {
-        $wrestler = Wrestler::find($value);
         return $wrestler->hired_at->lte(Carbon::parse($this->eventDate));
     }
 
