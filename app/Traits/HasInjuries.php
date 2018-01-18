@@ -9,12 +9,12 @@ trait HasInjuries
 {
     abstract public function injuries();
 
-    public function hasPreviousInjuries()
+    public function hasPastInjuries()
     {
-        return $this->previousInjuries->isNotEmpty();
+        return $this->pastInjuries->isNotEmpty();
     }
 
-    public function previousInjuries()
+    public function pastInjuries()
     {
         return $this->injuries()->whereNotNull('healed_at');
     }
@@ -37,13 +37,13 @@ trait HasInjuries
 
     public function heal($healedAt = null)
     {
-        if (! $this->isInjured()) {
+        if (!$this->isInjured()) {
             throw new WrestlerNotInjuredException;
         }
 
         $this->setStatusToActive();
 
-        $this->injuries()->whereNull('healed_at')->first()->healed($healedAt);
+        $this->injuries()->whereNull('healed_at')->first()->heal($healedAt);
 
         return $this;
     }

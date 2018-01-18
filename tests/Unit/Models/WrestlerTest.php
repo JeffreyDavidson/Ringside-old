@@ -2,16 +2,6 @@
 
 namespace Tests\Unit;
 
-use App\Exceptions\WrestlerAlreadyHasManagerException;
-use App\Exceptions\WrestlerAlreadyHasTitleException;
-use App\Exceptions\WrestlerAlreadyInjuredException;
-use App\Exceptions\WrestlerAlreadyRetiredException;
-use App\Exceptions\WrestlerAlreadySuspendedException;
-use App\Exceptions\WrestlerNotHaveHiredManagerException;
-use App\Exceptions\WrestlerNotInjuredException;
-use App\Exceptions\WrestlerNotRetiredException;
-use App\Exceptions\WrestlerNotSuspendedException;
-use App\Exceptions\WrestlerNotTitleChampionException;
 use App\Models\Manager;
 use App\Models\Title;
 use App\Models\Wrestler;
@@ -295,72 +285,6 @@ class WrestlerTest extends TestCase
         $wrestler->fireManager($manager);
 
         $this->assertEquals(0, $wrestler->previousManagers()->count());
-    }
-
-    /** @test */
-    public function an_wrestler_can_be_injured()
-    {
-        $wrestler = factory(Wrestler::class)->create();
-
-        $wrestler->injure();
-
-        $this->assertEquals(1, $wrestler->injuries->count());
-        $this->assertEquals(2, $wrestler->status());
-        $this->assertNull($wrestler->injuries()->first()->healed_at);
-    }
-
-    /** @test */
-    public function an_injured_wrestler_can_be_healed()
-    {
-        $wrestler = factory(Wrestler::class)->create();
-
-        $wrestler->injure();
-        $wrestler->heal();
-
-        $this->assertNotNull($wrestler->injuries()->first()->healed_at);
-        $this->assertEquals(1, $wrestler->status());
-    }
-
-    /** @test */
-    public function a_wrestler_can_have_multiple_injuries()
-    {
-        $wrestler = factory(Wrestler::class)->create();
-
-        $wrestler->injure();
-        $wrestler->heal();
-        $wrestler->injure();
-
-        $this->assertTrue($wrestler->hasPreviousInjuries());
-        $this->assertEquals(1, $wrestler->previousInjuries->count());
-    }
-
-    /**
-     * @expectedException \App\Exceptions\WrestlerAlreadyInjuredException
-     *
-     * @test
-     */
-    public function an_injured_wrestler_cannot_be_injured()
-    {
-        $wrestler = factory(Wrestler::class)->create();
-        $wrestler->injure();
-
-        $wrestler->injure();
-
-        $this->assertEquals(1, $wrestler->injuries->count());
-    }
-
-    /**
-     * @expectedException \App\Exceptions\WrestlerNotInjuredException
-     *
-     * @test
-     */
-    public function a_wrestler_who_is_not_injured_cannot_be_healed()
-    {
-        $wrestler = factory(Wrestler::class)->create();
-
-        $wrestler->heal();
-
-        $this->assertEquals(0, $wrestler->injuries->count());
     }
 
     /** @test */
