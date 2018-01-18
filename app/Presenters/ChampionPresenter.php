@@ -18,6 +18,6 @@ class ChampionPresenter extends Presenter {
 
     public function lengthOfReign()
     {
-        return $this->model->won_on->diffInDays($this->model->lost_on) .' days';
+        return $this->model->lost_on ? $this->model->won_on->diffInDays($this->model->lost_on) .' days' : 'Present';
     }
 }

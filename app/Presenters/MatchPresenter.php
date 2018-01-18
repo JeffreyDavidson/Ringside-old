@@ -4,8 +4,8 @@ namespace App\Presenters;
 
 use Laracodes\Presenter\Presenter;
 
-class MatchPresenter extends Presenter {
-
+class MatchPresenter extends Presenter
+{
     public function wrestlers()
     {
         return $this->model->wrestlers->implode('name', ' vs. ');
@@ -30,7 +30,7 @@ class MatchPresenter extends Presenter {
         } elseif ($loop->last) {
             return 'Main Event';
         } else {
-            return 'Match #'.$this->model->match_number;
+            return 'Match #' . $this->model->match_number;
         }
     }
 }

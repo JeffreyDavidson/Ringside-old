@@ -12,11 +12,11 @@ class MatchFactory
 
         self::addWrestlersForMatch($wrestlers, $match);
 
-        // self::addRefereesForMatch($referees, $match);
+        self::addRefereesForMatch($referees, $match);
 
         self::addTitlesForMatch($titles, $match);
 
-//        $match->addStipulations($stipulations);
+        self::addStipulationsForMatch($stipulations, $match);
 
         return $match;
     }
@@ -52,33 +52,42 @@ class MatchFactory
             // Throw exception
         }
 
-        $match->referees()->save($referees);
+        $match->referees()->saveMany($referees);
 
-        if ($match->needsTwoReferees()) {
-            $numberOfRefereesToAdd = 2 - count($referees);
+        // if ($match->needsTwoReferees()) {
+        //     $numberOfRefereesToAdd = 2 - count($referees);
 
-            if ($numberOfRefereesToAdd) {
-                $refereesToAdd = factory(Referee::class, $numberOfRefereesToAdd)->create();
-                array_push($refereesForMatch, $refereesToAdd);
-                array_push($refereesForMatch, $referees);
-            }
-        }
+        //     if ($numberOfRefereesToAdd) {
+        //         $refereesToAdd = factory(Referee::class, $numberOfRefereesToAdd)->create();
+        //         array_push($refereesForMatch, $refereesToAdd);
+        //         array_push($refereesForMatch, $referees);
+        //     }
+        // }
 
-        if (count($referees) == 0) {
-            array_push($refereesForMatch, factory(Referee::class)->create());
-        } elseif (count($referees) == 1) {
-            array_push($refereesForMatch, $referees);
-        }
+        // if (count($referees) == 0) {
+        //     array_push($refereesForMatch, factory(Referee::class)->create());
+        // } elseif (count($referees) == 1) {
+        //     array_push($refereesForMatch, $referees);
+        // }
 
-        $match->addReferees($refereesForMatch);
+        // $match->addReferees($refereesForMatch);
+    }
+
+    /**
+     * @param $titles
+     * @param $match
+     */
+    public static function addTitlesForMatch($titles, $match)
+    {
+        $match->titles()->saveMany($titles);
     }
 
     /**
      * @param $referees
      * @param $match
      */
-    public static function addTitlesForMatch($titles, $match)
+    public static function addStipulationsForMatch($stipulations, $match)
     {
-        $match->titles()->saveMany($titles);
+        $match->stipulations()->saveMany($stipulations);
     }
 }
