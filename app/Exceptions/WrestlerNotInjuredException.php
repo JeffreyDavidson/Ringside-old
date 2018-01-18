@@ -2,4 +2,6 @@
 
 namespace App\Exceptions;
 
-class WrestlerNotInjuredException extends \RuntimeException {}
+class WrestlerNotInjuredException extends \RuntimeException
+{
+}

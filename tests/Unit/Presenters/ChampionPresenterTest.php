@@ -3,14 +3,9 @@
 namespace Tests\Unit;
 
 use App\Models\Champion;
-use App\Models\Match;
-use App\Models\Referee;
-use App\Models\Stipulation;
-use App\Models\Wrestler;
 use Carbon\Carbon;
-use stdClass;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class ChampionPresenterTest extends TestCase
 {
@@ -35,7 +30,7 @@ class ChampionPresenterTest extends TestCase
     /** @test */
     public function a_current_champions_who_hasnt_lost_their_title_can_be_formatted()
     {
-        $champion = factory(Champion::class)->create(['lost_on' => NULL]);
+        $champion = factory(Champion::class)->create(['lost_on' => null]);
 
         $this->assertEquals('Present', $champion->present()->lostOn);
     }
@@ -51,7 +46,7 @@ class ChampionPresenterTest extends TestCase
     /** @test */
     public function a_champions_length_of_reign_that_hasnt_lost_there_title_can_be_formatted_in_a_readable_format()
     {
-        $champion = factory(Champion::class)->create(['won_on' => Carbon::now()->subDays(200), 'lost_on' => NULL]);
+        $champion = factory(Champion::class)->create(['won_on' => Carbon::now()->subDays(200), 'lost_on' => null]);
 
         $this->assertEquals('Present', $champion->present()->lengthOfReign);
     }

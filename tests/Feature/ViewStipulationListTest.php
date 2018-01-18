@@ -2,12 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Models\Permission;
+use App\Models\Role;
 use App\Models\Stipulation;
 use App\Models\User;
-use App\Models\Role;
-use App\Models\Permission;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class ViewStipulationListTest extends TestCase
 {
@@ -32,7 +32,7 @@ class ViewStipulationListTest extends TestCase
     }
 
     /** @test */
-    function users_who_have_permission_can_view_the_list_of_stipulations()
+    public function users_who_have_permission_can_view_the_list_of_stipulations()
     {
         $stipulationA = factory(Stipulation::class)->create();
         $stipulationB = factory(Stipulation::class)->create();
@@ -50,7 +50,7 @@ class ViewStipulationListTest extends TestCase
     }
 
     /** @test */
-    function users_who_dont_have_permission_cannot_view_the_list_of_stipulations()
+    public function users_who_dont_have_permission_cannot_view_the_list_of_stipulations()
     {
         $userWithoutPermission = factory(User::class)->create();
         $role = factory(Role::class)->create(['name' => 'editor']);
@@ -62,7 +62,7 @@ class ViewStipulationListTest extends TestCase
     }
 
     /** @test */
-    function guests_cannot_view_stipulation_list()
+    public function guests_cannot_view_stipulation_list()
     {
         $response = $this->get(route('stipulations.index'));
 

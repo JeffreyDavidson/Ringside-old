@@ -2,13 +2,12 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
-use App\Models\Role;
 use App\Models\Permission;
+use App\Models\Role;
 use App\Models\Stipulation;
-use App\Models\Match;
-use Tests\TestCase;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class ViewStipulationTest extends TestCase
 {
@@ -39,7 +38,7 @@ class ViewStipulationTest extends TestCase
     }
 
     /** @test */
-    function users_who_have_permission_can_view_a_stipulation()
+    public function users_who_have_permission_can_view_a_stipulation()
     {
         $response = $this->actingAs($this->user)->get(route('stipulations.show', $this->stipulation->id));
 
@@ -49,7 +48,7 @@ class ViewStipulationTest extends TestCase
     }
 
     /** @test */
-    function users_who_dont_have_permission_cannot_view_a_stipulation()
+    public function users_who_dont_have_permission_cannot_view_a_stipulation()
     {
         $userWithoutPermission = factory(User::class)->create();
         $role = factory(Role::class)->create(['name' => 'editor']);
@@ -61,7 +60,7 @@ class ViewStipulationTest extends TestCase
     }
 
     /** @test */
-    function guests_cannot_view_a_stipulation()
+    public function guests_cannot_view_a_stipulation()
     {
         $response = $this->get(route('stipulations.show', $this->stipulation->id));
 

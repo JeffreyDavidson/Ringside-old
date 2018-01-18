@@ -23,7 +23,7 @@ class Retirement extends Model
     /**
      * Unretires a wrestler who is currently retired.
      *
-     * @return boolean
+     * @return bool
      */
     public function unretire()
     {
