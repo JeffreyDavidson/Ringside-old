@@ -2,15 +2,9 @@
 
 namespace Tests\Unit;
 
-use App\Models\Champion;
 use App\Models\Event;
-use App\Models\Match;
-use App\Models\Referee;
-use App\Models\Stipulation;
-use App\Models\Wrestler;
-use stdClass;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class EventPresenterTest extends TestCase
 {

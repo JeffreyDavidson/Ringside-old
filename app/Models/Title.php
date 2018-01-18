@@ -7,8 +7,8 @@ use App\Queries\MostTitleDefensesQuery;
 use App\Queries\MostTitleReignsQuery;
 use App\Traits\HasMatches;
 use Illuminate\Database\Eloquent\Model;
-use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laracodes\Presenter\Traits\Presentable;
 
 class Title extends Model
 {

@@ -2,4 +2,6 @@
 
 namespace App\Exceptions;
 
-class WrestlerNotTitleChampionException extends \RuntimeException {}
+class WrestlerNotTitleChampionException extends \RuntimeException
+{
+}

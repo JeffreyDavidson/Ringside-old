@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracodes\Presenter\Traits\Presentable;
-use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
     use Presentable, SoftDeletes;
 
-    protected $with = array('matches');
+    protected $with = ['matches'];
 
     /**
      * Assign which presenter to be used for model.
