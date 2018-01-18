@@ -6,10 +6,10 @@ use App\Models\Event;
 use App\Models\Match;
 use App\Models\Wrestler;
 use App\Rules\BeforeFirstMatchDate;
-use Tests\TestCase;
 use EventFactory;
-use MatchFactory;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use MatchFactory;
+use Tests\TestCase;
 
 class BeforeFirstMatchDateRuleTest extends TestCase
 {

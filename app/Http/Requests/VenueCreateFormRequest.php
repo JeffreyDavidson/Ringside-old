@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use Gate;
 use Illuminate\Foundation\Http\FormRequest;
 
 class VenueCreateFormRequest extends FormRequest
@@ -25,11 +24,11 @@ class VenueCreateFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|alpha_num_spaces|unique:venues,name',
-            'address' => 'required|alpha_num_spaces',
-            'city' => 'required|alpha_spaces',
-            'state' => 'required|alpha|not_in:0',
-            'postcode' => 'required|numeric|digits:5'
+            'name'     => 'required|alpha_num_spaces|unique:venues,name',
+            'address'  => 'required|alpha_num_spaces',
+            'city'     => 'required|alpha_spaces',
+            'state'    => 'required|alpha|not_in:0',
+            'postcode' => 'required|numeric|digits:5',
         ];
     }
 }

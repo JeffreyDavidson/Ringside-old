@@ -2,8 +2,8 @@
 
 namespace Tests;
 
-use Exception;
 use App\Exceptions\Handler;
+use Exception;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\TestResponse;
@@ -29,11 +29,11 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
         });
 
         Collection::macro('assertContains', function ($value) {
-            Assert::assertTrue($this->contains($value), "Failed asserting that the collection contains the specified value.");
+            Assert::assertTrue($this->contains($value), 'Failed asserting that the collection contains the specified value.');
         });
 
         Collection::macro('assertNotContains', function ($value) {
-            Assert::assertFalse($this->contains($value), "Failed asserting that the collection does not contain the specified value.");
+            Assert::assertFalse($this->contains($value), 'Failed asserting that the collection does not contain the specified value.');
         });
 
         Collection::macro('assertEquals', function ($items) {
@@ -47,10 +47,17 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
 
     protected function disableExceptionHandling()
     {
-        $this->app->instance(ExceptionHandler::class, new class extends Handler {
-            public function __construct() {}
-            public function report(Exception $e) {}
-            public function render($request, Exception $e) {
+        $this->app->instance(ExceptionHandler::class, new class() extends Handler {
+            public function __construct()
+            {
+            }
+
+            public function report(Exception $e)
+            {
+            }
+
+            public function render($request, Exception $e)
+            {
                 throw $e;
             }
         });
@@ -59,6 +66,7 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
     protected function from($url)
     {
         session()->setPreviousUrl(url($url));
+
         return $this;
     }
 }
