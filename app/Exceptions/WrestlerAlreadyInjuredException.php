@@ -2,4 +2,6 @@
 
 namespace App\Exceptions;
 
-class WrestlerAlreadyInjuredException extends \Exception {}
+class WrestlerAlreadyInjuredException extends \Exception
+{
+}

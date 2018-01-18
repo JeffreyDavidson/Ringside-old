@@ -1,12 +1,12 @@
 <?php
 
-use App\Models\MatchType;
-use App\Models\Venue;
 use App\Models\Event;
 use App\Models\Match;
+use App\Models\MatchType;
+use App\Models\Referee;
 use App\Models\Stipulation;
 use App\Models\Title;
-use App\Models\Referee;
+use App\Models\Venue;
 use App\Models\Wrestler;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
@@ -24,19 +24,19 @@ class EventsTableSeeder extends Seeder
         $nextMonth = Carbon::now()->addMonth();
 
         collect([
-            'monday' => false,
+            'monday'   => false,
             'thursday' => false,
-            'sunday' => true
+            'sunday'   => true,
         ])->flatMap(function ($bool, $day) use ($start, $nextMonth) {
             return dates($start, $nextMonth, $day, $bool);
         })->sort(function ($a, $b) {
             return strtotime($a) - strtotime($b);
         })->values()->map(function ($date, $key) {
             return factory(Event::class)->create([
-                'name' => 'Event ' . ($key + 1),
-                'slug' => 'event' . ($key + 1),
+                'name'     => 'Event '.($key + 1),
+                'slug'     => 'event'.($key + 1),
                 'venue_id' => Venue::inRandomOrder()->first()->id,
-                'date' => $date
+                'date'     => $date,
             ]);
         })->filter(function ($event) {
             return $event->date->lt(Carbon::today());
@@ -45,8 +45,9 @@ class EventsTableSeeder extends Seeder
         });
     }
 
-    public function addTitles($match) {
-        if(chance(5)) {
+    public function addTitles($match)
+    {
+        if (chance(5)) {
             $match->addTitle($title = Title::valid($match->event->date)->inRandomOrder()->first());
         }
     }
@@ -54,11 +55,11 @@ class EventsTableSeeder extends Seeder
     public function addMatches(Event $event)
     {
         $matchesCount = rand(6, 10);
-        for($matchNumber = 1; $matchNumber <= $matchesCount; $matchNumber++) {
+        for ($matchNumber = 1; $matchNumber <= $matchesCount; $matchNumber++) {
             $match = $event->matches()->save(factory(Match::class)->create([
                 'match_type_id' => MatchType::inRandomOrder()->first()->id,
-                'event_id' => $event->id,
-                'match_number' => $matchNumber,
+                'event_id'      => $event->id,
+                'match_number'  => $matchNumber,
             ]));
 
             $this->addReferees($match);
@@ -115,8 +116,9 @@ class EventsTableSeeder extends Seeder
         }
     }
 
-    public function addStipulations($match) {
-        if(chance(3)) {
+    public function addStipulations($match)
+    {
+        if (chance(3)) {
             $stipulation = Stipulation::inRandomOrder()->first();
             $match->addStipulation($stipulation);
         }

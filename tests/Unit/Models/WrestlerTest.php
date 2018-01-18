@@ -7,8 +7,8 @@ use App\Models\Title;
 use App\Models\Wrestler;
 use App\Models\WrestlerStatus;
 use Carbon\Carbon;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class WrestlerTest extends TestCase
 {

@@ -2,4 +2,6 @@
 
 namespace App\Exceptions;
 
-class WrestlerIsInactiveException extends \RuntimeException {}
+class WrestlerIsInactiveException extends \RuntimeException
+{
+}
