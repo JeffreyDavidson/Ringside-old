@@ -2,8 +2,8 @@
 
 namespace App\Traits;
 
-use App\Exceptions\WrestlerNotInjuredException;
 use App\Exceptions\WrestlerAlreadyInjuredException;
+use App\Exceptions\WrestlerNotInjuredException;
 
 trait HasInjuries
 {
@@ -27,7 +27,7 @@ trait HasInjuries
     public function injure($injuredAt = null)
     {
         if ($this->isInjured()) {
-            throw new WrestlerAlreadyInjuredException;
+            throw new WrestlerAlreadyInjuredException();
         }
 
         $this->setStatusToInactive();
@@ -38,7 +38,7 @@ trait HasInjuries
     public function heal($healedAt = null)
     {
         if (!$this->isInjured()) {
-            throw new WrestlerNotInjuredException;
+            throw new WrestlerNotInjuredException();
         }
 
         $this->setStatusToActive();

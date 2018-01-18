@@ -31,13 +31,14 @@ class TitlesController extends Controller
     {
         $this->authorize('create', Title::class);
 
-        return response()->view('titles.create', ['title' => new Title]);
+        return response()->view('titles.create', ['title' => new Title()]);
     }
 
     /**
      * Store a newly created title.
      *
      * @param TitleCreateFormRequest $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(TitleCreateFormRequest $request)
@@ -45,8 +46,8 @@ class TitlesController extends Controller
         $this->authorize('create', Title::class);
 
         Title::create([
-            'name' => $request->name,
-            'slug' => $request->slug,
+            'name'          => $request->name,
+            'slug'          => $request->slug,
             'introduced_at' => $request->introduced_at,
         ]);
 
@@ -56,7 +57,8 @@ class TitlesController extends Controller
     /**
      * Display the specified title.
      *
-     * @param  Title $title
+     * @param Title $title
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(Title $title)
@@ -69,7 +71,8 @@ class TitlesController extends Controller
     /**
      * Show the form for editing a title.
      *
-     * @param  Title $title
+     * @param Title $title
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit(Title $title)
@@ -82,8 +85,9 @@ class TitlesController extends Controller
     /**
      * Update the specified title.
      *
-     * @param  TitleEditFormRequest  $request
-     * @param  Title $title
+     * @param TitleEditFormRequest $request
+     * @param Title                $title
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(TitleEditFormRequest $request, Title $title)
@@ -91,8 +95,8 @@ class TitlesController extends Controller
         $this->authorize('edit', Title::class);
 
         $title->update([
-            'name' => $request->name,
-            'slug' => $request->slug,
+            'name'          => $request->name,
+            'slug'          => $request->slug,
             'introduced_at' => $request->introduced_at,
         ]);
 
@@ -102,7 +106,8 @@ class TitlesController extends Controller
     /**
      * Delete the specified title.
      *
-     * @param  Title $title
+     * @param Title $title
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(Title $title)

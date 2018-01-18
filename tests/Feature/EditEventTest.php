@@ -2,14 +2,14 @@
 
 namespace Tests\Feature;
 
+use App\Models\Event;
 use App\Models\Permission;
 use App\Models\Role;
-use App\Models\Event;
 use App\Models\User;
 use App\Models\Venue;
 use Carbon\Carbon;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class EditEventTest extends TestCase
 {
@@ -42,9 +42,9 @@ class EditEventTest extends TestCase
     private function oldAttributes($overrides = [])
     {
         return array_merge([
-            'name' => 'Old Name',
-            'slug' => 'old-slug',
-            'date' => '2017-09-27',
+            'name'     => 'Old Name',
+            'slug'     => 'old-slug',
+            'date'     => '2017-09-27',
             'venue_id' => 1,
         ], $overrides);
     }
@@ -52,15 +52,15 @@ class EditEventTest extends TestCase
     private function validParams($overrides = [])
     {
         return array_merge([
-            'name' => 'Event Name',
-            'slug' => 'event-slug',
-            'date' => '2017-09-27',
+            'name'     => 'Event Name',
+            'slug'     => 'event-slug',
+            'date'     => '2017-09-27',
             'venue_id' => 1,
         ], $overrides);
     }
 
     /** @test */
-    function users_who_have_permission_can_view_the_edit_event_form()
+    public function users_who_have_permission_can_view_the_edit_event_form()
     {
         $response = $this->actingAs($this->user)->get(route('events.edit', $this->event->id));
 
@@ -69,7 +69,7 @@ class EditEventTest extends TestCase
     }
 
     /** @test */
-    function users_who_dont_have_permission_cannot_view_the_edit_event_form()
+    public function users_who_dont_have_permission_cannot_view_the_edit_event_form()
     {
         $userWithoutPermission = factory(User::class)->create();
         $role = factory(Role::class)->create(['name' => 'editor']);
@@ -81,7 +81,7 @@ class EditEventTest extends TestCase
     }
 
     /** @test */
-    function guests_cannot_view_the_edit_event_form()
+    public function guests_cannot_view_the_edit_event_form()
     {
         $response = $this->get(route('events.edit', $this->event->id));
 
@@ -90,7 +90,7 @@ class EditEventTest extends TestCase
     }
 
     /** @test */
-    function name_is_required()
+    public function name_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('events.edit', $this->event->id))->patch(route('events.update', $this->event->id), $this->validParams([
             'name' => '',
@@ -104,7 +104,7 @@ class EditEventTest extends TestCase
     }
 
     /** @test */
-    function slug_is_required()
+    public function slug_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('events.edit', $this->event->id))->patch(route('events.update', $this->event->id), $this->validParams([
             'slug' => '',
@@ -118,7 +118,7 @@ class EditEventTest extends TestCase
     }
 
     /** @test */
-    function name_must_be_unique()
+    public function name_must_be_unique()
     {
         factory(Event::class)->create($this->validParams());
 
@@ -135,7 +135,7 @@ class EditEventTest extends TestCase
     }
 
     /** @test */
-    function slug_must_be_unique()
+    public function slug_must_be_unique()
     {
         factory(Event::class)->create(['slug' => 'event-slug']);
 
@@ -152,7 +152,7 @@ class EditEventTest extends TestCase
     }
 
     /** @test */
-    function date_is_required()
+    public function date_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('events.edit', $this->event->id))->patch(route('events.update', $this->event->id), $this->validParams([
             'date' => '',
@@ -166,7 +166,7 @@ class EditEventTest extends TestCase
     }
 
     /** @test */
-    function date_must_be_a_date()
+    public function date_must_be_a_date()
     {
         $response = $this->actingAs($this->user)->from(route('events.edit', $this->event->id))->patch(route('events.update', $this->event->id), $this->validParams([
             'date' => 'not-a-date',
@@ -180,7 +180,7 @@ class EditEventTest extends TestCase
     }
 
     /** @test */
-    function an_events_venue_is_required()
+    public function an_events_venue_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('events.edit', $this->event->id))->patch(route('events.update', $this->event->id), $this->validParams([
             'venue_id' => '',
@@ -194,7 +194,7 @@ class EditEventTest extends TestCase
     }
 
     /** @test */
-    function an_events_venue_must_be_an_integer()
+    public function an_events_venue_must_be_an_integer()
     {
         $response = $this->actingAs($this->user)->from(route('events.edit', $this->event->id))->patch(route('events.update', $this->event->id), $this->validParams([
             'venue_id' => 'abc',
@@ -208,7 +208,7 @@ class EditEventTest extends TestCase
     }
 
     /** @test */
-    function an_events_venue_must_be_a_valid_selection()
+    public function an_events_venue_must_be_a_valid_selection()
     {
         $response = $this->actingAs($this->user)->from(route('events.edit', $this->event->id))->patch(route('events.update', $this->event->id), $this->validParams([
             'venue_id' => 0,
@@ -222,7 +222,7 @@ class EditEventTest extends TestCase
     }
 
     /** @test */
-    function an_events_venue_must_exist_in_the_database()
+    public function an_events_venue_must_exist_in_the_database()
     {
         $response = $this->actingAs($this->user)->from(route('events.edit', $this->event->id))->patch(route('events.update', $this->event->id), $this->validParams([
             'venue_id' => 99,
@@ -236,7 +236,7 @@ class EditEventTest extends TestCase
     }
 
     /** @test */
-    function an_events_venue_cannot_be_soft_deleted()
+    public function an_events_venue_cannot_be_soft_deleted()
     {
         $venue = factory(Venue::class)->create();
         $venue->delete();
@@ -253,12 +253,12 @@ class EditEventTest extends TestCase
     }
 
     /** @test */
-    function editing_a_valid_event()
+    public function editing_a_valid_event()
     {
         $response = $this->actingAs($this->user)->from(route('events.edit', $this->event->id))->patch(route('events.update', $this->event->id), [
-            'name' => 'New Name',
-            'slug' => 'new-slug',
-            'date' => '2017-09-27',
+            'name'     => 'New Name',
+            'slug'     => 'new-slug',
+            'date'     => '2017-09-27',
             'venue_id' => 1,
         ]);
 

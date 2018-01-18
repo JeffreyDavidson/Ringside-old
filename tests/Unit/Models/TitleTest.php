@@ -5,15 +5,15 @@ namespace Tests\Unit;
 use App\Models\Event;
 use App\Models\Title;
 use Carbon\Carbon;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class TitleTest extends TestCase
 {
     use DatabaseMigrations;
 
     /** @test */
-    function can_get_all_valid_titles_for_an_event()
+    public function can_get_all_valid_titles_for_an_event()
     {
         $validTitleA = factory(Title::class)->create(['introduced_at' => Carbon::parse('3 weeks ago')]);
         $validTitleB = factory(Title::class)->create(['introduced_at' => Carbon::parse('2 weeks ago')]);

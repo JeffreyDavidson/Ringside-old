@@ -2,4 +2,6 @@
 
 namespace App\Exceptions;
 
-class WrestlerAlreadyHasTitleException extends \RuntimeException {}
+class WrestlerAlreadyHasTitleException extends \RuntimeException
+{
+}
