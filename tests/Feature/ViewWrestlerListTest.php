@@ -2,12 +2,12 @@
 
 namespace Tests\Feature;
 
-use App\Models\Wrestler;
-use App\Models\User;
-use App\Models\Role;
 use App\Models\Permission;
-use Tests\TestCase;
+use App\Models\Role;
+use App\Models\User;
+use App\Models\Wrestler;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class ViewWrestlerListTest extends TestCase
 {
@@ -30,7 +30,7 @@ class ViewWrestlerListTest extends TestCase
     }
 
     /** @test */
-    function users_who_have_permission_can_view_the_list_of_wrestlers()
+    public function users_who_have_permission_can_view_the_list_of_wrestlers()
     {
         $wrestlerA = factory(Wrestler::class)->create();
         $wrestlerB = factory(Wrestler::class)->create();
@@ -48,7 +48,7 @@ class ViewWrestlerListTest extends TestCase
     }
 
     /** @test */
-    function users_who_dont_have_permission_cannot_view_the_list_of_wrestlers()
+    public function users_who_dont_have_permission_cannot_view_the_list_of_wrestlers()
     {
         $userWithoutPermission = factory(User::class)->create();
         $role = factory(Role::class)->create(['name' => 'editor']);
@@ -61,7 +61,7 @@ class ViewWrestlerListTest extends TestCase
     }
 
     /** @test */
-    function guests_cannot_view_wrestler_list()
+    public function guests_cannot_view_wrestler_list()
     {
         $response = $this->get(route('wrestlers.index'));
 
