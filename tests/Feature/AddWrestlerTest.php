@@ -2,14 +2,14 @@
 
 namespace Tests\Feature;
 
-use App\Models\Wrestler;
-use App\Models\User;
-use App\Models\Role;
 use App\Models\Permission;
+use App\Models\Role;
+use App\Models\User;
+use App\Models\Wrestler;
 use App\Models\WrestlerStatus;
 use Carbon\Carbon;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class AddWrestlerTest extends TestCase
 {
@@ -36,20 +36,20 @@ class AddWrestlerTest extends TestCase
     private function validParams($overrides = [])
     {
         return array_merge([
-            'name' => 'Wrestler Name',
-            'slug' => 'wrestler-slug',
-            'status_id' => 1,
-            'hired_at' => '2017-09-08',
-            'hometown' => 'Laraville, ON',
-            'feet' => 6,
-            'inches' => 10,
-            'weight' => 175,
+            'name'           => 'Wrestler Name',
+            'slug'           => 'wrestler-slug',
+            'status_id'      => 1,
+            'hired_at'       => '2017-09-08',
+            'hometown'       => 'Laraville, ON',
+            'feet'           => 6,
+            'inches'         => 10,
+            'weight'         => 175,
             'signature_move' => 'Wrestler Signature Move',
         ], $overrides);
     }
 
     /** @test */
-    function users_who_have_permission_can_view_the_add_wrestler_form()
+    public function users_who_have_permission_can_view_the_add_wrestler_form()
     {
         factory(WrestlerStatus::class)->create(['name' => 'Active']);
         factory(WrestlerStatus::class)->create(['name' => 'Inactive']);
@@ -62,7 +62,7 @@ class AddWrestlerTest extends TestCase
     }
 
     /** @test */
-    function users_who_dont_have_permission_cannot_view_the_add_wrestler_form()
+    public function users_who_dont_have_permission_cannot_view_the_add_wrestler_form()
     {
         $userWithoutPermission = factory(User::class)->create();
         $role = factory(Role::class)->create(['name' => 'editor']);
@@ -74,7 +74,7 @@ class AddWrestlerTest extends TestCase
     }
 
     /** @test */
-    function guests_cannot_view_the_add_wrestler_form()
+    public function guests_cannot_view_the_add_wrestler_form()
     {
         $response = $this->get(route('wrestlers.create'));
 
@@ -83,7 +83,7 @@ class AddWrestlerTest extends TestCase
     }
 
     /** @test */
-    function name_is_required()
+    public function name_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('wrestlers.create'))->post(route('wrestlers.index'), $this->validParams([
             'name' => '',
@@ -96,7 +96,7 @@ class AddWrestlerTest extends TestCase
     }
 
     /** @test */
-    function name_must_be_unique()
+    public function name_must_be_unique()
     {
         factory(Wrestler::class)->create(['name' => 'Wrestler Name']);
 
@@ -111,7 +111,7 @@ class AddWrestlerTest extends TestCase
     }
 
     /** @test */
-    function slug_is_required()
+    public function slug_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('wrestlers.create'))->post(route('wrestlers.index'), $this->validParams([
             'slug' => '',
@@ -124,7 +124,7 @@ class AddWrestlerTest extends TestCase
     }
 
     /** @test */
-    function slug_must_be_unique()
+    public function slug_must_be_unique()
     {
         factory(Wrestler::class)->create(['slug' => 'wrestler-slug']);
 
@@ -139,7 +139,7 @@ class AddWrestlerTest extends TestCase
     }
 
     /** @test */
-    function status_is_required()
+    public function status_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('wrestlers.create'))->post(route('wrestlers.index'), $this->validParams([
             'status_id' => '',
@@ -152,7 +152,7 @@ class AddWrestlerTest extends TestCase
     }
 
     /** @test */
-    function status_must_be_an_integer()
+    public function status_must_be_an_integer()
     {
         $response = $this->actingAs($this->user)->from(route('wrestlers.create'))->post(route('wrestlers.index'), $this->validParams([
             'status_id' => 'abc',
@@ -165,7 +165,7 @@ class AddWrestlerTest extends TestCase
     }
 
     /** @test */
-    function status_must_be_a_nonzero_value()
+    public function status_must_be_a_nonzero_value()
     {
         $response = $this->actingAs($this->user)->from(route('wrestlers.create'))->post(route('wrestlers.index'), $this->validParams([
             'status_id' => 0,
@@ -178,7 +178,7 @@ class AddWrestlerTest extends TestCase
     }
 
     /** @test */
-    function status_must_be_existant_in_the_database()
+    public function status_must_be_existant_in_the_database()
     {
         $response = $this->actingAs($this->user)->from(route('wrestlers.create'))->post(route('wrestlers.index'), $this->validParams([
             'status_id' => 1,
@@ -191,7 +191,7 @@ class AddWrestlerTest extends TestCase
     }
 
     /** @test */
-    function hometown_is_required()
+    public function hometown_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('wrestlers.create'))->post(route('wrestlers.index'), $this->validParams([
             'hometown' => '',
@@ -204,7 +204,7 @@ class AddWrestlerTest extends TestCase
     }
 
     /** @test */
-    function feet_is_required()
+    public function feet_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('wrestlers.create'))->post(route('wrestlers.index'), $this->validParams([
             'feet' => '',
@@ -217,7 +217,7 @@ class AddWrestlerTest extends TestCase
     }
 
     /** @test */
-    function feet_must_be_an_integer()
+    public function feet_must_be_an_integer()
     {
         $response = $this->actingAs($this->user)->from(route('wrestlers.create'))->post(route('wrestlers.index'), $this->validParams([
             'feet' => 'abc',
@@ -230,7 +230,7 @@ class AddWrestlerTest extends TestCase
     }
 
     /** @test */
-    function inches_is_required()
+    public function inches_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('wrestlers.create'))->post(route('wrestlers.index'), $this->validParams([
             'inches' => '',
@@ -243,7 +243,7 @@ class AddWrestlerTest extends TestCase
     }
 
     /** @test */
-    function inches_must_be_an_integer()
+    public function inches_must_be_an_integer()
     {
         $response = $this->actingAs($this->user)->from(route('wrestlers.create'))->post(route('wrestlers.index'), $this->validParams([
             'inches' => 'abc',
@@ -256,7 +256,7 @@ class AddWrestlerTest extends TestCase
     }
 
     /** @test */
-    function inches_must_have_a_value_smaller_than_12()
+    public function inches_must_have_a_value_smaller_than_12()
     {
         $response = $this->actingAs($this->user)->from(route('wrestlers.create'))->post(route('wrestlers.index'), $this->validParams([
             'inches' => '12',
@@ -269,7 +269,7 @@ class AddWrestlerTest extends TestCase
     }
 
     /** @test */
-    function weight_is_required()
+    public function weight_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('wrestlers.create'))->post(route('wrestlers.index'), $this->validParams([
             'weight' => '',
@@ -282,7 +282,7 @@ class AddWrestlerTest extends TestCase
     }
 
     /** @test */
-    function weight_must_be_an_integer()
+    public function weight_must_be_an_integer()
     {
         $response = $this->actingAs($this->user)->from(route('wrestlers.create'))->post(route('wrestlers.index'), $this->validParams([
             'weight' => '',
@@ -295,7 +295,7 @@ class AddWrestlerTest extends TestCase
     }
 
     /** @test */
-    function signature_move_is_required()
+    public function signature_move_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('wrestlers.create'))->post(route('wrestlers.index'), $this->validParams([
             'signature_move' => '',
@@ -308,7 +308,7 @@ class AddWrestlerTest extends TestCase
     }
 
     /** @test */
-    function hired_at_is_required()
+    public function hired_at_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('wrestlers.create'))->post(route('wrestlers.index'), $this->validParams([
             'hired_at' => '',
@@ -321,7 +321,7 @@ class AddWrestlerTest extends TestCase
     }
 
     /** @test */
-    function hired_at_must_be_a_date()
+    public function hired_at_must_be_a_date()
     {
         $response = $this->actingAs($this->user)->from(route('wrestlers.create'))->post(route('wrestlers.index'), $this->validParams([
             'hired_at' => 'abc',
@@ -334,7 +334,7 @@ class AddWrestlerTest extends TestCase
     }
 
     /** @test */
-    function adding_a_valid_wrestler()
+    public function adding_a_valid_wrestler()
     {
         factory(WrestlerStatus::class)->create(['name' => 'Active']);
         factory(WrestlerStatus::class)->create(['name' => 'Inactive']);

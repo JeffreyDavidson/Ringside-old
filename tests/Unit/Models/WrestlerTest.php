@@ -2,23 +2,13 @@
 
 namespace Tests\Unit;
 
-use App\Exceptions\WrestlerAlreadyHasManagerException;
-use App\Exceptions\WrestlerAlreadyHasTitleException;
-use App\Exceptions\WrestlerAlreadyInjuredException;
-use App\Exceptions\WrestlerAlreadyRetiredException;
-use App\Exceptions\WrestlerAlreadySuspendedException;
-use App\Exceptions\WrestlerNotHaveHiredManagerException;
-use App\Exceptions\WrestlerNotInjuredException;
-use App\Exceptions\WrestlerNotRetiredException;
-use App\Exceptions\WrestlerNotSuspendedException;
-use App\Exceptions\WrestlerNotTitleChampionException;
 use App\Models\Manager;
 use App\Models\Title;
 use App\Models\Wrestler;
 use App\Models\WrestlerStatus;
 use Carbon\Carbon;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class WrestlerTest extends TestCase
 {

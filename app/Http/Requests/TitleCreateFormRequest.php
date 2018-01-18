@@ -24,9 +24,9 @@ class TitleCreateFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|unique:titles,name',
-            'slug' => 'required|unique:titles,slug',
-            'introduced_at' => 'required|date'
+            'name'          => 'required|unique:titles,name',
+            'slug'          => 'required|unique:titles,slug',
+            'introduced_at' => 'required|date',
         ];
     }
 }

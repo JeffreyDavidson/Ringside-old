@@ -26,29 +26,28 @@ class TitleEditFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', Rule::unique('titles' ,'name')->ignore($this->title->id)],
-            'slug' => ['required', Rule::unique('titles' ,'slug')->ignore($this->title->id)],
+            'name'          => ['required', Rule::unique('titles', 'name')->ignore($this->title->id)],
+            'slug'          => ['required', Rule::unique('titles', 'slug')->ignore($this->title->id)],
             'introduced_at' => 'required|date',
         ];
     }
 
     /**
      * Find out if the introduced at date for the title is before the date of the first title's match.
-     *
      */
     public function withValidator($validator)
     {
-        $validator->after(function($validator) {
+        $validator->after(function ($validator) {
             $attr = $validator->getData();
 
-            if(!$this->title->hasPastMatches()) {
+            if (!$this->title->hasPastMatches()) {
                 return;
             }
 
             $firstMatchDate = $this->title->firstMatchDate();
             $introducedAt = Carbon::parse($attr['introduced_at']);
 
-            if($introducedAt->lte($firstMatchDate)) {
+            if ($introducedAt->lte($firstMatchDate)) {
                 return;
             }
 
