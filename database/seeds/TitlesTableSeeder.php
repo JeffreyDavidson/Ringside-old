@@ -20,18 +20,17 @@ class TitlesTableSeeder extends Seeder
 
         for ($this->titleCount; $this->titleCount <= 5; $this->titleCount++) {
             factory(Title::class)->create([
-                'name' => 'Title '.$this->titleCount,
-                'slug' => 'title'.$this->titleCount,
+                'name'          => 'Title '.$this->titleCount,
+                'slug'          => 'title'.$this->titleCount,
                 'introduced_at' => $startingDate,
             ]);
         }
 
-        while ($startingDate->addYears(8)->lte($now))
-        {
+        while ($startingDate->addYears(8)->lte($now)) {
             for ($x = 1; $x <= 1; $x++) {
                 factory(Title::class)->create([
-                    'name' => 'Title ' . $this->titleCount,
-                    'slug' => 'title' . $this->titleCount,
+                    'name'          => 'Title '.$this->titleCount,
+                    'slug'          => 'title'.$this->titleCount,
                     'introduced_at' => $startingDate,
                 ]);
                 $this->titleCount++;

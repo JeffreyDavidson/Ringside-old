@@ -26,13 +26,15 @@ class QualifiedForMatch implements Rule
     /**
      * Determine if the validation rule passes.
      *
-     * @param  string  $attribute
-     * @param  mixed  $value
+     * @param string $attribute
+     * @param mixed  $value
+     *
      * @return bool
      */
     public function passes($attribute, $value)
     {
         $wrestler = Wrestler::find($value);
+
         return $wrestler->hired_at->lte(Carbon::parse($this->eventDate));
     }
 

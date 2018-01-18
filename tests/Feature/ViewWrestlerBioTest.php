@@ -2,18 +2,17 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
-use App\Models\Role;
-use App\Models\Permission;
-use App\Models\Wrestler;
-use App\Models\Manager;
-use App\Models\Title;
-use App\Models\Match;
 use App\Models\Event;
-use App\Models\WrestlerBio;
+use App\Models\Manager;
+use App\Models\Match;
+use App\Models\Permission;
+use App\Models\Role;
+use App\Models\Title;
+use App\Models\User;
+use App\Models\Wrestler;
 use Carbon\Carbon;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class ViewWrestlerBioTest extends TestCase
 {
@@ -35,12 +34,12 @@ class ViewWrestlerBioTest extends TestCase
         $this->role = factory(Role::class)->create(['slug' => 'admin']);
         $this->permission = factory(Permission::class)->create(['slug' => 'show-wrestler']);
         $this->wrestler = factory(Wrestler::class)->create([
-            'name' => 'Wrestler 1',
-            'slug' => 'wrestler1',
-            'hired_at' => '2017-08-04',
-            'hometown' => 'Kansas City, Missouri',
-            'height' => 73,
-            'weight' => 251,
+            'name'           => 'Wrestler 1',
+            'slug'           => 'wrestler1',
+            'hired_at'       => '2017-08-04',
+            'hometown'       => 'Kansas City, Missouri',
+            'height'         => 73,
+            'weight'         => 251,
             'signature_move' => 'Powerbomb',
         ]);
 
@@ -49,7 +48,7 @@ class ViewWrestlerBioTest extends TestCase
     }
 
     /** @test */
-    function users_who_have_permission_can_view_a_wrestler_bio()
+    public function users_who_have_permission_can_view_a_wrestler_bio()
     {
         $response = $this->actingAs($this->user)->get(route('wrestlers.show', $this->wrestler->id));
 
@@ -57,7 +56,7 @@ class ViewWrestlerBioTest extends TestCase
     }
 
     /** @test */
-    function users_who_dont_have_permission_cannot_view_a_wrestler_bio()
+    public function users_who_dont_have_permission_cannot_view_a_wrestler_bio()
     {
         $userWithoutPermission = factory(User::class)->create();
         $role = factory(Role::class)->create(['name' => 'editor']);
@@ -69,7 +68,7 @@ class ViewWrestlerBioTest extends TestCase
     }
 
     /** @test */
-    function guests_cannot_view_a_wrestler_bio()
+    public function guests_cannot_view_a_wrestler_bio()
     {
         $response = $this->get(route('wrestlers.show', $this->wrestler->id));
 
@@ -155,7 +154,7 @@ class ViewWrestlerBioTest extends TestCase
         $match = factory(Match::class)->create(['event_id' => $event->id]);
 
         $wrestler2 = factory(Wrestler::class)->create([
-            'name' => 'Wrestler 2',
+            'name'     => 'Wrestler 2',
             'hired_at' => Carbon::parse('last month'),
         ]);
 
@@ -174,7 +173,7 @@ class ViewWrestlerBioTest extends TestCase
         $match = factory(Match::class)->create(['event_id' => $event->id]);
 
         $wrestler2 = factory(Wrestler::class)->create([
-            'name' => 'Wrestler 2',
+            'name'     => 'Wrestler 2',
             'hired_at' => Carbon::parse('last month'),
         ]);
 

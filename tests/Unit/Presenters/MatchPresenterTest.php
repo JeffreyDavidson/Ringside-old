@@ -6,9 +6,9 @@ use App\Models\Match;
 use App\Models\Referee;
 use App\Models\Stipulation;
 use App\Models\Wrestler;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use stdClass;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class MatchPresenterTest extends TestCase
 {
@@ -71,7 +71,7 @@ class MatchPresenterTest extends TestCase
     public function a_first_match_in_an_event_should_be_presented_as_the_opening_match()
     {
         $match = factory(Match::class)->create();
-        $loop = new stdClass;
+        $loop = new stdClass();
         $loop->first = true;
         $loop->last = false;
 
@@ -82,7 +82,7 @@ class MatchPresenterTest extends TestCase
     public function the_last_match_in_an_event_should_be_presented_as_the_opening_match()
     {
         $match = factory(Match::class)->create();
-        $loop = new stdClass;
+        $loop = new stdClass();
         $loop->first = false;
         $loop->last = true;
 
@@ -93,7 +93,7 @@ class MatchPresenterTest extends TestCase
     public function a_match_in_an_event_that_isnt_the_first_or_last_should_be_presented_correctly()
     {
         $match = factory(Match::class)->create(['match_number' => 2]);
-        $loop = new stdClass;
+        $loop = new stdClass();
         $loop->first = false;
         $loop->last = false;
 

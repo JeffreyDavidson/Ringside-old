@@ -6,15 +6,15 @@ use App\Models\Event;
 use App\Models\Match;
 use App\Models\Stipulation;
 use Carbon\Carbon;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class StipulationTest extends TestCase
 {
     use DatabaseMigrations;
 
     /** @test */
-    function a_stipulation_past_matches_only_shows_matches_from_the_past()
+    public function a_stipulation_past_matches_only_shows_matches_from_the_past()
     {
         $eventA = factory(Event::class)->create(['date' => Carbon::yesterday()]);
         $eventB = factory(Event::class)->create(['date' => Carbon::tomorrow()]);
@@ -30,7 +30,7 @@ class StipulationTest extends TestCase
         $this->assertFalse($stipulation->pastMatches()->contains($matchB));
     }
 
-    function a_stipulation_first_match_date_only_shows_the_date_it_first_happened()
+    public function a_stipulation_first_match_date_only_shows_the_date_it_first_happened()
     {
         $eventA = factory(Event::class)->create(['date' => Carbon::yesterday()]);
         $eventB = factory(Event::class)->create(['date' => Carbon::today()]);

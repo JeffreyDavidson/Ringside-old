@@ -23,7 +23,7 @@ class Injury extends Model
     /**
      * Heals the wrestler from being injured.
      *
-     * @return boolean
+     * @return bool
      */
     public function healed($healedAt)
     {
