@@ -31,13 +31,14 @@ class StipulationsController extends Controller
     {
         $this->authorize('create', Stipulation::class);
 
-        return response()->view('stipulations.create', ['stipulation' => new Stipulation]);
+        return response()->view('stipulations.create', ['stipulation' => new Stipulation()]);
     }
 
     /**
      * Store a newly created stipulation.
      *
      * @param StipulationCreateFormRequest $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(StipulationCreateFormRequest $request)
@@ -55,7 +56,8 @@ class StipulationsController extends Controller
     /**
      * Display the specified stipulation.
      *
-     * @param  Stipulation $stipulation
+     * @param Stipulation $stipulation
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(Stipulation $stipulation)
@@ -68,7 +70,8 @@ class StipulationsController extends Controller
     /**
      * Show the form for editing a stipulation.
      *
-     * @param  Stipulation  $stipulation
+     * @param Stipulation $stipulation
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit(Stipulation $stipulation)
@@ -82,7 +85,8 @@ class StipulationsController extends Controller
      * Update the specified stipulation.
      *
      * @param StipulationEditFormRequest $request
-     * @param  Stipulation $stipulation
+     * @param Stipulation                $stipulation
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(StipulationEditFormRequest $request, Stipulation $stipulation)
@@ -100,7 +104,8 @@ class StipulationsController extends Controller
     /**
      * Delete the specified stipulation.
      *
-     * @param  Stipulation $stipulation
+     * @param Stipulation $stipulation
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(Stipulation $stipulation)
