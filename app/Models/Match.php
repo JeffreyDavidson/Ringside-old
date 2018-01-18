@@ -3,15 +3,15 @@
 namespace App\Models;
 
 use App\Exceptions\WrestlerNotQualifiedException;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracodes\Presenter\Traits\Presentable;
-use Illuminate\Database\Eloquent\Model;
 
 class Match extends Model
 {
     use Presentable, SoftDeletes;
 
-    protected $with = array('wrestlers', 'stipulations', 'referees', 'titles');
+    protected $with = ['wrestlers', 'stipulations', 'referees', 'titles'];
 
     /**
      * Assign which presenter to be used for model.
@@ -101,6 +101,7 @@ class Match extends Model
      * Add a wrestler to a match.
      *
      * @param Wrestler $wrestler
+     *
      * @throws WrestlerNotQualifiedException
      */
     public function addWrestler(Wrestler $wrestler)
@@ -181,7 +182,7 @@ class Match extends Model
     /**
      * Determines if the match has a title associated to it.
      *
-     * @return boolean
+     * @return bool
      */
     public function isTitleMatch()
     {
@@ -198,7 +199,7 @@ class Match extends Model
         $this->update(['winner_id' => $wrestler->id, 'loser_id' => $this->wrestlers->except($wrestler->id)->first()->id]);
         if ($this->isTitleMatch()) {
             $this->titles->each(function ($title) use ($wrestler) {
-                if (! $wrestler->hasTitle($title)) {
+                if (!$wrestler->hasTitle($title)) {
                     $title->setNewChampion($wrestler, $this->event->date);
                 }
             });
@@ -223,7 +224,7 @@ class Match extends Model
     /**
      * Checks to if the match type needs multiple referees.
      *
-     * @return boolean
+     * @return bool
      */
     public function needsMoreThanOneReferee()
     {

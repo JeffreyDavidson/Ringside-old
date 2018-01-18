@@ -25,8 +25,9 @@ class BeforeFirstMatchDate implements Rule
     /**
      * Determine if the validation rule passes.
      *
-     * @param  string $attribute
-     * @param  mixed $value
+     * @param string $attribute
+     * @param mixed  $value
+     *
      * @return bool
      */
     public function passes($attribute, $value)
@@ -45,6 +46,6 @@ class BeforeFirstMatchDate implements Rule
      */
     public function message()
     {
-        return 'The :attribute cannot be after ' . $this->model->firstMatchDate()->toDateString();
+        return 'The :attribute cannot be after '.$this->model->firstMatchDate()->toDateString();
     }
 }

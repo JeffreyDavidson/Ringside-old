@@ -9,8 +9,8 @@ use App\Models\Role;
 use App\Models\Title;
 use App\Models\User;
 use Carbon\Carbon;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class EditTitleTest extends TestCase
 {
@@ -37,23 +37,23 @@ class EditTitleTest extends TestCase
     private function oldAttributes($overrides = [])
     {
         return array_merge([
-            'name' => 'Old Name',
-            'slug' => 'old-slug',
-            'introduced_at' => Carbon::parse('December 18, 2016')
+            'name'          => 'Old Name',
+            'slug'          => 'old-slug',
+            'introduced_at' => Carbon::parse('December 18, 2016'),
         ], $overrides);
     }
 
     private function validParams($overrides = [])
     {
         return array_merge([
-            'name' => 'Title Name',
-            'slug' => 'title-slug',
-            'introduced_at' => '2017-08-04'
+            'name'          => 'Title Name',
+            'slug'          => 'title-slug',
+            'introduced_at' => '2017-08-04',
         ], $overrides);
     }
 
     /** @test */
-    function users_who_have_permission_can_view_the_edit_title_form()
+    public function users_who_have_permission_can_view_the_edit_title_form()
     {
         $response = $this->actingAs($this->user)
                         ->get(route('titles.edit', $this->title->id));
@@ -63,7 +63,7 @@ class EditTitleTest extends TestCase
     }
 
     /** @test */
-    function users_who_dont_have_permission_cannot_view_the_edit_title_form()
+    public function users_who_dont_have_permission_cannot_view_the_edit_title_form()
     {
         $userWithoutPermission = factory(User::class)->create();
         $role = factory(Role::class)->create(['name' => 'editor']);
@@ -76,7 +76,7 @@ class EditTitleTest extends TestCase
     }
 
     /** @test */
-    function guests_cannot_view_the_edit_title_form()
+    public function guests_cannot_view_the_edit_title_form()
     {
         $response = $this->get(route('titles.edit', $this->title->id));
 
@@ -85,12 +85,12 @@ class EditTitleTest extends TestCase
     }
 
     /** @test */
-    function name_is_required()
+    public function name_is_required()
     {
         $response = $this->actingAs($this->user)
                         ->from(route('titles.edit', $this->title->id))
                         ->patch(route('titles.update', $this->title->id), $this->validParams([
-                            'name' => ''
+                            'name' => '',
                         ]));
 
         $response->assertRedirect(route('titles.edit', $this->title->id));
@@ -101,12 +101,12 @@ class EditTitleTest extends TestCase
     }
 
     /** @test */
-    function slug_is_required()
+    public function slug_is_required()
     {
         $response = $this->actingAs($this->user)
                     ->from(route('titles.edit', $this->title->id))
                     ->patch(route('titles.update', $this->title->id), $this->validParams([
-                        'slug' => ''
+                        'slug' => '',
                     ]));
 
         $response->assertRedirect(route('titles.edit', $this->title->id));
@@ -117,14 +117,14 @@ class EditTitleTest extends TestCase
     }
 
     /** @test */
-    function name_must_be_unique()
+    public function name_must_be_unique()
     {
         factory(Title::class)->create($this->validParams());
 
         $response = $this->actingAs($this->user)
                         ->from(route('titles.edit', $this->title->id))
                         ->patch(route('titles.update', $this->title->id), $this->validParams([
-                            'name' => 'Title Name'
+                            'name' => 'Title Name',
                         ]));
 
         $response->assertRedirect(route('titles.edit', $this->title->id));
@@ -136,14 +136,14 @@ class EditTitleTest extends TestCase
     }
 
     /** @test */
-    function slug_must_be_unique()
+    public function slug_must_be_unique()
     {
         factory(Title::class)->create($this->validParams());
 
         $response = $this->actingAs($this->user)
                         ->from(route('titles.edit', $this->title->id))
                         ->patch(route('titles.update', $this->title->id), $this->validParams([
-                            'slug' => 'title-slug'
+                            'slug' => 'title-slug',
                         ]));
 
         $response->assertRedirect(route('titles.edit', $this->title->id));
@@ -155,7 +155,7 @@ class EditTitleTest extends TestCase
     }
 
     /** @test */
-    function introduced_at_date_must_be_a_valid_date()
+    public function introduced_at_date_must_be_a_valid_date()
     {
         $response = $this->actingAs($this->user)
                 ->from(route('titles.edit', $this->title->id))
@@ -171,7 +171,7 @@ class EditTitleTest extends TestCase
     }
 
     /** @test */
-    function introduced_at_date_must_be_before_first_competed_for_match()
+    public function introduced_at_date_must_be_before_first_competed_for_match()
     {
         $event = factory(Event::class)->create(['date' => '2016-12-19']);
         $match = factory(Match::class)->create(['event_id' => $event->id]);
@@ -190,14 +190,14 @@ class EditTitleTest extends TestCase
     }
 
     /** @test */
-    function editing_a_valid_title_with_no_matches()
+    public function editing_a_valid_title_with_no_matches()
     {
         $response = $this->actingAs($this->user)
                         ->from(route('titles.edit', $this->title->id))
                         ->patch(route('titles.update', $this->title->id), $this->validParams([
-                            'name' => 'New Name',
-                            'slug' => 'new-slug',
-                            'introduced_at' => '2016-12-18'
+                            'name'          => 'New Name',
+                            'slug'          => 'new-slug',
+                            'introduced_at' => '2016-12-18',
                         ]));
 
         $response->assertRedirect(route('titles.index'));
@@ -209,7 +209,7 @@ class EditTitleTest extends TestCase
     }
 
     /** @test */
-    function editing_a_valid_title_with_matches()
+    public function editing_a_valid_title_with_matches()
     {
         $event = factory(Event::class)->create(['date' => '2016-12-19']);
         $match = factory(Match::class)->create(['event_id' => $event->id]);
@@ -217,9 +217,9 @@ class EditTitleTest extends TestCase
         $response = $this->actingAs($this->user)
             ->from(route('titles.edit', $this->title->id))
             ->patch(route('titles.update', $this->title->id), [
-                'name' => 'New Name',
-                'slug' => 'new-slug',
-                'introduced_at' => '2016-12-18'
+                'name'          => 'New Name',
+                'slug'          => 'new-slug',
+                'introduced_at' => '2016-12-18',
             ]);
 
         $response->assertRedirect(route('titles.index'));
