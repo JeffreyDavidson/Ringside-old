@@ -26,9 +26,9 @@ class EventCreateFormRequest extends FormRequest
     {
         //dd($this->all());
         return [
-            'name' => 'required|unique:events,name',
-            'slug' => 'required|unique:events,slug',
-            'date' => 'required|date',
+            'name'     => 'required|unique:events,name',
+            'slug'     => 'required|unique:events,slug',
+            'date'     => 'required|date',
             'venue_id' => 'required|integer|not_in:0|exists:venues,id',
             //'matches.*' => [
             //    'required',
@@ -64,7 +64,7 @@ class EventCreateFormRequest extends FormRequest
     {
         return [
             'venue_id.required' => 'The venue field is required.',
-            'venue_id.not_in'  => 'The selected venue is invalid.',
+            'venue_id.not_in'   => 'The selected venue is invalid.',
             //'matches.*.match_type_id.required' => 'The match type is required.',
             //'matches.*.match_type_id.not_in' => 'The selected match type is invalid.',
             //'matches.*.stipulations.not_in' => 'The selected stipulation is invalid.',

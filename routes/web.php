@@ -11,14 +11,13 @@
 |
 */
 
-
-
 Route::get('/', function () {
     return view('dashboard');
 })->name('dashboard');
 
-Route::get('login', function() {
+Route::get('login', function () {
     \Auth::loginUsingId(1);
+
     return redirect(route('dashboard'));
 })->name('login');
 

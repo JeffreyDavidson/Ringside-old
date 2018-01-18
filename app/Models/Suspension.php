@@ -23,7 +23,7 @@ class Suspension extends Model
     /**
      * Renews the wrestler from being suspended.
      *
-     * @return boolean
+     * @return bool
      */
     public function renew()
     {
