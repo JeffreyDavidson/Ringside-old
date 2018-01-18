@@ -2,12 +2,12 @@
 
 namespace Tests\Feature\Unit;
 
-use App\Models\Wrestler;
 use App\Models\Title;
+use App\Models\Wrestler;
 use EventFactory;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use MatchFactory;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class HasMatchesTraitTest extends TestCase
 {

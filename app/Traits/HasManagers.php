@@ -39,7 +39,7 @@ trait HasManagers
     public function hireManager($manager)
     {
         if ($this->hasManager($manager)) {
-            throw new WrestlerAlreadyHasManagerException;
+            throw new WrestlerAlreadyHasManagerException();
         }
 
         return $this->managers()->attach($manager->id, ['hired_on' => $this->freshTimestamp()]);
@@ -47,8 +47,8 @@ trait HasManagers
 
     public function fireManager($manager)
     {
-        if (! $this->hasManager($manager)) {
-            throw new WrestlerNotHaveHiredManagerException;
+        if (!$this->hasManager($manager)) {
+            throw new WrestlerNotHaveHiredManagerException();
         }
 
         return $this->managers()->updateExistingPivot($manager->id, ['fired_on' => $this->freshTimestamp()]);
