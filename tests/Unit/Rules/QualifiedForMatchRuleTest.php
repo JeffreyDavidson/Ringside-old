@@ -5,8 +5,8 @@ namespace Tests\Feature\Unit;
 use App\Models\Event;
 use App\Models\Wrestler;
 use App\Rules\QualifiedForMatch;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class QualifiedForMatchRuleTest extends TestCase
 {
@@ -20,7 +20,7 @@ class QualifiedForMatchRuleTest extends TestCase
 
         $validator = new QualifiedForMatch($event->date);
 
-        $this->assertFalse($validator->passes(null , $wrestler->id));
+        $this->assertFalse($validator->passes(null, $wrestler->id));
         $this->assertEquals('This wrestler is not qualified for the match.', $validator->message());
     }
 

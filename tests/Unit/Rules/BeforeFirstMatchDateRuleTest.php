@@ -5,10 +5,10 @@ namespace Tests\Feature\Unit;
 use App\Models\Event;
 use App\Models\Wrestler;
 use App\Rules\BeforeFirstMatchDate;
-use Tests\TestCase;
-use MatchFactory;
 use EventFactory;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use MatchFactory;
+use Tests\TestCase;
 
 class BeforeFirstMatchDateRuleTest extends TestCase
 {

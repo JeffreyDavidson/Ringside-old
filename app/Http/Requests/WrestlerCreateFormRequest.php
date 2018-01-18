@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class WrestlerCreateFormRequest extends FormRequest
 {
@@ -25,20 +24,20 @@ class WrestlerCreateFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|unique:wrestlers,name',
-            'slug' => 'required|unique:wrestlers,slug',
+            'name'      => 'required|unique:wrestlers,name',
+            'slug'      => 'required|unique:wrestlers,slug',
             'status_id' => [
                 'required',
                 'integer',
                 'not_in:0',
-                'exists:wrestler_statuses,id'
+                'exists:wrestler_statuses,id',
             ],
-            'hometown' => 'required',
-            'feet' => 'required|integer',
-            'inches' => 'required|integer|max:11',
-            'weight' => 'required|integer',
+            'hometown'       => 'required',
+            'feet'           => 'required|integer',
+            'inches'         => 'required|integer|max:11',
+            'weight'         => 'required|integer',
             'signature_move' => 'required',
-            'hired_at' => 'required|date',
+            'hired_at'       => 'required|date',
         ];
     }
 
@@ -51,7 +50,7 @@ class WrestlerCreateFormRequest extends FormRequest
     {
         return [
             'status_id.not_in'  => 'The selected status is invalid.',
-            'status_id.in'  => 'The selected status is invalid.',
+            'status_id.in'      => 'The selected status is invalid.',
         ];
     }
 }

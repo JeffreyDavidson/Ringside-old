@@ -18,17 +18,16 @@ trait HasMatches
 
     /**
      * Returns a collection of matches for the model before the current date.
-     *
      */
     public function pastMatches()
     {
-         return $this->matches->filter->isPast();
+        return $this->matches->filter->isPast();
     }
 
     /**
      * Finds out if the model has been associated to a past match.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasPastMatches()
     {
