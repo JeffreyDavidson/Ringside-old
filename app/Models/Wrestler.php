@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\HasInjuries;
 use App\Traits\HasManagers;
 use App\Traits\HasMatches;
-use App\Traits\HasStatuses;
-use App\Traits\HasTitles;
 use App\Traits\HasRetirements;
+use App\Traits\HasStatuses;
 use App\Traits\HasSuspensions;
-use App\Traits\HasInjuries;
+use App\Traits\HasTitles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracodes\Presenter\Traits\Presentable;
@@ -101,7 +101,7 @@ class Wrestler extends Model
     /**
      * Retrieves the status id attribute.
      *
-     * @return integer
+     * @return int
      */
     public function status()
     {

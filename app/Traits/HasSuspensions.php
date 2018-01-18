@@ -2,9 +2,9 @@
 
 namespace App\Traits;
 
-use Carbon\Carbon;
 use App\Exceptions\WrestlerAlreadySuspendedException;
 use App\Exceptions\WrestlerNotSuspendedException;
+use Carbon\Carbon;
 
 trait HasSuspensions
 {
@@ -28,7 +28,7 @@ trait HasSuspensions
     public function suspend()
     {
         if ($this->isSuspended()) {
-            throw new WrestlerAlreadySuspendedException;
+            throw new WrestlerAlreadySuspendedException();
         }
 
         $this->setStatusToInactive();
@@ -40,8 +40,8 @@ trait HasSuspensions
 
     public function renew()
     {
-        if (! $this->isSuspended()) {
-            throw new WrestlerNotSuspendedException;
+        if (!$this->isSuspended()) {
+            throw new WrestlerNotSuspendedException();
         }
 
         $this->setStatusToActive();

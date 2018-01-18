@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\EventCreateFormRequest;
 use App\Http\Requests\EventEditFormRequest;
 use App\Models\Event;
-use Illuminate\Http\Request;
 
 class EventsController extends Controller
 {
@@ -32,13 +31,14 @@ class EventsController extends Controller
     {
         $this->authorize('create', Event::class);
 
-        return response()->view('events.create', ['event' => new Event]);
+        return response()->view('events.create', ['event' => new Event()]);
     }
 
     /**
      * Store a newly created event.
      *
-     * @param  EventCreateFormRequest  $request
+     * @param EventCreateFormRequest $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(EventCreateFormRequest $request)
@@ -46,9 +46,9 @@ class EventsController extends Controller
         $this->authorize('create', Event::class);
 
         Event::create([
-            'name' => $request->name,
-            'slug' => $request->slug,
-            'date' => $request->date,
+            'name'     => $request->name,
+            'slug'     => $request->slug,
+            'date'     => $request->date,
             'venue_id' => $request->venue_id,
         ]);
 
@@ -58,7 +58,8 @@ class EventsController extends Controller
     /**
      * Display the specified event.
      *
-     * @param  Event  $event
+     * @param Event $event
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(Event $event)
@@ -71,7 +72,8 @@ class EventsController extends Controller
     /**
      * Show the form for editing an event.
      *
-     * @param  Event $event
+     * @param Event $event
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit(Event $event)
@@ -85,7 +87,8 @@ class EventsController extends Controller
      * Update the specified event.
      *
      * @param EventEditFormRequest $request
-     * @param  Event $event
+     * @param Event                $event
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(EventEditFormRequest $request, Event $event)
@@ -93,9 +96,9 @@ class EventsController extends Controller
         $this->authorize('edit', Event::class);
 
         $event->update([
-            'name' => $request->name,
-            'slug' => $request->slug,
-            'date' => $request->date,
+            'name'     => $request->name,
+            'slug'     => $request->slug,
+            'date'     => $request->date,
             'venue_id' => $request->venue_id,
         ]);
 
@@ -105,7 +108,8 @@ class EventsController extends Controller
     /**
      * Delete the specified event.
      *
-     * @param  Event $event
+     * @param Event $event
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(Event $event)

@@ -2,12 +2,12 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
-use App\Models\Role;
 use App\Models\Permission;
+use App\Models\Role;
 use App\Models\Title;
-use Tests\TestCase;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class ViewTitleTest extends TestCase
 {
@@ -29,9 +29,9 @@ class ViewTitleTest extends TestCase
         $this->role = factory(Role::class)->create(['slug' => 'admin']);
         $this->permission = factory(Permission::class)->create(['slug' => 'show-title']);
         $this->title = factory(Title::class)->create([
-            'name' => 'Title Name',
-            'slug' => 'title-slug',
-            'introduced_at' => '2017-09-17'
+            'name'          => 'Title Name',
+            'slug'          => 'title-slug',
+            'introduced_at' => '2017-09-17',
         ]);
 
         $this->role->givePermissionTo($this->permission);
@@ -39,7 +39,7 @@ class ViewTitleTest extends TestCase
     }
 
     /** @test */
-    function users_who_have_permission_can_view_a_title()
+    public function users_who_have_permission_can_view_a_title()
     {
         $response = $this->actingAs($this->user)->get(route('titles.show', $this->title->id));
 
@@ -49,7 +49,7 @@ class ViewTitleTest extends TestCase
     }
 
     /** @test */
-    function users_who_dont_have_permission_cannot_view_a_title()
+    public function users_who_dont_have_permission_cannot_view_a_title()
     {
         $userWithoutPermission = factory(User::class)->create();
         $role = factory(Role::class)->create(['name' => 'editor']);
@@ -61,7 +61,7 @@ class ViewTitleTest extends TestCase
     }
 
     /** @test */
-    function guests_cannot_view_a_title()
+    public function guests_cannot_view_a_title()
     {
         $response = $this->get(route('titles.show', $this->title->id));
 
