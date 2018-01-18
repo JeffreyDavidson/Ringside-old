@@ -2,4 +2,6 @@
 
 namespace App\Exceptions;
 
-class WrestlerAlreadyHasManagerException extends \Exception {}
+class WrestlerAlreadyHasManagerException extends \Exception
+{
+}

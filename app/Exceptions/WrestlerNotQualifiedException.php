@@ -2,4 +2,6 @@
 
 namespace App\Exceptions;
 
-class WrestlerNotQualifiedException extends \Exception {}
+class WrestlerNotQualifiedException extends \Exception
+{
+}

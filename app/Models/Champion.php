@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use App\Queries\LongestTitleRunQuery;
+use App\Collections\TitleChampionsCollection;
 use Illuminate\Database\Eloquent\Model;
 use Laracodes\Presenter\Traits\Presentable;
-use App\Collections\TitleChampionsCollection;
 
 class Champion extends Model
 {
@@ -40,7 +39,8 @@ class Champion extends Model
     /**
      * Create a new Eloquent Collection instance.
      *
-     * @param  array $models
+     * @param array $models
+     *
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function newCollection(array $models = [])
