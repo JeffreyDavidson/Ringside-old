@@ -3,10 +3,10 @@
 namespace Tests\Feature\Unit;
 
 use App\Models\Wrestler;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
-class HasInjurisTraitTest extends TestCase
+class HasInjuriesTraitTest extends TestCase
 {
     use DatabaseMigrations;
 

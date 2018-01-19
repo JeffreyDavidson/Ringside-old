@@ -2,18 +2,17 @@
 
 namespace Tests\Unit;
 
+use App\Models\Event;
 use App\Models\Match;
-use MatchFactory;
-use EventFactory;
 use App\Models\Referee;
-use App\Models\MatchType;
 use App\Models\Stipulation;
 use App\Models\Title;
 use App\Models\Wrestler;
-use App\Models\Event;
 use Carbon\Carbon;
-use Tests\TestCase;
+use EventFactory;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use MatchFactory;
+use Tests\TestCase;
 
 class MatchTest extends TestCase
 {

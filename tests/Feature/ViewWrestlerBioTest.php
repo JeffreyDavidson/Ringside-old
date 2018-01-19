@@ -2,19 +2,18 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
-use App\Models\Role;
-use App\Models\Permission;
-use App\Models\Wrestler;
-use App\Models\Manager;
-use App\Models\Title;
-use App\Models\Match;
 use App\Models\Event;
+use App\Models\Manager;
+use App\Models\Permission;
+use App\Models\Role;
+use App\Models\Title;
+use App\Models\User;
+use App\Models\Wrestler;
 use Carbon\Carbon;
 use EventFactory;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use MatchFactory;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class ViewWrestlerBioTest extends TestCase
 {
@@ -36,12 +35,12 @@ class ViewWrestlerBioTest extends TestCase
         $this->role = factory(Role::class)->create(['slug' => 'admin']);
         $this->permission = factory(Permission::class)->create(['slug' => 'show-wrestler']);
         $this->wrestler = factory(Wrestler::class)->create([
-            'name' => 'Wrestler 1',
-            'slug' => 'wrestler1',
-            'hired_at' => '2017-08-04',
-            'hometown' => 'Kansas City, Missouri',
-            'height' => 73,
-            'weight' => 251,
+            'name'           => 'Wrestler 1',
+            'slug'           => 'wrestler1',
+            'hired_at'       => '2017-08-04',
+            'hometown'       => 'Kansas City, Missouri',
+            'height'         => 73,
+            'weight'         => 251,
             'signature_move' => 'Powerbomb',
         ]);
 
@@ -164,7 +163,6 @@ class ViewWrestlerBioTest extends TestCase
     /** @test */
     public function view_list_of_past_matches_on_wrestler_bio()
     {
-        
         $event = EventFactory::create(['name' => 'Event Name', 'date' => Carbon::now()->subMonth()]);
         $match = MatchFactory::create(['event_id' => $event->id], [$this->wrestler]);
 
