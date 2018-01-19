@@ -37,7 +37,7 @@ trait HasInjuries
 
     public function heal($healedAt = null)
     {
-        if (!$this->isInjured()) {
+        if (! $this->isInjured()) {
             throw new WrestlerNotInjuredException;
         }
 

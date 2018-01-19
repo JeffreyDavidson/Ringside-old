@@ -2,14 +2,14 @@
 
 namespace Tests\Feature;
 
-use App\Models\Event;
-use App\Models\Match;
-use App\Models\Permission;
-use App\Models\Role;
-use App\Models\Title;
-use App\Models\User;
 use Carbon\Carbon;
 use Tests\TestCase;
+use App\Models\Role;
+use App\Models\User;
+use App\Models\Event;
+use App\Models\Match;
+use App\Models\Title;
+use App\Models\Permission;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class EditTitleTest extends TestCase

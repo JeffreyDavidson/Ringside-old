@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TitleCreateFormRequest;
-use App\Http\Requests\TitleEditFormRequest;
 use App\Models\Title;
+use App\Http\Requests\TitleEditFormRequest;
+use App\Http\Requests\TitleCreateFormRequest;
 
 class TitlesController extends Controller
 {

@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Models\Permission;
-use App\Models\Role;
-use App\Models\Stipulation;
-use App\Models\User;
 use Tests\TestCase;
+use App\Models\Role;
+use App\Models\User;
+use App\Models\Permission;
+use App\Models\Stipulation;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class EditStipulationTest extends TestCase
@@ -51,7 +51,7 @@ class EditStipulationTest extends TestCase
     }
 
     /** @test */
-    function users_who_have_permission_can_view_the_edit_stipulation_form()
+    public function users_who_have_permission_can_view_the_edit_stipulation_form()
     {
         $response = $this->actingAs($this->user)->get(route('stipulations.edit', $this->stipulation->id));
 
@@ -60,7 +60,7 @@ class EditStipulationTest extends TestCase
     }
 
     /** @test */
-    function users_who_dont_have_permission_cannot_view_the_edit_stipulation_form()
+    public function users_who_dont_have_permission_cannot_view_the_edit_stipulation_form()
     {
         $userWithoutPermission = factory(User::class)->create();
         $role = factory(Role::class)->create(['name' => 'editor']);
@@ -72,7 +72,7 @@ class EditStipulationTest extends TestCase
     }
 
     /** @test */
-    function guests_cannot_view_the_edit_stipulation_form()
+    public function guests_cannot_view_the_edit_stipulation_form()
     {
         $response = $this->get(route('stipulations.edit', $this->stipulation->id));
 
@@ -81,7 +81,7 @@ class EditStipulationTest extends TestCase
     }
 
     /** @test */
-    function name_is_required()
+    public function name_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('stipulations.edit', $this->stipulation->id))->patch(route('stipulations.update', $this->stipulation->id), $this->validParams([
             'name' => '',
@@ -95,7 +95,7 @@ class EditStipulationTest extends TestCase
     }
 
     /** @test */
-    function slug_is_required()
+    public function slug_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('stipulations.edit', $this->stipulation->id))->patch(route('stipulations.update', $this->stipulation->id), $this->validParams([
             'slug' => '',
@@ -109,7 +109,7 @@ class EditStipulationTest extends TestCase
     }
 
     /** @test */
-    function name_must_be_unique()
+    public function name_must_be_unique()
     {
         factory(Stipulation::class)->create($this->validParams());
 
@@ -126,7 +126,7 @@ class EditStipulationTest extends TestCase
     }
 
     /** @test */
-    function slug_must_be_unique()
+    public function slug_must_be_unique()
     {
         factory(Stipulation::class)->create(['slug' => 'stipulation-slug']);
 
@@ -143,7 +143,7 @@ class EditStipulationTest extends TestCase
     }
 
     /** @test */
-    function editing_a_valid_stipulation()
+    public function editing_a_valid_stipulation()
     {
         $response = $this->actingAs($this->user)->from(route('stipulations.edit', $this->stipulation->id))->patch(route('stipulations.update', $this->stipulation->id), [
             'name' => 'New Name',

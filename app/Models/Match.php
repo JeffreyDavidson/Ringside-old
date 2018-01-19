@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\Model;
+use Laracodes\Presenter\Traits\Presentable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Match extends Model
 {
@@ -169,7 +169,7 @@ class Match extends Model
     /**
      * Determines if the match has a title associated to it.
      *
-     * @return boolean
+     * @return bool
      */
     public function isTitleMatch()
     {
@@ -186,7 +186,7 @@ class Match extends Model
         $this->update(['winner_id' => $wrestler->id, 'loser_id' => $this->wrestlers->except($wrestler->id)->first()->id]);
         if ($this->isTitleMatch()) {
             $this->titles->each(function ($title) use ($wrestler) {
-                if (!$wrestler->hasTitle($title)) {
+                if (! $wrestler->hasTitle($title)) {
                     $title->setNewChampion($wrestler, $this->event->date);
                 }
             });
@@ -227,7 +227,7 @@ class Match extends Model
     /**
      * Checks if the match needs multiple referees.
      *
-     * @return boolean
+     * @return bool
      */
     public function needsTwoReferees()
     {

@@ -2,4 +2,6 @@
 
 namespace App\Exceptions;
 
-class MatchesHaveSameMatchNumberAtEventException extends \PDOException {}
+class MatchesHaveSameMatchNumberAtEventException extends \PDOException
+{
+}

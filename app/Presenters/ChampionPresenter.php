@@ -4,8 +4,8 @@ namespace App\Presenters;
 
 use Laracodes\Presenter\Presenter;
 
-class ChampionPresenter extends Presenter {
-
+class ChampionPresenter extends Presenter
+{
     public function wonOn()
     {
         return $this->model->won_on->format('F j, Y');
@@ -18,6 +18,6 @@ class ChampionPresenter extends Presenter {
 
     public function lengthOfReign()
     {
-        return $this->model->lost_on ? $this->model->won_on->diffInDays($this->model->lost_on) .' days' : 'Present';
+        return $this->model->lost_on ? $this->model->won_on->diffInDays($this->model->lost_on).' days' : 'Present';
     }
 }

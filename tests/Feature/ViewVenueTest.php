@@ -2,15 +2,15 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
-use App\Models\Role;
-use App\Models\Permission;
-use App\Models\Venue;
 use EventFactory;
 use MatchFactory;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use App\Models\Role;
+use App\Models\User;
+use App\Models\Venue;
 use App\Models\Wrestler;
+use App\Models\Permission;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class ViewVenueTest extends TestCase
 {
@@ -44,7 +44,7 @@ class ViewVenueTest extends TestCase
     }
 
     /** @test */
-    function users_who_have_permission_can_view_a_venue()
+    public function users_who_have_permission_can_view_a_venue()
     {
         $response = $this->actingAs($this->user)->get(route('venues.show', $this->venue->id));
 
@@ -54,7 +54,7 @@ class ViewVenueTest extends TestCase
     }
 
     /** @test */
-    function users_who_dont_have_permission_cannot_view_a_venue()
+    public function users_who_dont_have_permission_cannot_view_a_venue()
     {
         $userWithoutPermission = factory(User::class)->create();
         $role = factory(Role::class)->create(['name' => 'editor']);
@@ -66,7 +66,7 @@ class ViewVenueTest extends TestCase
     }
 
     /** @test */
-    function guests_cannot_view_a_venue()
+    public function guests_cannot_view_a_venue()
     {
         $response = $this->get(route('venues.show', $this->venue->id));
 
@@ -75,7 +75,7 @@ class ViewVenueTest extends TestCase
     }
 
     /** @test */
-    function a_venues_past_events_can_be_viewed_on_venue_page()
+    public function a_venues_past_events_can_be_viewed_on_venue_page()
     {
         $this->withoutExceptionHandling();
         $event = EventFactory::create(['name' => 'Event Name', 'venue_id' => $this->venue->id]);
@@ -87,6 +87,5 @@ class ViewVenueTest extends TestCase
         $response->assertViewIs('venues.show');
         $response->assertViewHas('venue');
         $response->assertSee('Event Name');
-
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Title;
 use Carbon\Carbon;
+use App\Models\Title;
 use Illuminate\Database\Seeder;
 
 class TitlesTableSeeder extends Seeder
@@ -26,12 +26,11 @@ class TitlesTableSeeder extends Seeder
             ]);
         }
 
-        while ($startingDate->addYears(8)->lte($now))
-        {
+        while ($startingDate->addYears(8)->lte($now)) {
             for ($x = 1; $x <= 1; $x++) {
                 factory(Title::class)->create([
-                    'name' => 'Title ' . $this->titleCount,
-                    'slug' => 'title' . $this->titleCount,
+                    'name' => 'Title '.$this->titleCount,
+                    'slug' => 'title'.$this->titleCount,
                     'introduced_at' => $startingDate,
                 ]);
                 $this->titleCount++;

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StipulationCreateFormRequest;
-use App\Http\Requests\StipulationEditFormRequest;
 use App\Models\Stipulation;
+use App\Http\Requests\StipulationEditFormRequest;
+use App\Http\Requests\StipulationCreateFormRequest;
 
 class StipulationsController extends Controller
 {

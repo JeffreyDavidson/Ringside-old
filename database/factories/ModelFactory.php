@@ -16,6 +16,7 @@ use Carbon\Carbon;
 
 $factory->define(App\Models\Permission::class, function (Faker\Generator $faker) {
     $name = $faker->sentence;
+
     return [
         'name' => $name,
         'slug' => str_slug($name),
@@ -24,6 +25,7 @@ $factory->define(App\Models\Permission::class, function (Faker\Generator $faker)
 
 $factory->define(App\Models\Role::class, function (Faker\Generator $faker) {
     $name = $faker->sentence;
+
     return [
         'name' => $name,
         'slug' => str_slug($name),
@@ -63,6 +65,7 @@ $factory->define(App\Models\Manager::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Models\Title::class, function (Faker\Generator $faker) {
     $name = $faker->sentence;
+
     return [
         'name' => $name,
         'slug' => str_slug($name),
@@ -90,6 +93,7 @@ $factory->define(App\Models\Match::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Models\Event::class, function (Faker\Generator $faker) {
     $name = $faker->sentence;
+
     return [
         'name' => $name,
         'slug' => str_slug($name),
@@ -114,6 +118,7 @@ $factory->define(App\Models\Champion::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Models\MatchType::class, function (Faker\Generator $faker) {
     $name = $faker->sentence;
+
     return [
         'name' => $name,
         'slug' => str_slug($name),
@@ -123,6 +128,7 @@ $factory->define(App\Models\MatchType::class, function (Faker\Generator $faker) 
 
 $factory->define(App\Models\Stipulation::class, function (Faker\Generator $faker) {
     $name = $faker->sentence;
+
     return [
         'name' => $name,
         'slug' => str_slug($name),
@@ -131,6 +137,7 @@ $factory->define(App\Models\Stipulation::class, function (Faker\Generator $faker
 
 $factory->define(App\Models\MatchDecision::class, function (Faker\Generator $faker) {
     $name = $faker->sentence;
+
     return [
         'name' => $name,
         'slug' => str_slug($name),

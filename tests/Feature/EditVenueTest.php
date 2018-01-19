@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Models\Permission;
-use App\Models\Role;
-use App\Models\Venue;
-use App\Models\User;
 use Tests\TestCase;
+use App\Models\Role;
+use App\Models\User;
+use App\Models\Venue;
+use App\Models\Permission;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class EditVenueTest extends TestCase
@@ -57,7 +57,7 @@ class EditVenueTest extends TestCase
     }
 
     /** @test */
-    function users_who_have_permission_can_view_the_edit_venue_form()
+    public function users_who_have_permission_can_view_the_edit_venue_form()
     {
         $response = $this->actingAs($this->user)->get(route('venues.edit', $this->venue->id));
 
@@ -67,7 +67,7 @@ class EditVenueTest extends TestCase
     }
 
     /** @test */
-    function users_who_dont_have_permission_cannot_view_the_edit_venue_form()
+    public function users_who_dont_have_permission_cannot_view_the_edit_venue_form()
     {
         $userWithoutPermission = factory(User::class)->create();
         $role = factory(Role::class)->create(['name' => 'editor']);
@@ -79,7 +79,7 @@ class EditVenueTest extends TestCase
     }
 
     /** @test */
-    function guests_cannot_view_the_add_venue_form()
+    public function guests_cannot_view_the_add_venue_form()
     {
         $response = $this->get(route('venues.create'));
 
@@ -88,7 +88,7 @@ class EditVenueTest extends TestCase
     }
 
     /** @test */
-    function name_is_required()
+    public function name_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('venues.edit', $this->venue->id))->patch(route('venues.update', $this->venue->id), $this->validParams([
             'name' => '',
@@ -101,7 +101,7 @@ class EditVenueTest extends TestCase
     }
 
     /** @test */
-    function name_must_only_contain_letters_numbers_and_spaces()
+    public function name_must_only_contain_letters_numbers_and_spaces()
     {
         $response = $this->actingAs($this->user)->from(route('venues.edit', $this->venue->id))->patch(route('venues.update', $this->venue->id), $this->validParams([
             'name' => 'Club 83%#(@0@(*U$',
@@ -114,7 +114,7 @@ class EditVenueTest extends TestCase
     }
 
     /** @test */
-    function name_must_be_unique()
+    public function name_must_be_unique()
     {
         factory(Venue::class)->create($this->validParams());
 
@@ -132,7 +132,7 @@ class EditVenueTest extends TestCase
     }
 
     /** @test */
-    function address_is_required()
+    public function address_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('venues.edit', $this->venue->id))->patch(route('venues.update', $this->venue->id), $this->validParams([
             'address' => '',
@@ -145,7 +145,7 @@ class EditVenueTest extends TestCase
     }
 
     /** @test */
-    function address_must_only_contain_letters_numbers_and_spaces()
+    public function address_must_only_contain_letters_numbers_and_spaces()
     {
         $response = $this->actingAs($this->user)->from(route('venues.edit', $this->venue->id))->patch(route('venues.update', $this->venue->id), $this->validParams([
             'address' => 'Address 83%#(@0@(*U$',
@@ -158,7 +158,7 @@ class EditVenueTest extends TestCase
     }
 
     /** @test */
-    function city_is_required()
+    public function city_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('venues.edit', $this->venue->id))->patch(route('venues.update', $this->venue->id), $this->validParams([
             'city' => '',
@@ -171,7 +171,7 @@ class EditVenueTest extends TestCase
     }
 
     /** @test */
-    function city_must_only_contain_letters_and_spaces()
+    public function city_must_only_contain_letters_and_spaces()
     {
         $response = $this->actingAs($this->user)->from(route('venues.edit', $this->venue->id))->patch(route('venues.update', $this->venue->id, $this->validParams([
             'city' => '90210',
@@ -184,7 +184,7 @@ class EditVenueTest extends TestCase
     }
 
     /** @test */
-    function state_is_required()
+    public function state_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('venues.edit', $this->venue->id))->patch(route('venues.update', $this->venue->id), $this->validParams([
             'state' => '',
@@ -197,7 +197,7 @@ class EditVenueTest extends TestCase
     }
 
     /** @test */
-    function state_must_only_contain_letters()
+    public function state_must_only_contain_letters()
     {
         $response = $this->actingAs($this->user)->from(route('venues.edit', $this->venue->id))->patch(route('venues.update', $this->venue->id), $this->validParams([
             'state' => 'abcd789',
@@ -210,7 +210,7 @@ class EditVenueTest extends TestCase
     }
 
     /** @test */
-    function state_must_have_a_valid_selection()
+    public function state_must_have_a_valid_selection()
     {
         $response = $this->actingAs($this->user)->from(route('venues.edit', $this->venue->id))->patch(route('venues.update', $this->venue->id), $this->validParams([
             'state' => '0',
@@ -223,7 +223,7 @@ class EditVenueTest extends TestCase
     }
 
     /** @test */
-    function postcode_is_required()
+    public function postcode_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('venues.edit', $this->venue->id))->patch(route('venues.update', $this->venue->id), $this->validParams([
             'postcode' => '',
@@ -236,7 +236,7 @@ class EditVenueTest extends TestCase
     }
 
     /** @test */
-    function postcode_must_be_numeric()
+    public function postcode_must_be_numeric()
     {
         $response = $this->actingAs($this->user)->from(route('venues.edit', $this->venue->id))->patch(route('venues.update', $this->venue->id), $this->validParams([
             'postcode' => 'not a number',
@@ -249,7 +249,7 @@ class EditVenueTest extends TestCase
     }
 
     /** @test */
-    function postcode_must_be_5_digits()
+    public function postcode_must_be_5_digits()
     {
         $response = $this->actingAs($this->user)->from(route('venues.edit', $this->venue->id))->patch(route('venues.update', $this->venue->id), $this->validParams([
             'postcode' => time(),
@@ -262,7 +262,7 @@ class EditVenueTest extends TestCase
     }
 
     /** @test */
-    function editing_a_valid_venue()
+    public function editing_a_valid_venue()
     {
         $response = $this->actingAs($this->user)->from(route('venues.edit', $this->venue->id))->patch(route('venues.update', $this->venue->id), $this->validParams([
             'name' => 'New Venue Name',

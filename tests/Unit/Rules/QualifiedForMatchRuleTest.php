@@ -2,10 +2,10 @@
 
 namespace Tests\Feature\Unit;
 
-use App\Models\Wrestler;
 use EventFactory;
-use App\Rules\QualifiedForMatch;
 use Tests\TestCase;
+use App\Models\Wrestler;
+use App\Rules\QualifiedForMatch;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class QualifiedForMatchRuleTest extends TestCase

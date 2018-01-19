@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\EventCreateFormRequest;
-use App\Http\Requests\EventEditFormRequest;
 use App\Models\Event;
-use Illuminate\Http\Request;
+use App\Http\Requests\EventEditFormRequest;
+use App\Http\Requests\EventCreateFormRequest;
 
 class EventsController extends Controller
 {

@@ -2,10 +2,10 @@
 
 namespace Tests\Unit;
 
-use App\Models\Event;
-use App\Models\Venue;
 use Carbon\Carbon;
 use Tests\TestCase;
+use App\Models\Event;
+use App\Models\Venue;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class VenueTest extends TestCase

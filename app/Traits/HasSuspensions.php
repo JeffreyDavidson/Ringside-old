@@ -3,8 +3,8 @@
 namespace App\Traits;
 
 use Carbon\Carbon;
-use App\Exceptions\WrestlerAlreadySuspendedException;
 use App\Exceptions\WrestlerNotSuspendedException;
+use App\Exceptions\WrestlerAlreadySuspendedException;
 
 trait HasSuspensions
 {

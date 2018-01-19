@@ -2,8 +2,8 @@
 
 namespace App\Traits;
 
-use App\Models\Permission;
 use App\Models\Role;
+use App\Models\Permission;
 
 trait HasRoles
 {
@@ -25,7 +25,7 @@ trait HasRoles
      * Determine if the user's role has the given permission.
      *
      * @param  string $permissionSlug
-     * @return boolean
+     * @return bool
      */
     public function hasPermission($permissionSlug)
     {
@@ -36,7 +36,7 @@ trait HasRoles
      * Determine if the supplied role matches the role of the user.
      *
      * @param  Role $role
-     * @return boolean
+     * @return bool
      */
     public function hasRole(Role $role)
     {

@@ -4,8 +4,8 @@ namespace App\Presenters;
 
 use Laracodes\Presenter\Presenter;
 
-class EventPresenter extends Presenter {
-
+class EventPresenter extends Presenter
+{
     public function date()
     {
         return $this->model->date->format('F jS, Y');

@@ -2,8 +2,8 @@
 
 namespace App\Http\Middleware;
 
-use App\Policies\ApplicationPolicy;
 use Closure;
+use App\Policies\ApplicationPolicy;
 
 class Authenticate
 {

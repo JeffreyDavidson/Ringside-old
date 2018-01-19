@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Foundation\Http\FormRequest;
 
 class StipulationEditFormRequest extends FormRequest
 {
@@ -25,8 +25,8 @@ class StipulationEditFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', Rule::unique('stipulations' ,'name')->ignore($this->stipulation->id)],
-            'slug' => ['required', Rule::unique('stipulations' ,'slug')->ignore($this->stipulation->id)]
+            'name' => ['required', Rule::unique('stipulations', 'name')->ignore($this->stipulation->id)],
+            'slug' => ['required', Rule::unique('stipulations', 'slug')->ignore($this->stipulation->id)]
         ];
     }
 }

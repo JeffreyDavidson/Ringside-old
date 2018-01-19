@@ -2,4 +2,6 @@
 
 namespace App\Exceptions;
 
-class WrestlerAlreadySuspendedException extends \Exception {}
+class WrestlerAlreadySuspendedException extends \Exception
+{
+}

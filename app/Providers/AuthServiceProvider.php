@@ -2,17 +2,16 @@
 
 namespace App\Providers;
 
-use App\Models\Wrestler;
-use App\Policies\WrestlerPolicy;
 use App\Models\Event;
-use App\Policies\EventPolicy;
 use App\Models\Title;
-use App\Policies\TitlePolicy;
-use App\Models\Stipulation;
-use App\Policies\StipulationPolicy;
 use App\Models\Venue;
+use App\Models\Wrestler;
+use App\Models\Stipulation;
+use App\Policies\EventPolicy;
+use App\Policies\TitlePolicy;
 use App\Policies\VenuePolicy;
-
+use App\Policies\WrestlerPolicy;
+use App\Policies\StipulationPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider

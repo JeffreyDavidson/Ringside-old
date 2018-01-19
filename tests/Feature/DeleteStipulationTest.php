@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Models\Stipulation;
-use App\Models\User;
-use App\Models\Role;
-use App\Models\Permission;
 use Tests\TestCase;
+use App\Models\Role;
+use App\Models\User;
+use App\Models\Permission;
+use App\Models\Stipulation;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class DeleteStipulationTest extends TestCase
@@ -35,7 +35,7 @@ class DeleteStipulationTest extends TestCase
     }
 
     /** @test */
-    function users_who_have_permission_can_soft_delete_a_stipulation()
+    public function users_who_have_permission_can_soft_delete_a_stipulation()
     {
         $response = $this->actingAs($this->user)->from(route('stipulations.index'))->delete(route('stipulations.destroy', $this->stipulation->id));
 
@@ -45,7 +45,7 @@ class DeleteStipulationTest extends TestCase
     }
 
     /** @test */
-    function users_who_dont_have_permission_cannot_delete_a_stipulation()
+    public function users_who_dont_have_permission_cannot_delete_a_stipulation()
     {
         $userWithoutPermission = factory(User::class)->create();
         $role = factory(Role::class)->create(['name' => 'editor']);
@@ -57,7 +57,7 @@ class DeleteStipulationTest extends TestCase
     }
 
     /** @test */
-    function guests_cannot_delete_a_stipulation()
+    public function guests_cannot_delete_a_stipulation()
     {
         $response = $this->from(route('stipulations.index'))->delete(route('stipulations.destroy', $this->stipulation->id));
 

@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Models\Venue;
-use App\Models\User;
-use App\Models\Role;
-use App\Models\Permission;
 use Tests\TestCase;
+use App\Models\Role;
+use App\Models\User;
+use App\Models\Venue;
+use App\Models\Permission;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class ViewVenueListTest extends TestCase
@@ -30,7 +30,7 @@ class ViewVenueListTest extends TestCase
     }
 
     /** @test */
-    function users_who_have_permission_can_view_the_list_of_venues()
+    public function users_who_have_permission_can_view_the_list_of_venues()
     {
         $venueA = factory(Venue::class)->create();
         $venueB = factory(Venue::class)->create();
@@ -43,7 +43,7 @@ class ViewVenueListTest extends TestCase
     }
 
     /** @test */
-    function users_who_dont_have_permission_cannot_view_the_list_of_venues()
+    public function users_who_dont_have_permission_cannot_view_the_list_of_venues()
     {
         $userWithoutPermission = factory(User::class)->create();
         $role = factory(Role::class)->create(['name' => 'editor']);
@@ -55,7 +55,7 @@ class ViewVenueListTest extends TestCase
     }
 
     /** @test */
-    function guests_cannot_view_venue_list()
+    public function guests_cannot_view_venue_list()
     {
         $response = $this->get(route('venues.index'));
 
