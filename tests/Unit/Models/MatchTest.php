@@ -3,6 +3,8 @@
 namespace Tests\Unit;
 
 use App\Models\Match;
+use MatchFactory;
+use EventFactory;
 use App\Models\Referee;
 use App\Models\MatchType;
 use App\Models\Stipulation;
@@ -18,7 +20,7 @@ class MatchTest extends TestCase
     use DatabaseMigrations;
 
     /** @test */
-    function a_match_can_have_a_title_being_competed_for()
+    public function a_match_can_have_a_title_being_competed_for()
     {
         $match = factory(Match::class)->create();
         $title = factory(Title::class)->create();
@@ -30,7 +32,7 @@ class MatchTest extends TestCase
     }
 
     /** @test */
-    function can_have_more_than_one_title()
+    public function can_have_more_than_one_title()
     {
         $event = factory(Event::class)->create(['date' => Carbon::parse('tomorrow')]);
         $match = factory(Match::class)->create(['event_id' => $event->id]);
@@ -42,7 +44,7 @@ class MatchTest extends TestCase
     }
 
     /** @test */
-    function must_have_a_referee()
+    public function must_have_a_referee()
     {
         $event = factory(Event::class)->create(['date' => Carbon::parse('tomorrow')]);
         $match = factory(Match::class)->create(['event_id' => $event->id]);
@@ -54,7 +56,7 @@ class MatchTest extends TestCase
     }
 
     /** @test */
-    function can_have_more_than_one_referee()
+    public function can_have_more_than_one_referee()
     {
         $event = factory(Event::class)->create();
         $match = factory(Match::class)->create(['event_id' => $event->id]);
@@ -66,7 +68,7 @@ class MatchTest extends TestCase
     }
 
     /** @test */
-    function can_have_one_stipulation()
+    public function can_have_one_stipulation()
     {
         $event = factory(Event::class)->create();
         $match = factory(Match::class)->create(['event_id' => $event->id]);
@@ -78,7 +80,7 @@ class MatchTest extends TestCase
     }
 
     /** @test */
-    function can_have_more_than_one_stipulation()
+    public function can_have_more_than_one_stipulation()
     {
         $event = factory(Event::class)->create(['date' => Carbon::parse('tomorrow')]);
         $match = factory(Match::class)->create(['event_id' => $event->id]);
@@ -90,7 +92,7 @@ class MatchTest extends TestCase
     }
 
     /** @test */
-    function can_add_more_than_one_wrestler()
+    public function can_add_more_than_one_wrestler()
     {
         $event = factory(Event::class)->create(['date' => Carbon::parse('tomorrow')]);
         $match = factory(Match::class)->create(['event_id' => $event->id]);
@@ -102,7 +104,7 @@ class MatchTest extends TestCase
     }
 
     /** @test */
-    function can_add_one_wrestler()
+    public function can_add_one_wrestler()
     {
         $event = factory(Event::class)->create(['date' => Carbon::parse('tomorrow')]);
         $match = factory(Match::class)->create(['event_id' => $event->id]);
@@ -114,27 +116,26 @@ class MatchTest extends TestCase
     }
 
     /** @test */
-    function some_matches_need_more_than_one_referee()
+    public function some_matches_need_more_than_one_referee()
     {
         $matchTypeA = factory(MatchType::class)->create(['slug' => 'battleroyal']);
         $matchTypeB = factory(MatchType::class)->create(['slug' => 'royalrumble']);
 
-        $matchA = factory(Match::class)->create(['match_type_id' => $matchTypeA->id]);
-        $matchB = factory(Match::class)->create(['match_type_id' => $matchTypeB->id]);
+        $matchA = MatchFactory::create(['match_type_id' => $matchTypeA->id]);
+        $matchB = MatchFactory::create(['match_type_id' => $matchTypeB->id]);
 
-        $this->assertTrue($matchA->needsMoreThanOneReferee());
-        $this->assertTrue($matchB->needsMoreThanOneReferee());
+        $this->assertContains($matchA->type->needsMultipleReferees);
+        $this->assertContains($matchB->type->needsMoreThanOneRefere);
     }
 
     /** @test */
-    function a_winner_can_be_set_for_a_title_match()
+    public function a_winner_can_be_set_for_a_title_match()
     {
         $wrestlerA = factory(Wrestler::class)->create();
         $wrestlerB = factory(Wrestler::class)->create();
-        $match = factory(Match::class)->create();
         $title = factory(Title::class)->create();
-        $match->addWrestlers([$wrestlerA, $wrestlerB]);
-        $match->addTitle($title);
+        $event = EventFactory::create();
+        $match = MatchFactory::create(['event_id' => $event->id], [$wrestlerA, $wrestlerB], [], [$title], []);
 
         $match->setWinner($wrestlerA);
 
@@ -144,7 +145,7 @@ class MatchTest extends TestCase
     }
 
     /** @test */
-    function a_winner_can_be_set_for_a_nontitle_match()
+    public function a_winner_can_be_set_for_a_nontitle_match()
     {
         $wrestlerA = factory(Wrestler::class)->create();
         $wrestlerB = factory(Wrestler::class)->create();

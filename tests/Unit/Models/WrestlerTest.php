@@ -36,8 +36,8 @@ class WrestlerTest extends TestCase
         $wrestler->loseTitle($title, Carbon::now());
 
         tap($wrestler->fresh(), function ($wrestler) {
-            $this->assertTrue($wrestler->hasPreviousTitlesHeld());
-            $this->assertEquals(1, $wrestler->previousTitlesHeld->count());
+            $this->assertTrue($wrestler->hasPastTitlesHeld());
+            $this->assertEquals(1, $wrestler->pastTitlesHeld->count());
         });
     }
 
@@ -82,7 +82,7 @@ class WrestlerTest extends TestCase
 
         $wrestler->loseTitle($title, Carbon::now());
 
-        $this->assertEquals(0, $wrestler->previousTitlesHeld->count());
+        $this->assertEquals(0, $wrestler->pastTitlesHeld->count());
     }
 
     /** @test */
@@ -118,8 +118,8 @@ class WrestlerTest extends TestCase
         $wrestler->renew();
         $wrestler->suspend();
 
-        $this->assertTrue($wrestler->hasPreviousSuspensions());
-        $this->assertEquals(1, $wrestler->previousSuspensions->count());
+        $this->assertTrue($wrestler->hasPastSuspensions());
+        $this->assertEquals(1, $wrestler->pastSuspensions->count());
     }
 
     /**
@@ -184,8 +184,8 @@ class WrestlerTest extends TestCase
         $wrestler->unretire();
         $wrestler->retire();
 
-        $this->assertTrue($wrestler->hasPreviousRetirements());
-        $this->assertEquals(1, $wrestler->previousRetirements->count());
+        $this->assertTrue($wrestler->hasPastRetirements());
+        $this->assertEquals(1, $wrestler->pastRetirements->count());
     }
 
     /**
@@ -238,8 +238,8 @@ class WrestlerTest extends TestCase
         $wrestler->fireManager($manager);
 
         tap($wrestler->fresh(), function ($wrestler) {
-            $this->assertTrue($wrestler->hasPreviousManagers());
-            $this->assertEquals(1, $wrestler->previousManagers->count());
+            $this->assertTrue($wrestler->hasPastManagers());
+            $this->assertEquals(1, $wrestler->pastManagers->count());
         });
     }
 
@@ -284,7 +284,7 @@ class WrestlerTest extends TestCase
 
         $wrestler->fireManager($manager);
 
-        $this->assertEquals(0, $wrestler->previousManagers()->count());
+        $this->assertEquals(0, $wrestler->pastManagers()->count());
     }
 
     /** @test */

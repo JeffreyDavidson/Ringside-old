@@ -238,7 +238,6 @@ class EditWrestlerTest extends TestCase
     /** @test */
     function editing_a_wrestler_with_no_matches()
     {
-        $this->disableExceptionHandling();
         factory(WrestlerStatus::class)->create(['name' => 'Active']);
         factory(WrestlerStatus::class)->create(['name' => 'Inactive']);
         factory(WrestlerStatus::class)->create(['name' => 'Injured']);
@@ -273,7 +272,6 @@ class EditWrestlerTest extends TestCase
     /** @test */
     function editing_a_wrestler_with_matches()
     {
-        $this->disableExceptionHandling();
         factory(WrestlerStatus::class)->create(['name' => 'Active']);
         factory(WrestlerStatus::class)->create(['name' => 'Inactive']);
         factory(WrestlerStatus::class)->create(['name' => 'Injured']);

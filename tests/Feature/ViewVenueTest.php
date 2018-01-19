@@ -2,15 +2,15 @@
 
 namespace Tests\Feature;
 
-use App\Models\Event;
-use App\Models\Match;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Permission;
 use App\Models\Venue;
-use App\Models\Wrestler;
+use EventFactory;
+use MatchFactory;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use App\Models\Wrestler;
 
 class ViewVenueTest extends TestCase
 {
@@ -32,7 +32,7 @@ class ViewVenueTest extends TestCase
         $this->role = factory(Role::class)->create(['slug' => 'admin']);
         $this->permission = factory(Permission::class)->create(['slug' => 'show-venue']);
         $this->venue = factory(Venue::class)->create([
-            'name' => 'Stipulation Name',
+            'name' => 'Venue Name',
             'address' => '123 Main Street',
             'city' => 'Laraville',
             'state' => 'FL',
@@ -75,19 +75,18 @@ class ViewVenueTest extends TestCase
     }
 
     /** @test */
-    function a_venues_events_can_be_viewed_on_page()
+    function a_venues_past_events_can_be_viewed_on_venue_page()
     {
-        $this->disableExceptionHandling();
-        $event = factory(Event::class)->create(['venue_id' => $this->venue->id]);
-        $match = factory(Match::class)->create(['event_id' => $event->id]);
-        $wrestlerA = factory(Wrestler::class)->create(['name' => 'Wrestler A']);
-        $wrestlerB = factory(Wrestler::class)->create(['name' => 'Wrestler B']);
-        $match->addWrestlers([$wrestlerA, $wrestlerB]);
+        $this->withoutExceptionHandling();
+        $event = EventFactory::create(['name' => 'Event Name', 'venue_id' => $this->venue->id]);
+        MatchFactory::create(['event_id' => $event->id], factory(Wrestler::class, 2)->create());
 
         $response = $this->actingAs($this->user)->get(route('venues.show', $this->venue->id));
 
         $response->assertSuccessful();
         $response->assertViewIs('venues.show');
         $response->assertViewHas('venue');
+        $response->assertSee('Event Name');
+
     }
 }

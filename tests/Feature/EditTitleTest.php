@@ -53,30 +53,28 @@ class EditTitleTest extends TestCase
     }
 
     /** @test */
-    function users_who_have_permission_can_view_the_edit_title_form()
+    public function users_who_have_permission_can_view_the_edit_title_form()
     {
-        $response = $this->actingAs($this->user)
-                        ->get(route('titles.edit', $this->title->id));
+        $response = $this->actingAs($this->user)->get(route('titles.edit', $this->title->id));
 
         $response->assertStatus(200);
         $this->assertTrue($response->data('title')->is($this->title));
     }
 
     /** @test */
-    function users_who_dont_have_permission_cannot_view_the_edit_title_form()
+    public function users_who_dont_have_permission_cannot_view_the_edit_title_form()
     {
         $userWithoutPermission = factory(User::class)->create();
         $role = factory(Role::class)->create(['name' => 'editor']);
         $userWithoutPermission->assignRole($role);
 
-        $response = $this->actingAs($userWithoutPermission)
-                        ->get(route('titles.edit', $this->title->id));
+        $response = $this->actingAs($userWithoutPermission)->get(route('titles.edit', $this->title->id));
 
         $response->assertStatus(403);
     }
 
     /** @test */
-    function guests_cannot_view_the_edit_title_form()
+    public function guests_cannot_view_the_edit_title_form()
     {
         $response = $this->get(route('titles.edit', $this->title->id));
 
@@ -85,13 +83,11 @@ class EditTitleTest extends TestCase
     }
 
     /** @test */
-    function name_is_required()
+    public function title_name_is_required()
     {
-        $response = $this->actingAs($this->user)
-                        ->from(route('titles.edit', $this->title->id))
-                        ->patch(route('titles.update', $this->title->id), $this->validParams([
-                            'name' => ''
-                        ]));
+        $response = $this->actingAs($this->user)->from(route('titles.edit', $this->title->id))->patch(route('titles.update', $this->title->id), $this->validParams([
+            'name' => ''
+        ]));
 
         $response->assertRedirect(route('titles.edit', $this->title->id));
         $response->assertSessionHasErrors('name');
@@ -101,13 +97,11 @@ class EditTitleTest extends TestCase
     }
 
     /** @test */
-    function slug_is_required()
+    public function title_slug_is_required()
     {
-        $response = $this->actingAs($this->user)
-                    ->from(route('titles.edit', $this->title->id))
-                    ->patch(route('titles.update', $this->title->id), $this->validParams([
-                        'slug' => ''
-                    ]));
+        $response = $this->actingAs($this->user)->from(route('titles.edit', $this->title->id))->patch(route('titles.update', $this->title->id), $this->validParams([
+            'slug' => ''
+        ]));
 
         $response->assertRedirect(route('titles.edit', $this->title->id));
         $response->assertSessionHasErrors('slug');
@@ -117,15 +111,13 @@ class EditTitleTest extends TestCase
     }
 
     /** @test */
-    function name_must_be_unique()
+    public function tile_name_must_be_unique()
     {
         factory(Title::class)->create($this->validParams());
 
-        $response = $this->actingAs($this->user)
-                        ->from(route('titles.edit', $this->title->id))
-                        ->patch(route('titles.update', $this->title->id), $this->validParams([
-                            'name' => 'Title Name'
-                        ]));
+        $response = $this->actingAs($this->user)->from(route('titles.edit', $this->title->id))->patch(route('titles.update', $this->title->id), $this->validParams([
+            'name' => 'Title Name'
+        ]));
 
         $response->assertRedirect(route('titles.edit', $this->title->id));
         $response->assertSessionHasErrors('name');
@@ -136,15 +128,13 @@ class EditTitleTest extends TestCase
     }
 
     /** @test */
-    function slug_must_be_unique()
+    public function title_slug_must_be_unique()
     {
         factory(Title::class)->create($this->validParams());
 
-        $response = $this->actingAs($this->user)
-                        ->from(route('titles.edit', $this->title->id))
-                        ->patch(route('titles.update', $this->title->id), $this->validParams([
-                            'slug' => 'title-slug'
-                        ]));
+        $response = $this->actingAs($this->user)->from(route('titles.edit', $this->title->id))->patch(route('titles.update', $this->title->id), $this->validParams([
+            'slug' => 'title-slug'
+        ]));
 
         $response->assertRedirect(route('titles.edit', $this->title->id));
         $response->assertSessionHasErrors('slug');
@@ -155,13 +145,11 @@ class EditTitleTest extends TestCase
     }
 
     /** @test */
-    function introduced_at_date_must_be_a_valid_date()
+    public function title_introduced_at_date_must_be_a_valid_date()
     {
-        $response = $this->actingAs($this->user)
-                ->from(route('titles.edit', $this->title->id))
-                ->patch(route('titles.update', $this->title->id), $this->validParams([
-                    'introduced_at' => 'not-a-date',
-                ]));
+        $response = $this->actingAs($this->user)->from(route('titles.edit', $this->title->id))->patch(route('titles.update', $this->title->id), $this->validParams([
+            'introduced_at' => 'not-a-date',
+        ]));
 
         $response->assertRedirect(route('titles.edit', $this->title->id));
         $response->assertSessionHasErrors('introduced_at');
@@ -171,17 +159,16 @@ class EditTitleTest extends TestCase
     }
 
     /** @test */
-    function introduced_at_date_must_be_before_first_competed_for_match()
+    public function title_introduced_at_date_must_be_before_first_competed_for_match()
     {
         $event = factory(Event::class)->create(['date' => '2016-12-19']);
         $match = factory(Match::class)->create(['event_id' => $event->id]);
         $match->addTitle($this->title);
 
-        $response = $this->actingAs($this->user)
-            ->from(route('titles.edit', $this->title->id))
-            ->patch(route('titles.update', $this->title->id), $this->validParams([
-                'introduced_at' => '2016-12-20',
-            ]));
+        $response = $this->actingAs($this->user)->from(route('titles.edit', $this->title->id))->patch(route('titles.update', $this->title->id), $this->validParams([
+            'introduced_at' => '2016-12-20',
+        ]));
+
         $response->assertRedirect(route('titles.edit', $this->title->id));
         $response->assertSessionHasErrors('introduced_at');
         tap($this->title->fresh(), function ($title) {
@@ -190,15 +177,13 @@ class EditTitleTest extends TestCase
     }
 
     /** @test */
-    function editing_a_valid_title_with_no_matches()
+    public function editing_a_valid_title_with_no_matches()
     {
-        $response = $this->actingAs($this->user)
-                        ->from(route('titles.edit', $this->title->id))
-                        ->patch(route('titles.update', $this->title->id), $this->validParams([
-                            'name' => 'New Name',
-                            'slug' => 'new-slug',
-                            'introduced_at' => '2016-12-18'
-                        ]));
+        $response = $this->actingAs($this->user)->from(route('titles.edit', $this->title->id))->patch(route('titles.update', $this->title->id), $this->validParams([
+            'name' => 'New Name',
+            'slug' => 'new-slug',
+            'introduced_at' => '2016-12-18'
+        ]));
 
         $response->assertRedirect(route('titles.index'));
         tap($this->title->fresh(), function ($title) {
@@ -209,18 +194,16 @@ class EditTitleTest extends TestCase
     }
 
     /** @test */
-    function editing_a_valid_title_with_matches()
+    public function editing_a_valid_title_with_matches()
     {
         $event = factory(Event::class)->create(['date' => '2016-12-19']);
         $match = factory(Match::class)->create(['event_id' => $event->id]);
         $match->addTitle($this->title);
-        $response = $this->actingAs($this->user)
-            ->from(route('titles.edit', $this->title->id))
-            ->patch(route('titles.update', $this->title->id), [
-                'name' => 'New Name',
-                'slug' => 'new-slug',
-                'introduced_at' => '2016-12-18'
-            ]);
+        $response = $this->actingAs($this->user)->from(route('titles.edit', $this->title->id))->patch(route('titles.update', $this->title->id), [
+            'name' => 'New Name',
+            'slug' => 'new-slug',
+            'introduced_at' => '2016-12-18'
+        ]);
 
         $response->assertRedirect(route('titles.index'));
         tap($this->title->fresh(), function ($title) {

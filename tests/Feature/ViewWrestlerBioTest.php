@@ -10,8 +10,9 @@ use App\Models\Manager;
 use App\Models\Title;
 use App\Models\Match;
 use App\Models\Event;
-use App\Models\WrestlerBio;
 use Carbon\Carbon;
+use EventFactory;
+use MatchFactory;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -49,7 +50,7 @@ class ViewWrestlerBioTest extends TestCase
     }
 
     /** @test */
-    function users_who_have_permission_can_view_a_wrestler_bio()
+    public function users_who_have_permission_can_view_a_wrestler_bio()
     {
         $response = $this->actingAs($this->user)->get(route('wrestlers.show', $this->wrestler->id));
 
@@ -57,7 +58,7 @@ class ViewWrestlerBioTest extends TestCase
     }
 
     /** @test */
-    function users_who_dont_have_permission_cannot_view_a_wrestler_bio()
+    public function users_who_dont_have_permission_cannot_view_a_wrestler_bio()
     {
         $userWithoutPermission = factory(User::class)->create();
         $role = factory(Role::class)->create(['name' => 'editor']);
@@ -69,7 +70,7 @@ class ViewWrestlerBioTest extends TestCase
     }
 
     /** @test */
-    function guests_cannot_view_a_wrestler_bio()
+    public function guests_cannot_view_a_wrestler_bio()
     {
         $response = $this->get(route('wrestlers.show', $this->wrestler->id));
 
@@ -78,7 +79,7 @@ class ViewWrestlerBioTest extends TestCase
     }
 
     /** @test */
-    public function view_bio_information_of_wrestler()
+    public function view_bio_information_on_wrestler_bio()
     {
         $response = $this->actingAs($this->user)->get(route('wrestlers.show', $this->wrestler->id));
 
@@ -103,7 +104,7 @@ class ViewWrestlerBioTest extends TestCase
     }
 
     /** @test */
-    public function view_list_of_previous_managers_on_wrestler_bio()
+    public function view_list_of_past_managers_on_wrestler_bio()
     {
         $managerA = factory(Manager::class)->create(['first_name' => 'John', 'last_name' => 'Smith']);
 
@@ -133,8 +134,9 @@ class ViewWrestlerBioTest extends TestCase
     }
 
     /** @test */
-    public function view_list_of_previous_titles_held_on_wrestler_bio()
+    public function view_list_of_past_titles_held_on_wrestler_bio()
     {
+        $this->withoutExceptionHandling();
         $wrestler = factory(Wrestler::class)->create();
         $titleA = factory(Title::class)->create(['name' => 'Title A']);
         factory(Title::class)->create(['name' => 'Title B']);
@@ -151,16 +153,8 @@ class ViewWrestlerBioTest extends TestCase
     /** @test */
     public function view_list_of_currently_scheduled_matches_on_wrestler_bio()
     {
-        $event = factory(Event::class)->create(['name' => 'Event Name', 'date' => Carbon::parse('tomorrow')]);
-        $match = factory(Match::class)->create(['event_id' => $event->id]);
-
-        $wrestler2 = factory(Wrestler::class)->create([
-            'name' => 'Wrestler 2',
-            'hired_at' => Carbon::parse('last month'),
-        ]);
-
-        $match->addWrestler($this->wrestler);
-        $match->addWrestler($wrestler2);
+        $event = EventFactory::create(['name' => 'Event Name', 'date' => Carbon::parse('tomorrow')]);
+        $match = MatchFactory::create(['event_id' => $event->id], [$this->wrestler]);
 
         $response = $this->actingAs($this->user)->get(route('wrestlers.show', $this->wrestler->id));
 
@@ -168,18 +162,11 @@ class ViewWrestlerBioTest extends TestCase
     }
 
     /** @test */
-    public function view_list_of_previous_matches_on_wrestler_bio()
+    public function view_list_of_past_matches_on_wrestler_bio()
     {
-        $event = factory(Event::class)->create(['name' => 'Event Name', 'date' => Carbon::parse('last week')]);
-        $match = factory(Match::class)->create(['event_id' => $event->id]);
-
-        $wrestler2 = factory(Wrestler::class)->create([
-            'name' => 'Wrestler 2',
-            'hired_at' => Carbon::parse('last month'),
-        ]);
-
-        $match->addWrestler($this->wrestler);
-        $match->addWrestler($wrestler2);
+        
+        $event = EventFactory::create(['name' => 'Event Name', 'date' => Carbon::now()->subMonth()]);
+        $match = MatchFactory::create(['event_id' => $event->id], [$this->wrestler]);
 
         $response = $this->actingAs($this->user)->get(route('wrestlers.show', $this->wrestler->id));
 
