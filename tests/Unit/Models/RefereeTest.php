@@ -3,8 +3,8 @@
 namespace Tests\Unit;
 
 use App\Models\Referee;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class RefereeTest extends TestCase
 {

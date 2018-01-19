@@ -17,7 +17,7 @@ class MatchType extends Model
     ];
 
     public function needsMultipleReferees()
-    { 
+    {
         return in_array($this->slug, $this->needsMultipleReferees);
     }
 }

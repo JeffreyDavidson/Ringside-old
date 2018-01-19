@@ -5,8 +5,8 @@ namespace Tests\Unit;
 use App\Models\Event;
 use App\Models\Title;
 use Carbon\Carbon;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class TitleTest extends TestCase
 {

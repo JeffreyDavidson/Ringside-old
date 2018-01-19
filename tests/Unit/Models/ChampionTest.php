@@ -4,8 +4,8 @@ namespace Tests\Unit;
 
 use App\Models\Champion;
 use App\Models\Title;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class ChampionTest extends TestCase
 {
