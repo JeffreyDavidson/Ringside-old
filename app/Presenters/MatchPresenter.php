@@ -30,7 +30,7 @@ class MatchPresenter extends Presenter
         } elseif ($loop->last) {
             return 'Main Event';
         } else {
-            return 'Match #' . $this->model->match_number;
+            return 'Match #'.$this->model->match_number;
         }
     }
 }

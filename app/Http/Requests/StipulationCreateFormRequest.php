@@ -25,7 +25,7 @@ class StipulationCreateFormRequest extends FormRequest
     {
         return [
             'name' => 'required|unique:stipulations,name',
-            'slug' => 'required|unique:stipulations,slug'
+            'slug' => 'required|unique:stipulations,slug',
         ];
     }
 }

@@ -11,6 +11,7 @@ class MostTitleDefensesQuery
      * Returns collection of champions by most title defenses.
      *
      * @param \App\Models\Title $title
+     *
      * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
      */
     public static function get(Title $title)

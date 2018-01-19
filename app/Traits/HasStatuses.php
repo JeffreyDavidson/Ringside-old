@@ -56,7 +56,7 @@ trait HasStatuses
     }
 
     // TODO: Adjust job of changing the status of the wrestler.
-    /**
+    /*
      * Checks to see if wrestler is no longer retired, injured or suspended.
      *
      * @return void

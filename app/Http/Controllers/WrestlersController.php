@@ -35,13 +35,14 @@ class WrestlersController extends Controller
 
         $statuses = WrestlerStatus::available();
 
-        return response()->view('wrestlers.create', ['wrestler' => new Wrestler, 'statuses' => $statuses]);
+        return response()->view('wrestlers.create', ['wrestler' => new Wrestler(), 'statuses' => $statuses]);
     }
 
     /**
      * Store a newly created wrestler.
      *
      * @param WrestlerCreateFormRequest $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(WrestlerCreateFormRequest $request)
@@ -49,13 +50,13 @@ class WrestlersController extends Controller
         $this->authorize('create', Wrestler::class);
 
         Wrestler::create([
-            'name' => $request->name,
-            'slug' => $request->slug,
-            'status_id' => $request->status_id,
-            'hired_at' => Carbon::parse($request->hired_at),
-            'hometown' => $request->hometown,
-            'height' => ($request->feet * 12) + $request->inches,
-            'weight' => $request->weight,
+            'name'           => $request->name,
+            'slug'           => $request->slug,
+            'status_id'      => $request->status_id,
+            'hired_at'       => Carbon::parse($request->hired_at),
+            'hometown'       => $request->hometown,
+            'height'         => ($request->feet * 12) + $request->inches,
+            'weight'         => $request->weight,
             'signature_move' => $request->signature_move,
         ]);
 
@@ -65,7 +66,8 @@ class WrestlersController extends Controller
     /**
      * Display the specified wrestler.
      *
-     * @param  Wrestler $wrestler
+     * @param Wrestler $wrestler
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(Wrestler $wrestler)
@@ -80,7 +82,8 @@ class WrestlersController extends Controller
     /**
      * Show the form for editing a wrestler.
      *
-     * @param  Wrestler $wrestler
+     * @param Wrestler $wrestler
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit(Wrestler $wrestler)
@@ -96,7 +99,8 @@ class WrestlersController extends Controller
      * Update the specified wrestler.
      *
      * @param WrestlerEditFormRequest $request
-     * @param  Wrestler $wrestler
+     * @param Wrestler                $wrestler
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(WrestlerEditFormRequest $request, Wrestler $wrestler)
@@ -115,13 +119,13 @@ class WrestlersController extends Controller
         //}
 
         $wrestler->update([
-            'name' => $request->name,
-            'slug' => $request->slug,
-            'status_id' => $request->status_id,
-            'hired_at' => $request->hired_at,
-            'hometown' => $request->hometown,
-            'height' => ($request->feet * 12) + $request->inches,
-            'weight' => $request->weight,
+            'name'           => $request->name,
+            'slug'           => $request->slug,
+            'status_id'      => $request->status_id,
+            'hired_at'       => $request->hired_at,
+            'hometown'       => $request->hometown,
+            'height'         => ($request->feet * 12) + $request->inches,
+            'weight'         => $request->weight,
             'signature_move' => $request->signature_move,
         ]);
 
@@ -139,7 +143,8 @@ class WrestlersController extends Controller
     /**
      * Delete the specified wrestler.
      *
-     * @param  Wrestler $wrestler
+     * @param Wrestler $wrestler
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(Wrestler $wrestler)
