@@ -2,4 +2,6 @@
 
 namespace App\Exceptions;
 
-class WrestlerNotHaveHiredManagerException extends \RuntimeException {}
+class WrestlerNotHaveHiredManagerException extends \RuntimeException
+{
+}

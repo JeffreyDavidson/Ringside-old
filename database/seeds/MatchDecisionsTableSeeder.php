@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\MatchDecision;
-
 use Illuminate\Database\Seeder;
 
 class MatchDecisionsTableSeeder extends Seeder

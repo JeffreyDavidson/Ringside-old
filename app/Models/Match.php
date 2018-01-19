@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracodes\Presenter\Traits\Presentable;
-use Illuminate\Database\Eloquent\Model;
 
 class Match extends Model
 {
@@ -169,7 +169,7 @@ class Match extends Model
     /**
      * Determines if the match has a title associated to it.
      *
-     * @return boolean
+     * @return bool
      */
     public function isTitleMatch()
     {
@@ -217,6 +217,7 @@ class Match extends Model
      * Add a match to an event.
      *
      * @param Event $event
+     *
      * @return bool
      */
     public function addToEvent(Event $event)
@@ -227,7 +228,7 @@ class Match extends Model
     /**
      * Checks if the match needs multiple referees.
      *
-     * @return boolean
+     * @return bool
      */
     public function needsTwoReferees()
     {

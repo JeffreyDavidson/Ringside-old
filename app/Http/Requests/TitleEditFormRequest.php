@@ -26,8 +26,8 @@ class TitleEditFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', Rule::unique('titles' ,'name')->ignore($this->title->id)],
-            'slug' => ['required', Rule::unique('titles' ,'slug')->ignore($this->title->id)],
+            'name'          => ['required', Rule::unique('titles', 'name')->ignore($this->title->id)],
+            'slug'          => ['required', Rule::unique('titles', 'slug')->ignore($this->title->id)],
             'introduced_at' => ['required', 'date', new BeforeFirstMatchDate($this->title)],
         ];
     }
