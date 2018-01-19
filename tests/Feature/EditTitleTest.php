@@ -9,8 +9,8 @@ use App\Models\Role;
 use App\Models\Title;
 use App\Models\User;
 use Carbon\Carbon;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class EditTitleTest extends TestCase
 {
@@ -37,18 +37,18 @@ class EditTitleTest extends TestCase
     private function oldAttributes($overrides = [])
     {
         return array_merge([
-            'name' => 'Old Name',
-            'slug' => 'old-slug',
-            'introduced_at' => Carbon::parse('December 18, 2016')
+            'name'          => 'Old Name',
+            'slug'          => 'old-slug',
+            'introduced_at' => Carbon::parse('December 18, 2016'),
         ], $overrides);
     }
 
     private function validParams($overrides = [])
     {
         return array_merge([
-            'name' => 'Title Name',
-            'slug' => 'title-slug',
-            'introduced_at' => '2017-08-04'
+            'name'          => 'Title Name',
+            'slug'          => 'title-slug',
+            'introduced_at' => '2017-08-04',
         ], $overrides);
     }
 
@@ -86,7 +86,7 @@ class EditTitleTest extends TestCase
     public function title_name_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('titles.edit', $this->title->id))->patch(route('titles.update', $this->title->id), $this->validParams([
-            'name' => ''
+            'name' => '',
         ]));
 
         $response->assertRedirect(route('titles.edit', $this->title->id));
@@ -100,7 +100,7 @@ class EditTitleTest extends TestCase
     public function title_slug_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('titles.edit', $this->title->id))->patch(route('titles.update', $this->title->id), $this->validParams([
-            'slug' => ''
+            'slug' => '',
         ]));
 
         $response->assertRedirect(route('titles.edit', $this->title->id));
@@ -116,7 +116,7 @@ class EditTitleTest extends TestCase
         factory(Title::class)->create($this->validParams());
 
         $response = $this->actingAs($this->user)->from(route('titles.edit', $this->title->id))->patch(route('titles.update', $this->title->id), $this->validParams([
-            'name' => 'Title Name'
+            'name' => 'Title Name',
         ]));
 
         $response->assertRedirect(route('titles.edit', $this->title->id));
@@ -133,7 +133,7 @@ class EditTitleTest extends TestCase
         factory(Title::class)->create($this->validParams());
 
         $response = $this->actingAs($this->user)->from(route('titles.edit', $this->title->id))->patch(route('titles.update', $this->title->id), $this->validParams([
-            'slug' => 'title-slug'
+            'slug' => 'title-slug',
         ]));
 
         $response->assertRedirect(route('titles.edit', $this->title->id));
@@ -180,9 +180,9 @@ class EditTitleTest extends TestCase
     public function editing_a_valid_title_with_no_matches()
     {
         $response = $this->actingAs($this->user)->from(route('titles.edit', $this->title->id))->patch(route('titles.update', $this->title->id), $this->validParams([
-            'name' => 'New Name',
-            'slug' => 'new-slug',
-            'introduced_at' => '2016-12-18'
+            'name'          => 'New Name',
+            'slug'          => 'new-slug',
+            'introduced_at' => '2016-12-18',
         ]));
 
         $response->assertRedirect(route('titles.index'));
@@ -200,9 +200,9 @@ class EditTitleTest extends TestCase
         $match = factory(Match::class)->create(['event_id' => $event->id]);
         $match->addTitle($this->title);
         $response = $this->actingAs($this->user)->from(route('titles.edit', $this->title->id))->patch(route('titles.update', $this->title->id), [
-            'name' => 'New Name',
-            'slug' => 'new-slug',
-            'introduced_at' => '2016-12-18'
+            'name'          => 'New Name',
+            'slug'          => 'new-slug',
+            'introduced_at' => '2016-12-18',
         ]);
 
         $response->assertRedirect(route('titles.index'));

@@ -2,12 +2,12 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
-use App\Models\Role;
-use App\Models\Permission;
 use App\Models\Event;
-use Tests\TestCase;
+use App\Models\Permission;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class ViewEventTest extends TestCase
 {
@@ -40,7 +40,7 @@ class ViewEventTest extends TestCase
     }
 
     /** @test */
-    function users_who_have_permission_can_view_a_event()
+    public function users_who_have_permission_can_view_a_event()
     {
         $response = $this->actingAs($this->user)->get(route('events.show', $this->event->id));
 
@@ -50,7 +50,7 @@ class ViewEventTest extends TestCase
     }
 
     /** @test */
-    function users_who_dont_have_permission_cannot_view_a_event()
+    public function users_who_dont_have_permission_cannot_view_a_event()
     {
         $userWithoutPermission = factory(User::class)->create();
         $role = factory(Role::class)->create(['name' => 'editor']);
@@ -62,7 +62,7 @@ class ViewEventTest extends TestCase
     }
 
     /** @test */
-    function guests_cannot_view_a_event()
+    public function guests_cannot_view_a_event()
     {
         $response = $this->get(route('events.show', $this->event->id));
 
