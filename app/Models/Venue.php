@@ -33,11 +33,16 @@ class Venue extends Model
      */
     public function pastEvents()
     {
-        return $this->events->filter->date->isPast();
+        return $this->events->filter->isPast();
     }
 
+    /**
+     * Returns a collection of events before the current date.
+     *
+     * @return boolean
+     */
     public function hasPastEvents()
     {
-        return $this->pastEvents->isNotEmpty();
+        return $this->pastEvents()->isNotEmpty();
     }
 }

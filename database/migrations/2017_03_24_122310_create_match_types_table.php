@@ -17,6 +17,7 @@ class CreateMatchTypesTable extends Migration
             $table->increments('id');
             $table->string('name')->unique();
             $table->string('slug')->unique();
+            $table->integer('number_of_competitors');
             $table->timestamps();
         });
     }

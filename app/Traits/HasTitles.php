@@ -9,12 +9,12 @@ trait HasTitles
 {
     abstract public function titles();
 
-    public function hasPreviousTitlesHeld()
+    public function hasPastTitlesHeld()
     {
-        return $this->previousTitlesHeld->isNotEmpty();
+        return $this->pastTitlesHeld->isNotEmpty();
     }
 
-    public function previousTitlesHeld()
+    public function pastTitlesHeld()
     {
         return $this->titles()->whereNotNull('lost_on');
     }
@@ -49,7 +49,7 @@ trait HasTitles
 
     public function loseTitle($title, $date)
     {
-        if (! $this->hasTitle($title)) {
+        if (!$this->hasTitle($title)) {
             throw new WrestlerNotTitleChampionException;
         }
 

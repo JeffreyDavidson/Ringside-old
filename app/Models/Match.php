@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Exceptions\WrestlerNotQualifiedException;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +10,7 @@ class Match extends Model
 {
     use Presentable, SoftDeletes;
 
-    protected $with = array('wrestlers', 'stipulations', 'referees', 'titles');
+    protected $with = ['wrestlers', 'stipulations', 'referees', 'titles'];
 
     /**
      * Assign which presenter to be used for model.
@@ -19,16 +18,6 @@ class Match extends Model
      * @var string
      */
     protected $presenter = 'App\Presenters\MatchPresenter';
-
-    /**
-     * List of matches that need multiple referees.
-     *
-     * @var array
-     */
-    protected $matchTypesWithMultipleReferees = [
-        'battleroyal',
-        'royalrumble',
-    ];
 
     /**
      * Don't auto-apply mass assignment protection.
@@ -44,7 +33,7 @@ class Match extends Model
      */
     public function wrestlers()
     {
-        return $this->belongsToMany(Wrestler::class)->withTimestamps();
+        return $this->belongsToMany(Wrestler::class);
     }
 
     /**
@@ -68,13 +57,13 @@ class Match extends Model
     }
 
     /**
-     * A match can have many titles competed for.
+     * A match can have many titles.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function titles()
     {
-        return $this->belongsToMany(Title::class)->withTimestamps();
+        return $this->belongsToMany(Title::class);
     }
 
     /**
@@ -84,7 +73,7 @@ class Match extends Model
      */
     public function referees()
     {
-        return $this->belongsToMany(Referee::class)->withTimestamps();
+        return $this->belongsToMany(Referee::class);
     }
 
     /**
@@ -94,14 +83,13 @@ class Match extends Model
      */
     public function stipulations()
     {
-        return $this->belongsToMany(Stipulation::class)->withTimestamps();
+        return $this->belongsToMany(Stipulation::class);
     }
 
     /**
      * Add a wrestler to a match.
      *
      * @param Wrestler $wrestler
-     * @throws WrestlerNotQualifiedException
      */
     public function addWrestler(Wrestler $wrestler)
     {
@@ -135,7 +123,7 @@ class Match extends Model
      */
     public function addTitles($titles)
     {
-        $this->titles()->saveMany($titles->all());
+        $this->titles()->saveMany($titles);
     }
 
     /**
@@ -198,7 +186,7 @@ class Match extends Model
         $this->update(['winner_id' => $wrestler->id, 'loser_id' => $this->wrestlers->except($wrestler->id)->first()->id]);
         if ($this->isTitleMatch()) {
             $this->titles->each(function ($title) use ($wrestler) {
-                if (! $wrestler->hasTitle($title)) {
+                if (!$wrestler->hasTitle($title)) {
                     $title->setNewChampion($wrestler, $this->event->date);
                 }
             });
@@ -215,17 +203,33 @@ class Match extends Model
         return $this->event->date;
     }
 
+    /**
+     * Retrieves the past matches.
+     *
+     * @return collection
+     */
     public function isPast()
     {
         return $this->date->isPast();
     }
 
     /**
-     * Checks to if the match type needs multiple referees.
+     * Add a match to an event.
+     *
+     * @param Event $event
+     * @return bool
+     */
+    public function addToEvent(Event $event)
+    {
+        return $this->update(['event_id' => $event]);
+    }
+
+    /**
+     * Checks if the match needs multiple referees.
      *
      * @return boolean
      */
-    public function needsMoreThanOneReferee()
+    public function needsTwoReferees()
     {
         return in_array($this->type->slug, $this->matchTypesWithMultipleReferees);
     }

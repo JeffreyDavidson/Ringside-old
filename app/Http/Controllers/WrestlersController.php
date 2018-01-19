@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\WrestlerStatusChanged;
 use App\Http\Requests\WrestlerCreateFormRequest;
 use App\Http\Requests\WrestlerEditFormRequest;
 use App\Models\Wrestler;
@@ -73,7 +72,7 @@ class WrestlersController extends Controller
     {
         $this->authorize('show', Wrestler::class);
 
-        $wrestler->load('currentManagers', 'previousManagers', 'currentTitlesHeld', 'previousTitlesHeld');
+        $wrestler->load('currentManagers', 'pastManagers', 'currentTitlesHeld', 'pastTitlesHeld');
 
         return response()->view('wrestlers.show', ['wrestler' => $wrestler]);
     }

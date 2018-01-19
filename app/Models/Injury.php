@@ -21,12 +21,13 @@ class Injury extends Model
     protected $dates = ['injured_at', 'healed_at'];
 
     /**
-     * Heals the wrestler from being injured.
+     * Heals the an injury.
      *
+     * @param string $date Datetime that represents the date and time the injury was healed.
      * @return boolean
      */
-    public function healed($healedAt)
+    public function heal($date = null)
     {
-        return $this->update(['healed_at' => $healedAt ?: $this->freshTimestamp()]);
+        return $this->update(['healed_at' => $date ?: $this->freshTimestamp()]);
     }
 }

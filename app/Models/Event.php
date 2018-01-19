@@ -10,7 +10,12 @@ class Event extends Model
 {
     use Presentable, SoftDeletes;
 
-    protected $with = array('matches');
+    /**
+     * Assign which presenter to be used for model.
+     *
+     * @var array
+     */
+    protected $with = ['matches', 'venue'];
 
     /**
      * Assign which presenter to be used for model.
@@ -54,7 +59,17 @@ class Event extends Model
     }
 
     /**
-     * Set the date field for the title.
+     * Retrieves the past events.
+     *
+     * @return collection
+     */
+    public function isPast()
+    {
+        return $this->date->isPast();
+    }
+
+    /**
+     * Set the date field for the event.
      *
      * @return date
      */
@@ -71,5 +86,10 @@ class Event extends Model
     public function mainEvent()
     {
         return $this->matches->last();
+    }
+
+    public function addMatch($match)
+    {
+        $this->matches()->create($match);
     }
 }

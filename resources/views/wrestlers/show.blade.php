@@ -31,37 +31,37 @@
         </ul>
     @endif
 
-    @if($wrestler->hasPreviousManagers())
+    @if($wrestler->hasPastManagers())
         <h2>Previous Managers</h2>
         <ul>
-            @foreach($wrestler->previousManagers as $manager)
+            @foreach($wrestler->pastManagers as $manager)
                 <li>{{ $manager->present()->fullName() }}</li>
             @endforeach
         </ul>
     @endif
 
-    @if ($wrestler->hasPreviousTitlesHeld())
+    @if ($wrestler->hasPastTitlesHeld())
         <h2>Previous Titles Held</h2>
         <ul>
-            @foreach($wrestler->previousTitlesHeld->groupByTitle() as $titles)
+            @foreach($wrestler->pastTitlesHeld->groupByTitle() as $titles)
                 <li>{{ "{$titles->first()->title->name} ({$titles->count()}x)" }}</li>
             @endforeach
         </ul>
     @endif
 
-    @if($wrestler->hasPreviousInjuries())
+    @if($wrestler->hasPastInjuries())
         <h2>Previous Injuries</h2>
         <ul>
-            @foreach($wrestler->previousInjuries as $injury)
+            @foreach($wrestler->pastInjuries as $injury)
                 <li>{{ $injury->injured_at->format('F jS, Y') }} to {{ $injury->healed_at->format('F jS, Y') }}</li>
             @endforeach
         </ul>
     @endif
 
-    @if($wrestler->hasPreviousRetirements())
+    @if($wrestler->hasPastRetirements())
         <h2>Previous Retirements</h2>
         <ul>
-            @foreach($wrestler->previousRetirements as $retirement)
+            @foreach($wrestler->pastRetirements as $retirement)
                 <li>{{ $retirement->retired_at->format('F jS, Y') }} to {{ $retirement->ended_at->format('F jS, Y') }}</li>
             @endforeach
         </ul>

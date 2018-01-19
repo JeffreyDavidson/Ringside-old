@@ -10,12 +10,12 @@ trait HasRetirements
 {
     abstract public function retirements();
 
-    public function hasPreviousRetirements()
+    public function hasPastRetirements()
     {
-        return $this->previousRetirements->isNotEmpty();
+        return $this->pastRetirements->isNotEmpty();
     }
 
-    public function previousRetirements()
+    public function pastRetirements()
     {
         return $this->retirements()->whereNotNull('ended_at');
     }
@@ -40,7 +40,7 @@ trait HasRetirements
 
     public function unretire()
     {
-        if (! $this->isRetired()) {
+        if (!$this->isRetired()) {
             throw new WrestlerNotRetiredException;
         }
 

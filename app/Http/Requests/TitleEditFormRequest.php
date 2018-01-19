@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use Carbon\Carbon;
+use App\Rules\BeforeFirstMatchDate;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -28,32 +28,7 @@ class TitleEditFormRequest extends FormRequest
         return [
             'name' => ['required', Rule::unique('titles' ,'name')->ignore($this->title->id)],
             'slug' => ['required', Rule::unique('titles' ,'slug')->ignore($this->title->id)],
-            'introduced_at' => 'required|date',
+            'introduced_at' => ['required', 'date', new BeforeFirstMatchDate($this->title)],
         ];
-    }
-
-    /**
-     * Find out if the introduced at date for the title is before the date of the first title's match.
-     *
-     */
-    public function withValidator($validator)
-    {
-        $validator->after(function($validator) {
-            $attr = $validator->getData();
-
-            if(!$this->title->hasPastMatches()) {
-                return;
-            }
-
-            $firstMatchDate = $this->title->firstMatchDate();
-            $introducedAt = Carbon::parse($attr['introduced_at']);
-
-            if($introducedAt->lte($firstMatchDate)) {
-                return;
-            }
-
-            $sErr = 'The introduced at date must be on or before '.$firstMatchDate->format('F d, Y').'.';
-            $validator->errors()->add('introduced_at', $sErr);
-        });
     }
 }

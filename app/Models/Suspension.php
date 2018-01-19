@@ -23,10 +23,11 @@ class Suspension extends Model
     /**
      * Renews the wrestler from being suspended.
      *
+     * @param string $date Datetime that represents the date and time the wrestler was renewed.
      * @return boolean
      */
-    public function renew()
+    public function renew($date = null)
     {
-        return $this->update(['ended_at' => $this->freshTimestamp()]);
+        return $this->update(['ended_at' => $date ?: $this->freshTimestamp()]);
     }
 }

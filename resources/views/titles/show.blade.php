@@ -22,7 +22,7 @@
             @include('titles.partials.records')
         </div>
     </div>
-    @if ($stipulation->hasPastMatches())
+    @if ($title->hasPastMatches())
         <div class="panel panel-bordered panel-primary">
             <div class="panel-heading clearfix">
                 <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-trophy"></i>Previous Champions</h3>
@@ -39,4 +39,5 @@
                 @include('titles.partials.matches')
             </div>
         </div>
+    @endif
 @endsection

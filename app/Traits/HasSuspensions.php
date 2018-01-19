@@ -10,12 +10,12 @@ trait HasSuspensions
 {
     abstract public function suspensions();
 
-    public function hasPreviousSuspensions()
+    public function hasPastSuspensions()
     {
-        return $this->previousSuspensions->isNotEmpty();
+        return $this->pastSuspensions->isNotEmpty();
     }
 
-    public function previousSuspensions()
+    public function pastSuspensions()
     {
         return $this->suspensions()->whereNotNull('ended_at');
     }

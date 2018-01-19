@@ -9,12 +9,12 @@ trait HasManagers
 {
     abstract public function managers();
 
-    public function hasPreviousManagers()
+    public function hasPastManagers()
     {
-        return $this->previousManagers->isNotEmpty();
+        return $this->pastManagers->isNotEmpty();
     }
 
-    public function previousManagers()
+    public function pastManagers()
     {
         return $this->managers()->whereNotNull('fired_on')->withPivot('fired_on');
     }
@@ -47,7 +47,7 @@ trait HasManagers
 
     public function fireManager($manager)
     {
-        if (! $this->hasManager($manager)) {
+        if (!$this->hasManager($manager)) {
             throw new WrestlerNotHaveHiredManagerException;
         }
 

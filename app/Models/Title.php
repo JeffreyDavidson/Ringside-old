@@ -52,14 +52,15 @@ class Title extends Model
      */
     public function matches()
     {
-        return $this->belongsToMany(Match::class)->with('event');
+        return $this->belongsToMany(Match::class);
     }
 
     /**
      * Retrieve valid titles to be competed for.
      *
      * @param Builder $query
-     * @param $date
+     * @param string $date
+     * @return mixed
      */
     public function scopeValid($query, $date)
     {

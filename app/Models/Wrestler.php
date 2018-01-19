@@ -15,7 +15,8 @@ use Laracodes\Presenter\Traits\Presentable;
 
 class Wrestler extends Model
 {
-    use HasStatuses, HasManagers, HasTitles, HasRetirements, HasSuspensions, HasInjuries, HasMatches, SoftDeletes, Presentable;
+    use HasStatuses, HasManagers, HasTitles, HasRetirements, HasSuspensions,
+        HasInjuries, HasMatches, SoftDeletes, Presentable;
 
     /**
      * Assign which presenter to be used for model.
@@ -45,7 +46,7 @@ class Wrestler extends Model
      */
     public function managers()
     {
-        return $this->belongsToMany(Manager::class)->withPivot('hired_on', 'fired_on')->withTimestamps();
+        return $this->belongsToMany(Manager::class);
     }
 
     /**
