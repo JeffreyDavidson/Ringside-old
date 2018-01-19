@@ -2,12 +2,12 @@
 
 namespace Tests\Feature;
 
-use App\Models\Title;
-use App\Models\User;
-use App\Models\Role;
-use App\Models\Permission;
 use Carbon\Carbon;
 use Tests\TestCase;
+use App\Models\Role;
+use App\Models\User;
+use App\Models\Title;
+use App\Models\Permission;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class AddTitleTest extends TestCase
@@ -42,7 +42,7 @@ class AddTitleTest extends TestCase
     }
 
     /** @test */
-    function users_who_have_permission_can_view_the_add_title_form()
+    public function users_who_have_permission_can_view_the_add_title_form()
     {
         $response = $this->actingAs($this->user)->get(route('titles.create'));
 
@@ -51,7 +51,7 @@ class AddTitleTest extends TestCase
     }
 
     /** @test */
-    function users_who_dont_have_permission_cannot_view_the_add_title_form()
+    public function users_who_dont_have_permission_cannot_view_the_add_title_form()
     {
         $userWithoutPermission = factory(User::class)->create();
         $role = factory(Role::class)->create(['name' => 'editor']);
@@ -63,7 +63,7 @@ class AddTitleTest extends TestCase
     }
 
     /** @test */
-    function guests_cannot_view_the_add_title_form()
+    public function guests_cannot_view_the_add_title_form()
     {
         $response = $this->get(route('titles.create'));
 
@@ -72,7 +72,7 @@ class AddTitleTest extends TestCase
     }
 
     /** @test */
-    function name_is_required()
+    public function name_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('titles.create'))->post(route('titles.index'), $this->validParams([
             'name' => '',
@@ -85,7 +85,7 @@ class AddTitleTest extends TestCase
     }
 
     /** @test */
-    function name_must_be_unique()
+    public function name_must_be_unique()
     {
         factory(Title::class)->create(['name' => 'Title Name']);
 
@@ -100,7 +100,7 @@ class AddTitleTest extends TestCase
     }
 
     /** @test */
-    function slug_is_required()
+    public function slug_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('titles.create'))->post(route('titles.index'), $this->validParams([
             'slug' => '',
@@ -113,7 +113,7 @@ class AddTitleTest extends TestCase
     }
 
     /** @test */
-    function slug_must_be_unique()
+    public function slug_must_be_unique()
     {
         factory(Title::class)->create(['slug' => 'title-slug']);
 
@@ -128,7 +128,7 @@ class AddTitleTest extends TestCase
     }
 
     /** @test */
-    function introduced_at_date_is_required()
+    public function introduced_at_date_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('titles.create'))->post(route('titles.index'), $this->validParams([
             'introduced_at' => '',
@@ -141,7 +141,7 @@ class AddTitleTest extends TestCase
     }
 
     /** @test */
-    function introduced_at_date_must_be_a_valid_date()
+    public function introduced_at_date_must_be_a_valid_date()
     {
         $response = $this->actingAs($this->user)->from(route('titles.create'))->post(route('titles.index'), $this->validParams([
             'introduced_at' => 'not-a-date',
@@ -154,7 +154,7 @@ class AddTitleTest extends TestCase
     }
 
     /** @test */
-    function adding_a_valid_title()
+    public function adding_a_valid_title()
     {
         $response = $this->actingAs($this->user)->post(route('titles.index'), $this->validParams());
 

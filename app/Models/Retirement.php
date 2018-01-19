@@ -24,7 +24,7 @@ class Retirement extends Model
      * Unretires a retired wrestler.
      *
      * @param string $date Datetime that represents the date and time the wrestler was unretired.
-     * @return boolean
+     * @return bool
      */
     public function unretire($date = null)
     {

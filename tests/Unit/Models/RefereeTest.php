@@ -2,8 +2,8 @@
 
 namespace Tests\Unit;
 
-use App\Models\Referee;
 use Tests\TestCase;
+use App\Models\Referee;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class RefereeTest extends TestCase

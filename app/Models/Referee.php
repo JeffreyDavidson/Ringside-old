@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\Model;
+use Laracodes\Presenter\Traits\Presentable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Referee extends Model
 {

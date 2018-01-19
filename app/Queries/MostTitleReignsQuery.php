@@ -2,8 +2,8 @@
 
 namespace App\Queries;
 
-use App\Models\Champion;
 use App\Models\Title;
+use App\Models\Champion;
 
 class MostTitleReignsQuery
 {

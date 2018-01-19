@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Models\Title;
-use App\Models\User;
-use App\Models\Role;
-use App\Models\Permission;
 use Tests\TestCase;
+use App\Models\Role;
+use App\Models\User;
+use App\Models\Title;
+use App\Models\Permission;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class ViewTitleListTest extends TestCase
@@ -30,7 +30,7 @@ class ViewTitleListTest extends TestCase
     }
 
     /** @test */
-    function users_who_have_permission_can_view_the_list_of_titles()
+    public function users_who_have_permission_can_view_the_list_of_titles()
     {
         $titleA = factory(Title::class)->create();
         $titleB = factory(Title::class)->create();
@@ -48,7 +48,7 @@ class ViewTitleListTest extends TestCase
     }
 
     /** @test */
-    function users_who_dont_have_permission_cannot_view_the_list_of_titles()
+    public function users_who_dont_have_permission_cannot_view_the_list_of_titles()
     {
         $userWithoutPermission = factory(User::class)->create();
         $role = factory(Role::class)->create(['name' => 'editor']);
@@ -61,7 +61,7 @@ class ViewTitleListTest extends TestCase
     }
 
     /** @test */
-    function guests_cannot_view_title_list()
+    public function guests_cannot_view_title_list()
     {
         $response = $this->get(route('titles.index'));
 

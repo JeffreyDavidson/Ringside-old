@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Queries\LongestTitleRunQuery;
 use Illuminate\Database\Eloquent\Model;
 use Laracodes\Presenter\Traits\Presentable;
 use App\Collections\TitleChampionsCollection;

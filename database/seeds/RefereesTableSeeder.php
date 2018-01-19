@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Referee;
 use Carbon\Carbon;
+use App\Models\Referee;
 use Illuminate\Database\Seeder;
 
 class RefereesTableSeeder extends Seeder
@@ -24,8 +24,7 @@ class RefereesTableSeeder extends Seeder
             ]);
         }
 
-        while ($startingDate->addYears(3)->lte($now))
-        {
+        while ($startingDate->addYears(3)->lte($now)) {
             for ($x = 1; $x <= 5; $x++) {
                 factory(Referee::class)->create([
                     'hired_at' => $startingDate,

@@ -2,16 +2,15 @@
 
 namespace Tests\Feature;
 
+use Carbon\Carbon;
+use Tests\TestCase;
+use App\Models\Role;
+use App\Models\User;
 use App\Models\Event;
 use App\Models\Match;
-use App\Models\Permission;
-use App\Models\Role;
 use App\Models\Wrestler;
-use App\Models\User;
+use App\Models\Permission;
 use App\Models\WrestlerStatus;
-use Carbon\Carbon;
-
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class EditWrestlerTest extends TestCase
@@ -68,7 +67,7 @@ class EditWrestlerTest extends TestCase
     }
 
     /** @test */
-    function users_who_have_permission_can_view_the_edit_wrestler_form()
+    public function users_who_have_permission_can_view_the_edit_wrestler_form()
     {
         factory(WrestlerStatus::class)->create(['name' => 'Active']);
         factory(WrestlerStatus::class)->create(['name' => 'Inactive']);
@@ -83,7 +82,7 @@ class EditWrestlerTest extends TestCase
     }
 
     /** @test */
-    function users_who_dont_have_permission_cannot_view_the_edit_wrestler_form()
+    public function users_who_dont_have_permission_cannot_view_the_edit_wrestler_form()
     {
         $userWithoutPermission = factory(User::class)->create();
         $role = factory(Role::class)->create(['name' => 'editor']);
@@ -95,7 +94,7 @@ class EditWrestlerTest extends TestCase
     }
 
     /** @test */
-    function guests_cannot_view_the_edit_wrestler_form()
+    public function guests_cannot_view_the_edit_wrestler_form()
     {
         $response = $this->get(route('wrestlers.edit', $this->wrestler->id));
 
@@ -104,7 +103,7 @@ class EditWrestlerTest extends TestCase
     }
 
     /** @test */
-    function name_is_required()
+    public function name_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('wrestlers.edit', $this->wrestler->id))->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
             'name' => '',
@@ -118,7 +117,7 @@ class EditWrestlerTest extends TestCase
     }
 
     /** @test */
-    function name_must_be_unique()
+    public function name_must_be_unique()
     {
         factory(Wrestler::class)->create($this->oldAttributes([
             'name' => 'Wrestler B Name',
@@ -139,7 +138,7 @@ class EditWrestlerTest extends TestCase
     }
 
     /** @test */
-    function slug_is_required()
+    public function slug_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('wrestlers.edit', $this->wrestler->id))->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
             'slug' => '',
@@ -153,7 +152,7 @@ class EditWrestlerTest extends TestCase
     }
 
     /** @test */
-    function slug_must_be_unique()
+    public function slug_must_be_unique()
     {
         factory(Wrestler::class)->create($this->oldAttributes([
             'name' => 'Wrestler B Name',
@@ -174,7 +173,7 @@ class EditWrestlerTest extends TestCase
     }
 
     /** @test */
-    function a_wrestlers_status_can_be_changed()
+    public function a_wrestlers_status_can_be_changed()
     {
         factory(WrestlerStatus::class)->create(['name' => 'Active']);
         factory(WrestlerStatus::class)->create(['name' => 'Inactive']);
@@ -193,7 +192,7 @@ class EditWrestlerTest extends TestCase
     }
 
     /** @test */
-    function hired_at_date_must_be_a_valid_date()
+    public function hired_at_date_must_be_a_valid_date()
     {
         factory(WrestlerStatus::class)->create(['name' => 'Active']);
         factory(WrestlerStatus::class)->create(['name' => 'Inactive']);
@@ -213,7 +212,7 @@ class EditWrestlerTest extends TestCase
     }
 
     /** @test */
-    function hired_at_date_must_be_before_first_competed_for_match()
+    public function hired_at_date_must_be_before_first_competed_for_match()
     {
         factory(WrestlerStatus::class)->create(['name' => 'Active']);
         factory(WrestlerStatus::class)->create(['name' => 'Inactive']);
@@ -236,7 +235,7 @@ class EditWrestlerTest extends TestCase
     }
 
     /** @test */
-    function editing_a_wrestler_with_no_matches()
+    public function editing_a_wrestler_with_no_matches()
     {
         factory(WrestlerStatus::class)->create(['name' => 'Active']);
         factory(WrestlerStatus::class)->create(['name' => 'Inactive']);
@@ -270,7 +269,7 @@ class EditWrestlerTest extends TestCase
     }
 
     /** @test */
-    function editing_a_wrestler_with_matches()
+    public function editing_a_wrestler_with_matches()
     {
         factory(WrestlerStatus::class)->create(['name' => 'Active']);
         factory(WrestlerStatus::class)->create(['name' => 'Inactive']);

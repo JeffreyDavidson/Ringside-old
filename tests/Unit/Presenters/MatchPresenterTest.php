@@ -2,13 +2,13 @@
 
 namespace Tests\Unit;
 
-use App\Models\Referee;
-use App\Models\Stipulation;
-use App\Models\Wrestler;
+use stdClass;
 use EventFactory;
 use MatchFactory;
-use stdClass;
 use Tests\TestCase;
+use App\Models\Referee;
+use App\Models\Wrestler;
+use App\Models\Stipulation;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class MatchPresenterTest extends TestCase

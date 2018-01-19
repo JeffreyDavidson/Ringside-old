@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Manager;
 use Carbon\Carbon;
+use App\Models\Manager;
 use Illuminate\Database\Seeder;
 
 class ManagersTableSeeder extends Seeder
@@ -24,8 +24,7 @@ class ManagersTableSeeder extends Seeder
             ]);
         }
 
-        while ($startingDate->addYears(2)->lte($now))
-        {
+        while ($startingDate->addYears(2)->lte($now)) {
             for ($x = 1; $x <= 3; $x++) {
                 factory(Manager::class)->create([
                     'hired_at' => $startingDate,
@@ -34,8 +33,7 @@ class ManagersTableSeeder extends Seeder
             }
         }
 
-        while ($startingDate->addYears(2)->lte(Carbon::now()))
-        {
+        while ($startingDate->addYears(2)->lte(Carbon::now())) {
             factory(Manager::class, 3)->create([
                 'hired_at' => $startingDate,
             ]);

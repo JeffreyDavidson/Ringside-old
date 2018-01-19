@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Foundation\Http\FormRequest;
 
 class VenueEditFormRequest extends FormRequest
 {
@@ -25,7 +25,7 @@ class VenueEditFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'alpha_num_spaces', Rule::unique('venues' ,'name')->ignore($this->venue->id)],
+            'name' => ['required', 'alpha_num_spaces', Rule::unique('venues', 'name')->ignore($this->venue->id)],
             'address' => 'required|alpha_num_spaces',
             'city' => 'required|alpha_spaces',
             'state' => 'required|alpha|not_in:0',

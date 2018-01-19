@@ -1,20 +1,21 @@
 <?php
 
 use App\Models\Wrestler;
-use App\Models\WrestlerStatus;
 use Faker\Generator as Faker;
+use App\Models\WrestlerStatus;
 
 $factory->define(Wrestler::class, function (Faker $faker) {
     $name = $faker->sentence;
+
     return [
         'name' => $name,
         'slug' => str_slug($name),
         'status_id' => WrestlerStatus::ACTIVE,
-        'hometown' => $faker->city . ', ' . $faker->state,
+        'hometown' => $faker->city.', '.$faker->state,
         'height' => $faker->numberBetween(63, 84),
         'weight' => $faker->numberBetween(175, 400),
         'signature_move' => $faker->unique()->sentence(3),
-        'hired_at' => $faker->dateTimeBetween('-30 years','-1 year'),
+        'hired_at' => $faker->dateTimeBetween('-30 years', '-1 year'),
     ];
 });
 

@@ -2,8 +2,8 @@
 
 namespace Tests\Unit;
 
-use App\Models\Wrestler;
 use Tests\TestCase;
+use App\Models\Wrestler;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class WrestlerPresenterTest extends TestCase

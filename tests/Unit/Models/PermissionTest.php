@@ -2,9 +2,9 @@
 
 namespace Tests\Unit;
 
-use App\Models\Permission;
-use App\Models\Role;
 use Tests\TestCase;
+use App\Models\Role;
+use App\Models\Permission;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class PermissionTest extends TestCase

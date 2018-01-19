@@ -3,10 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Models\WrestlerStatus;
-use App\Rules\BeforeFirstMatchDate;
-use Carbon\Carbon;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\Rules\BeforeFirstMatchDate;
+use Illuminate\Foundation\Http\FormRequest;
 
 class WrestlerEditFormRequest extends FormRequest
 {
@@ -28,8 +27,8 @@ class WrestlerEditFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', Rule::unique('wrestlers' ,'name')->ignore($this->wrestler->id)],
-            'slug' => ['required', Rule::unique('wrestlers' ,'slug')->ignore($this->wrestler->id)],
+            'name' => ['required', Rule::unique('wrestlers', 'name')->ignore($this->wrestler->id)],
+            'slug' => ['required', Rule::unique('wrestlers', 'slug')->ignore($this->wrestler->id)],
             'status_id' => [
                 'required',
                 'integer',

@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Models\Title;
-use App\Models\User;
-use App\Models\Role;
-use App\Models\Permission;
 use Tests\TestCase;
+use App\Models\Role;
+use App\Models\User;
+use App\Models\Title;
+use App\Models\Permission;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class DeleteTitleTest extends TestCase
@@ -35,7 +35,7 @@ class DeleteTitleTest extends TestCase
     }
 
     /** @test */
-    function users_who_have_permission_can_soft_delete_a_title()
+    public function users_who_have_permission_can_soft_delete_a_title()
     {
         $response = $this->actingAs($this->user)->from(route('titles.index'))->delete(route('titles.destroy', $this->title->id));
 
@@ -45,7 +45,7 @@ class DeleteTitleTest extends TestCase
     }
 
     /** @test */
-    function users_who_dont_have_permission_cannot_delete_a_title()
+    public function users_who_dont_have_permission_cannot_delete_a_title()
     {
         $userWithoutPermission = factory(User::class)->create();
         $role = factory(Role::class)->create(['name' => 'editor']);
@@ -57,7 +57,7 @@ class DeleteTitleTest extends TestCase
     }
 
     /** @test */
-    function guests_cannot_delete_a_title()
+    public function guests_cannot_delete_a_title()
     {
         $response = $this->from(route('titles.index'))->delete(route('titles.destroy', $this->title->id));
 

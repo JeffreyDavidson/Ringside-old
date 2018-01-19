@@ -2,18 +2,17 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
-use App\Models\Role;
-use App\Models\Permission;
-use App\Models\Wrestler;
-use App\Models\Manager;
-use App\Models\Title;
-use App\Models\Match;
-use App\Models\Event;
-use Carbon\Carbon;
 use EventFactory;
 use MatchFactory;
+use Carbon\Carbon;
 use Tests\TestCase;
+use App\Models\Role;
+use App\Models\User;
+use App\Models\Event;
+use App\Models\Title;
+use App\Models\Manager;
+use App\Models\Wrestler;
+use App\Models\Permission;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class ViewWrestlerBioTest extends TestCase
@@ -164,7 +163,6 @@ class ViewWrestlerBioTest extends TestCase
     /** @test */
     public function view_list_of_past_matches_on_wrestler_bio()
     {
-        
         $event = EventFactory::create(['name' => 'Event Name', 'date' => Carbon::now()->subMonth()]);
         $match = MatchFactory::create(['event_id' => $event->id], [$this->wrestler]);
 

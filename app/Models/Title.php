@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use App\Traits\HasMatches;
+use App\Queries\MostTitleReignsQuery;
 use App\Queries\LongestTitleReignQuery;
 use App\Queries\MostTitleDefensesQuery;
-use App\Queries\MostTitleReignsQuery;
-use App\Traits\HasMatches;
 use Illuminate\Database\Eloquent\Model;
 use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -77,7 +77,7 @@ class Title extends Model
      */
     public function setNewChampion($wrestler, $date)
     {
-        if (!is_null($this->getCurrentChampion())) {
+        if (! is_null($this->getCurrentChampion())) {
             $this->getCurrentChampion()->loseTitle($this, $date);
         }
 
