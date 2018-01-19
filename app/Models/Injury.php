@@ -24,7 +24,8 @@ class Injury extends Model
      * Heals the an injury.
      *
      * @param string $date Datetime that represents the date and time the injury was healed.
-     * @return boolean
+     *
+     * @return bool
      */
     public function heal($date = null)
     {

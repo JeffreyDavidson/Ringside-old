@@ -31,13 +31,14 @@ class VenuesController extends Controller
     {
         $this->authorize('create', Venue::class);
 
-        return response()->view('venues.create', ['venue' => new Venue]);
+        return response()->view('venues.create', ['venue' => new Venue()]);
     }
 
     /**
      * Store a newly created venue.
      *
      * @param VenueCreateFormRequest $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(VenueCreateFormRequest $request)
@@ -45,10 +46,10 @@ class VenuesController extends Controller
         $this->authorize('create', Venue::class);
 
         Venue::create([
-            'name' => $request->name,
-            'address' => $request->address,
-            'city' => $request->city,
-            'state' => $request->state,
+            'name'     => $request->name,
+            'address'  => $request->address,
+            'city'     => $request->city,
+            'state'    => $request->state,
             'postcode' => $request->postcode,
         ]);
 
@@ -58,7 +59,8 @@ class VenuesController extends Controller
     /**
      * Display the specified venue.
      *
-     * @param  Venue $venue
+     * @param Venue $venue
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(Venue $venue)
@@ -71,7 +73,8 @@ class VenuesController extends Controller
     /**
      * Show the form for editing an venue.
      *
-     * @param  Venue $venue
+     * @param Venue $venue
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit(Venue $venue)
@@ -85,7 +88,8 @@ class VenuesController extends Controller
      * Update the specified venue.
      *
      * @param VenueEditFormRequest $request
-     * @param  Venue $venue
+     * @param Venue                $venue
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(VenueEditFormRequest $request, Venue $venue)
@@ -93,10 +97,10 @@ class VenuesController extends Controller
         $this->authorize('edit', Venue::class);
 
         $venue->update([
-            'name' => $request->name,
-            'address' => $request->address,
-            'city' => $request->city,
-            'state' => $request->state,
+            'name'     => $request->name,
+            'address'  => $request->address,
+            'city'     => $request->city,
+            'state'    => $request->state,
             'postcode' => $request->postcode,
         ]);
 
@@ -106,7 +110,8 @@ class VenuesController extends Controller
     /**
      * Delete the specified venue.
      *
-     * @param  Venue $venue
+     * @param Venue $venue
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(Venue $venue)

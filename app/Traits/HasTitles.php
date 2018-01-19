@@ -41,7 +41,7 @@ trait HasTitles
     public function winTitle($title, $date)
     {
         if ($this->hasTitle($title)) {
-            throw new WrestlerAlreadyHasTitleException;
+            throw new WrestlerAlreadyHasTitleException();
         }
 
         $this->titles()->create(['title_id' => $title->id, 'won_on' => $date]);
@@ -50,7 +50,7 @@ trait HasTitles
     public function loseTitle($title, $date)
     {
         if (!$this->hasTitle($title)) {
-            throw new WrestlerNotTitleChampionException;
+            throw new WrestlerNotTitleChampionException();
         }
 
         $this->currentTitlesHeld()->where('title_id', $title->id)->first()->loseTitle($date);

@@ -6,13 +6,12 @@ use App\Models\Event;
 use App\Models\Match;
 use App\Models\Permission;
 use App\Models\Role;
-use App\Models\Wrestler;
 use App\Models\User;
+use App\Models\Wrestler;
 use App\Models\WrestlerStatus;
 use Carbon\Carbon;
-
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class EditWrestlerTest extends TestCase
 {
@@ -41,34 +40,34 @@ class EditWrestlerTest extends TestCase
     private function oldAttributes($overrides = [])
     {
         return array_merge([
-            'name' => 'Old Name',
-            'slug' => 'old-slug',
-            'status_id' => 1,
-            'hometown' => 'Old City, Old State',
-            'height' => 63,
-            'weight' => 175,
+            'name'           => 'Old Name',
+            'slug'           => 'old-slug',
+            'status_id'      => 1,
+            'hometown'       => 'Old City, Old State',
+            'height'         => 63,
+            'weight'         => 175,
             'signature_move' => 'Old Signature Move',
-            'hired_at' => '2017-10-09',
+            'hired_at'       => '2017-10-09',
         ], $overrides);
     }
 
     private function validParams($overrides = [])
     {
         return array_merge([
-            'name' => 'Wrestler Name',
-            'slug' => 'wrestler-slug',
-            'status_id' => 1,
-            'hometown' => 'Laraville, FL',
-            'feet' => 6,
-            'inches' => 3,
-            'weight' => 175,
+            'name'           => 'Wrestler Name',
+            'slug'           => 'wrestler-slug',
+            'status_id'      => 1,
+            'hometown'       => 'Laraville, FL',
+            'feet'           => 6,
+            'inches'         => 3,
+            'weight'         => 175,
             'signature_move' => 'New Signature Move',
-            'hired_at' => '2017-10-09 12:00:00',
+            'hired_at'       => '2017-10-09 12:00:00',
         ], $overrides);
     }
 
     /** @test */
-    function users_who_have_permission_can_view_the_edit_wrestler_form()
+    public function users_who_have_permission_can_view_the_edit_wrestler_form()
     {
         factory(WrestlerStatus::class)->create(['name' => 'Active']);
         factory(WrestlerStatus::class)->create(['name' => 'Inactive']);
@@ -83,7 +82,7 @@ class EditWrestlerTest extends TestCase
     }
 
     /** @test */
-    function users_who_dont_have_permission_cannot_view_the_edit_wrestler_form()
+    public function users_who_dont_have_permission_cannot_view_the_edit_wrestler_form()
     {
         $userWithoutPermission = factory(User::class)->create();
         $role = factory(Role::class)->create(['name' => 'editor']);
@@ -95,7 +94,7 @@ class EditWrestlerTest extends TestCase
     }
 
     /** @test */
-    function guests_cannot_view_the_edit_wrestler_form()
+    public function guests_cannot_view_the_edit_wrestler_form()
     {
         $response = $this->get(route('wrestlers.edit', $this->wrestler->id));
 
@@ -104,7 +103,7 @@ class EditWrestlerTest extends TestCase
     }
 
     /** @test */
-    function name_is_required()
+    public function name_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('wrestlers.edit', $this->wrestler->id))->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
             'name' => '',
@@ -118,12 +117,12 @@ class EditWrestlerTest extends TestCase
     }
 
     /** @test */
-    function name_must_be_unique()
+    public function name_must_be_unique()
     {
         factory(Wrestler::class)->create($this->oldAttributes([
-            'name' => 'Wrestler B Name',
-            'slug' => 'wrestlerb-slug',
-            'signature_move' => 'Wrestler B Signature Move'
+            'name'           => 'Wrestler B Name',
+            'slug'           => 'wrestlerb-slug',
+            'signature_move' => 'Wrestler B Signature Move',
         ]));
 
         $response = $this->actingAs($this->user)->from(route('wrestlers.edit', $this->wrestler->id))->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
@@ -139,7 +138,7 @@ class EditWrestlerTest extends TestCase
     }
 
     /** @test */
-    function slug_is_required()
+    public function slug_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('wrestlers.edit', $this->wrestler->id))->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
             'slug' => '',
@@ -153,12 +152,12 @@ class EditWrestlerTest extends TestCase
     }
 
     /** @test */
-    function slug_must_be_unique()
+    public function slug_must_be_unique()
     {
         factory(Wrestler::class)->create($this->oldAttributes([
-            'name' => 'Wrestler B Name',
-            'slug' => 'wrestlerb-slug',
-            'signature_move' => 'Wrestler B Signature Move'
+            'name'           => 'Wrestler B Name',
+            'slug'           => 'wrestlerb-slug',
+            'signature_move' => 'Wrestler B Signature Move',
         ]));
 
         $response = $this->actingAs($this->user)->from(route('wrestlers.edit', $this->wrestler->id))->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
@@ -174,7 +173,7 @@ class EditWrestlerTest extends TestCase
     }
 
     /** @test */
-    function a_wrestlers_status_can_be_changed()
+    public function a_wrestlers_status_can_be_changed()
     {
         factory(WrestlerStatus::class)->create(['name' => 'Active']);
         factory(WrestlerStatus::class)->create(['name' => 'Inactive']);
@@ -193,7 +192,7 @@ class EditWrestlerTest extends TestCase
     }
 
     /** @test */
-    function hired_at_date_must_be_a_valid_date()
+    public function hired_at_date_must_be_a_valid_date()
     {
         factory(WrestlerStatus::class)->create(['name' => 'Active']);
         factory(WrestlerStatus::class)->create(['name' => 'Inactive']);
@@ -213,7 +212,7 @@ class EditWrestlerTest extends TestCase
     }
 
     /** @test */
-    function hired_at_date_must_be_before_first_competed_for_match()
+    public function hired_at_date_must_be_before_first_competed_for_match()
     {
         factory(WrestlerStatus::class)->create(['name' => 'Active']);
         factory(WrestlerStatus::class)->create(['name' => 'Inactive']);
@@ -236,7 +235,7 @@ class EditWrestlerTest extends TestCase
     }
 
     /** @test */
-    function editing_a_wrestler_with_no_matches()
+    public function editing_a_wrestler_with_no_matches()
     {
         factory(WrestlerStatus::class)->create(['name' => 'Active']);
         factory(WrestlerStatus::class)->create(['name' => 'Inactive']);
@@ -245,15 +244,15 @@ class EditWrestlerTest extends TestCase
         factory(WrestlerStatus::class)->create(['name' => 'Retired']);
 
         $response = $this->actingAs($this->user)->from(route('wrestlers.edit', $this->wrestler->id))->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
-            'name' => 'New Name',
-            'slug' => 'new-slug',
-            'status_id' => 1,
-            'hometown' => 'Laraville, FL',
-            'feet' => 5,
-            'inches' => 3,
-            'weight' => 175,
+            'name'           => 'New Name',
+            'slug'           => 'new-slug',
+            'status_id'      => 1,
+            'hometown'       => 'Laraville, FL',
+            'feet'           => 5,
+            'inches'         => 3,
+            'weight'         => 175,
             'signature_move' => 'Wrestler Signature Move',
-            'hired_at' => '2017-09-10',
+            'hired_at'       => '2017-09-10',
         ]));
 
         $response->assertRedirect(route('wrestlers.index'));
@@ -270,7 +269,7 @@ class EditWrestlerTest extends TestCase
     }
 
     /** @test */
-    function editing_a_wrestler_with_matches()
+    public function editing_a_wrestler_with_matches()
     {
         factory(WrestlerStatus::class)->create(['name' => 'Active']);
         factory(WrestlerStatus::class)->create(['name' => 'Inactive']);
