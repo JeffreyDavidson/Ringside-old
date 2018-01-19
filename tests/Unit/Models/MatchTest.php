@@ -116,19 +116,6 @@ class MatchTest extends TestCase
     }
 
     /** @test */
-    public function some_matches_need_more_than_one_referee()
-    {
-        $matchTypeA = factory(MatchType::class)->create(['slug' => 'battleroyal']);
-        $matchTypeB = factory(MatchType::class)->create(['slug' => 'royalrumble']);
-
-        $matchA = MatchFactory::create(['match_type_id' => $matchTypeA->id]);
-        $matchB = MatchFactory::create(['match_type_id' => $matchTypeB->id]);
-
-        $this->assertContains($matchA->type->needsMultipleReferees);
-        $this->assertContains($matchB->type->needsMoreThanOneRefere);
-    }
-
-    /** @test */
     public function a_winner_can_be_set_for_a_title_match()
     {
         $wrestlerA = factory(Wrestler::class)->create();
