@@ -2,9 +2,9 @@
 
 namespace App\Traits;
 
+use App\Exceptions\WrestlerAlreadyRetiredException;
 use App\Exceptions\WrestlerNotRetiredException;
 use Carbon\Carbon;
-use App\Exceptions\WrestlerAlreadyRetiredException;
 
 trait HasRetirements
 {
@@ -28,7 +28,7 @@ trait HasRetirements
     public function retire()
     {
         if ($this->isRetired()) {
-            throw new WrestlerAlreadyRetiredException;
+            throw new WrestlerAlreadyRetiredException();
         }
 
         $this->setStatusToInactive();
@@ -41,7 +41,7 @@ trait HasRetirements
     public function unretire()
     {
         if (!$this->isRetired()) {
-            throw new WrestlerNotRetiredException;
+            throw new WrestlerNotRetiredException();
         }
 
         $this->setStatusToActive();
