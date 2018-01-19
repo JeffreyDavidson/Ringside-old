@@ -4,17 +4,17 @@ namespace Tests\Feature;
 
 use App\Models\Event;
 use App\Models\MatchType;
+use App\Models\Permission;
 use App\Models\Referee;
+use App\Models\Role;
 use App\Models\Stipulation;
 use App\Models\Title;
 use App\Models\User;
-use App\Models\Role;
-use App\Models\Permission;
 use App\Models\Venue;
 use App\Models\Wrestler;
 use Carbon\Carbon;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class AddEventTest extends TestCase
 {
@@ -70,9 +70,9 @@ class AddEventTest extends TestCase
     private function eventAttributes($overrides = [])
     {
         return array_merge([
-            'name' => 'Event Name',
-            'slug' => 'event-slug',
-            'date' => '2017-09-17',
+            'name'     => 'Event Name',
+            'slug'     => 'event-slug',
+            'date'     => '2017-09-17',
             'venue_id' => $this->venue->id,
         ], $overrides);
     }
@@ -80,9 +80,9 @@ class AddEventTest extends TestCase
     private function validParams($overrides = [])
     {
         return array_merge([
-            'name' => 'Event Name',
-            'slug' => 'event-slug',
-            'date' => '2017-09-17',
+            'name'     => 'Event Name',
+            'slug'     => 'event-slug',
+            'date'     => '2017-09-17',
             'venue_id' => $this->venue->id,
             //'matches' => [
             //    1 => [
@@ -98,7 +98,7 @@ class AddEventTest extends TestCase
     }
 
     /** @test */
-    function users_who_have_permission_can_view_the_add_event_form()
+    public function users_who_have_permission_can_view_the_add_event_form()
     {
         $response = $this->actingAs($this->user)->get(route('events.create'));
 
@@ -107,7 +107,7 @@ class AddEventTest extends TestCase
     }
 
     /** @test */
-    function users_who_dont_have_permission_cannot_view_the_add_event_form()
+    public function users_who_dont_have_permission_cannot_view_the_add_event_form()
     {
         $userWithoutPermission = factory(User::class)->create();
         $role = factory(Role::class)->create(['name' => 'editor']);
@@ -119,7 +119,7 @@ class AddEventTest extends TestCase
     }
 
     /** @test */
-    function guests_cannot_view_the_add_event_form()
+    public function guests_cannot_view_the_add_event_form()
     {
         $response = $this->get(route('events.create'));
 
@@ -128,7 +128,7 @@ class AddEventTest extends TestCase
     }
 
     /** @test */
-    function name_is_required()
+    public function name_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('events.create'))->post(route('events.index'), $this->validParams([
             'name' => '',
@@ -141,7 +141,7 @@ class AddEventTest extends TestCase
     }
 
     /** @test */
-    function name_must_be_unique()
+    public function name_must_be_unique()
     {
         factory(Event::class)->create($this->eventAttributes([
             'name' => 'Event Name',
@@ -158,7 +158,7 @@ class AddEventTest extends TestCase
     }
 
     /** @test */
-    function slug_is_required()
+    public function slug_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('events.create'))->post(route('events.index'), $this->validParams([
             'slug' => '',
@@ -171,7 +171,7 @@ class AddEventTest extends TestCase
     }
 
     /** @test */
-    function slug_must_be_unique()
+    public function slug_must_be_unique()
     {
         factory(Event::class)->create($this->eventAttributes([
             'slug' => 'event-slug',
@@ -188,7 +188,7 @@ class AddEventTest extends TestCase
     }
 
     /** @test */
-    function date_is_required()
+    public function date_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('events.create'))->post(route('events.index'), $this->validParams([
             'date' => '',
@@ -201,7 +201,7 @@ class AddEventTest extends TestCase
     }
 
     ///** @test */
-    function date_must_be_date()
+    public function date_must_be_date()
     {
         $response = $this->actingAs($this->user)->from(route('events.create'))->post(route('events.index'), $this->validParams([
             'date' => 'not-a-date',
@@ -214,7 +214,7 @@ class AddEventTest extends TestCase
     }
 
     /** @test */
-    function venue_is_required()
+    public function venue_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('events.create'))->post(route('events.index'), $this->validParams([
             'venue_id' => '',
@@ -227,7 +227,7 @@ class AddEventTest extends TestCase
     }
 
     /** @test */
-    function venue_must_be_an_integer()
+    public function venue_must_be_an_integer()
     {
         $response = $this->actingAs($this->user)->from(route('events.create'))->post(route('events.index'), $this->validParams([
             'venue_id' => 'abc',
@@ -240,7 +240,7 @@ class AddEventTest extends TestCase
     }
 
     /** @test */
-    function venue_must_be_a_valid_selection()
+    public function venue_must_be_a_valid_selection()
     {
         $response = $this->actingAs($this->user)->from(route('events.create'))->post(route('events.index'), $this->validParams([
             'venue_id' => 0,
@@ -253,7 +253,7 @@ class AddEventTest extends TestCase
     }
 
     /** @test */
-    function venue_must_exist_in_database()
+    public function venue_must_exist_in_database()
     {
         $response = $this->actingAs($this->user)->from(route('events.create'))->post(route('events.index'), $this->validParams([
             'venue_id' => 99,
@@ -731,7 +731,7 @@ class AddEventTest extends TestCase
     //}
 
     /** @test */
-    function adding_a_valid_event()
+    public function adding_a_valid_event()
     {
         //$this->disableExceptionHandling();
         //$stipulationA = factory(Stipulation::class)->create();
@@ -745,9 +745,9 @@ class AddEventTest extends TestCase
         //$refereeB = factory(Referee::class)->create();
 
         $response = $this->actingAs($this->user)->from(route('events.create'))->post(route('events.index'), $this->validParams([
-            'name' => 'Event Name',
-            'slug' => 'event-slug',
-            'date' => '2017-09-17',
+            'name'     => 'Event Name',
+            'slug'     => 'event-slug',
+            'date'     => '2017-09-17',
             'venue_id' => $this->venue->id,
             //'matches' => [
             //    [

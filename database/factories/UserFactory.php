@@ -6,10 +6,10 @@ $factory->define(App\Models\User::class, function (Faker $faker) {
     static $password;
 
     return [
-        'name' => $faker->name,
-        'email' => $faker->unique()->safeEmail,
-        'password' => $password ?: $password = bcrypt('secret'),
-        'role_id' => $faker->numberBetween(1, 4),
+        'name'           => $faker->name,
+        'email'          => $faker->unique()->safeEmail,
+        'password'       => $password ?: $password = bcrypt('secret'),
+        'role_id'        => $faker->numberBetween(1, 4),
         'remember_token' => str_random(10),
     ];
 });

@@ -3,8 +3,8 @@
 namespace Tests\Unit;
 
 use App\Models\Title;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class TitlePresenterTest extends TestCase
 {
