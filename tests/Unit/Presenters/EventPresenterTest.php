@@ -2,8 +2,8 @@
 
 namespace Tests\Unit;
 
-use App\Models\Event;
 use Tests\TestCase;
+use App\Models\Event;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class EventPresenterTest extends TestCase

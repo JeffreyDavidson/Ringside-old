@@ -49,7 +49,7 @@ trait HasTitles
 
     public function loseTitle($title, $date)
     {
-        if (!$this->hasTitle($title)) {
+        if (! $this->hasTitle($title)) {
             throw new WrestlerNotTitleChampionException;
         }
 

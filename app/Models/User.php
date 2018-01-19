@@ -29,7 +29,6 @@ class User extends Authenticatable
     ];
 
     /**
-     *
      * A user can have many roles.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -2,8 +2,8 @@
 
 namespace Tests\Unit;
 
-use App\Models\Title;
 use Tests\TestCase;
+use App\Models\Title;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class TitlePresenterTest extends TestCase

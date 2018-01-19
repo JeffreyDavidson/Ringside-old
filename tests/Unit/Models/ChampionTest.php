@@ -2,9 +2,9 @@
 
 namespace Tests\Unit;
 
-use App\Models\Champion;
-use App\Models\Title;
 use Tests\TestCase;
+use App\Models\Title;
+use App\Models\Champion;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class ChampionTest extends TestCase

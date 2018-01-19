@@ -2,10 +2,10 @@
 
 namespace Tests\Unit;
 
-use App\Models\Permission;
+use Tests\TestCase;
 use App\Models\Role;
 use App\Models\User;
-use Tests\TestCase;
+use App\Models\Permission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UserTest extends TestCase

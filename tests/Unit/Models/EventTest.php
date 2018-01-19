@@ -4,9 +4,9 @@ namespace Tests\Unit;
 
 use EventFactory;
 use MatchFactory;
+use Tests\TestCase;
 use App\Models\Venue;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
 class EventTest extends TestCase
 {

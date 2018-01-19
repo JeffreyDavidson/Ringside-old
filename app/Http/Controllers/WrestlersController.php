@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\WrestlerCreateFormRequest;
-use App\Http\Requests\WrestlerEditFormRequest;
+use Carbon\Carbon;
 use App\Models\Wrestler;
 use App\Models\WrestlerStatus;
-use Carbon\Carbon;
+use App\Http\Requests\WrestlerEditFormRequest;
+use App\Http\Requests\WrestlerCreateFormRequest;
 
 class WrestlersController extends Controller
 {

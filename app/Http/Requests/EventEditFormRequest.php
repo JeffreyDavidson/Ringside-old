@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Foundation\Http\FormRequest;
 
 class EventEditFormRequest extends FormRequest
 {
@@ -25,8 +25,8 @@ class EventEditFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', Rule::unique('events' ,'name')->ignore($this->event->id)],
-            'slug' => ['required', Rule::unique('events' ,'slug')->ignore($this->event->id)],
+            'name' => ['required', Rule::unique('events', 'name')->ignore($this->event->id)],
+            'slug' => ['required', Rule::unique('events', 'slug')->ignore($this->event->id)],
             'date' => 'required|date',
             'venue_id' => 'required|integer|not_in:0|exists:venues,id,deleted_at,NULL'
         ];

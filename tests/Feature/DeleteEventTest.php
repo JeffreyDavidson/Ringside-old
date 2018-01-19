@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Models\Event;
-use App\Models\User;
-use App\Models\Role;
-use App\Models\Permission;
 use Tests\TestCase;
+use App\Models\Role;
+use App\Models\User;
+use App\Models\Event;
+use App\Models\Permission;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class DeleteEventTest extends TestCase
@@ -35,7 +35,7 @@ class DeleteEventTest extends TestCase
     }
 
     /** @test */
-    function users_who_have_permission_can_delete_a_event()
+    public function users_who_have_permission_can_delete_a_event()
     {
         $response = $this->actingAs($this->user)->from(route('events.index'))->delete(route('events.destroy', $this->event->id));
 
@@ -45,7 +45,7 @@ class DeleteEventTest extends TestCase
     }
 
     /** @test */
-    function users_who_dont_have_permission_cannot_delete_a_event()
+    public function users_who_dont_have_permission_cannot_delete_a_event()
     {
         $userWithoutPermission = factory(User::class)->create();
         $role = factory(Role::class)->create(['name' => 'editor']);
@@ -57,7 +57,7 @@ class DeleteEventTest extends TestCase
     }
 
     /** @test */
-    function guests_cannot_delete_a_event()
+    public function guests_cannot_delete_a_event()
     {
         $response = $this->from(route('events.index'))->delete(route('events.destroy', $this->event->id));
 

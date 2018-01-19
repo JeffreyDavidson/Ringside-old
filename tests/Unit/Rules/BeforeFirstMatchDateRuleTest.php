@@ -2,11 +2,11 @@
 
 namespace Tests\Feature\Unit;
 
+use EventFactory;
+use MatchFactory;
+use Tests\TestCase;
 use App\Models\Wrestler;
 use App\Rules\BeforeFirstMatchDate;
-use Tests\TestCase;
-use MatchFactory;
-use EventFactory;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class BeforeFirstMatchDateRuleTest extends TestCase

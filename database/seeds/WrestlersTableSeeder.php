@@ -1,9 +1,7 @@
 <?php
 
-use App\Models\Wrestler;
-use App\Models\WrestlerBio;
 use Carbon\Carbon;
-use Carbon\CarbonInterval;
+use App\Models\Wrestler;
 use Illuminate\Database\Seeder;
 
 class WrestlersTableSeeder extends Seeder
@@ -29,14 +27,13 @@ class WrestlersTableSeeder extends Seeder
             ]);
         }
 
-        while ($startingDate->addMonths(4)->lte($now))
-        {
+        while ($startingDate->addMonths(4)->lte($now)) {
             for ($x = 1; $x <= 5; $x++) {
                 factory(Wrestler::class)->create([
-                    'name' => 'Wrestler ' . $this->wrestlerCount,
-                    'slug' => 'wrestler' . $this->wrestlerCount,
+                    'name' => 'Wrestler '.$this->wrestlerCount,
+                    'slug' => 'wrestler'.$this->wrestlerCount,
                     'hired_at' => $startingDate,
-                    'signature_move' => 'Signature Move ' . $this->wrestlerCount
+                    'signature_move' => 'Signature Move '.$this->wrestlerCount
                 ]);
                 $this->wrestlerCount++;
             }

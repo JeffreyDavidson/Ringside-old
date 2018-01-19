@@ -2,12 +2,12 @@
 
 namespace Tests\Unit;
 
-use App\Models\Manager;
-use App\Models\Title;
-use App\Models\Wrestler;
-use App\Models\WrestlerStatus;
 use Carbon\Carbon;
 use Tests\TestCase;
+use App\Models\Title;
+use App\Models\Manager;
+use App\Models\Wrestler;
+use App\Models\WrestlerStatus;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class WrestlerTest extends TestCase

@@ -24,7 +24,7 @@ class Suspension extends Model
      * Renews the wrestler from being suspended.
      *
      * @param string $date Datetime that represents the date and time the wrestler was renewed.
-     * @return boolean
+     * @return bool
      */
     public function renew($date = null)
     {

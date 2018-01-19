@@ -3,8 +3,8 @@
 namespace App\Policies;
 
 use App\Models\Permission;
-use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 
 class ApplicationPolicy
 {
@@ -27,7 +27,7 @@ class ApplicationPolicy
 
     public function init()
     {
-        foreach($this->getPermissions() as $permission) {
+        foreach ($this->getPermissions() as $permission) {
             $this->gate->define($permission->slug, function ($user) use ($permission) {
                 return $user->hasPermission($permission);
             });

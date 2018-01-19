@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Models\Stipulation;
-use App\Models\User;
-use App\Models\Role;
-use App\Models\Permission;
 use Tests\TestCase;
+use App\Models\Role;
+use App\Models\User;
+use App\Models\Permission;
+use App\Models\Stipulation;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class AddStipulationTest extends TestCase
@@ -40,7 +40,7 @@ class AddStipulationTest extends TestCase
     }
 
     /** @test */
-    function users_who_have_permission_can_view_the_add_stipulation_form()
+    public function users_who_have_permission_can_view_the_add_stipulation_form()
     {
         $response = $this->actingAs($this->user)->get(route('stipulations.create'));
 
@@ -49,7 +49,7 @@ class AddStipulationTest extends TestCase
     }
 
     /** @test */
-    function users_who_dont_have_permission_cannot_view_the_add_stipulation_form()
+    public function users_who_dont_have_permission_cannot_view_the_add_stipulation_form()
     {
         $userWithoutPermission = factory(User::class)->create();
         $role = factory(Role::class)->create(['name' => 'editor']);
@@ -61,7 +61,7 @@ class AddStipulationTest extends TestCase
     }
 
     /** @test */
-    function guests_cannot_view_the_add_stipulation_form()
+    public function guests_cannot_view_the_add_stipulation_form()
     {
         $response = $this->get(route('stipulations.create'));
 
@@ -70,7 +70,7 @@ class AddStipulationTest extends TestCase
     }
 
     /** @test */
-    function name_is_required()
+    public function name_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('stipulations.create'))->post(route('stipulations.index'), $this->validParams([
             'name' => '',
@@ -83,7 +83,7 @@ class AddStipulationTest extends TestCase
     }
 
     /** @test */
-    function name_must_be_unique()
+    public function name_must_be_unique()
     {
         factory(Stipulation::class)->create(['name' => 'Stipulation Name']);
 
@@ -98,7 +98,7 @@ class AddStipulationTest extends TestCase
     }
 
     /** @test */
-    function slug_is_required()
+    public function slug_is_required()
     {
         $response = $this->actingAs($this->user)->from(route('stipulations.create'))->post(route('stipulations.index'), $this->validParams([
             'slug' => '',
@@ -111,7 +111,7 @@ class AddStipulationTest extends TestCase
     }
 
     /** @test */
-    function slug_must_be_unique()
+    public function slug_must_be_unique()
     {
         factory(Stipulation::class)->create(['slug' => 'stipulation-slug']);
 
@@ -126,7 +126,7 @@ class AddStipulationTest extends TestCase
     }
 
     /** @test */
-    function adding_a_valid_stipulation()
+    public function adding_a_valid_stipulation()
     {
         $response = $this->actingAs($this->user)->post(route('stipulations.index'), $this->validParams());
 

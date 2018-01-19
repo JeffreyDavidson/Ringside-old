@@ -47,7 +47,7 @@ trait HasManagers
 
     public function fireManager($manager)
     {
-        if (!$this->hasManager($manager)) {
+        if (! $this->hasManager($manager)) {
             throw new WrestlerNotHaveHiredManagerException;
         }
 

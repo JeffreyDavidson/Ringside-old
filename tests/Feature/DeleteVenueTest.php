@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Models\Venue;
-use App\Models\User;
-use App\Models\Role;
-use App\Models\Permission;
 use Tests\TestCase;
+use App\Models\Role;
+use App\Models\User;
+use App\Models\Venue;
+use App\Models\Permission;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class DeleteVenueTest extends TestCase
@@ -28,14 +28,14 @@ class DeleteVenueTest extends TestCase
         $this->user = factory(User::class)->create();
         $this->role = factory(Role::class)->create(['slug' => 'admin']);
         $this->permission = factory(Permission::class)->create(['slug' => 'delete-venue']);
-        $this->venue = factory(Venue::class)->create();;
+        $this->venue = factory(Venue::class)->create();
 
         $this->role->givePermissionTo($this->permission);
         $this->user->assignRole($this->role);
     }
 
     /** @test */
-    function users_who_have_permission_can_soft_delete_a_venue()
+    public function users_who_have_permission_can_soft_delete_a_venue()
     {
         $response = $this->actingAs($this->user)->from(route('venues.index'))->delete(route('venues.destroy', $this->venue->id));
 
@@ -45,7 +45,7 @@ class DeleteVenueTest extends TestCase
     }
 
     /** @test */
-    function users_who_dont_have_permission_cannot_delete_a_venue()
+    public function users_who_dont_have_permission_cannot_delete_a_venue()
     {
         $userWithoutPermission = factory(User::class)->create();
         $role = factory(Role::class)->create(['name' => 'editor']);
@@ -57,7 +57,7 @@ class DeleteVenueTest extends TestCase
     }
 
     /** @test */
-    function guests_cannot_delete_a_venue()
+    public function guests_cannot_delete_a_venue()
     {
         $response = $this->from(route('venues.index'))->delete(route('venues.destroy', $this->venue->id));
 

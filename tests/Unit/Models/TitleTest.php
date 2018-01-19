@@ -2,10 +2,10 @@
 
 namespace Tests\Unit;
 
-use App\Models\Event;
-use App\Models\Title;
 use Carbon\Carbon;
 use Tests\TestCase;
+use App\Models\Event;
+use App\Models\Title;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class TitleTest extends TestCase
