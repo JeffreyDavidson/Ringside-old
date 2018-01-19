@@ -3,8 +3,8 @@
 namespace Tests\Unit;
 
 use App\Models\MatchType;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class MatchTypeTest extends TestCase
 {
@@ -22,7 +22,7 @@ class MatchTypeTest extends TestCase
     public function a_royal_rumble_match_type_requires_multiple_referees()
     {
         $matchType = factory(MatchType::class)->create(['slug' => 'royalrumble']);
-        
+
         $this->assertTrue($matchType->needsMultipleReferees());
     }
 }

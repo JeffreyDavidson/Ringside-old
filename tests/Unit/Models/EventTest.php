@@ -2,10 +2,10 @@
 
 namespace Tests\Unit;
 
-use EventFactory;
-use MatchFactory;
 use App\Models\Venue;
+use EventFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use MatchFactory;
 use Tests\TestCase;
 
 class EventTest extends TestCase
