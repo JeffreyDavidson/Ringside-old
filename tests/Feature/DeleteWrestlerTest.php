@@ -2,12 +2,12 @@
 
 namespace Tests\Feature;
 
-use App\Models\Wrestler;
-use App\Models\User;
-use App\Models\Role;
 use App\Models\Permission;
-use Tests\TestCase;
+use App\Models\Role;
+use App\Models\User;
+use App\Models\Wrestler;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class DeleteWrestlerTest extends TestCase
 {
@@ -35,7 +35,7 @@ class DeleteWrestlerTest extends TestCase
     }
 
     /** @test */
-    function users_who_have_permission_can_delete_a_wrestler()
+    public function users_who_have_permission_can_delete_a_wrestler()
     {
         $response = $this->actingAs($this->user)->from(route('wrestlers.index'))->delete(route('wrestlers.destroy', $this->wrestler->id));
 
@@ -45,7 +45,7 @@ class DeleteWrestlerTest extends TestCase
     }
 
     /** @test */
-    function users_who_dont_have_permission_cannot_delete_a_wrestler()
+    public function users_who_dont_have_permission_cannot_delete_a_wrestler()
     {
         $userWithoutPermission = factory(User::class)->create();
         $role = factory(Role::class)->create(['name' => 'editor']);
@@ -57,7 +57,7 @@ class DeleteWrestlerTest extends TestCase
     }
 
     /** @test */
-    function guests_cannot_delete_a_wrestler()
+    public function guests_cannot_delete_a_wrestler()
     {
         $response = $this->from(route('wrestlers.index'))->delete(route('wrestlers.destroy', $this->wrestler->id));
 
