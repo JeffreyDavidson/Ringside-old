@@ -39,7 +39,7 @@ class Venue extends Model
     /**
      * Returns a collection of events before the current date.
      *
-     * @return bool
+     * @return boolean
      */
     public function hasPastEvents()
     {

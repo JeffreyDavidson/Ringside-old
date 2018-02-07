@@ -19,7 +19,7 @@ class EditWrestlerTest extends TestCase
     {
         parent::setUp();
 
-        $this->setupAuthorizedUser('edit-wrestler');
+        $this->setupAuthorizedUser(['edit-wrestler', 'update-wrestler']);
 
         factory(WrestlerStatus::class)->create(['name' => 'Active']);
         factory(WrestlerStatus::class)->create(['name' => 'Inactive']);
@@ -62,148 +62,29 @@ class EditWrestlerTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_view_the_edit_wrestler_form()
     {
-        $response = $this->actingAs($this->authorizedUser)->get(route('wrestlers.edit', $this->wrestler->id));
+        $response = $this->actingAs($this->authorizedUser)
+                        ->get(route('wrestlers.edit', $this->wrestler->id));
 
         $response->assertSuccessful();
         $this->assertTrue($response->data('wrestler')->is($this->wrestler));
     }
 
     /** @test */
-    public function users_who_dont_have_permission_cannot_view_the_edit_wrestler_form()
+    public function users_who_have_permission_can_edit_a_wrestler_with_no_matches()
     {
-        $response = $this->actingAs($this->unauthorizedUser)->get(route('wrestlers.edit', $this->wrestler->id));
-
-        $response->assertStatus(403);
-    }
-
-    /** @test */
-    public function guests_cannot_view_the_edit_wrestler_form()
-    {
-        $response = $this->get(route('wrestlers.edit', $this->wrestler->id));
-
-        $response->assertStatus(302);
-        $response->assertRedirect(route('login'));
-    }
-
-    /** @test */
-    public function wrestler_name_is_required()
-    {
-        $response = $this->actingAs($this->authorizedUser)->from(route('wrestlers.edit', $this->wrestler->id))->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
-            'name' => '',
-        ]));
-
-        $response->assertRedirect(route('wrestlers.edit', $this->wrestler->id));
-        $response->assertSessionHasErrors('name');
-        tap($this->wrestler->fresh(), function ($wrestler) {
-            $this->assertEquals('Old Name', $wrestler->name);
-        });
-    }
-
-    /** @test */
-    public function wrestler_name_must_be_unique()
-    {
-        factory(Wrestler::class)->create(['name' => 'Wrestler Name']);
-
-        $response = $this->actingAs($this->authorizedUser)->from(route('wrestlers.edit', $this->wrestler->id))->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
-            'name' => 'Wrestler Name',
-        ]));
-
-        $response->assertRedirect(route('wrestlers.edit', $this->wrestler->id));
-        $response->assertSessionHasErrors('name');
-        tap($this->wrestler->fresh(), function ($wrestler) {
-            $this->assertEquals('Old Name', $wrestler->name);
-        });
-    }
-
-    /** @test */
-    public function wrestler_slug_is_required()
-    {
-        $response = $this->actingAs($this->authorizedUser)->from(route('wrestlers.edit', $this->wrestler->id))->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
-            'slug' => '',
-        ]));
-
-        $response->assertRedirect(route('wrestlers.edit', $this->wrestler->id));
-        $response->assertSessionHasErrors('slug');
-        tap($this->wrestler->fresh(), function ($wrestler) {
-            $this->assertEquals('old-slug', $wrestler->slug);
-        });
-    }
-
-    /** @test */
-    public function wrestler_slug_must_be_unique()
-    {
-        factory(Wrestler::class)->create(['slug' => 'wrestler-slug']);
-
-        $response = $this->actingAs($this->authorizedUser)->from(route('wrestlers.edit', $this->wrestler->id))->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
-            'slug' => 'wrestler-slug',
-        ]));
-
-        $response->assertRedirect(route('wrestlers.edit', $this->wrestler->id));
-        $response->assertSessionHasErrors('slug');
-        tap($this->wrestler->fresh(), function ($wrestler) {
-            $this->assertEquals('old-slug', $wrestler->slug);
-        });
-    }
-
-    /** @test */
-    public function wrestler_status_can_be_changed()
-    {
-        $response = $this->actingAs($this->authorizedUser)->from(route('wrestlers.edit', $this->wrestler->id))->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
-            'status_id' => 4,
-        ]));
-
-        $response->assertRedirect(route('wrestlers.index'));
-        tap($this->wrestler->fresh(), function ($wrestler) {
-            $this->assertEquals(4, $wrestler->status());
-        });
-    }
-
-    /** @test */
-    public function wrestler_hired_at_date_must_be_a_valid_date()
-    {
-        $response = $this->actingAs($this->authorizedUser)->from(route('wrestlers.edit', $this->wrestler->id))->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
-            'hired_at' => 'not-a-date',
-        ]));
-
-        $response->assertRedirect(route('wrestlers.edit', $this->wrestler->id));
-        $response->assertSessionHasErrors('hired_at');
-        tap($this->wrestler->fresh(), function ($wrestler) {
-            $this->assertEquals('2017-10-09', $wrestler->hired_at->toDateString());
-        });
-    }
-
-    /** @test */
-    public function wrestler_hired_at_date_must_be_before_first_competed_for_match()
-    {
-        $event = factory(Event::class)->create(['date' => '2017-11-09']);
-        $match = factory(Match::class)->create(['event_id' => $event->id]);
-        $match->addWrestler($this->wrestler);
-
-        $response = $this->actingAs($this->authorizedUser)->from(route('wrestlers.edit', $this->wrestler->id))->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
-            'hired_at' => '2017-11-10',
-        ]));
-
-        $response->assertRedirect(route('wrestlers.edit', $this->wrestler->id));
-        $response->assertSessionHasErrors('hired_at');
-        tap($this->wrestler->fresh(), function ($wrestler) {
-            $this->assertEquals('2017-10-09', $wrestler->hired_at->toDateString());
-        });
-    }
-
-    /** @test */
-    public function editing_a_wrestler_with_no_matches()
-    {
-        $response = $this->actingAs($this->authorizedUser)->from(route('wrestlers.edit', $this->wrestler->id))->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
-            'name' => 'New Name',
-            'slug' => 'new-slug',
-            'status_id' => 1,
-            'hometown' => 'Laraville, FL',
-            'feet' => 5,
-            'inches' => 3,
-            'weight' => 175,
-            'signature_move' => 'Wrestler Signature Move',
-            'hired_at' => '2017-09-10',
-        ]));
+        $response = $this->actingAs($this->authorizedUser)
+                        ->from(route('wrestlers.edit', $this->wrestler->id))
+                        ->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
+                            'name' => 'New Name',
+                            'slug' => 'new-slug',
+                            'status_id' => 1,
+                            'hometown' => 'Laraville, FL',
+                            'feet' => 5,
+                            'inches' => 3,
+                            'weight' => 175,
+                            'signature_move' => 'Wrestler Signature Move',
+                            'hired_at' => '2017-09-10',
+                        ]));
 
         $response->assertRedirect(route('wrestlers.index'));
         tap($this->wrestler->fresh(), function ($wrestler) {
@@ -219,19 +100,176 @@ class EditWrestlerTest extends TestCase
     }
 
     /** @test */
-    public function editing_a_wrestler_with_matches()
+    public function users_who_have_permission_can_edit_a_wrestler_with_matches()
     {
         $event = factory(Event::class)->create(['date' => '2017-10-11']);
         $match = factory(Match::class)->create(['event_id' => $event->id]);
         $match->addWrestler($this->wrestler);
 
-        $response = $this->actingAs($this->authorizedUser)->from(route('wrestlers.edit', $this->wrestler->id))->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
-            'hired_at' => '2017-10-01',
-        ]));
+        $response = $this->actingAs($this->authorizedUser)
+                        ->from(route('wrestlers.edit', $this->wrestler->id))
+                        ->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
+                            'hired_at' => '2017-10-01',
+                        ]));
 
         $response->assertRedirect(route('wrestlers.index'));
         tap($this->wrestler->fresh(), function ($wrestler) {
             $this->assertEquals('2017-10-01', $wrestler->hired_at->toDateString());
+        });
+    }
+
+    /** @test */
+    public function users_who_dont_have_permission_cannot_view_the_edit_wrestler_form()
+    {
+        $response = $this->actingAs($this->unauthorizedUser)
+                        ->get(route('wrestlers.edit', $this->wrestler->id));
+
+        $response->assertStatus(403);
+    }
+
+    /** @test */
+    public function users_who_dont_have_permission_cannot_edit_a_wrestler()
+    {
+        $response = $this->actingAs($this->unauthorizedUser)
+                        ->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams());
+
+        $response->assertStatus(403);
+    }
+
+    /** @test */
+    public function guests_cannot_view_the_edit_wrestler_form()
+    {
+        $response = $this->get(route('wrestlers.edit', $this->wrestler->id));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('login'));
+    }
+
+    /** @test */
+    public function guests_cannot_edit_a_wrestler()
+    {
+        $response = $this->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams());
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('login'));
+    }
+
+    /** @test */
+    public function wrestler_name_is_required()
+    {
+        $response = $this->actingAs($this->authorizedUser)
+                        ->from(route('wrestlers.edit', $this->wrestler->id))
+                        ->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
+                            'name' => '',
+                        ]));
+
+        $response->assertRedirect(route('wrestlers.edit', $this->wrestler->id));
+        $response->assertSessionHasErrors('name');
+        tap($this->wrestler->fresh(), function ($wrestler) {
+            $this->assertEquals('Old Name', $wrestler->name);
+        });
+    }
+
+    /** @test */
+    public function wrestler_name_must_be_unique()
+    {
+        factory(Wrestler::class)->create(['name' => 'Wrestler Name']);
+
+        $response = $this->actingAs($this->authorizedUser)
+                        ->from(route('wrestlers.edit', $this->wrestler->id))
+                        ->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
+                            'name' => 'Wrestler Name',
+                        ]));
+
+        $response->assertRedirect(route('wrestlers.edit', $this->wrestler->id));
+        $response->assertSessionHasErrors('name');
+        tap($this->wrestler->fresh(), function ($wrestler) {
+            $this->assertEquals('Old Name', $wrestler->name);
+        });
+    }
+
+    /** @test */
+    public function wrestler_slug_is_required()
+    {
+        $response = $this->actingAs($this->authorizedUser)
+                        ->from(route('wrestlers.edit', $this->wrestler->id))
+                        ->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
+                            'slug' => '',
+                        ]));
+
+        $response->assertRedirect(route('wrestlers.edit', $this->wrestler->id));
+        $response->assertSessionHasErrors('slug');
+        tap($this->wrestler->fresh(), function ($wrestler) {
+            $this->assertEquals('old-slug', $wrestler->slug);
+        });
+    }
+
+    /** @test */
+    public function wrestler_slug_must_be_unique()
+    {
+        factory(Wrestler::class)->create(['slug' => 'wrestler-slug']);
+
+        $response = $this->actingAs($this->authorizedUser)
+                        ->from(route('wrestlers.edit', $this->wrestler->id))
+                        ->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
+                            'slug' => 'wrestler-slug',
+                        ]));
+
+        $response->assertRedirect(route('wrestlers.edit', $this->wrestler->id));
+        $response->assertSessionHasErrors('slug');
+        tap($this->wrestler->fresh(), function ($wrestler) {
+            $this->assertEquals('old-slug', $wrestler->slug);
+        });
+    }
+
+    /** @test */
+    public function wrestler_status_can_be_changed()
+    {
+        $response = $this->actingAs($this->authorizedUser)
+                        ->from(route('wrestlers.edit', $this->wrestler->id))
+                        ->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
+                            'status_id' => 4,
+                        ]));
+
+        $response->assertRedirect(route('wrestlers.index'));
+        tap($this->wrestler->fresh(), function ($wrestler) {
+            $this->assertEquals(4, $wrestler->status());
+        });
+    }
+
+    /** @test */
+    public function wrestler_hired_at_date_must_be_a_valid_date()
+    {
+        $response = $this->actingAs($this->authorizedUser)
+                        ->from(route('wrestlers.edit', $this->wrestler->id))
+                        ->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
+                            'hired_at' => 'not-a-date',
+                        ]));
+
+        $response->assertRedirect(route('wrestlers.edit', $this->wrestler->id));
+        $response->assertSessionHasErrors('hired_at');
+        tap($this->wrestler->fresh(), function ($wrestler) {
+            $this->assertEquals('2017-10-09', $wrestler->hired_at->toDateString());
+        });
+    }
+
+    /** @test */
+    public function wrestler_hired_at_date_must_be_before_first_competed_for_match()
+    {
+        $event = factory(Event::class)->create(['date' => '2017-11-09']);
+        $match = factory(Match::class)->create(['event_id' => $event->id]);
+        $match->addWrestler($this->wrestler);
+
+        $response = $this->actingAs($this->authorizedUser)
+                        ->from(route('wrestlers.edit', $this->wrestler->id))
+                        ->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
+                            'hired_at' => '2017-11-10',
+                        ]));
+
+        $response->assertRedirect(route('wrestlers.edit', $this->wrestler->id));
+        $response->assertSessionHasErrors('hired_at');
+        tap($this->wrestler->fresh(), function ($wrestler) {
+            $this->assertEquals('2017-10-09', $wrestler->hired_at->toDateString());
         });
     }
 }

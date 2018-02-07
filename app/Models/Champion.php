@@ -10,6 +10,11 @@ class Champion extends Model
 {
     use Presentable;
 
+    /**
+     * Assign which presenter to be used for model.
+     *
+     * @var string
+     */
     protected $presenter = 'App\Presenters\ChampionPresenter';
 
     /**
@@ -19,23 +24,38 @@ class Champion extends Model
      */
     protected $dates = ['won_on', 'lost_on'];
 
-    protected $guarded = ['id'];
+    /**
+     * Don't auto-apply mass assignment protection.
+     *
+     * @var array
+     */
+    protected $guarded = [];
 
+    /**
+     * A champion belongs to a title.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function title()
     {
         return $this->belongsTo(Title::class)->withTrashed();
     }
 
     /**
-     * Undocumented function
+     * A champion belongs to a wrestler.
      *
-     * @return void
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function wrestler()
     {
         return $this->belongsTo(Wrestler::class)->withTrashed();
     }
 
+    /**
+     * A title can be added to many matches.
+     *
+     * @return boolean
+     */
     public function loseTitle($date)
     {
         return $this->update(['lost_on' => $date ?: $this->freshTimestamp()]);

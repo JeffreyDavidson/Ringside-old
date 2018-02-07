@@ -24,7 +24,8 @@ class ViewStipulationListTest extends TestCase
         $stipulationB = factory(Stipulation::class)->create();
         $stipulationC = factory(Stipulation::class)->create();
 
-        $response = $this->actingAs($this->authorizedUser)->get(route('stipulations.index'));
+        $response = $this->actingAs($this->authorizedUser)
+                        ->get(route('stipulations.index'));
 
         $response->assertStatus(200);
         $response->assertViewIs('stipulations.index');
@@ -38,7 +39,8 @@ class ViewStipulationListTest extends TestCase
     /** @test */
     public function users_who_dont_have_permission_cannot_view_the_list_of_stipulations()
     {
-        $response = $this->actingAs($this->unauthorizedUser)->get(route('stipulations.index'));
+        $response = $this->actingAs($this->unauthorizedUser)
+                        ->get(route('stipulations.index'));
 
         $response->assertStatus(403);
     }

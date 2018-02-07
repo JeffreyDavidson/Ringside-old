@@ -22,9 +22,11 @@ class DeleteTitleTest extends TestCase
     }
 
     /** @test */
-    public function users_who_have_permission_can_soft_delete_a_title()
+    public function users_who_have_permission_can_delete_a_title()
     {
-        $response = $this->actingAs($this->authorizedUser)->from(route('titles.index'))->delete(route('titles.destroy', $this->title->id));
+        $response = $this->actingAs($this->authorizedUser)
+                        ->from(route('titles.index'))
+                        ->delete(route('titles.destroy', $this->title->id));
 
         $response->assertStatus(302);
         $this->assertSoftDeleted('titles', $this->title->toArray());
@@ -34,7 +36,9 @@ class DeleteTitleTest extends TestCase
     /** @test */
     public function users_who_dont_have_permission_cannot_delete_a_title()
     {
-        $response = $this->actingAs($this->unauthorizedUser)->from(route('titles.index'))->delete(route('titles.destroy', $this->title->id));
+        $response = $this->actingAs($this->unauthorizedUser)
+                        ->from(route('titles.index'))
+                        ->delete(route('titles.destroy', $this->title->id));
 
         $response->assertStatus(403);
     }
@@ -42,7 +46,8 @@ class DeleteTitleTest extends TestCase
     /** @test */
     public function guests_cannot_delete_a_title()
     {
-        $response = $this->from(route('titles.index'))->delete(route('titles.destroy', $this->title->id));
+        $response = $this->from(route('titles.index'))
+                        ->delete(route('titles.destroy', $this->title->id));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));

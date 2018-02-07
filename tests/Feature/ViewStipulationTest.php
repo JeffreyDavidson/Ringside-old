@@ -27,7 +27,8 @@ class ViewStipulationTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_view_a_stipulation()
     {
-        $response = $this->actingAs($this->authorizedUser)->get(route('stipulations.show', $this->stipulation->id));
+        $response = $this->actingAs($this->authorizedUser)
+                        ->get(route('stipulations.show', $this->stipulation->id));
 
         $response->assertSuccessful();
         $response->assertViewIs('stipulations.show');
@@ -37,7 +38,8 @@ class ViewStipulationTest extends TestCase
     /** @test */
     public function users_who_dont_have_permission_cannot_view_a_stipulation()
     {
-        $response = $this->actingAs($this->unauthorizedUser)->get(route('stipulations.show', $this->stipulation->id));
+        $response = $this->actingAs($this->unauthorizedUser)
+                        ->get(route('stipulations.show', $this->stipulation->id));
 
         $response->assertStatus(403);
     }

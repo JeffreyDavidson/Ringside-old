@@ -24,7 +24,8 @@ class ViewVenueListTest extends TestCase
         $venueB = factory(Venue::class)->create();
         $venueC = factory(Venue::class)->create();
 
-        $response = $this->actingAs($this->authorizedUser)->get(route('venues.index'));
+        $response = $this->actingAs($this->authorizedUser)
+                        ->get(route('venues.index'));
 
         $response->assertStatus(200);
         $response->data('venues')->assertEquals([
@@ -37,7 +38,8 @@ class ViewVenueListTest extends TestCase
     /** @test */
     public function users_who_dont_have_permission_cannot_view_the_list_of_venues()
     {
-        $response = $this->actingAs($this->unauthorizedUser)->get(route('venues.index'));
+        $response = $this->actingAs($this->unauthorizedUser)
+                        ->get(route('venues.index'));
 
         $response->assertStatus(403);
     }

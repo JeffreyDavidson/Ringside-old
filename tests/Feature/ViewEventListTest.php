@@ -24,7 +24,8 @@ class ViewEventListTest extends TestCase
         $eventB = factory(Event::class)->create();
         $eventC = factory(Event::class)->create();
 
-        $response = $this->actingAs($this->authorizedUser)->get(route('events.index'));
+        $response = $this->actingAs($this->authorizedUser)
+                        ->get(route('events.index'));
 
         $response->assertStatus(200);
         $response->data('events')->assertEquals([
@@ -37,7 +38,8 @@ class ViewEventListTest extends TestCase
     /** @test */
     public function users_who_dont_have_permission_cannot_view_the_list_of_events()
     {
-        $response = $this->actingAs($this->unauthorizedUser)->get(route('events.index'));
+        $response = $this->actingAs($this->unauthorizedUser)
+                        ->get(route('events.index'));
 
         $response->assertStatus(403);
     }

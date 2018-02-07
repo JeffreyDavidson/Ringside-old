@@ -12,6 +12,21 @@ class VenueTest extends TestCase
 {
     use DatabaseMigrations;
 
+    protected $venue;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->venue = factory(Venue::class)->create();
+    }
+
+    /** @test */
+    function a_venue_has_many_events()
+    {
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->venue->events);
+    }
+
     /** @test */
     public function it_can_get_venues_past_events()
     {

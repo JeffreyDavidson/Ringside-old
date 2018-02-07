@@ -28,7 +28,8 @@ class ViewTitleTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_view_a_title()
     {
-        $response = $this->actingAs($this->authorizedUser)->get(route('titles.show', $this->title->id));
+        $response = $this->actingAs($this->authorizedUser)
+                        ->get(route('titles.show', $this->title->id));
 
         $response->assertSuccessful();
         $response->assertViewIs('titles.show');
@@ -38,7 +39,8 @@ class ViewTitleTest extends TestCase
     /** @test */
     public function users_who_dont_have_permission_cannot_view_a_title()
     {
-        $response = $this->actingAs($this->unauthorizedUser)->get(route('titles.show', $this->title->id));
+        $response = $this->actingAs($this->unauthorizedUser)
+                        ->get(route('titles.show', $this->title->id));
 
         $response->assertStatus(403);
     }

@@ -16,7 +16,7 @@ class WrestlerEditFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return \Auth::user()->hasPermission('update-wrestler');
     }
 
     /**

@@ -72,50 +72,28 @@ class Title extends Model
     /**
      * Crown the new champion.
      *
-     * @param $wrestler
-     * @param $date
+     * @param \App\Models\Wrestler $wrestler
+     * @param datetime $date
+     * @return void
      */
-    public function setNewChampion($wrestler, $date)
+    public function setNewChampion(Wrestler $wrestler, $date)
     {
-        if (! is_null($this->getCurrentChampion())) {
-            $this->getCurrentChampion()->loseTitle($this, $date);
+        if ($champion = $this->getCurrentChampion()) {
+            $champion->loseTitle($this, $date);
         }
 
         $wrestler->winTitle($this, $date);
     }
 
     /**
-     * Get the wrestler who has defended the title the most times.
-     *
-     * @return static
-     */
-    public function most_title_defenses()
-    {
-        return MostTitleDefensesQuery::get($this);
-    }
-
-    /**
-     * Get the wrestler who has held the title the most times.
-     *
-     * @return Wrestler $wrestler
-     */
-    public function most_title_reigns()
-    {
-        return MostTitleReignsQuery::get($this);
-    }
-
-    /**
      * Get the current champion for the title.
      *
-     * @return Wrestler $wrestler|null
+     * @return Wrestler|null
      */
     public function getCurrentChampion()
     {
-        return $this->champions()->whereNull('lost_on')->first() ? $this->champions()->whereNull('lost_on')->first()->wrestler : null;
-    }
-
-    public function longest_title_reign()
-    {
-        return LongestTitleReignQuery::get($this);
+        if ($champion = $this->champions()->whereNull('lost_on')->first()) {
+            return $champion->wrestler;
+        }
     }
 }

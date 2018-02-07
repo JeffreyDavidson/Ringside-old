@@ -22,10 +22,12 @@ class DeleteVenueTest extends TestCase
     }
 
     /** @test */
-    public function users_who_have_permission_can_soft_delete_a_venue()
+    public function users_who_have_permission_can_delete_a_venue()
     {
         $this->withoutExceptionHandling();
-        $response = $this->actingAs($this->authorizedUser)->from(route('venues.index'))->delete(route('venues.destroy', $this->venue->id));
+        $response = $this->actingAs($this->authorizedUser)
+                        ->from(route('venues.index'))
+                        ->delete(route('venues.destroy', $this->venue->id));
 
         $response->assertStatus(302);
         $this->assertSoftDeleted('venues', $this->venue->toArray());
@@ -35,7 +37,9 @@ class DeleteVenueTest extends TestCase
     /** @test */
     public function users_who_dont_have_permission_cannot_delete_a_venue()
     {
-        $response = $this->actingAs($this->unauthorizedUser)->from(route('venues.index'))->delete(route('venues.destroy', $this->venue->id));
+        $response = $this->actingAs($this->unauthorizedUser)
+                        ->from(route('venues.index'))
+                        ->delete(route('venues.destroy', $this->venue->id));
 
         $response->assertStatus(403);
     }
@@ -43,7 +47,8 @@ class DeleteVenueTest extends TestCase
     /** @test */
     public function guests_cannot_delete_a_venue()
     {
-        $response = $this->from(route('venues.index'))->delete(route('venues.destroy', $this->venue->id));
+        $response = $this->from(route('venues.index'))
+                        ->delete(route('venues.destroy', $this->venue->id));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));

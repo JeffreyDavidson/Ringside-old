@@ -6,11 +6,33 @@ use Carbon\Carbon;
 use Tests\TestCase;
 use App\Models\Event;
 use App\Models\Title;
+use App\Models\Wrestler;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class TitleTest extends TestCase
 {
     use DatabaseMigrations;
+
+    protected $title;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->title = factory(Title::class)->create();
+    }
+
+    /** @test */
+    public function a_title_has_many_champions()
+    {
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->title->champions);
+    }
+
+    /** @test */
+    public function a_title_belongs_to_matches()
+    {
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->title->matches);
+    }
 
     /** @test */
     public function can_get_all_valid_titles_for_an_event()
@@ -27,12 +49,14 @@ class TitleTest extends TestCase
         $this->assertFalse($validTitles->contains($invalidTitle));
     }
 
-    public function a_title_can_have_past_matches()
+    /** @test */
+    public function a_title_can_set_a_new_champion()
     {
         $title = factory(Title::class)->create();
+        $wrestler = factory(Wrestler::class)->create();
 
-        $event = factory(Event::class)->create();
-        $match = factory(Match::class)->create(['event_id' => $event->id]);
-        $match->titles->save($title);
+        $title->setNewChampion($wrestler, Carbon::now());
+
+        $this->assertEquals($wrestler->id, $title->getCurrentChampion()->id);
     }
 }

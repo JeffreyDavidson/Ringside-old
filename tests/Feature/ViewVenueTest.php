@@ -33,7 +33,8 @@ class ViewVenueTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_view_a_venue()
     {
-        $response = $this->actingAs($this->authorizedUser)->get(route('venues.show', $this->venue->id));
+        $response = $this->actingAs($this->authorizedUser)
+                        ->get(route('venues.show', $this->venue->id));
 
         $response->assertSuccessful();
         $response->assertViewIs('venues.show');
@@ -43,7 +44,8 @@ class ViewVenueTest extends TestCase
     /** @test */
     public function users_who_dont_have_permission_cannot_view_a_venue()
     {
-        $response = $this->actingAs($this->unauthorizedUser)->get(route('venues.show', $this->venue->id));
+        $response = $this->actingAs($this->unauthorizedUser)
+                        ->get(route('venues.show', $this->venue->id));
 
         $response->assertStatus(403);
     }
@@ -63,7 +65,8 @@ class ViewVenueTest extends TestCase
         $event = EventFactory::create(['name' => 'Event Name', 'venue_id' => $this->venue->id]);
         MatchFactory::create(['event_id' => $event->id], factory(Wrestler::class, 2)->create());
 
-        $response = $this->actingAs($this->authorizedUser)->get(route('venues.show', $this->venue->id));
+        $response = $this->actingAs($this->authorizedUser)
+                        ->get(route('venues.show', $this->venue->id));
 
         $response->assertSuccessful();
         $response->assertViewIs('venues.show');

@@ -5,34 +5,24 @@ namespace Tests\Unit;
 use Tests\TestCase;
 use App\Models\Role;
 use App\Models\User;
-use App\Models\Permission;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class UserTest extends TestCase
 {
-    use RefreshDatabase;
+    use DatabaseMigrations;
 
-    /** @test */
-    public function a_user_can_be_assigned_a_role()
+    protected $user;
+
+    public function setUp()
     {
-        $user = factory(User::class)->create();
-        $role = factory(Role::class)->create();
+        parent::setUp();
 
-        $user->assignRole($role);
-
-        $this->assertTrue($user->hasRole($role));
+        $this->user = factory(User::class)->create();
     }
 
     /** @test */
-    public function a_user_with_a_role_has_a_given_permission()
+    public function a_user_has_a_role()
     {
-        $user = factory(User::class)->create();
-        $role = factory(Role::class)->create();
-        $permission = factory(Permission::class)->create();
-
-        $user->assignRole($role);
-        $role->givePermissionTo($permission);
-
-        $this->assertTrue($user->hasPermission($permission->slug));
+        $this->assertInstanceOf(Role::class, $this->user->role);
     }
 }

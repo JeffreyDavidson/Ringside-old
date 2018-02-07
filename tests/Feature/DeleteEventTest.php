@@ -24,7 +24,9 @@ class DeleteEventTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_delete_a_event()
     {
-        $response = $this->actingAs($this->authorizedUser)->from(route('events.index'))->delete(route('events.destroy', $this->event->id));
+        $response = $this->actingAs($this->authorizedUser)
+                        ->from(route('events.index'))
+                        ->delete(route('events.destroy', $this->event->id));
 
         $response->assertStatus(302);
         $this->assertSoftDeleted('events', $this->event->toArray());
@@ -34,7 +36,9 @@ class DeleteEventTest extends TestCase
     /** @test */
     public function users_who_dont_have_permission_cannot_delete_a_event()
     {
-        $response = $this->actingAs($this->unauthorizedUser)->from(route('events.index'))->delete(route('events.destroy', $this->event->id));
+        $response = $this->actingAs($this->unauthorizedUser)
+                        ->from(route('events.index'))
+                        ->delete(route('events.destroy', $this->event->id));
 
         $response->assertStatus(403);
     }
@@ -42,7 +46,8 @@ class DeleteEventTest extends TestCase
     /** @test */
     public function guests_cannot_delete_a_event()
     {
-        $response = $this->from(route('events.index'))->delete(route('events.destroy', $this->event->id));
+        $response = $this->from(route('events.index'))
+                        ->delete(route('events.destroy', $this->event->id));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));

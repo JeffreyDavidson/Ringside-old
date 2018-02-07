@@ -24,7 +24,8 @@ class ViewTitleListTest extends TestCase
         $titleB = factory(Title::class)->create();
         $titleC = factory(Title::class)->create();
 
-        $response = $this->actingAs($this->authorizedUser)->get(route('titles.index'));
+        $response = $this->actingAs($this->authorizedUser)
+                        ->get(route('titles.index'));
 
         $response->assertStatus(200);
         $response->data('titles')->assertEquals([
@@ -37,7 +38,8 @@ class ViewTitleListTest extends TestCase
     /** @test */
     public function users_who_dont_have_permission_cannot_view_the_list_of_titles()
     {
-        $response = $this->actingAs($this->unauthorizedUser)->get(route('titles.index'));
+        $response = $this->actingAs($this->unauthorizedUser)
+                        ->get(route('titles.index'));
 
         $response->assertStatus(403);
     }

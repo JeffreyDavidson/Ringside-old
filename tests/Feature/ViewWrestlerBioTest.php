@@ -38,7 +38,8 @@ class ViewWrestlerBioTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_view_a_wrestler_bio()
     {
-        $response = $this->actingAs($this->authorizedUser)->get(route('wrestlers.show', $this->wrestler->id));
+        $response = $this->actingAs($this->authorizedUser)
+                        ->get(route('wrestlers.show', $this->wrestler->id));
 
         $response->assertStatus(200);
     }
@@ -46,7 +47,8 @@ class ViewWrestlerBioTest extends TestCase
     /** @test */
     public function users_who_dont_have_permission_cannot_view_a_wrestler_bio()
     {
-        $response = $this->actingAs($this->unauthorizedUser)->get(route('wrestlers.show', $this->wrestler->id));
+        $response = $this->actingAs($this->unauthorizedUser)
+                        ->get(route('wrestlers.show', $this->wrestler->id));
 
         $response->assertStatus(403);
     }
@@ -61,9 +63,10 @@ class ViewWrestlerBioTest extends TestCase
     }
 
     /** @test */
-    public function view_bio_information_on_wrestler_bio()
+    public function users_who_have_permission_can_view_bio_information_on_wrestler_bio()
     {
-        $response = $this->actingAs($this->authorizedUser)->get(route('wrestlers.show', $this->wrestler->id));
+        $response = $this->actingAs($this->authorizedUser)
+                        ->get(route('wrestlers.show', $this->wrestler->id));
 
         $response->assertSee('Wrestler 1');
         $response->assertSee('Kansas City, Missouri');
@@ -73,7 +76,7 @@ class ViewWrestlerBioTest extends TestCase
     }
 
     /** @test */
-    public function view_list_of_current_managers_on_wrestler_bio()
+    public function users_who_have_permission_can_view_list_of_current_managers_on_wrestler_bio()
     {
         $managerA = factory(Manager::class)->create(['first_name' => 'Jane', 'last_name' => 'Doe']);
 
@@ -86,62 +89,67 @@ class ViewWrestlerBioTest extends TestCase
     }
 
     /** @test */
-    public function view_list_of_past_managers_on_wrestler_bio()
+    public function users_who_have_permission_can_view_list_of_past_managers_on_wrestler_bio()
     {
         $managerA = factory(Manager::class)->create(['first_name' => 'John', 'last_name' => 'Smith']);
 
         $this->wrestler->hireManager($managerA, Carbon::parse('last week'));
         $this->wrestler->fireManager($managerA, Carbon::parse('yesterday'));
 
-        $response = $this->actingAs($this->authorizedUser)->get(route('wrestlers.show', $this->wrestler->id));
+        $response = $this->actingAs($this->authorizedUser)          
+                        ->get(route('wrestlers.show', $this->wrestler->id));
 
         $response->assertStatus(200);
         $response->assertSee('John Smith');
     }
 
     /** @test */
-    public function view_list_of_current_titles_held_on_wrestler_bio()
+    public function users_who_have_permission_can_view_list_of_current_titles_held_on_wrestler_bio()
     {
         $title = factory(Title::class)->create(['name' => 'Title A']);
 
         $this->wrestler->winTitle($title, Carbon::yesterday());
 
-        $response = $this->actingAs($this->authorizedUser)->get(route('wrestlers.show', $this->wrestler->id));
+        $response = $this->actingAs($this->authorizedUser)
+                        ->get(route('wrestlers.show', $this->wrestler->id));
 
         $response->assertSee('Title A');
     }
 
     /** @test */
-    public function view_list_of_past_titles_held_on_wrestler_bio()
+    public function users_who_have_permission_can_view_list_of_past_titles_held_on_wrestler_bio()
     {
         $title = factory(Title::class)->create(['name' => 'Title A']);
 
         $this->wrestler->winTitle($title, Carbon::parse('last week'));
         $this->wrestler->loseTitle($title, Carbon::yesterday());
 
-        $response = $this->actingAs($this->authorizedUser)->get(route('wrestlers.show', $this->wrestler->id));
+        $response = $this->actingAs($this->authorizedUser)          
+                        ->get(route('wrestlers.show', $this->wrestler->id));
 
         $response->assertSee('Title A');
     }
 
     /** @test */
-    public function view_list_of_currently_scheduled_matches_on_wrestler_bio()
+    public function users_who_have_permission_can_view_list_of_currently_scheduled_matches_on_wrestler_bio()
     {
         $event = EventFactory::create(['name' => 'Event Name', 'date' => Carbon::parse('tomorrow')]);
         $match = MatchFactory::create(['event_id' => $event->id], [$this->wrestler]);
 
-        $response = $this->actingAs($this->authorizedUser)->get(route('wrestlers.show', $this->wrestler->id));
+        $response = $this->actingAs($this->authorizedUser)
+                        ->get(route('wrestlers.show', $this->wrestler->id));
 
         $response->assertSee('Event Name');
     }
 
     /** @test */
-    public function view_list_of_past_matches_on_wrestler_bio()
+    public function users_who_have_permission_can_view_list_of_past_matches_on_wrestler_bio()
     {
         $event = EventFactory::create(['name' => 'Event Name', 'date' => Carbon::now()->subMonth()]);
         $match = MatchFactory::create(['event_id' => $event->id], [$this->wrestler]);
 
-        $response = $this->actingAs($this->authorizedUser)->get(route('wrestlers.show', $this->wrestler->id));
+        $response = $this->actingAs($this->authorizedUser)          
+                        ->get(route('wrestlers.show', $this->wrestler->id));
 
         $response->assertSee('Event Name');
     }

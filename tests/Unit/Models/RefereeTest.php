@@ -10,11 +10,4 @@ class RefereeTest extends TestCase
 {
     use DatabaseMigrations;
 
-    /** @test */
-    public function it_can_have_their_name_concatenated()
-    {
-        $referee = factory(Referee::class)->make(['first_name' => 'Michael', 'last_name' => 'Smith']);
-
-        $this->assertEquals('Michael Smith', $referee->present()->fullName);
-    }
 }

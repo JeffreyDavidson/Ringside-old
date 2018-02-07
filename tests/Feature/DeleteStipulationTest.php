@@ -22,9 +22,11 @@ class DeleteStipulationTest extends TestCase
     }
 
     /** @test */
-    public function users_who_have_permission_can_soft_delete_a_stipulation()
+    public function users_who_have_permission_can_delete_a_stipulation()
     {
-        $response = $this->actingAs($this->authorizedUser)->from(route('stipulations.index'))->delete(route('stipulations.destroy', $this->stipulation->id));
+        $response = $this->actingAs($this->authorizedUser)
+                        ->from(route('stipulations.index'))
+                        ->delete(route('stipulations.destroy', $this->stipulation->id));
 
         $response->assertStatus(302);
         $this->assertSoftDeleted('stipulations', $this->stipulation->toArray());
@@ -34,7 +36,9 @@ class DeleteStipulationTest extends TestCase
     /** @test */
     public function users_who_dont_have_permission_cannot_delete_a_stipulation()
     {
-        $response = $this->actingAs($this->unauthorizedUser)->from(route('stipulations.index'))->delete(route('stipulations.destroy', $this->stipulation->id));
+        $response = $this->actingAs($this->unauthorizedUser)
+                        ->from(route('stipulations.index'))
+                        ->delete(route('stipulations.destroy', $this->stipulation->id));
 
         $response->assertStatus(403);
     }
@@ -42,7 +46,8 @@ class DeleteStipulationTest extends TestCase
     /** @test */
     public function guests_cannot_delete_a_stipulation()
     {
-        $response = $this->from(route('stipulations.index'))->delete(route('stipulations.destroy', $this->stipulation->id));
+        $response = $this->from(route('stipulations.index'))
+                        ->delete(route('stipulations.destroy', $this->stipulation->id));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));

@@ -16,6 +16,11 @@ class MatchType extends Model
         'royalrumble',
     ];
 
+    /**
+     * Checks to see if the match type needs additional referees.
+     *
+     * @return boolean
+     */
     public function needsMultipleReferees()
     {
         return in_array($this->slug, $this->needsMultipleReferees);

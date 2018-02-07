@@ -14,7 +14,7 @@ class AddStipulationTest extends TestCase
     {
         parent::setUp();
 
-        $this->setupAuthorizedUser('create-stipulation');
+        $this->setupAuthorizedUser(['create-stipulation', 'store-stipulation']);
     }
 
     private function validParams($overrides = [])
@@ -28,15 +28,42 @@ class AddStipulationTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_view_the_add_stipulation_form()
     {
-        $response = $this->actingAs($this->authorizedUser)->get(route('stipulations.create'));
+        $response = $this->actingAs($this->authorizedUser)
+                        ->get(route('stipulations.create'));
 
         $response->assertSuccessful();
     }
 
     /** @test */
+    public function users_who_have_permission_can_create_a_stipulation()
+    {
+        $response = $this->actingAs($this->authorizedUser)
+                        ->from(route('stipulations.create'))
+                        ->post(route('stipulations.index'), $this->validParams());
+
+        tap(Stipulation::first(), function ($stipulation) use ($response) {
+            $response->assertStatus(302);
+            $response->assertRedirect(route('stipulations.index'));
+
+            $this->assertEquals('Stipulation Name', $stipulation->name);
+            $this->assertEquals('stipulation-slug', $stipulation->slug);
+        });
+    }
+
+    /** @test */
     public function users_who_dont_have_permission_cannot_view_the_add_stipulation_form()
     {
-        $response = $this->actingAs($this->unauthorizedUser)->get(route('stipulations.create'));
+        $response = $this->actingAs($this->unauthorizedUser)
+                        ->get(route('stipulations.create'));
+
+        $response->assertStatus(403);
+    }
+
+    /** @test */
+    public function users_who_dont_have_permission_cannot_create_a_stipulation()
+    {
+        $response = $this->actingAs($this->unauthorizedUser)
+                        ->post(route('stipulations.store', $this->validParams()));
 
         $response->assertStatus(403);
     }
@@ -45,6 +72,15 @@ class AddStipulationTest extends TestCase
     public function guests_cannot_view_the_add_stipulation_form()
     {
         $response = $this->get(route('stipulations.create'));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('login'));
+    }
+
+    /** @test */
+    public function guests_cannot_create_a_stipulation()
+    {
+        $response = $this->post(route('stipulations.store', $this->validParams()));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));
@@ -112,21 +148,5 @@ class AddStipulationTest extends TestCase
         $response->assertRedirect(route('stipulations.create'));
         $response->assertSessionHasErrors('slug');
         $this->assertEquals(1, Stipulation::count());
-    }
-
-    /** @test */
-    public function adding_a_valid_stipulation()
-    {
-        $response = $this->actingAs($this->authorizedUser)
-                        ->from(route('stipulations.create'))
-                        ->post(route('stipulations.index'), $this->validParams());
-
-        tap(Stipulation::first(), function ($stipulation) use ($response) {
-            $response->assertStatus(302);
-            $response->assertRedirect(route('stipulations.index'));
-
-            $this->assertEquals('Stipulation Name', $stipulation->name);
-            $this->assertEquals('stipulation-slug', $stipulation->slug);
-        });
     }
 }

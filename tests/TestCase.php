@@ -50,13 +50,27 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
         $this->setupUnauthorizedUser();
     }
 
-    protected function setupAuthorizedUser($slug)
+    /**
+     * Creates an authorized user of the included permissions.
+     *
+     * @param array $slugs
+     * @return void
+     */
+    protected function setupAuthorizedUser($slugs)
     {
         $this->authorizedUser = factory(User::class)->create();
         $role = factory(Role::class)->create();
-        $permission = factory(Permission::class)->create(['slug' => $slug]);
 
-        $role->givePermissionTo($permission);
+        if (is_array($slugs)) {
+            foreach ($slugs as $slug) {
+                $permission = factory(Permission::class)->create(['slug' => $slug]);
+                $role->givePermissionTo($permission);
+            }
+        } else {
+            $permission = factory(Permission::class)->create(['slug' => $slugs]);
+            $role->givePermissionTo($permission);
+        }
+        
         $this->authorizedUser->assignRole($role);
     }
 

@@ -24,7 +24,8 @@ class ViewWrestlerListTest extends TestCase
         $wrestlerB = factory(Wrestler::class)->create();
         $wrestlerC = factory(Wrestler::class)->create();
 
-        $response = $this->actingAs($this->authorizedUser)->get(route('wrestlers.index'));
+        $response = $this->actingAs($this->authorizedUser)
+                        ->get(route('wrestlers.index'));
 
         $response->assertStatus(200);
         $response->data('wrestlers')->assertEquals([
@@ -37,7 +38,8 @@ class ViewWrestlerListTest extends TestCase
     /** @test */
     public function users_who_dont_have_permission_cannot_view_the_list_of_wrestlers()
     {
-        $response = $this->actingAs($this->unauthorizedUser)->get(route('wrestlers.index'));
+        $response = $this->actingAs($this->unauthorizedUser)
+                        ->get(route('wrestlers.index'));
 
         $response->assertStatus(403);
     }

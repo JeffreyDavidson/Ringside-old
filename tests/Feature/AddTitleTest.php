@@ -14,7 +14,7 @@ class AddTitleTest extends TestCase
     {
         parent::setUp();
 
-        $this->setupAuthorizedUser('create-title');
+        $this->setupAuthorizedUser(['create-title', 'store-title']);
     }
 
     private function validParams($overrides = [])
@@ -29,15 +29,42 @@ class AddTitleTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_view_the_add_title_form()
     {
-        $response = $this->actingAs($this->authorizedUser)->get(route('titles.create'));
+        $response = $this->actingAs($this->authorizedUser)
+                        ->get(route('titles.create'));
 
         $response->assertStatus(200);
     }
 
     /** @test */
+    public function users_who_have_permission_can_create_a_title()
+    {
+        $response = $this->actingAs($this->authorizedUser)
+                        ->post(route('titles.index'), $this->validParams());
+
+        tap(Title::first(), function ($title) use ($response) {
+            $response->assertStatus(302);
+            $response->assertRedirect(route('titles.index'));
+
+            $this->assertEquals('Title Name', $title->name);
+            $this->assertEquals('title-slug', $title->slug);
+            $this->assertEquals('2017-08-04', $title->introduced_at->toDateString());
+        });
+    }
+
+    /** @test */
     public function users_who_dont_have_permission_cannot_view_the_add_title_form()
     {
-        $response = $this->actingAs($this->unauthorizedUser)->get(route('titles.create'));
+        $response = $this->actingAs($this->unauthorizedUser)
+                        ->get(route('titles.create'));
+
+        $response->assertStatus(403);
+    }
+
+    /** @test */
+    public function users_who_dont_have_permission_cannot_create_a_title()
+    {
+        $response = $this->actingAs($this->unauthorizedUser)
+                        ->post(route('titles.index'), $this->validParams());
 
         $response->assertStatus(403);
     }
@@ -50,6 +77,15 @@ class AddTitleTest extends TestCase
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));
     }
+
+     /** @test */
+     public function guests_cannot_create_a_title()
+     {
+        $response = $this->post(route('titles.index'), $this->validParams());
+ 
+        $response->assertStatus(302);
+        $response->assertRedirect(route('login'));
+     }
 
     /** @test */
     public function title_name_is_required()
@@ -143,20 +179,5 @@ class AddTitleTest extends TestCase
         $response->assertRedirect(route('titles.create'));
         $response->assertSessionHasErrors('introduced_at');
         $this->assertEquals(0, Title::count());
-    }
-
-    /** @test */
-    public function adding_a_valid_title()
-    {
-        $response = $this->actingAs($this->authorizedUser)->post(route('titles.index'), $this->validParams());
-
-        tap(Title::first(), function ($title) use ($response) {
-            $response->assertStatus(302);
-            $response->assertRedirect(route('titles.index'));
-
-            $this->assertEquals('Title Name', $title->name);
-            $this->assertEquals('title-slug', $title->slug);
-            $this->assertEquals('2017-08-04', $title->introduced_at->toDateString());
-        });
     }
 }
