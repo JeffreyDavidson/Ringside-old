@@ -2,6 +2,9 @@
 
 namespace Tests;
 
+use App\Models\User;
+use App\Models\Role;
+use App\Models\Permission;
 use PHPUnit\Framework\Assert;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\TestResponse;
@@ -9,6 +12,9 @@ use Illuminate\Foundation\Testing\TestResponse;
 abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
 {
     use CreatesApplication;
+
+    protected $authorizedUser;
+    protected $unauthorizedUser;
 
     /**
      * The base URL to use while testing the application.
@@ -40,5 +46,24 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
                 Assert::assertTrue($a->is($b));
             });
         });
+
+        $this->setupUnauthorizedUser();
+    }
+
+    protected function setupAuthorizedUser($slug)
+    {
+        $this->authorizedUser = factory(User::class)->create();
+        $role = factory(Role::class)->create();
+        $permission = factory(Permission::class)->create(['slug' => $slug]);
+
+        $role->givePermissionTo($permission);
+        $this->authorizedUser->assignRole($role);
+    }
+
+    protected function setupUnauthorizedUser()
+    {
+        $this->unauthorizedUser = factory(User::class)->create();
+        $role = factory(Role::class)->create();
+        $this->unauthorizedUser->assignRole($role);
     }
 }

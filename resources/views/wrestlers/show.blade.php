@@ -5,13 +5,20 @@
 @endsection
 
 @section('content')
-    <p>Hometown: {{ $wrestler->hometown }}</p>
-    <p>Height: {!!  $wrestler->present()->height !!}</p>
-    <p>Weight: {{ $wrestler->weight }} lbs.</p>
+    <div class="panel panel-bordered panel-primary">
+        <div class="panel-heading clearfix">
+            <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-trophy"></i>Wrestler Profile</h3>
+        </div>
+        <div class="panel-body container-fluid">
+            <p>Hometown: {{ $wrestler->hometown }}</p>
+            <p>Height: {!!  $wrestler->present()->height !!}</p>
+            <p>Weight: {{ $wrestler->weight }} lbs.</p>
 
-    @if($wrestler->signature_move)
-        <p>Signature Move: {{ $wrestler->signature_move }}</p>
-    @endif
+            @if($wrestler->signature_move)
+                <p>Signature Move: {{ $wrestler->signature_move }}</p>
+            @endif
+        </div>
+    </div>
 
     @if($wrestler->isCurrentlyAChampion())
         <h2>Current Titles</h2>
@@ -77,18 +84,16 @@
         <div class="panel-body container-fluid">
             <table class="table table-striped table-bordered datatable" cellspacing="0" width="100%">
                 <thead>
-                <th>ID</th>
-                <th>Event</th>
-                <th>Opponent(s)</th>
-                <th>Actions</th>
+                    <th>ID</th>
+                    <th>Event</th>
+                    <th>Opponent(s)</th>
                 </thead>
                 <tbody>
                 @foreach($wrestler->matches as $match)
                     <tr>
                         <td>{{ $match->id }}</td>
                         <td>{{ $match->event->name }}</td>
-                        {{--<td>{{ $match->competitors }}</td>--}}
-                        <td> </td>
+                        <td>{{ $match->competitors }}</td>
                     </tr>
                 @endforeach
                 </tbody>

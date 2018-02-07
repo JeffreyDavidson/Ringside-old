@@ -49,8 +49,8 @@ class WrestlerCreateFormRequest extends FormRequest
     public function messages()
     {
         return [
-            'status_id.not_in'  => 'The selected status is invalid.',
-            'status_id.in'  => 'The selected status is invalid.',
+            'status_id.not_in' => 'The selected status is invalid.',
+            'status_id.in' => 'The selected status is invalid.',
         ];
     }
 }

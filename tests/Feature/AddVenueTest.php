@@ -3,32 +3,18 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Models\Role;
-use App\Models\User;
 use App\Models\Venue;
-use App\Models\Permission;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class AddVenueTest extends TestCase
 {
     use DatabaseMigrations;
 
-    private $user;
-
-    private $role;
-
-    private $permission;
-
     public function setUp()
     {
         parent::setUp();
 
-        $this->user = factory(User::class)->create();
-        $this->role = factory(Role::class)->create(['slug' => 'admin']);
-        $this->permission = factory(Permission::class)->create(['slug' => 'create-venue']);
-
-        $this->role->givePermissionTo($this->permission);
-        $this->user->assignRole($this->role);
+        $this->setupAuthorizedUser('create-venue');
     }
 
     private function validParams($overrides = [])
@@ -45,7 +31,7 @@ class AddVenueTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_view_the_add_venue_form()
     {
-        $response = $this->actingAs($this->user)->get(route('venues.create'));
+        $response = $this->actingAs($this->authorizedUser)->get(route('venues.create'));
 
         $response->assertStatus(200);
         $response->assertViewIs('venues.create');
@@ -54,11 +40,7 @@ class AddVenueTest extends TestCase
     /** @test */
     public function users_who_dont_have_permission_cannot_view_the_add_venue_form()
     {
-        $userWithoutPermission = factory(User::class)->create();
-        $role = factory(Role::class)->create(['name' => 'editor']);
-        $userWithoutPermission->assignRole($role);
-
-        $response = $this->actingAs($userWithoutPermission)->get(route('venues.create'));
+        $response = $this->actingAs($this->unauthorizedUser)->get(route('venues.create'));
 
         $response->assertStatus(403);
     }
@@ -73,9 +55,9 @@ class AddVenueTest extends TestCase
     }
 
     /** @test */
-    public function name_is_required()
+    public function venue_name_is_required()
     {
-        $response = $this->actingAs($this->user)->from(route('venues.create'))->post(route('venues.index'), $this->validParams([
+        $response = $this->actingAs($this->authorizedUser)->from(route('venues.create'))->post(route('venues.index'), $this->validParams([
             'name' => '',
         ]));
 
@@ -86,9 +68,9 @@ class AddVenueTest extends TestCase
     }
 
     /** @test */
-    public function name_must_only_contain_letters_numbers_and_spaces()
+    public function venue_name_must_only_contain_letters_numbers_and_spaces()
     {
-        $response = $this->actingAs($this->user)->from(route('venues.create'))->post(route('venues.index'), $this->validParams([
+        $response = $this->actingAs($this->authorizedUser)->from(route('venues.create'))->post(route('venues.index'), $this->validParams([
             'name' => 'Club 83%#(@0@(*U$',
         ]));
 
@@ -99,24 +81,24 @@ class AddVenueTest extends TestCase
     }
 
     /** @test */
-    public function name_must_be_unique()
+    public function venue_name_must_be_unique()
     {
         factory(Venue::class)->create(['name' => 'Venue Name']);
 
-        $response = $this->actingAs($this->user)->from(route('venues.create'))->post(route('venues.index', $this->validParams([
+        $response = $this->actingAs($this->authorizedUser)->from(route('venues.create'))->post(route('venues.index', $this->validParams([
             'name' => 'Venue Name',
         ])));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('venues.create'));
         $response->assertSessionHasErrors('name');
-        $this->assertEquals(1, Venue::where('name', 'Venue Name')->count());
+        $this->assertEquals(1, Venue::count());
     }
 
     /** @test */
-    public function address_is_required()
+    public function venue_address_is_required()
     {
-        $response = $this->actingAs($this->user)->from(route('venues.create'))->post(route('venues.index', $this->validParams([
+        $response = $this->actingAs($this->authorizedUser)->from(route('venues.create'))->post(route('venues.index', $this->validParams([
             'address' => '',
         ])));
 
@@ -127,9 +109,9 @@ class AddVenueTest extends TestCase
     }
 
     /** @test */
-    public function address_must_only_contain_letters_numbers_and_spaces()
+    public function venue_address_must_only_contain_letters_numbers_and_spaces()
     {
-        $response = $this->actingAs($this->user)->from(route('venues.create'))->post(route('venues.index'), $this->validParams([
+        $response = $this->actingAs($this->authorizedUser)->from(route('venues.create'))->post(route('venues.index'), $this->validParams([
             'address' => 'Address 83%#(@0@(*U$',
         ]));
 
@@ -140,9 +122,9 @@ class AddVenueTest extends TestCase
     }
 
     /** @test */
-    public function city_is_required()
+    public function venue_city_is_required()
     {
-        $response = $this->actingAs($this->user)->from(route('venues.create'))->post(route('venues.index', $this->validParams([
+        $response = $this->actingAs($this->authorizedUser)->from(route('venues.create'))->post(route('venues.index', $this->validParams([
             'city' => '',
         ])));
 
@@ -153,10 +135,10 @@ class AddVenueTest extends TestCase
     }
 
     /** @test */
-    public function city_must_only_contain_letters_and_spaces()
+    public function venue_city_must_only_contain_letters_and_spaces()
     {
-        $response = $this->actingAs($this->user)->from(route('venues.create'))->post(route('venues.index', $this->validParams([
-            'city' => '90210',
+        $response = $this->actingAs($this->authorizedUser)->from(route('venues.create'))->post(route('venues.index', $this->validParams([
+            'city' => '12345',
         ])));
 
         $response->assertStatus(302);
@@ -166,9 +148,9 @@ class AddVenueTest extends TestCase
     }
 
     /** @test */
-    public function state_is_required()
+    public function venue_state_is_required()
     {
-        $response = $this->actingAs($this->user)->from(route('venues.create'))->post(route('venues.index', $this->validParams([
+        $response = $this->actingAs($this->authorizedUser)->from(route('venues.create'))->post(route('venues.index', $this->validParams([
             'state' => '',
         ])));
 
@@ -179,9 +161,9 @@ class AddVenueTest extends TestCase
     }
 
     /** @test */
-    public function state_must_only_contain_letters()
+    public function venue_state_must_only_contain_letters()
     {
-        $response = $this->actingAs($this->user)->from(route('venues.create'))->post(route('venues.index', $this->validParams([
+        $response = $this->actingAs($this->authorizedUser)->from(route('venues.create'))->post(route('venues.index', $this->validParams([
             'state' => 'abcd789',
         ])));
 
@@ -192,22 +174,9 @@ class AddVenueTest extends TestCase
     }
 
     /** @test */
-    public function state_must_have_a_valid_selection()
+    public function venue_postcode_is_required()
     {
-        $response = $this->actingAs($this->user)->from(route('venues.create'))->post(route('venues.index', $this->validParams([
-            'state' => '0',
-        ])));
-
-        $response->assertStatus(302);
-        $response->assertRedirect(route('venues.create'));
-        $response->assertSessionHasErrors('state');
-        $this->assertEquals(0, Venue::count());
-    }
-
-    /** @test */
-    public function postcode_is_required()
-    {
-        $response = $this->actingAs($this->user)->from(route('venues.create'))->post(route('venues.index', $this->validParams([
+        $response = $this->actingAs($this->authorizedUser)->from(route('venues.create'))->post(route('venues.index', $this->validParams([
             'postcode' => '',
         ])));
 
@@ -218,10 +187,10 @@ class AddVenueTest extends TestCase
     }
 
     /** @test */
-    public function postcode_must_be_numeric()
+    public function venue_postcode_must_be_numeric()
     {
-        $response = $this->actingAs($this->user)->from(route('venues.create'))->post(route('venues.index', $this->validParams([
-            'postcode' => 'not a number',
+        $response = $this->actingAs($this->authorizedUser)->from(route('venues.create'))->post(route('venues.index', $this->validParams([
+            'postcode' => 'not-a-number',
         ])));
 
         $response->assertStatus(302);
@@ -231,10 +200,10 @@ class AddVenueTest extends TestCase
     }
 
     /** @test */
-    public function postcode_must_be_5_digits()
+    public function venue_postcode_must_be_5_digits()
     {
-        $response = $this->actingAs($this->user)->from(route('venues.create'))->post(route('venues.index', $this->validParams([
-            'postcode' => time(),
+        $response = $this->actingAs($this->authorizedUser)->from(route('venues.create'))->post(route('venues.index', $this->validParams([
+            'postcode' => 11111111,
         ])));
 
         $response->assertStatus(302);
@@ -246,7 +215,7 @@ class AddVenueTest extends TestCase
     /** @test */
     public function adding_a_valid_venue()
     {
-        $response = $this->actingAs($this->user)->from(route('venues.create'))->post(route('venues.index'), $this->validParams());
+        $response = $this->actingAs($this->authorizedUser)->from(route('venues.create'))->post(route('venues.index'), $this->validParams());
 
         tap(Venue::first(), function ($venue) use ($response) {
             $response->assertStatus(302);

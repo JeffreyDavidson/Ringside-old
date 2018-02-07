@@ -3,21 +3,12 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Models\Role;
-use App\Models\User;
 use App\Models\Wrestler;
-use App\Models\Permission;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class DeleteWrestlerTest extends TestCase
 {
     use DatabaseMigrations;
-
-    private $user;
-
-    private $role;
-
-    private $permission;
 
     private $wrestler;
 
@@ -25,19 +16,15 @@ class DeleteWrestlerTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = factory(User::class)->create();
-        $this->role = factory(Role::class)->create(['slug' => 'admin']);
-        $this->permission = factory(Permission::class)->create(['slug' => 'delete-wrestler']);
-        $this->wrestler = factory(Wrestler::class)->create();
+        $this->setupAuthorizedUser('delete-wrestler');
 
-        $this->role->givePermissionTo($this->permission);
-        $this->user->assignRole($this->role);
+        $this->wrestler = factory(Wrestler::class)->create();
     }
 
     /** @test */
     public function users_who_have_permission_can_delete_a_wrestler()
     {
-        $response = $this->actingAs($this->user)->from(route('wrestlers.index'))->delete(route('wrestlers.destroy', $this->wrestler->id));
+        $response = $this->actingAs($this->authorizedUser)->from(route('wrestlers.index'))->delete(route('wrestlers.destroy', $this->wrestler->id));
 
         $response->assertStatus(302);
         $this->assertSoftDeleted('wrestlers', $this->wrestler->toArray());
@@ -47,11 +34,7 @@ class DeleteWrestlerTest extends TestCase
     /** @test */
     public function users_who_dont_have_permission_cannot_delete_a_wrestler()
     {
-        $userWithoutPermission = factory(User::class)->create();
-        $role = factory(Role::class)->create(['name' => 'editor']);
-        $userWithoutPermission->assignRole($role);
-
-        $response = $this->actingAs($userWithoutPermission)->from(route('wrestlers.index'))->delete(route('wrestlers.destroy', $this->wrestler->id));
+        $response = $this->actingAs($this->unauthorizedUser)->from(route('wrestlers.index'))->delete(route('wrestlers.destroy', $this->wrestler->id));
 
         $response->assertStatus(403);
     }

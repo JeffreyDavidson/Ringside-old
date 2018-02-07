@@ -3,21 +3,12 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Models\Role;
-use App\Models\User;
 use App\Models\Venue;
-use App\Models\Permission;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class DeleteVenueTest extends TestCase
 {
     use DatabaseMigrations;
-
-    private $user;
-
-    private $role;
-
-    private $permission;
 
     private $venue;
 
@@ -25,19 +16,16 @@ class DeleteVenueTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = factory(User::class)->create();
-        $this->role = factory(Role::class)->create(['slug' => 'admin']);
-        $this->permission = factory(Permission::class)->create(['slug' => 'delete-venue']);
-        $this->venue = factory(Venue::class)->create();
+        $this->setupAuthorizedUser('delete-venue');
 
-        $this->role->givePermissionTo($this->permission);
-        $this->user->assignRole($this->role);
+        $this->venue = factory(Venue::class)->create();
     }
 
     /** @test */
     public function users_who_have_permission_can_soft_delete_a_venue()
     {
-        $response = $this->actingAs($this->user)->from(route('venues.index'))->delete(route('venues.destroy', $this->venue->id));
+        $this->withoutExceptionHandling();
+        $response = $this->actingAs($this->authorizedUser)->from(route('venues.index'))->delete(route('venues.destroy', $this->venue->id));
 
         $response->assertStatus(302);
         $this->assertSoftDeleted('venues', $this->venue->toArray());
@@ -47,11 +35,7 @@ class DeleteVenueTest extends TestCase
     /** @test */
     public function users_who_dont_have_permission_cannot_delete_a_venue()
     {
-        $userWithoutPermission = factory(User::class)->create();
-        $role = factory(Role::class)->create(['name' => 'editor']);
-        $userWithoutPermission->assignRole($role);
-
-        $response = $this->actingAs($userWithoutPermission)->from(route('venues.index'))->delete(route('venues.destroy', $this->venue->id));
+        $response = $this->actingAs($this->unauthorizedUser)->from(route('venues.index'))->delete(route('venues.destroy', $this->venue->id));
 
         $response->assertStatus(403);
     }

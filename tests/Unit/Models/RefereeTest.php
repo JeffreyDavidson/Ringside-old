@@ -13,8 +13,8 @@ class RefereeTest extends TestCase
     /** @test */
     public function it_can_have_their_name_concatenated()
     {
-        $referee = factory(Referee::class)->make(['first_name' => 'Jeffrey', 'last_name' => 'Davidson']);
+        $referee = factory(Referee::class)->make(['first_name' => 'Michael', 'last_name' => 'Smith']);
 
-        $this->assertEquals('Jeffrey Davidson', $referee->present()->fullName);
+        $this->assertEquals('Michael Smith', $referee->present()->fullName);
     }
 }

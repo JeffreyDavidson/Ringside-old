@@ -3,30 +3,18 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Models\Role;
-use App\Models\User;
 use App\Models\Wrestler;
-use App\Models\Permission;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class ViewWrestlerListTest extends TestCase
 {
     use DatabaseMigrations;
 
-    private $user;
-    private $role;
-    private $permission;
-
     public function setUp()
     {
         parent::setUp();
 
-        $this->user = factory(User::class)->create();
-        $this->role = factory(Role::class)->create(['slug' => 'admin']);
-        $this->permission = factory(Permission::class)->create(['slug' => 'view-wrestlers']);
-
-        $this->role->givePermissionTo($this->permission);
-        $this->user->assignRole($this->role);
+        $this->setupAuthorizedUser('view-wrestlers');
     }
 
     /** @test */
@@ -36,8 +24,7 @@ class ViewWrestlerListTest extends TestCase
         $wrestlerB = factory(Wrestler::class)->create();
         $wrestlerC = factory(Wrestler::class)->create();
 
-        $response = $this->actingAs($this->user)
-                        ->get(route('wrestlers.index'));
+        $response = $this->actingAs($this->authorizedUser)->get(route('wrestlers.index'));
 
         $response->assertStatus(200);
         $response->data('wrestlers')->assertEquals([
@@ -50,12 +37,7 @@ class ViewWrestlerListTest extends TestCase
     /** @test */
     public function users_who_dont_have_permission_cannot_view_the_list_of_wrestlers()
     {
-        $userWithoutPermission = factory(User::class)->create();
-        $role = factory(Role::class)->create(['name' => 'editor']);
-        $userWithoutPermission->assignRole($role);
-
-        $response = $this->actingAs($userWithoutPermission)
-                        ->get(route('wrestlers.index'));
+        $response = $this->actingAs($this->unauthorizedUser)->get(route('wrestlers.index'));
 
         $response->assertStatus(403);
     }

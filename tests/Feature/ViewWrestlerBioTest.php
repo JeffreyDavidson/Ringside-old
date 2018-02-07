@@ -6,24 +6,15 @@ use EventFactory;
 use MatchFactory;
 use Carbon\Carbon;
 use Tests\TestCase;
-use App\Models\Role;
-use App\Models\User;
 use App\Models\Event;
 use App\Models\Title;
 use App\Models\Manager;
 use App\Models\Wrestler;
-use App\Models\Permission;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class ViewWrestlerBioTest extends TestCase
 {
     use DatabaseMigrations;
-
-    private $user;
-
-    private $role;
-
-    private $permission;
 
     private $wrestler;
 
@@ -31,9 +22,8 @@ class ViewWrestlerBioTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = factory(User::class)->create();
-        $this->role = factory(Role::class)->create(['slug' => 'admin']);
-        $this->permission = factory(Permission::class)->create(['slug' => 'show-wrestler']);
+        $this->setupAuthorizedUser('show-wrestler');
+
         $this->wrestler = factory(Wrestler::class)->create([
             'name' => 'Wrestler 1',
             'slug' => 'wrestler1',
@@ -43,15 +33,12 @@ class ViewWrestlerBioTest extends TestCase
             'weight' => 251,
             'signature_move' => 'Powerbomb',
         ]);
-
-        $this->role->givePermissionTo($this->permission);
-        $this->user->assignRole($this->role);
     }
 
     /** @test */
     public function users_who_have_permission_can_view_a_wrestler_bio()
     {
-        $response = $this->actingAs($this->user)->get(route('wrestlers.show', $this->wrestler->id));
+        $response = $this->actingAs($this->authorizedUser)->get(route('wrestlers.show', $this->wrestler->id));
 
         $response->assertStatus(200);
     }
@@ -59,11 +46,7 @@ class ViewWrestlerBioTest extends TestCase
     /** @test */
     public function users_who_dont_have_permission_cannot_view_a_wrestler_bio()
     {
-        $userWithoutPermission = factory(User::class)->create();
-        $role = factory(Role::class)->create(['name' => 'editor']);
-        $userWithoutPermission->assignRole($role);
-
-        $response = $this->actingAs($userWithoutPermission)->get(route('wrestlers.show', $this->wrestler->id));
+        $response = $this->actingAs($this->unauthorizedUser)->get(route('wrestlers.show', $this->wrestler->id));
 
         $response->assertStatus(403);
     }
@@ -80,7 +63,7 @@ class ViewWrestlerBioTest extends TestCase
     /** @test */
     public function view_bio_information_on_wrestler_bio()
     {
-        $response = $this->actingAs($this->user)->get(route('wrestlers.show', $this->wrestler->id));
+        $response = $this->actingAs($this->authorizedUser)->get(route('wrestlers.show', $this->wrestler->id));
 
         $response->assertSee('Wrestler 1');
         $response->assertSee('Kansas City, Missouri');
@@ -96,7 +79,7 @@ class ViewWrestlerBioTest extends TestCase
 
         $this->wrestler->hireManager($managerA, Carbon::parse('last week'));
 
-        $response = $this->actingAs($this->user)->get(route('wrestlers.show', $this->wrestler->id));
+        $response = $this->actingAs($this->authorizedUser)->get(route('wrestlers.show', $this->wrestler->id));
 
         $response->assertStatus(200);
         $response->assertSee('Jane Doe');
@@ -110,7 +93,7 @@ class ViewWrestlerBioTest extends TestCase
         $this->wrestler->hireManager($managerA, Carbon::parse('last week'));
         $this->wrestler->fireManager($managerA, Carbon::parse('yesterday'));
 
-        $response = $this->actingAs($this->user)->get(route('wrestlers.show', $this->wrestler->id));
+        $response = $this->actingAs($this->authorizedUser)->get(route('wrestlers.show', $this->wrestler->id));
 
         $response->assertStatus(200);
         $response->assertSee('John Smith');
@@ -119,34 +102,26 @@ class ViewWrestlerBioTest extends TestCase
     /** @test */
     public function view_list_of_current_titles_held_on_wrestler_bio()
     {
-        $wrestler = factory(Wrestler::class)->create();
-        $titleA = factory(Title::class)->create(['name' => 'Title A']);
-        $titleB = factory(Title::class)->create(['name' => 'Title B']);
+        $title = factory(Title::class)->create(['name' => 'Title A']);
 
-        $wrestler->winTitle($titleA, Carbon::yesterday());
-        $wrestler->winTitle($titleB, Carbon::yesterday());
+        $this->wrestler->winTitle($title, Carbon::yesterday());
 
-        $response = $this->actingAs($this->user)->get(route('wrestlers.show', $wrestler->id));
+        $response = $this->actingAs($this->authorizedUser)->get(route('wrestlers.show', $this->wrestler->id));
 
         $response->assertSee('Title A');
-        $response->assertSee('Title B');
     }
 
     /** @test */
     public function view_list_of_past_titles_held_on_wrestler_bio()
     {
-        $this->withoutExceptionHandling();
-        $wrestler = factory(Wrestler::class)->create();
-        $titleA = factory(Title::class)->create(['name' => 'Title A']);
-        factory(Title::class)->create(['name' => 'Title B']);
+        $title = factory(Title::class)->create(['name' => 'Title A']);
 
-        $wrestler->winTitle($titleA, Carbon::yesterday());
-        $wrestler->loseTitle($titleA, Carbon::now());
+        $this->wrestler->winTitle($title, Carbon::parse('last week'));
+        $this->wrestler->loseTitle($title, Carbon::yesterday());
 
-        $response = $this->actingAs($this->user)->get(route('wrestlers.show', $wrestler->id));
+        $response = $this->actingAs($this->authorizedUser)->get(route('wrestlers.show', $this->wrestler->id));
 
         $response->assertSee('Title A');
-        $response->assertDontSee('Title B');
     }
 
     /** @test */
@@ -155,7 +130,7 @@ class ViewWrestlerBioTest extends TestCase
         $event = EventFactory::create(['name' => 'Event Name', 'date' => Carbon::parse('tomorrow')]);
         $match = MatchFactory::create(['event_id' => $event->id], [$this->wrestler]);
 
-        $response = $this->actingAs($this->user)->get(route('wrestlers.show', $this->wrestler->id));
+        $response = $this->actingAs($this->authorizedUser)->get(route('wrestlers.show', $this->wrestler->id));
 
         $response->assertSee('Event Name');
     }
@@ -166,11 +141,8 @@ class ViewWrestlerBioTest extends TestCase
         $event = EventFactory::create(['name' => 'Event Name', 'date' => Carbon::now()->subMonth()]);
         $match = MatchFactory::create(['event_id' => $event->id], [$this->wrestler]);
 
-        $response = $this->actingAs($this->user)->get(route('wrestlers.show', $this->wrestler->id));
+        $response = $this->actingAs($this->authorizedUser)->get(route('wrestlers.show', $this->wrestler->id));
 
         $response->assertSee('Event Name');
     }
-
-    //    TODO: Write test for viewing list of retirements
-    //    TODO: Write test for viewing list of injuries
 }

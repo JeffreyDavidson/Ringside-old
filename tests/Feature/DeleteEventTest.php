@@ -3,21 +3,12 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Models\Role;
-use App\Models\User;
 use App\Models\Event;
-use App\Models\Permission;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class DeleteEventTest extends TestCase
 {
     use DatabaseMigrations;
-
-    private $user;
-
-    private $role;
-
-    private $permission;
 
     private $event;
 
@@ -25,19 +16,15 @@ class DeleteEventTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = factory(User::class)->create();
-        $this->role = factory(Role::class)->create(['slug' => 'admin']);
-        $this->permission = factory(Permission::class)->create(['slug' => 'delete-event']);
-        $this->event = factory(Event::class)->create();
+        $this->setupAuthorizedUser('delete-event');
 
-        $this->role->givePermissionTo($this->permission);
-        $this->user->assignRole($this->role);
+        $this->event = factory(Event::class)->create();
     }
 
     /** @test */
     public function users_who_have_permission_can_delete_a_event()
     {
-        $response = $this->actingAs($this->user)->from(route('events.index'))->delete(route('events.destroy', $this->event->id));
+        $response = $this->actingAs($this->authorizedUser)->from(route('events.index'))->delete(route('events.destroy', $this->event->id));
 
         $response->assertStatus(302);
         $this->assertSoftDeleted('events', $this->event->toArray());
@@ -47,11 +34,7 @@ class DeleteEventTest extends TestCase
     /** @test */
     public function users_who_dont_have_permission_cannot_delete_a_event()
     {
-        $userWithoutPermission = factory(User::class)->create();
-        $role = factory(Role::class)->create(['name' => 'editor']);
-        $userWithoutPermission->assignRole($role);
-
-        $response = $this->actingAs($userWithoutPermission)->from(route('events.index'))->delete(route('events.destroy', $this->event->id));
+        $response = $this->actingAs($this->unauthorizedUser)->from(route('events.index'))->delete(route('events.destroy', $this->event->id));
 
         $response->assertStatus(403);
     }

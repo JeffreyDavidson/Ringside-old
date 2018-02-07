@@ -5,22 +5,13 @@ namespace Tests\Feature;
 use EventFactory;
 use MatchFactory;
 use Tests\TestCase;
-use App\Models\Role;
-use App\Models\User;
 use App\Models\Venue;
 use App\Models\Wrestler;
-use App\Models\Permission;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class ViewVenueTest extends TestCase
 {
     use DatabaseMigrations;
-
-    private $user;
-
-    private $role;
-
-    private $permission;
 
     private $venue;
 
@@ -28,9 +19,8 @@ class ViewVenueTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = factory(User::class)->create();
-        $this->role = factory(Role::class)->create(['slug' => 'admin']);
-        $this->permission = factory(Permission::class)->create(['slug' => 'show-venue']);
+        $this->setupAuthorizedUser('show-venue');
+
         $this->venue = factory(Venue::class)->create([
             'name' => 'Venue Name',
             'address' => '123 Main Street',
@@ -38,15 +28,12 @@ class ViewVenueTest extends TestCase
             'state' => 'FL',
             'postcode' => '90210'
         ]);
-
-        $this->role->givePermissionTo($this->permission);
-        $this->user->assignRole($this->role);
     }
 
     /** @test */
     public function users_who_have_permission_can_view_a_venue()
     {
-        $response = $this->actingAs($this->user)->get(route('venues.show', $this->venue->id));
+        $response = $this->actingAs($this->authorizedUser)->get(route('venues.show', $this->venue->id));
 
         $response->assertSuccessful();
         $response->assertViewIs('venues.show');
@@ -56,11 +43,7 @@ class ViewVenueTest extends TestCase
     /** @test */
     public function users_who_dont_have_permission_cannot_view_a_venue()
     {
-        $userWithoutPermission = factory(User::class)->create();
-        $role = factory(Role::class)->create(['name' => 'editor']);
-        $userWithoutPermission->assignRole($role);
-
-        $response = $this->actingAs($userWithoutPermission)->get(route('venues.show', $this->venue->id));
+        $response = $this->actingAs($this->unauthorizedUser)->get(route('venues.show', $this->venue->id));
 
         $response->assertStatus(403);
     }
@@ -75,13 +58,12 @@ class ViewVenueTest extends TestCase
     }
 
     /** @test */
-    public function a_venues_past_events_can_be_viewed_on_venue_page()
+    public function venues_past_events_can_be_viewed_on_venue_page()
     {
-        $this->withoutExceptionHandling();
         $event = EventFactory::create(['name' => 'Event Name', 'venue_id' => $this->venue->id]);
         MatchFactory::create(['event_id' => $event->id], factory(Wrestler::class, 2)->create());
 
-        $response = $this->actingAs($this->user)->get(route('venues.show', $this->venue->id));
+        $response = $this->actingAs($this->authorizedUser)->get(route('venues.show', $this->venue->id));
 
         $response->assertSuccessful();
         $response->assertViewIs('venues.show');

@@ -3,21 +3,12 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Models\Role;
-use App\Models\User;
-use App\Models\Event;
-use App\Models\Permission;
+use EventFactory;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class ViewEventTest extends TestCase
 {
     use DatabaseMigrations;
-
-    private $user;
-
-    private $role;
-
-    private $permission;
 
     private $event;
 
@@ -25,24 +16,19 @@ class ViewEventTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = factory(User::class)->create();
-        $this->role = factory(Role::class)->create(['slug' => 'admin']);
-        $this->permission = factory(Permission::class)->create(['slug' => 'show-event']);
-        $this->event = factory(Event::class)->create([
+        $this->setupAuthorizedUser('show-event');
+
+        $this->event = EventFactory::create([
             'name' => 'Event Name',
             'slug' => 'event-slug',
-            'date' => '2017-09-17',
-            //'venue_id' => 1
+            'date' => '2017-09-17'
         ]);
-
-        $this->role->givePermissionTo($this->permission);
-        $this->user->assignRole($this->role);
     }
 
     /** @test */
     public function users_who_have_permission_can_view_a_event()
     {
-        $response = $this->actingAs($this->user)->get(route('events.show', $this->event->id));
+        $response = $this->actingAs($this->authorizedUser)->get(route('events.show', $this->event->id));
 
         $response->assertSuccessful();
         $response->assertViewIs('events.show');
@@ -52,11 +38,7 @@ class ViewEventTest extends TestCase
     /** @test */
     public function users_who_dont_have_permission_cannot_view_a_event()
     {
-        $userWithoutPermission = factory(User::class)->create();
-        $role = factory(Role::class)->create(['name' => 'editor']);
-        $userWithoutPermission->assignRole($role);
-
-        $response = $this->actingAs($userWithoutPermission)->get(route('events.show', $this->event->id));
+        $response = $this->actingAs($this->unauthorizedUser)->get(route('events.show', $this->event->id));
 
         $response->assertStatus(403);
     }

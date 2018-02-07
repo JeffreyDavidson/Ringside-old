@@ -26,6 +26,11 @@ class Champion extends Model
         return $this->belongsTo(Title::class)->withTrashed();
     }
 
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
     public function wrestler()
     {
         return $this->belongsTo(Wrestler::class)->withTrashed();
