@@ -4,10 +4,10 @@ namespace Tests\Unit;
 
 use Carbon\Carbon;
 use Tests\TestCase;
-use App\Models\Champion;
+use App\Models\Referee;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
-class ChampionPresenterTest extends TestCase
+class RefereePresenterTest extends TestCase
 {
     use DatabaseMigrations;
 

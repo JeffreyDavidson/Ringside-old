@@ -19,15 +19,4 @@ class Retirement extends Model
      * @var array
      */
     protected $dates = ['retired_at', 'ended_at'];
-
-    /**
-     * Unretires a retired wrestler.
-     *
-     * @param string $date Datetime that represents the date and time the wrestler was unretired.
-     * @return bool
-     */
-    public function unretire($date = null)
-    {
-        return $this->update(['ended_at' => $date ?: $this->freshTimestamp()]);
-    }
 }

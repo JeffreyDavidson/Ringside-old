@@ -12,11 +12,57 @@ use App\Models\Title;
 use App\Models\Referee;
 use App\Models\Wrestler;
 use App\Models\Stipulation;
+use App\Models\MatchType;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class MatchTest extends TestCase
 {
     use DatabaseMigrations;
+
+    protected $match;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->match = factory(Match::class)->create();
+    }
+
+    /** @test */
+    public function a_match_has_many_wrestlers()
+    {
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->match->wrestlers);
+    }
+
+    /** @test */
+    public function a_match_belongs_to_an_event()
+    {
+        $this->assertInstanceOf(Event::class, $this->match->event);
+    }
+
+    /** @test */
+    public function a_match_has_has_a_type()
+    {
+        $this->assertInstanceOf(MatchType::class, $this->match->type);
+    }
+
+    /** @test */
+    public function a_match_can_have_many_titles()
+    {
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->match->titles);
+    }
+
+    /** @test */
+    public function a_match_can_have_many_referees()
+    {
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->match->referees);
+    }
+
+    /** @test */
+    public function a_match_can_have_many_stipulations()
+    {
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->match->stipulations);
+    }
 
     /** @test */
     public function a_match_can_have_a_title_being_competed_for()

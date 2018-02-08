@@ -10,6 +10,11 @@ class Match extends Model
 {
     use Presentable, SoftDeletes;
 
+    /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
     protected $with = ['wrestlers', 'stipulations', 'referees', 'titles'];
 
     /**
@@ -169,7 +174,7 @@ class Match extends Model
     /**
      * Determines if the match has a title associated to it.
      *
-     * @return bool
+     * @return boolean
      */
     public function isTitleMatch()
     {
@@ -184,6 +189,7 @@ class Match extends Model
     public function setWinner(Wrestler $wrestler)
     {
         $this->update(['winner_id' => $wrestler->id, 'loser_id' => $this->wrestlers->except($wrestler->id)->first()->id]);
+
         if ($this->isTitleMatch()) {
             $this->titles->each(function ($title) use ($wrestler) {
                 if (! $wrestler->hasTitle($title)) {
@@ -216,8 +222,8 @@ class Match extends Model
     /**
      * Add a match to an event.
      *
-     * @param Event $event
-     * @return bool
+     * @param  Event $event
+     * @return boolean
      */
     public function addToEvent(Event $event)
     {
@@ -227,7 +233,7 @@ class Match extends Model
     /**
      * Checks if the match needs multiple referees.
      *
-     * @return bool
+     * @return boolean
      */
     public function needsTwoReferees()
     {

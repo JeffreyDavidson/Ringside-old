@@ -1,7 +1,18 @@
 <?php
 
+namespace Tests\Feature\Unit;
 
-/** @test */
+use Tests\TestCase;
+use App\Models\User;
+use App\Models\Role;
+use App\Models\Permission;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+
+class HasRolesTraitTest extends TestCase
+{
+    use DatabaseMigrations;
+
+    /** @test */
     public function a_user_can_be_assigned_a_role()
     {
         $user = factory(User::class)->create();
@@ -24,3 +35,4 @@
 
         $this->assertTrue($user->hasPermission($permission->slug));
     }
+}

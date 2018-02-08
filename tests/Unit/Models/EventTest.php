@@ -6,11 +6,11 @@ use EventFactory;
 use MatchFactory;
 use Tests\TestCase;
 use App\Models\Venue;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class EventTest extends TestCase
 {
-    use RefreshDatabase;
+    use DatabaseMigrations;
 
     /** @test */
     public function an_event_have_many_matches()

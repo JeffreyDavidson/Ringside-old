@@ -8,11 +8,11 @@ use App\Models\Title;
 use App\Models\Manager;
 use App\Models\Wrestler;
 use App\Models\WrestlerStatus;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class WrestlerTest extends TestCase
 {
-    use RefreshDatabase;
+    use DatabaseMigrations;
 
     /** @test */
     public function a_wrestler_can_win_a_title()
