@@ -71,4 +71,9 @@ class Champion extends Model
     {
         return new TitleChampionsCollection($models);
     }
+
+    public function scopeCurrent($query) 
+    {
+        return $query->whereNull('lost_on');
+    }
 }

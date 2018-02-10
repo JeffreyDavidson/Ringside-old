@@ -35,21 +35,6 @@ class TitleTest extends TestCase
     }
 
     /** @test */
-    public function can_get_all_valid_titles_for_an_event()
-    {
-        $validTitleA = factory(Title::class)->create(['introduced_at' => Carbon::parse('3 weeks ago')]);
-        $validTitleB = factory(Title::class)->create(['introduced_at' => Carbon::parse('2 weeks ago')]);
-        $invalidTitle = factory(Title::class)->create(['introduced_at' => Carbon::parse('next week')]);
-        $event = factory(Event::class)->create(['date' => Carbon::parse('tomorrow')]);
-
-        $validTitles = Title::valid($event->date)->get();
-
-        $this->assertTrue($validTitles->contains($validTitleA));
-        $this->assertTrue($validTitles->contains($validTitleB));
-        $this->assertFalse($validTitles->contains($invalidTitle));
-    }
-
-    /** @test */
     public function a_title_can_set_a_new_champion()
     {
         $title = factory(Title::class)->create();
@@ -58,5 +43,35 @@ class TitleTest extends TestCase
         $title->setNewChampion($wrestler, Carbon::now());
 
         $this->assertEquals($wrestler->id, $title->getCurrentChampion()->id);
+    }
+
+    /** @test */
+    public function can_get_all_retired_titles()
+    {
+        $retiredTitleA = factory(Title::class)->create(['retired_at' => Carbon::yesterday()]);
+        $retiredTitleB = factory(Title::class)->create(['retired_at' => Carbon::yesterday()]);
+        $activeTitle = factory(Title::class)->create(['retired_at' => NULL]);
+
+        $retiredTitles = Title::retired()->get();
+
+        $this->assertTrue($retiredTitles->contains($retiredTitleA));
+        $this->assertTrue($retiredTitles->contains($retiredTitleB));
+        $this->assertFalse($retiredTitles->contains($activeTitle));
+    }
+
+    /** @test */
+    public function can_get_all_active_titles()
+    {
+        $activeTitleA = factory(Title::class)->create(['retired_at' => NULL, 'introduced_at' => Carbon::yesterday()]);
+        $activeTitleB = factory(Title::class)->create(['retired_at' => NULL, 'introduced_at' => Carbon::yesterday()]);
+        $retiredTitle = factory(Title::class)->create(['retired_at' => Carbon::yesterday(), 'introduced_at' => Carbon::tomorrow()]);
+        $inactiveTitle = factory(Title::class)->create(['retired_at' => NULL, 'introduced_at' => Carbon::tomorrow()]);
+
+        $activeTitles = Title::active(Carbon::today())->get();
+
+        $this->assertTrue($activeTitles->contains($activeTitleA));
+        $this->assertTrue($activeTitles->contains($activeTitleB));
+        $this->assertFalse($activeTitles->contains($retiredTitle));
+        $this->assertFalse($activeTitles->contains($inactiveTitle));
     }
 }

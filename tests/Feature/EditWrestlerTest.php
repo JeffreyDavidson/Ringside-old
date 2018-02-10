@@ -102,6 +102,7 @@ class EditWrestlerTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_edit_a_wrestler_with_matches()
     {
+        $this->withoutExceptionHandling();
         $event = factory(Event::class)->create(['date' => '2017-10-11']);
         $match = factory(Match::class)->create(['event_id' => $event->id]);
         $match->addWrestler($this->wrestler);

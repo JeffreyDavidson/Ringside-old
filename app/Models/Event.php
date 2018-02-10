@@ -49,7 +49,7 @@ class Event extends Model
     }
 
     /**
-     * An event belongs to one venue.
+     * An event belongs to a venue.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

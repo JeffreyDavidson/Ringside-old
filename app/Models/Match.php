@@ -94,7 +94,7 @@ class Match extends Model
     /**
      * Add a wrestler to a match.
      *
-     * @param Wrestler $wrestler
+     * @param \App\Models\Wrestler $wrestler
      */
     public function addWrestler(Wrestler $wrestler)
     {
@@ -102,9 +102,9 @@ class Match extends Model
     }
 
     /**
-     * Add a collection of wrestlers to a match.
+     * Add a array of wrestlers to a match.
      *
-     * @param $wrestlers
+     * @param array $wrestlers
      */
     public function addWrestlers($wrestlers)
     {
@@ -114,7 +114,7 @@ class Match extends Model
     /**
      * Add a title to a match.
      *
-     * @param Title $title
+     * @param \App\Models\Title $title
      */
     public function addTitle(Title $title)
     {
@@ -122,9 +122,9 @@ class Match extends Model
     }
 
     /**
-     * Add a collection of titles to a match.
+     * Add a array of titles to a match.
      *
-     * @param $titles
+     * @param array $titles
      */
     public function addTitles($titles)
     {
@@ -134,7 +134,7 @@ class Match extends Model
     /**
      * Add a stipulation to a match.
      *
-     * @param Stipulation $stipulation
+     * @param \App\Models\Stipulation $stipulation
      */
     public function addStipulation(Stipulation $stipulation)
     {
@@ -142,9 +142,9 @@ class Match extends Model
     }
 
     /**
-     * Add a collection of stipulations to a match.
+     * Add a array of stipulations to a match.
      *
-     * @param $stipulations
+     * @param array $stipulations
      */
     public function addStipulations($stipulations)
     {
@@ -154,7 +154,7 @@ class Match extends Model
     /**
      * Add a referee to a match.
      *
-     * @param Referee $referee
+     * @param \App\Models\Referee $referee
      */
     public function addReferee(Referee $referee)
     {
@@ -162,9 +162,9 @@ class Match extends Model
     }
 
     /**
-     * Add a collection of referees to a match.
+     * Add an array of referees to a match.
      *
-     * @param $referees
+     * @param array $referees
      */
     public function addReferees($referees)
     {
@@ -184,7 +184,7 @@ class Match extends Model
     /**
      * Sets the winner of the match.
      *
-     * @param Wrestler $wrestler
+     * @param \App\Models\Wrestler $wrestler
      */
     public function setWinner(Wrestler $wrestler)
     {
@@ -192,7 +192,7 @@ class Match extends Model
 
         if ($this->isTitleMatch()) {
             $this->titles->each(function ($title) use ($wrestler) {
-                if (! $wrestler->hasTitle($title)) {
+                if (!$wrestler->hasTitle($title)) {
                     $title->setNewChampion($wrestler, $this->event->date);
                 }
             });
@@ -212,7 +212,7 @@ class Match extends Model
     /**
      * Retrieves the past matches.
      *
-     * @return collection
+     * @return Illuminate\Database\Eloquent\Collection
      */
     public function isPast()
     {
@@ -222,21 +222,13 @@ class Match extends Model
     /**
      * Add a match to an event.
      *
-     * @param  Event $event
+     * @param  \App\Models\Event $event
      * @return boolean
      */
     public function addToEvent(Event $event)
     {
-        return $this->update(['event_id' => $event]);
-    }
+        $nextMatchNumber = $event->matches->max('match_number');
 
-    /**
-     * Checks if the match needs multiple referees.
-     *
-     * @return boolean
-     */
-    public function needsTwoReferees()
-    {
-        return in_array($this->type->slug, $this->matchTypesWithMultipleReferees);
+        return $this->update(['event_id' => $event->id, 'match_number' => $nextMatchNumber + 1]);
     }
 }

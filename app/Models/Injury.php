@@ -21,7 +21,7 @@ class Injury extends Model
     protected $dates = ['injured_at', 'healed_at'];
 
     /**
-     * Heals the an injury.
+     * Heals an injury.
      *
      * @param string $date Datetime that represents the date and time the injury was healed.
      * @return bool

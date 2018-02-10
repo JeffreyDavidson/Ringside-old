@@ -83,7 +83,9 @@ $factory->state(App\Models\Title::class, 'retired', function ($faker) {
 
 $factory->define(App\Models\Match::class, function (Faker\Generator $faker) {
     return [
-        'match_number' => $faker->randomDigitNotNull,
+        'event_id' => function () {
+            return factory(App\Models\Event::class)->create()->id;
+        },
         'match_type_id' => function () {
             return factory(App\Models\MatchType::class)->create()->id;
         },
@@ -159,5 +161,15 @@ $factory->define(App\Models\Referee::class, function (Faker\Generator $faker) {
         'first_name' => $faker->firstName,
         'last_name' => $faker->lastName,
         'hired_at' => Carbon::parse('-2 weeks')
+    ];
+});
+
+$factory->define(App\Models\Suspension::class, function (Faker\Generator $faker) {
+    return [
+        'wrestler_id' => function () {
+            return factory(App\Models\Wrestler::class)->create()->id;
+        },
+        'suspended_at' => Carbon::now('-2 years'),
+        'ended_at' => Carbon::now('-2 days'),
     ];
 });

@@ -65,128 +65,127 @@ class MatchTest extends TestCase
     }
 
     /** @test */
-    public function a_match_can_have_a_title_being_competed_for()
+    public function a_match_can_add_a_wrestler()
     {
-        $match = factory(Match::class)->create();
-        $title = factory(Title::class)->create();
+        $wrestler = factory(Wrestler::class)->make();
 
-        $match->addTitle($title);
+        $this->match->addWrestler($wrestler);
 
-        $this->assertCount(1, $match->titles);
-        $this->assertTrue($match->isTitleMatch());
+        $this->assertCount(1, $this->match->wrestlers);
     }
 
     /** @test */
-    public function can_have_more_than_one_title()
+    public function a_match_can_add_multiple_wrestlers()
     {
-        $event = factory(Event::class)->create(['date' => Carbon::parse('tomorrow')]);
-        $match = factory(Match::class)->create(['event_id' => $event->id]);
-        $titles = factory(Title::class, 2)->create();
+        $wrestlers = factory(Wrestler::class, 2)->make();
 
-        $match->addTitles($titles);
+        $this->match->addWrestlers($wrestlers);
 
-        $this->assertCount(2, $match->titles);
+        $this->assertCount(2, $this->match->wrestlers);
     }
 
     /** @test */
-    public function must_have_a_referee()
+    public function a_match_can_add_a_title()
     {
-        $event = factory(Event::class)->create(['date' => Carbon::parse('tomorrow')]);
-        $match = factory(Match::class)->create(['event_id' => $event->id]);
-        $referee = factory(Referee::class)->create();
+        $title = factory(Title::class)->make();
 
-        $match->addReferee($referee);
+        $this->match->addTitle($title);
 
-        $this->assertCount(1, $match->referees);
+        $this->assertCount(1, $this->match->titles);
+        $this->assertTrue($this->match->isTitleMatch());
     }
 
     /** @test */
-    public function can_have_more_than_one_referee()
-    {
-        $event = factory(Event::class)->create();
-        $match = factory(Match::class)->create(['event_id' => $event->id]);
-        $referees = factory(Referee::class, 2)->create();
+    public function a_match_can_multiple_titles()
+    {        
+        $titles = factory(Title::class, 2)->make();
 
-        $match->addReferees($referees);
+        $this->match->addTitles($titles);
 
-        $this->assertCount(2, $match->referees);
+        $this->assertCount(2, $this->match->titles);
+        $this->assertTrue($this->match->isTitleMatch());
     }
 
     /** @test */
-    public function can_have_one_stipulation()
+    public function a_match_can_add_one_stipulation()
     {
-        $event = factory(Event::class)->create();
-        $match = factory(Match::class)->create(['event_id' => $event->id]);
-        $stipulation = factory(Stipulation::class)->create();
+        $stipulation = factory(Stipulation::class)->make();
 
-        $match->addStipulation($stipulation);
+        $this->match->addStipulation($stipulation);
 
-        $this->assertCount(1, $match->stipulations);
+        $this->assertCount(1, $this->match->stipulations);
     }
 
     /** @test */
-    public function can_have_more_than_one_stipulation()
+    public function a_match_can_add_multiple_stipulations()
     {
-        $event = factory(Event::class)->create(['date' => Carbon::parse('tomorrow')]);
-        $match = factory(Match::class)->create(['event_id' => $event->id]);
-        $stipulations = factory(Stipulation::class, 2)->create();
+        $stipulations = factory(Stipulation::class, 2)->make();
 
-        $match->addStipulations($stipulations);
+        $this->match->addStipulations($stipulations);
 
-        $this->assertCount(2, $match->stipulations);
+        $this->assertCount(2, $this->match->stipulations);
     }
 
     /** @test */
-    public function can_add_more_than_one_wrestler()
+    public function a_match_can_add_a_referee()
     {
-        $event = factory(Event::class)->create(['date' => Carbon::parse('tomorrow')]);
-        $match = factory(Match::class)->create(['event_id' => $event->id]);
-        $wrestlers = factory(Wrestler::class, 2)->create();
+        $referee = factory(Referee::class)->make();
 
-        $match->addWrestlers($wrestlers);
+        $this->match->addReferee($referee);
 
-        $this->assertCount(2, $match->wrestlers);
+        $this->assertCount(1, $this->match->referees);
     }
 
     /** @test */
-    public function can_add_one_wrestler()
+    public function a_match_can_add_multiple_referees()
     {
-        $event = factory(Event::class)->create(['date' => Carbon::parse('tomorrow')]);
-        $match = factory(Match::class)->create(['event_id' => $event->id]);
-        $wrestler = factory(Wrestler::class)->create();
+        $referees = factory(Referee::class, 2)->make();
 
-        $match->addWrestler($wrestler);
+        $this->match->addReferees($referees);
 
-        $this->assertCount(1, $match->wrestlers);
+        $this->assertCount(2, $this->match->referees);
     }
 
     /** @test */
-    public function a_winner_can_be_set_for_a_title_match()
+    public function a_match_can_set_a_winner()
     {
         $wrestlerA = factory(Wrestler::class)->create();
         $wrestlerB = factory(Wrestler::class)->create();
-        $title = factory(Title::class)->create();
-        $event = EventFactory::create();
-        $match = MatchFactory::create(['event_id' => $event->id], [$wrestlerA, $wrestlerB], [], [$title], []);
+        $this->match->addWrestlers([$wrestlerA, $wrestlerB]);
 
-        $match->setWinner($wrestlerA);
+        $this->match->setWinner($wrestlerA);
 
-        $this->assertEquals($wrestlerA->id, $match->winner_id);
-        $this->assertEquals($wrestlerB->id, $match->loser_id);
-        $this->assertEquals($title->fresh()->champions->first()->id, $wrestlerA->id);
+        $this->assertEquals($wrestlerA->id, $this->match->winner_id);
+        $this->assertEquals($wrestlerB->id, $this->match->loser_id);
     }
 
     /** @test */
-    public function a_winner_can_be_set_for_a_nontitle_match()
+    public function a_match_can_return_its_event_date()
     {
-        $wrestlerA = factory(Wrestler::class)->create();
-        $wrestlerB = factory(Wrestler::class)->create();
+        $event = factory(Event::class)->create(['date' => '2018-02-01']);
+        $match = factory(Match::class)->make(['event_id' => $event->id]);
+
+        $this->assertEquals('2018-02-01', $match->date->toDateString());
+    }
+
+    /** @test */
+    public function it_can_return_if_its_date_has_past()
+    {
+        $event = factory(Event::class)->create(['date' => Carbon::yesterday()]);
+        $match = factory(Match::class)->make(['event_id' => $event->id]);
+
+        $this->assertTrue($match->isPast());
+    }
+
+    /** @test */
+    public function a_match_can_be_added_to_an_event()
+    {
+        $event = factory(Event::class)->create();
         $match = factory(Match::class)->create();
-        $match->addWrestlers([$wrestlerA, $wrestlerB]);
 
-        $match->setWinner($wrestlerA);
+        $match->addToEvent($event);
 
-        $this->assertEquals($wrestlerA->id, $match->winner_id);
-        $this->assertEquals($wrestlerB->id, $match->loser_id);
+        $this->assertEquals($event->id, $match->event_id);
+        $this->assertEquals(1, $match->match_number);
     }
 }

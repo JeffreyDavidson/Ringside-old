@@ -12,6 +12,27 @@ class EventTest extends TestCase
 {
     use DatabaseMigrations;
 
+    protected $event;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->event = factory(Event::class)->create();
+    }
+
+    /** @test */
+    public function an_event_can_have_many_matches()
+    {
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->event->matches);
+    }
+
+    /** @test */
+    public function an_event_belongs_to_a_venue()
+    {
+        $this->assertInstanceOf(Venue::class, $this->match->venue);
+    }
+
     /** @test */
     public function an_event_have_many_matches()
     {

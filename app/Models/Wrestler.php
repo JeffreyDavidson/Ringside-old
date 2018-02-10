@@ -108,8 +108,4 @@ class Wrestler extends Model
     {
         return $this->getAttribute('status_id');
     }
-
-    public function foo()
-    {
-    }
 }

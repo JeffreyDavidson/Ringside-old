@@ -56,21 +56,7 @@ class Title extends Model
     }
 
     /**
-     * Retrieve valid titles to be competed for.
-     *
-     * @param Builder $query
-     * @param string $date
-     * @return mixed
-     */
-    public function scopeValid($query, $date)
-    {
-        return $query->where('introduced_at', '<=', $date)->where(function ($query) use ($date) {
-            $query->whereNull('retired_at')->orWhere('retired_at', '>', $date);
-        });
-    }
-
-    /**
-     * Crown the new champion.
+     * Crowns the new champion for the title.
      *
      * @param \App\Models\Wrestler $wrestler
      * @param datetime $date
@@ -86,14 +72,36 @@ class Title extends Model
     }
 
     /**
-     * Get the current champion for the title.
+     * Gets the current champion for the title.
      *
-     * @return Wrestler|null
+     * @return \App\Models\Wrestler|null
      */
     public function getCurrentChampion()
     {
-        if ($champion = $this->champions()->whereNull('lost_on')->first()) {
+        if ($champion = $this->champions()->current()) {
             return $champion->wrestler;
         }
+    }
+
+    /**
+     * Scope a query to only include active titles.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeActive($query, $date)
+    {
+        return $query->whereNull('retired_at')->where('introduced_at', '<=', $date);
+    }
+
+    /**
+     * Scope a query to only retired titles.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeRetired($query)
+    {
+        return $query->whereNotNull('retired_at');
     }
 }
