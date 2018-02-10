@@ -1,67 +1,78 @@
 <?php
 
-/** @test */
-public function a_wrestler_can_retire()
+namespace Tests\Unit\Traits;
+
+use Tests\TestCase;
+use App\Models\Wrestler;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+
+class HasRetirementsTraitTest extends TestCase
 {
-    $wrestler = factory(Wrestler::class)->create();
+    use DatabaseMigrations;
 
-    $wrestler->retire();
+    /** @test */
+    public function a_wrestler_can_retire()
+    {
+        $wrestler = factory(Wrestler::class)->create();
 
-    $this->assertEquals(1, $wrestler->retirements->count());
-    $this->assertEquals(2, $wrestler->status());
-    $this->assertNull($wrestler->retirements()->first()->ended_at);
-}
+        $wrestler->retire();
 
-/** @test */
-public function a_wrestler_can_unretire()
-{
-    $wrestler = factory(Wrestler::class)->create();
+        $this->assertEquals(1, $wrestler->retirements->count());
+        $this->assertEquals(2, $wrestler->status());
+        $this->assertNull($wrestler->retirements()->first()->ended_at);
+    }
 
-    $wrestler->retire();
-    $wrestler->unretire();
+    /** @test */
+    public function a_wrestler_can_unretire()
+    {
+        $wrestler = factory(Wrestler::class)->create();
 
-    $this->assertNotNull($wrestler->retirements()->first()->ended_at);
-    $this->assertEquals(1, $wrestler->status());
-}
+        $wrestler->retire();
+        $wrestler->unretire();
 
-/** @test */
-public function a_wrestler_can_have_multiple_retirements()
-{
-    $wrestler = factory(Wrestler::class)->create();
+        $this->assertNotNull($wrestler->retirements()->first()->ended_at);
+        $this->assertEquals(1, $wrestler->status());
+    }
 
-    $wrestler->retire();
-    $wrestler->unretire();
-    $wrestler->retire();
+    /** @test */
+    public function a_wrestler_can_have_multiple_retirements()
+    {
+        $wrestler = factory(Wrestler::class)->create();
 
-    $this->assertTrue($wrestler->hasPastRetirements());
-    $this->assertEquals(1, $wrestler->pastRetirements->count());
-}
+        $wrestler->retire();
+        $wrestler->unretire();
+        $wrestler->retire();
 
-/**
- * @expectedException \App\Exceptions\WrestlerAlreadyRetiredException
- *
- * @test
- */
-public function a_wrestler_who_is_retired_cannot_retire_without_unretiring()
-{
-    $wrestler = factory(Wrestler::class)->create();
+        $this->assertTrue($wrestler->hasPastRetirements());
+        $this->assertEquals(1, $wrestler->pastRetirements->count());
+    }
 
-    $wrestler->retire();
-    $wrestler->retire();
+    /**
+     * @expectedException \App\Exceptions\WrestlerAlreadyRetiredException
+     *
+     * @test
+     */
+    public function a_wrestler_who_is_retired_cannot_retire_without_unretiring()
+    {
+        $wrestler = factory(Wrestler::class)->create();
 
-    $this->assertEquals(1, $wrestler->retirements->count());
-}
+        $wrestler->retire();
+        $wrestler->retire();
 
-/**
- * @expectedException \App\Exceptions\WrestlerNotRetiredException
- *
- * @test
- */
-public function a_wrestler_who_is_not_retired_cannot_unretire()
-{
-    $wrestler = factory(Wrestler::class)->create();
+        $this->assertEquals(1, $wrestler->retirements->count());
+    }
 
-    $wrestler->unretire();
+    /**
+     * @expectedException \App\Exceptions\WrestlerNotRetiredException
+     *
+     * @test
+     */
+    public function a_wrestler_who_is_not_retired_cannot_unretire()
+    {
+        $wrestler = factory(Wrestler::class)->create();
 
-    $this->assertEquals(0, $wrestler->retirements->count());
+        $wrestler->unretire();
+
+        $this->assertEquals(0, $wrestler->retirements->count());
+    }
 }

@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use Tests\TestCase;
 use App\Models\Injury;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class InjuryTest extends TestCase

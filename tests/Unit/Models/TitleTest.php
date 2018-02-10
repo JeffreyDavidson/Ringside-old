@@ -37,12 +37,11 @@ class TitleTest extends TestCase
     /** @test */
     public function a_title_can_set_a_new_champion()
     {
-        $title = factory(Title::class)->create();
         $wrestler = factory(Wrestler::class)->create();
 
-        $title->setNewChampion($wrestler, Carbon::now());
+        $this->title->setNewChampion($wrestler, Carbon::now());
 
-        $this->assertEquals($wrestler->id, $title->getCurrentChampion()->id);
+        $this->assertEquals($wrestler->id, $this->title->getCurrentChampion()->id);
     }
 
     /** @test */

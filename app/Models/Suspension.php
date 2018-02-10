@@ -21,6 +21,8 @@ class Suspension extends Model
     protected $dates = ['suspended_at', 'ended_at'];
 
     /**
+     * TODO: Find out what I should do about type for date.
+     * REVIEW: Find out if this is the right class to handle this method.
      * Lifts a wrestler's suspension.
      *
      * @param string $date Datetime that represents the date and time the wrestler was renewed.

@@ -69,26 +69,22 @@ class Event extends Model
     }
 
     /**
-     * Set the date field for the event.
-     *
-     * @return date
-     */
-    public function setDateAttribute($date)
-    {
-        return $this->attributes['date'] = $date;
-    }
-
-    /**
      * The last match of an event is the main event.
      *
-     * @return object
+     * @return \App\Models\Match
      */
     public function mainEvent()
     {
-        return $this->matches->last();
+        return $this->matches()->orderBy('match_order', 'DESC')->first();
     }
 
-    public function addMatch($match)
+    /**
+     * Adds a match to the event.
+     *
+     * @param \App\Models\Match $match
+     * @return boolean
+     */
+    public function addMatch(Match $match)
     {
         $this->matches()->create($match);
     }

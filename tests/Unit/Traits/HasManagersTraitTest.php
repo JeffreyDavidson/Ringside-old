@@ -1,71 +1,83 @@
 <?php
 
-/** @test */
-public function a_wrestler_can_hire_a_manager()
+namespace Tests\Unit\Traits;
+
+use Tests\TestCase;
+use App\Models\Wrestler;
+use App\Models\Manager;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+
+class HasManagersTraitTest extends TestCase
 {
-    $wrestler = factory(Wrestler::class)->create();
-    $manager = factory(Manager::class)->create();
+    use DatabaseMigrations;
 
-    $wrestler->hireManager($manager);
+    /** @test */
+    public function a_wrestler_can_hire_a_manager()
+    {
+        $wrestler = factory(Wrestler::class)->create();
+        $manager = factory(Manager::class)->create();
 
-    $this->assertEquals(1, $wrestler->currentManagers()->count());
-}
+        $wrestler->hireManager($manager);
 
-/** @test */
-public function a_wrestler_can_fire_a_manager()
-{
-    $wrestler = factory(Wrestler::class)->create();
-    $manager = factory(Manager::class)->create();
+        $this->assertEquals(1, $wrestler->currentManagers()->count());
+    }
 
-    $wrestler->hireManager($manager);
-    $wrestler->fireManager($manager);
+    /** @test */
+    public function a_wrestler_can_fire_a_manager()
+    {
+        $wrestler = factory(Wrestler::class)->create();
+        $manager = factory(Manager::class)->create();
 
-    tap($wrestler->fresh(), function ($wrestler) {
-        $this->assertTrue($wrestler->hasPastManagers());
-        $this->assertEquals(1, $wrestler->pastManagers->count());
-    });
-}
+        $wrestler->hireManager($manager);
+        $wrestler->fireManager($manager);
 
-/** @test */
-public function a_wrestler_can_have_multiple_managers()
-{
-    $wrestler = factory(Wrestler::class)->create();
-    $managerA = factory(Manager::class)->create();
-    $managerB = factory(Manager::class)->create();
+        tap($wrestler->fresh(), function ($wrestler) {
+            $this->assertTrue($wrestler->hasPastManagers());
+            $this->assertEquals(1, $wrestler->pastManagers->count());
+        });
+    }
 
-    $wrestler->hireManager($managerA);
-    $wrestler->hireManager($managerB);
+    /** @test */
+    public function a_wrestler_can_have_multiple_managers()
+    {
+        $wrestler = factory(Wrestler::class)->create();
+        $managerA = factory(Manager::class)->create();
+        $managerB = factory(Manager::class)->create();
 
-    $this->assertEquals(2, $wrestler->currentManagers()->count());
-}
+        $wrestler->hireManager($managerA);
+        $wrestler->hireManager($managerB);
 
-/**
- * @expectedException \App\Exceptions\WrestlerAlreadyHasManagerException
- *
- * @test
- */
-public function a_wrestler_cannot_hire_a_manager_they_already_have()
-{
-    $wrestler = factory(Wrestler::class)->create();
-    $manager = factory(Manager::class)->create();
-    $wrestler->hireManager($manager);
+        $this->assertEquals(2, $wrestler->currentManagers()->count());
+    }
 
-    $wrestler->hireManager($manager);
+    /**
+     * @expectedException \App\Exceptions\WrestlerAlreadyHasManagerException
+     *
+     * @test
+     */
+    public function a_wrestler_cannot_hire_a_manager_they_already_have()
+    {
+        $wrestler = factory(Wrestler::class)->create();
+        $manager = factory(Manager::class)->create();
+        $wrestler->hireManager($manager);
 
-    $this->assertEquals(1, $wrestler->currentManagers()->count());
-}
+        $wrestler->hireManager($manager);
 
-/**
- * @expectedException \App\Exceptions\WrestlerNotHaveHiredManagerException
- *
- * @test
- */
-public function a_wrestler_cannot_fire_a_manager_they_do_not_have()
-{
-    $wrestler = factory(Wrestler::class)->create();
-    $manager = factory(Manager::class)->create();
+        $this->assertEquals(1, $wrestler->currentManagers()->count());
+    }
 
-    $wrestler->fireManager($manager);
+    /**
+     * @expectedException \App\Exceptions\WrestlerNotHaveHiredManagerException
+     *
+     * @test
+     */
+    public function a_wrestler_cannot_fire_a_manager_they_do_not_have()
+    {
+        $wrestler = factory(Wrestler::class)->create();
+        $manager = factory(Manager::class)->create();
 
-    $this->assertEquals(0, $wrestler->pastManagers()->count());
+        $wrestler->fireManager($manager);
+
+        $this->assertEquals(0, $wrestler->pastManagers()->count());
+    }
 }

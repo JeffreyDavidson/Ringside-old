@@ -7,18 +7,38 @@ use App\Exceptions\WrestlerAlreadyInjuredException;
 
 trait HasInjuries
 {
+    /**
+     * Make a new related instance for the given model.
+     *
+     * @return \Illuminate\Database\Eloquent\Model
+     */
     abstract public function injuries();
 
+    /**
+     * Checks to see if the wrestler has past injuries.
+     *
+     * @return boolean
+     */
     public function hasPastInjuries()
     {
         return $this->pastInjuries->isNotEmpty();
     }
 
+    /**
+     * Returns all the past injuries for a wrestler.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
     public function pastInjuries()
     {
-        return $this->injuries()->whereNotNull('healed_at');
+        return $this->injuries()->whereNotNull('healed_at')->get();
     }
 
+    /**
+     * Checks to see if the wrestler is currently injured.
+     *
+     * @return boolean
+     */
     public function isInjured()
     {
         return $this->injuries()->whereNull('healed_at')->count() > 0;

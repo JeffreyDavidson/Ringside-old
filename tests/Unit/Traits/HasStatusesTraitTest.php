@@ -1,77 +1,89 @@
 <?php
 
-/** @test */
-public function a_wrestler_can_be_active()
+namespace Tests\Unit\Traits;
+
+use Tests\TestCase;
+use App\Models\Wrestler;
+use App\Models\WrestlerStatus;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+
+class HasStatusesTraitTest extends TestCase
 {
-    $wrestler = factory(Wrestler::class)->create(['status_id' => 1]);
+    use DatabaseMigrations;
 
-    $this->assertTrue($wrestler->isActive());
-}
+    /** @test */
+    public function a_wrestler_can_be_active()
+    {
+        $wrestler = factory(Wrestler::class)->create(['status_id' => 1]);
 
-/** @test */
-public function a_wrestler_can_be_inactive()
-{
-    $wrestler = factory(Wrestler::class)->create(['status_id' => 2]);
+        $this->assertTrue($wrestler->isActive());
+    }
 
-    $this->assertTrue($wrestler->isInactive());
-}
+    /** @test */
+    public function a_wrestler_can_be_inactive()
+    {
+        $wrestler = factory(Wrestler::class)->create(['status_id' => 2]);
 
-/** @test */
-public function it_can_get_all_active_users()
-{
-    factory(Wrestler::class, 3)->create(['status_id' => WrestlerStatus::ACTIVE]);
+        $this->assertTrue($wrestler->isInactive());
+    }
 
-    $this->assertEquals(3, Wrestler::active()->get()->count());
-}
+    /** @test */
+    public function it_can_get_all_active_users()
+    {
+        factory(Wrestler::class, 3)->create(['status_id' => WrestlerStatus::ACTIVE]);
 
-/** @test */
-public function it_can_get_all_inactive_users()
-{
-    factory(Wrestler::class, 3)->create(['status_id' => WrestlerStatus::INACTIVE]);
+        $this->assertEquals(3, Wrestler::active()->get()->count());
+    }
 
-    $this->assertEquals(3, Wrestler::inactive()->get()->count());
-}
+    /** @test */
+    public function it_can_get_all_inactive_users()
+    {
+        factory(Wrestler::class, 3)->create(['status_id' => WrestlerStatus::INACTIVE]);
 
-/** @test */
-public function it_can_retrieve_all_injured_wrestlers()
-{
-    factory(Wrestler::class, 3)->create(['status_id' => WrestlerStatus::INJURED]);
+        $this->assertEquals(3, Wrestler::inactive()->get()->count());
+    }
 
-    $this->assertEquals(3, Wrestler::injured()->get()->count());
-}
+    /** @test */
+    public function it_can_retrieve_all_injured_wrestlers()
+    {
+        factory(Wrestler::class, 3)->create(['status_id' => WrestlerStatus::INJURED]);
 
-/** @test */
-public function it_can_retrieve_all_retired_wrestlers()
-{
-    factory(Wrestler::class, 3)->create(['status_id' => WrestlerStatus::RETIRED]);
+        $this->assertEquals(3, Wrestler::injured()->get()->count());
+    }
 
-    $this->assertEquals(3, Wrestler::retired()->get()->count());
-}
+    /** @test */
+    public function it_can_retrieve_all_retired_wrestlers()
+    {
+        factory(Wrestler::class, 3)->create(['status_id' => WrestlerStatus::RETIRED]);
 
-/** @test */
-public function it_can_retrieve_all_suspended_wrestlers()
-{
-    factory(Wrestler::class, 3)->create(['status_id' => WrestlerStatus::SUSPENDED]);
+        $this->assertEquals(3, Wrestler::retired()->get()->count());
+    }
 
-    $this->assertEquals(3, Wrestler::suspended()->get()->count());
-}
+    /** @test */
+    public function it_can_retrieve_all_suspended_wrestlers()
+    {
+        factory(Wrestler::class, 3)->create(['status_id' => WrestlerStatus::SUSPENDED]);
 
-/** @test */
-public function it_can_change_a_users_active_status_to_inactive()
-{
-    $wrestler = factory(Wrestler::class)->create(['status_id' => 1]);
+        $this->assertEquals(3, Wrestler::suspended()->get()->count());
+    }
 
-    $wrestler->setStatusToInactive();
+    /** @test */
+    public function it_can_change_a_users_active_status_to_inactive()
+    {
+        $wrestler = factory(Wrestler::class)->create(['status_id' => 1]);
 
-    $this->assertEquals(WrestlerStatus::INACTIVE, $wrestler->status());
-}
+        $wrestler->setStatusToInactive();
 
-/** @test */
-public function it_can_change_a_users_inactive_status_to_active()
-{
-    $wrestler = factory(Wrestler::class)->create(['status_id' => 2]);
+        $this->assertEquals(WrestlerStatus::INACTIVE, $wrestler->status());
+    }
 
-    $wrestler->setStatusToActive();
+    /** @test */
+    public function it_can_change_a_users_inactive_status_to_active()
+    {
+        $wrestler = factory(Wrestler::class)->create(['status_id' => 2]);
 
-    $this->assertEquals(WrestlerStatus::ACTIVE, $wrestler->status());
+        $wrestler->setStatusToActive();
+
+        $this->assertEquals(WrestlerStatus::ACTIVE, $wrestler->status());
+    }
 }

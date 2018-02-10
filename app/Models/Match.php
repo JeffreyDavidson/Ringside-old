@@ -200,6 +200,7 @@ class Match extends Model
     }
 
     /**
+     * TODO: Find out what I should do about type for date.
      * Retrieves the date of the event for the match.
      *
      * @return string

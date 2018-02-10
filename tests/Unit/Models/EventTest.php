@@ -6,6 +6,7 @@ use EventFactory;
 use MatchFactory;
 use Tests\TestCase;
 use App\Models\Venue;
+use App\Models\Event;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class EventTest extends TestCase
@@ -30,7 +31,7 @@ class EventTest extends TestCase
     /** @test */
     public function an_event_belongs_to_a_venue()
     {
-        $this->assertInstanceOf(Venue::class, $this->match->venue);
+        $this->assertInstanceOf(Venue::class, $this->event->venue);
     }
 
     /** @test */
@@ -51,5 +52,11 @@ class EventTest extends TestCase
         $event = EventFactory::create(['venue_id' => $venue->id]);
 
         $this->assertEquals($venue->id, $event->venue->id);
+    }
+
+    /** @test */
+    public function an_event_can_get_the_last_match()
+    {
+        
     }
 }

@@ -3,9 +3,6 @@
 namespace App\Models;
 
 use App\Traits\HasMatches;
-use App\Queries\MostTitleReignsQuery;
-use App\Queries\LongestTitleReignQuery;
-use App\Queries\MostTitleDefensesQuery;
 use Illuminate\Database\Eloquent\Model;
 use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -56,6 +53,7 @@ class Title extends Model
     }
 
     /**
+     * TODO: Find out what I should do about type for date.
      * Crowns the new champion for the title.
      *
      * @param \App\Models\Wrestler $wrestler

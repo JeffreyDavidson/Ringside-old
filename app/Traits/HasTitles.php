@@ -9,14 +9,24 @@ trait HasTitles
 {
     abstract public function titles();
 
+    /**
+     * Checks to see if the wrestler has held any previous titles.
+     *
+     * @return boolean
+     */
     public function hasPastTitlesHeld()
     {
         return $this->pastTitlesHeld->isNotEmpty();
     }
 
+    /**
+     * Returns the wrestler's past titles held.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
     public function pastTitlesHeld()
     {
-        return $this->titles()->whereNotNull('lost_on');
+        return $this->titles()->whereNotNull('lost_on')->get();
     }
 
     public function isCurrentlyAChampion()

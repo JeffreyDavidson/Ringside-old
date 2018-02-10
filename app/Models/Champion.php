@@ -32,7 +32,7 @@ class Champion extends Model
     protected $guarded = [];
 
     /**
-     * A champion belongs to a title.
+     * A champion holds a title.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -42,7 +42,7 @@ class Champion extends Model
     }
 
     /**
-     * A champion belongs to a wrestler.
+     * A champion is a wrestler.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -52,8 +52,11 @@ class Champion extends Model
     }
 
     /**
-     * A title can be added to many matches.
+     * TODO: Find out what I should do about type for date.
+     * REVIEW: Figure out if the wrestler should be responsible for the method or a champion or a service class.
+     * A champion can lose their title.
      *
+     * @param datetime $date
      * @return boolean
      */
     public function loseTitle($date)
@@ -62,6 +65,18 @@ class Champion extends Model
     }
 
     /**
+     * Scope a query to only return current champions.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeCurrent($query) 
+    {
+        return $query->whereNull('lost_on');
+    }
+
+    /**
+     * REVIEW: Does this class need a new collection class for only grouping champions 
      * Create a new Eloquent Collection instance.
      *
      * @param  array $models
@@ -70,10 +85,5 @@ class Champion extends Model
     public function newCollection(array $models = [])
     {
         return new TitleChampionsCollection($models);
-    }
-
-    public function scopeCurrent($query) 
-    {
-        return $query->whereNull('lost_on');
     }
 }

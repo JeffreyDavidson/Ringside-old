@@ -4,10 +4,11 @@ namespace App\Traits;
 
 trait HasMatches
 {
+
     abstract public function matches();
 
     /**
-     * Retrieves date of the wrestler's first match.
+     * Retrieves the date of the wrestler's first match.
      *
      * @return string
      */
@@ -17,7 +18,9 @@ trait HasMatches
     }
 
     /**
-     * Returns a collection of matches for the model before the current date.
+     * Returns the wrestler's past matches.
+     * 
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function pastMatches()
     {
@@ -25,9 +28,9 @@ trait HasMatches
     }
 
     /**
-     * Finds out if the model has been associated to a past match.
+     * Checks to see if the wrestler has past matches.
      *
-     * @return bool
+     * @return boolean
      */
     public function hasPastMatches()
     {

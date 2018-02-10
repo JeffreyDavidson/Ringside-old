@@ -1,67 +1,78 @@
 <?php
 
-/** @test */
-public function a_wrestler_can_be_suspended()
+namespace Tests\Unit\Traits;
+
+use Tests\TestCase;
+use App\Models\Wrestler;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+
+class HasSuspensionsTraitTest extends TestCase
 {
-    $wrestler = factory(Wrestler::class)->create();
+    use DatabaseMigrations;
 
-    $wrestler->suspend();
+    /** @test */
+    public function a_wrestler_can_be_suspended()
+    {
+        $wrestler = factory(Wrestler::class)->create();
 
-    $this->assertEquals(1, $wrestler->suspensions->count());
-    $this->assertEquals(2, $wrestler->status());
-    $this->assertNull($wrestler->suspensions()->first()->ended_at);
-}
+        $wrestler->suspend();
 
-/** @test */
-public function a_wrestler_can_be_renewed()
-{
-    $wrestler = factory(Wrestler::class)->create();
+        $this->assertEquals(1, $wrestler->suspensions->count());
+        $this->assertEquals(2, $wrestler->status());
+        $this->assertNull($wrestler->suspensions()->first()->ended_at);
+    }
 
-    $wrestler->suspend();
-    $wrestler->renew();
+    /** @test */
+    public function a_wrestlers_suspension_can_be_lifted()
+    {
+        $wrestler = factory(Wrestler::class)->create();
 
-    $this->assertNotNull($wrestler->suspensions()->first()->ended_at);
-    $this->assertEquals(1, $wrestler->status());
-}
+        $wrestler->suspend();
+        $wrestler->lift();
 
-/** @test */
-public function a_wrestler_can_have_multiple_suspensions()
-{
-    $wrestler = factory(Wrestler::class)->create();
+        $this->assertNotNull($wrestler->suspensions()->first()->ended_at);
+        $this->assertEquals(1, $wrestler->status());
+    }
 
-    $wrestler->suspend();
-    $wrestler->renew();
-    $wrestler->suspend();
+    /** @test */
+    public function a_wrestler_can_have_multiple_suspensions()
+    {
+        $wrestler = factory(Wrestler::class)->create();
 
-    $this->assertTrue($wrestler->hasPastSuspensions());
-    $this->assertEquals(1, $wrestler->pastSuspensions->count());
-}
+        $wrestler->suspend();
+        $wrestler->suspensions->lift();
+        $wrestler->suspend();
 
-/**
- * @expectedException \App\Exceptions\WrestlerAlreadySuspendedException
- *
- * @test
- */
-public function a_wrestler_who_is_suspended_cannot_be_suspended()
-{
-    $wrestler = factory(Wrestler::class)->create();
-    $wrestler->suspend();
+        $this->assertTrue($wrestler->hasPastSuspensions());
+        $this->assertEquals(1, $wrestler->pastSuspensions->count());
+    }
 
-    $wrestler->suspend();
+    /**
+     * @expectedException \App\Exceptions\WrestlerAlreadySuspendedException
+     *
+     * @test
+     */
+    public function a_wrestler_who_is_suspended_cannot_be_suspended_again_until_lifted()
+    {
+        $wrestler = factory(Wrestler::class)->create();
+        $wrestler->suspend();
 
-    $this->assertEquals(1, $wrestler->suspended->count());
-}
+        $wrestler->suspend();
 
-/**
- * @expectedException \App\Exceptions\WrestlerNotSuspendedException
- *
- * @test
- */
-public function a_wrestler_who_is_not_suspended_cannot_be_renewed()
-{
-    $wrestler = factory(Wrestler::class)->create();
+        $this->assertEquals(1, $wrestler->suspensions->count());
+    }
 
-    $wrestler->renew();
+    /**
+     * @expectedException \App\Exceptions\WrestlerNotSuspendedException
+     *
+     * @test
+     */
+    public function a_wrestler_who_is_not_suspended_cannot_have_their_suspension_lifted()
+    {
+        $wrestler = factory(Wrestler::class)->create();
 
-    $this->assertEquals(0, $wrestler->retirements->count());
+        $wrestler->lift();
+
+        $this->assertEquals(0, $wrestler->suspensions->count());
+    }
 }

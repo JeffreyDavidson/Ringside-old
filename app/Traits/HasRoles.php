@@ -10,22 +10,22 @@ trait HasRoles
     abstract public function role();
 
     /**
-     * Assign a role to a user.
+     * Assigns a role to a user.
      *
-     *
-     * @param  Role $role
-     * @return mixed
+     * @param  \App\Models\Role $role
+     * @return \App\Models\User
      */
     public function assignRole(Role $role)
     {
+        // dd($this->role()->associate($role));
         return $this->role()->associate($role);
     }
 
     /**
-     * Determine if the user's role has the given permission.
+     * Checks to see if the user's role has the given permission.
      *
      * @param  string $permissionSlug
-     * @return bool
+     * @return boolean
      */
     public function hasPermission($permissionSlug)
     {
@@ -33,10 +33,10 @@ trait HasRoles
     }
 
     /**
-     * Determine if the supplied role matches the role of the user.
+     * Check to see if the supplied role matches the user's role.
      *
-     * @param  Role $role
-     * @return bool
+     * @param  \App\Models\Role $role
+     * @return boolean
      */
     public function hasRole(Role $role)
     {
