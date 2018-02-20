@@ -27,7 +27,12 @@ trait HasSuspensions
      */
     public function pastSuspensions()
     {
-        return $this->suspensions()->whereNotNull('ended_at')->get();
+        return $this->suspensions()->whereNotNull('ended_at');
+    }
+
+    public function currentSuspension()
+    {
+        return $this->suspensions()->whereNull('ended_at')->first();
     }
 
     /**
@@ -55,18 +60,19 @@ trait HasSuspensions
 
         $this->suspensions()->create(['suspended_at' => Carbon::now()]);
 
-        // dd($this);
         return $this;
     }
 
-    public function renew()
+    public function unsuspend()
     {
         if (! $this->isSuspended()) {
             throw new WrestlerNotSuspendedException;
         }
 
         $this->setStatusToActive();
+        
+        $this->currentSuspension()->lift();
 
-        $this->suspensions()->whereNull('ended_at')->first()->renew();
+        return $this;
     }
 }

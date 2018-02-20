@@ -4,6 +4,7 @@ namespace Tests\Unit\Traits;
 
 use Tests\TestCase;
 use App\Models\Wrestler;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class HasRetirementsTraitTest extends TestCase
@@ -23,11 +24,10 @@ class HasRetirementsTraitTest extends TestCase
     }
 
     /** @test */
-    public function a_wrestler_can_unretire()
+    public function a_retired_wrestler_can_unretire()
     {
-        $wrestler = factory(Wrestler::class)->create();
+        $wrestler = factory(Wrestler::class)->create()->retire();
 
-        $wrestler->retire();
         $wrestler->unretire();
 
         $this->assertNotNull($wrestler->retirements()->first()->ended_at);
@@ -52,11 +52,10 @@ class HasRetirementsTraitTest extends TestCase
      *
      * @test
      */
-    public function a_wrestler_who_is_retired_cannot_retire_without_unretiring()
+    public function a_retired_wrestler_cannot_retire()
     {
-        $wrestler = factory(Wrestler::class)->create();
-
-        $wrestler->retire();
+        $wrestler = factory(Wrestler::class)->create()->retire();
+        
         $wrestler->retire();
 
         $this->assertEquals(1, $wrestler->retirements->count());

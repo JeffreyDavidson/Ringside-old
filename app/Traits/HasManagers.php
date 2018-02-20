@@ -26,7 +26,7 @@ trait HasManagers
      */
     public function pastManagers()
     {
-        return $this->managers()->whereNotNull('fired_on')->withPivot('fired_on')->get();
+        return $this->managers()->whereNotNull('fired_on')->withPivot('fired_on');
     }
 
     /**

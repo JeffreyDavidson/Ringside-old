@@ -20,6 +20,11 @@ trait HasRetirements
         return $this->retirements()->whereNotNull('ended_at');
     }
 
+    public function currentRetirement()
+    {
+        return $this->retirements()->whereNull('ended_at')->first();
+    }
+
     public function isRetired()
     {
         return $this->retirements()->whereNull('ended_at')->count() > 0;
@@ -46,6 +51,8 @@ trait HasRetirements
 
         $this->setStatusToActive();
 
-        $this->retirements()->whereNull('ended_at')->first()->unretire();
+        $this->currentRetirement()->end();
+
+        return $this;
     }
 }

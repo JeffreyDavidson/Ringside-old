@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Injury extends Model
 {
@@ -21,14 +22,15 @@ class Injury extends Model
     protected $dates = ['injured_at', 'healed_at'];
 
     /**
-     * TODO: Find out what I should do about type for date.
      * Heals an injury.
      *
-     * @param string $date Datetime that represents the date and time the injury was healed.
-     * @return boolean
+     * @param string $date Datetime that represents the date and time the injury healed.
+     * @return bool
      */
-    public function heal($date = null)
+    public function heal()
     {
-        return $this->update(['healed_at' => $date ?: $this->freshTimestamp()]);
+        return tap($this)->update([
+            'healed_at' => Carbon::now()
+        ]);
     }
 }

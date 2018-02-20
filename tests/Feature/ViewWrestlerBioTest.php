@@ -65,6 +65,7 @@ class ViewWrestlerBioTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_view_bio_information_on_wrestler_bio()
     {
+        $this->withoutExceptionHandling();
         $response = $this->actingAs($this->authorizedUser)
                         ->get(route('wrestlers.show', $this->wrestler->id));
 

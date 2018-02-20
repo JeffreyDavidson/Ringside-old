@@ -52,19 +52,6 @@ class Champion extends Model
     }
 
     /**
-     * TODO: Find out what I should do about type for date.
-     * REVIEW: Figure out if the wrestler should be responsible for the method or a champion or a service class.
-     * A champion can lose their title.
-     *
-     * @param datetime $date
-     * @return boolean
-     */
-    public function loseTitle($date)
-    {
-        return $this->update(['lost_on' => $date ?: $this->freshTimestamp()]);
-    }
-
-    /**
      * Scope a query to only return current champions.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
@@ -75,15 +62,15 @@ class Champion extends Model
         return $query->whereNull('lost_on');
     }
 
-    /**
-     * REVIEW: Does this class need a new collection class for only grouping champions 
-     * Create a new Eloquent Collection instance.
-     *
-     * @param  array $models
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function newCollection(array $models = [])
-    {
-        return new TitleChampionsCollection($models);
-    }
+    // /**
+    //  * REVIEW: Does this class need a new collection class for only grouping champions 
+    //  * Create a new Eloquent Collection instance.
+    //  *
+    //  * @param  array $models
+    //  * @return \Illuminate\Database\Eloquent\Collection
+    //  */
+    // public function newCollection(array $models = [])
+    // {
+    //     return new TitleChampionsCollection($models);
+    // }
 }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Suspension extends Model
 {
@@ -21,15 +22,15 @@ class Suspension extends Model
     protected $dates = ['suspended_at', 'ended_at'];
 
     /**
-     * TODO: Find out what I should do about type for date.
-     * REVIEW: Find out if this is the right class to handle this method.
-     * Lifts a wrestler's suspension.
+     * Lifts a suspension.
      *
-     * @param string $date Datetime that represents the date and time the wrestler was renewed.
+     * @param string $date Datetime that represents the date and time the suspension was lifted.
      * @return bool
      */
-    public function lift($date = null)
+    public function lift()
     {
-        return $this->update(['ended_at' => $date ?: $this->freshTimestamp()]);
+        return tap($this)->update([
+            'ended_at' => Carbon::now()
+        ]);
     }
 }

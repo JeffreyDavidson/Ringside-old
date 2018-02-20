@@ -53,7 +53,6 @@ class Title extends Model
     }
 
     /**
-     * TODO: Find out what I should do about type for date.
      * Crowns the new champion for the title.
      *
      * @param \App\Models\Wrestler $wrestler
@@ -62,7 +61,7 @@ class Title extends Model
      */
     public function setNewChampion(Wrestler $wrestler, $date)
     {
-        if ($champion = $this->getCurrentChampion()) {
+        if ($champion = $this->currentChampion) {
             $champion->loseTitle($this, $date);
         }
 
@@ -70,15 +69,15 @@ class Title extends Model
     }
 
     /**
-     * Gets the current champion for the title.
+     * Scope a query to only return current champions.
      *
-     * @return \App\Models\Wrestler|null
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function getCurrentChampion()
+    public function currentChampion() 
     {
-        if ($champion = $this->champions()->current()) {
-            return $champion->wrestler;
-        }
+        return $this->champions()->toHasOne();
+        // return $this->champions()->whereNull('lost_on')->toHasOne();
     }
 
     /**

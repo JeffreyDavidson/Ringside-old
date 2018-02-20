@@ -40,8 +40,10 @@ class TitleTest extends TestCase
         $wrestler = factory(Wrestler::class)->create();
 
         $this->title->setNewChampion($wrestler, Carbon::now());
+        // dd($this->title->currentChampion);
+        dd($this->title->getRelations());
 
-        $this->assertEquals($wrestler->id, $this->title->getCurrentChampion()->id);
+        $this->assertEquals($wrestler->id, $this->title->currentChampion->id);
     }
 
     /** @test */

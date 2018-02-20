@@ -14,7 +14,7 @@ class HasMatchesTraitTest extends TestCase
     use DatabaseMigrations;
 
     /** @test */
-    public function a_wrestler_with_matches_before_current_date_has_past_matches()
+    public function a_wrestler_with_matches_before_the_current_date_has_past_matches()
     {
         $wrestler = factory(Wrestler::class)->create();
         $event = EventFactory::create(['date' => '2017-10-09']);

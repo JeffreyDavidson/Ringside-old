@@ -25,7 +25,7 @@ class HasTitlesTraitTest extends TestCase
     }
 
     /** @test */
-    public function a_wrestler_can_lose_a_title()
+    public function a_wrestler_who_is_the_title_champion_can_lose_the_title()
     {
         $wrestler = factory(Wrestler::class)->create();
         $title = factory(Title::class)->create();
@@ -73,7 +73,7 @@ class HasTitlesTraitTest extends TestCase
      *
      * @test
      */
-    public function a_wrestler_does_not_have_a_title_cannot_lose_the_title()
+    public function a_wrestler_who_does_not_have_the_title_cannot_lose_the_title()
     {
         $wrestler = factory(Wrestler::class)->create();
         $title = factory(Title::class)->create();
