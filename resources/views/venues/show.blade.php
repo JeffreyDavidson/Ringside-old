@@ -39,7 +39,7 @@
                             <td>{{ $event->id }}</td>
                             <td>{{ $event->name }}</td>
                             <td>{{ $event->present()->date }}</td>
-                            <td>{{ $event->mainEvent()->present()->wrestlers }}</td>
+                            <td>{{ $event->mainEvent->present()->wrestlers }}</td>
                             <td>
                                 <a class="btn btn-sm btn-icon btn-flat btn-default" href="{{ route('events.show', $event) }}" data-toggle="tooltip" data-original-title="Show">
                                     <i class="icon wb-eye" aria-hidden="true"></i>

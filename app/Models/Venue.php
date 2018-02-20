@@ -34,6 +34,7 @@ class Venue extends Model
     public function pastEvents()
     {
         return $this->events->filter->isPast();
+        return $this->events()->where('date', '<', Carbon::today());
     }
 
     /**

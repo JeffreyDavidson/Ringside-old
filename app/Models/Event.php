@@ -75,7 +75,7 @@ class Event extends Model
      */
     public function mainEvent()
     {
-        return $this->matches()->orderBy('match_order', 'DESC')->first();
+        return $this->matches()->orderBy('match_order', 'DESC')->toHasOne();
     }
 
     /**

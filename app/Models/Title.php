@@ -66,6 +66,8 @@ class Title extends Model
         }
 
         $wrestler->winTitle($this, $date);
+
+        $this->setRelation('currentChampion', $wrestler);
     }
 
     /**
@@ -76,8 +78,7 @@ class Title extends Model
      */
     public function currentChampion() 
     {
-        return $this->champions()->toHasOne();
-        // return $this->champions()->whereNull('lost_on')->toHasOne();
+        return $this->champions()->whereNull('lost_on')->toHasOne();
     }
 
     /**
