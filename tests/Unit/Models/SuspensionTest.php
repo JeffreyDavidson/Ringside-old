@@ -21,10 +21,10 @@ class SuspensionTest extends TestCase
     }
 
     /** @test */
-    public function a_suspension_is_lifted_on_the_current_day()
+    public function a_suspension_can_be_lifted()
     {
         $this->suspension->lift();
 
-        $this->assertEquals(Carbon::today()->toDateString(), $this->suspension->ended_at->toDateString());
+        $this->assertEquals(Carbon::now()->toDateString(), $this->suspension->ended_at->toDateString());
     }
 }

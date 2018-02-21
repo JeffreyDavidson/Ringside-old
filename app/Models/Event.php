@@ -59,23 +59,13 @@ class Event extends Model
     }
 
     /**
-     * Retrieves the past events.
-     *
-     * @return collection
-     */
-    public function isPast()
-    {
-        return $this->date->isPast();
-    }
-
-    /**
      * The last match of an event is the main event.
      *
      * @return \App\Models\Match
      */
     public function mainEvent()
     {
-        return $this->matches()->orderBy('match_order', 'DESC')->toHasOne();
+        return $this->matches()->orderBy('match_number', 'DESC')->toHasOne();
     }
 
     /**
@@ -86,6 +76,6 @@ class Event extends Model
      */
     public function addMatch(Match $match)
     {
-        $this->matches()->create($match);
+        $this->matches()->save($match);
     }
 }

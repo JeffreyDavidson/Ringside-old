@@ -7,6 +7,7 @@ use MatchFactory;
 use Tests\TestCase;
 use App\Models\Venue;
 use App\Models\Event;
+use App\Models\Match;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class EventTest extends TestCase
@@ -35,28 +36,24 @@ class EventTest extends TestCase
     }
 
     /** @test */
-    public function an_event_have_many_matches()
+    public function an_event_can_get_the_main_event_match()
     {
-        $event = EventFactory::create();
-        MatchFactory::create(['event_id' => $event->id]);
-        MatchFactory::create(['event_id' => $event->id]);
-        MatchFactory::create(['event_id' => $event->id]);
+        $matchA = factory(Match::class)->create(['event_id' => $this->event->id]);
+        $matchB = factory(Match::class)->create(['event_id' => $this->event->id]);
+        $matchC = factory(Match::class)->create(['event_id' => $this->event->id]);
 
-        $this->assertCount(3, $event->matches);
+        $mainEvent = $this->event->mainEvent;
+
+        $this->assertEquals($matchC->id, $mainEvent->id);
     }
 
     /** @test */
-    public function an_event_takes_place_at_a_venue()
+    public function an_event_can_add_a_match()
     {
-        $venue = factory(Venue::class)->create();
-        $event = EventFactory::create(['venue_id' => $venue->id]);
+        $match = factory(Match::class)->create();
 
-        $this->assertEquals($venue->id, $event->venue->id);
-    }
+        $this->event->addMatch($match);
 
-    /** @test */
-    public function an_event_can_get_the_last_match()
-    {
-        
+        $this->assertEquals($match->event_id, $this->event->id);
     }
 }

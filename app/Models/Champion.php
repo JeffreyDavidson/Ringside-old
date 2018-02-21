@@ -61,16 +61,4 @@ class Champion extends Model
     {
         return $query->whereNull('lost_on');
     }
-
-    // /**
-    //  * REVIEW: Does this class need a new collection class for only grouping champions 
-    //  * Create a new Eloquent Collection instance.
-    //  *
-    //  * @param  array $models
-    //  * @return \Illuminate\Database\Eloquent\Collection
-    //  */
-    // public function newCollection(array $models = [])
-    // {
-    //     return new TitleChampionsCollection($models);
-    // }
 }

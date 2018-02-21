@@ -71,7 +71,7 @@ class Title extends Model
     }
 
     /**
-     * Scope a query to only return current champions.
+     * Scope a query to only return the current champion.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
@@ -79,17 +79,6 @@ class Title extends Model
     public function currentChampion() 
     {
         return $this->champions()->whereNull('lost_on')->toHasOne();
-    }
-
-    /**
-     * Scope a query to only include active titles.
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeActive($query, $date)
-    {
-        return $query->whereNull('retired_at')->where('introduced_at', '<=', $date);
     }
 
     /**
@@ -101,5 +90,16 @@ class Title extends Model
     public function scopeRetired($query)
     {
         return $query->whereNotNull('retired_at');
+    } 
+    
+    /**
+     * Scope a query to only include active titles.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeActive($query, $date)
+    {
+        return $query->whereNull('retired_at')->where('introduced_at', '<=', $date);
     }
 }

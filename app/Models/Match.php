@@ -211,16 +211,6 @@ class Match extends Model
     }
 
     /**
-     * Retrieves the past matches.
-     *
-     * @return Illuminate\Database\Eloquent\Collection
-     */
-    public function isPast()
-    {
-        return $this->date->isPast();
-    }
-
-    /**
      * Add a match to an event.
      *
      * @param  \App\Models\Event $event

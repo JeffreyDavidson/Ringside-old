@@ -169,23 +169,15 @@ class MatchTest extends TestCase
     }
 
     /** @test */
-    public function it_can_return_if_its_date_has_past()
-    {
-        $event = factory(Event::class)->create(['date' => Carbon::yesterday()]);
-        $match = factory(Match::class)->make(['event_id' => $event->id]);
-
-        $this->assertTrue($match->isPast());
-    }
-
-    /** @test */
     public function a_match_can_be_added_to_an_event()
     {
         $event = factory(Event::class)->create();
-        $match = factory(Match::class)->create();
+        $matchA = factory(Match::class)->create(['event_id' => $event->id, 'match_number' => 1]);
+        $matchB = factory(Match::class)->create(['event_id' => $event->id, 'match_number' => 2]);
+        $matchC = factory(Match::class)->create();
 
-        $match->addToEvent($event);
+        $matchC->addToEvent($event);
 
-        $this->assertEquals($event->id, $match->event_id);
-        $this->assertEquals(1, $match->match_number);
+        $this->assertEquals($matchC->id, $event->mainEvent->id);
     }
 }

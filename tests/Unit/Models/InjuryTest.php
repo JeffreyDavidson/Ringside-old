@@ -21,10 +21,10 @@ class InjuryTest extends TestCase
     }
 
     /** @test */
-    public function an_injury_is_healed_on_the_current_date()
+    public function an_injury_can_be_healed()
     {
         $this->injury->heal();
 
-        $this->assertEquals(Carbon::today()->toDateString(), $this->injury->healed_at->toDateString());
+        $this->assertEquals(Carbon::now()->toDateString(), $this->injury->healed_at->toDateString());
     }
 }

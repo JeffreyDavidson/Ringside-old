@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use Carbon\Carbon;
+
 trait HasMatches
 {
 
@@ -14,7 +16,7 @@ trait HasMatches
      */
     public function firstMatchDate()
     {
-        return $this->pastMatches()->first()->date;
+        return $this->pastMatches->first()->date;
     }
 
     /**
@@ -24,7 +26,7 @@ trait HasMatches
      */
     public function pastMatches()
     {
-        return $this->matches->filter->isPast();
+        return $this->matches()->where('date', '<', Carbon::today());
     }
 
     /**
@@ -34,6 +36,6 @@ trait HasMatches
      */
     public function hasPastMatches()
     {
-        return $this->pastMatches()->isNotEmpty();
+        return $this->pastMatches->isNotEmpty();
     }
 }

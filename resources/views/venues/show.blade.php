@@ -34,7 +34,7 @@
                         <th>Actions</th>
                     </thead>
                     <tbody>
-                    @foreach($venue->pastEvents() as $event)
+                    @foreach($venue->pastEvents as $event)
                         <tr>
                             <td>{{ $event->id }}</td>
                             <td>{{ $event->name }}</td>

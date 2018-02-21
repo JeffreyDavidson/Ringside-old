@@ -58,4 +58,12 @@ class WrestlerTest extends TestCase
     {
         $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->wrestler->retirements);
     }
+
+    /** @test */
+    public function a_wrestlers_status_can_be_returned()
+    {
+        $wrestler = factory(Wrestler::class)->create(['status_id' => 1]);
+
+        $this->assertEquals(1, $this->wrestler->status());
+    }
 }

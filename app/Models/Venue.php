@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Carbon\Carbon;
 
 class Venue extends Model
 {
@@ -33,7 +34,6 @@ class Venue extends Model
      */
     public function pastEvents()
     {
-        return $this->events->filter->isPast();
         return $this->events()->where('date', '<', Carbon::today());
     }
 
@@ -44,6 +44,6 @@ class Venue extends Model
      */
     public function hasPastEvents()
     {
-        return $this->pastEvents()->isNotEmpty();
+        return $this->pastEvents->isNotEmpty();
     }
 }
