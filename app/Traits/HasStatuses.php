@@ -48,11 +48,15 @@ trait HasStatuses
     public function setStatusToActive()
     {
         $this->update(['status_id' => WrestlerStatus::ACTIVE]);
+
+        return $this;
     }
 
     public function setStatusToInactive()
     {
         $this->update(['status_id' => WrestlerStatus::INACTIVE]);
+
+        return $this;
     }
 
     // TODO: Adjust job of changing the status of the wrestler.

@@ -36,7 +36,7 @@ class VenueTest extends TestCase
         $pastEventB = factory(Event::class)->create(['venue_id' => $venue->id, 'date' => Carbon::now()->subWeek(1)]);
         $upcomingEvent = factory(Event::class)->create(['venue_id' => $venue->id, 'date' => Carbon::now()->addWeek(1)]);
 
-        $pastEvents = $venue->pastEvents();
+        $pastEvents = $venue->pastEvents;
 
         $this->assertTrue($venue->hasPastEvents());
         $this->assertTrue($pastEvents->contains($pastEventA));

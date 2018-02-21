@@ -21,7 +21,7 @@ class HasMatchesTraitTest extends TestCase
         $match = MatchFactory::create(['event_id' => $event->id], [$wrestler], [], []);
 
         $this->assertTrue($wrestler->hasPastMatches());
-        $this->assertEquals(1, $wrestler->pastMatches()->count());
+        $this->assertEquals(1, $wrestler->pastMatches->count());
         $this->assertEquals('2017-10-09', $wrestler->firstMatchDate()->toDateString());
     }
 
@@ -41,7 +41,7 @@ class HasMatchesTraitTest extends TestCase
         $match = MatchFactory::create(['event_id' => $event->id], [], [], [$title]);
 
         $this->assertTrue($title->hasPastMatches());
-        $this->assertEquals(1, $title->pastMatches()->count());
+        $this->assertEquals(1, $title->pastMatches->count());
         $this->assertEquals('2017-10-09', $title->firstMatchDate()->toDateString());
     }
 
