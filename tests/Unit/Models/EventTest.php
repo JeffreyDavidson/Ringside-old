@@ -2,8 +2,6 @@
 
 namespace Tests\Unit;
 
-use EventFactory;
-use MatchFactory;
 use Tests\TestCase;
 use App\Models\Venue;
 use App\Models\Event;

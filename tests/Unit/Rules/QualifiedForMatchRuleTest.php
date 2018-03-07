@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Unit;
 
-use EventFactory;
+use App\Models\Event;
 use Tests\TestCase;
 use App\Models\Wrestler;
 use App\Rules\QualifiedForMatch;
@@ -16,7 +16,7 @@ class QualifiedForMatchRuleTest extends TestCase
     public function a_wrestler_with_a_hired_at_date_after_an_event_date_cannot_participate_in_the_match()
     {
         $wrestler = factory(Wrestler::class)->create(['hired_at' => '2017-10-10']);
-        $event = EventFactory::create(['date' => '2017-10-09']);
+        $event = factory(Event::class)->create(['date' => '2017-10-09']);
 
         $validator = new QualifiedForMatch($event->date);
 
@@ -27,7 +27,7 @@ class QualifiedForMatchRuleTest extends TestCase
     public function a_wrestler_with_a_hired_at_date_before_or_equal_to_an_event_date_can_participate_in_the_match()
     {
         $wrestler = factory(Wrestler::class)->create(['hired_at' => '2017-10-08']);
-        $event = EventFactory::create(['date' => '2017-10-09']);
+        $event = factory(Event::class)->create(['date' => '2017-10-09']);
 
         $validator = new QualifiedForMatch($event->date);
 

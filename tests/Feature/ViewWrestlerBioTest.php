@@ -2,11 +2,10 @@
 
 namespace Tests\Feature;
 
-use EventFactory;
-use MatchFactory;
 use Carbon\Carbon;
 use Tests\TestCase;
 use App\Models\Event;
+use App\Models\Match;
 use App\Models\Title;
 use App\Models\Manager;
 use App\Models\Wrestler;
@@ -97,7 +96,7 @@ class ViewWrestlerBioTest extends TestCase
         $this->wrestler->hireManager($managerA, Carbon::parse('last week'));
         $this->wrestler->fireManager($managerA, Carbon::parse('yesterday'));
 
-        $response = $this->actingAs($this->authorizedUser)          
+        $response = $this->actingAs($this->authorizedUser)
                         ->get(route('wrestlers.show', $this->wrestler->id));
 
         $response->assertStatus(200);
@@ -125,7 +124,7 @@ class ViewWrestlerBioTest extends TestCase
         $this->wrestler->winTitle($title, Carbon::parse('last week'));
         $this->wrestler->loseTitle($title, Carbon::yesterday());
 
-        $response = $this->actingAs($this->authorizedUser)          
+        $response = $this->actingAs($this->authorizedUser)
                         ->get(route('wrestlers.show', $this->wrestler->id));
 
         $response->assertSee('Title A');
@@ -134,8 +133,9 @@ class ViewWrestlerBioTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_view_list_of_currently_scheduled_matches_on_wrestler_bio()
     {
-        $event = EventFactory::create(['name' => 'Event Name', 'date' => Carbon::parse('tomorrow')]);
-        $match = MatchFactory::create(['event_id' => $event->id], [$this->wrestler]);
+        $event = factory(Event::class)->create(['name' => 'Event Name', 'date' => Carbon::parse('tomorrow')]);
+        $match = factory(Match::class)->create(['event_id' => $event->id]);
+        $match->addWrestler($this->wrestler);
 
         $response = $this->actingAs($this->authorizedUser)
                         ->get(route('wrestlers.show', $this->wrestler->id));
@@ -146,10 +146,11 @@ class ViewWrestlerBioTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_view_list_of_past_matches_on_wrestler_bio()
     {
-        $event = EventFactory::create(['name' => 'Event Name', 'date' => Carbon::now()->subMonth()]);
-        $match = MatchFactory::create(['event_id' => $event->id], [$this->wrestler]);
+        $event = factory(Event::class)->create(['name' => 'Event Name', 'date' => Carbon::now()->subMonth()]);
+        $match = factory(Match::class)->create(['event_id' => $event->id]);
+        $match->addWrestler($this->wrestler);
 
-        $response = $this->actingAs($this->authorizedUser)          
+        $response = $this->actingAs($this->authorizedUser)
                         ->get(route('wrestlers.show', $this->wrestler->id));
 
         $response->assertSee('Event Name');

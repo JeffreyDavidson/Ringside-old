@@ -3,12 +3,11 @@
 namespace Tests\Unit;
 
 use stdClass;
-use EventFactory;
-use MatchFactory;
 use Tests\TestCase;
 use App\Models\Referee;
 use App\Models\Wrestler;
 use App\Models\Stipulation;
+use App\Models\Match;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class MatchPresenterTest extends TestCase
@@ -20,8 +19,8 @@ class MatchPresenterTest extends TestCase
     {
         $wrestlerA = factory(Wrestler::class)->create(['name' => 'Wrestler A']);
         $wrestlerB = factory(Wrestler::class)->create(['name' => 'Wrestler B']);
-        $event = EventFactory::create(['date' => '2017-10-09']);
-        $match = MatchFactory::create(['event_id' => $event->id], [$wrestlerA, $wrestlerB], [], []);
+        $match = factory(Match::class)->create();
+        $match->addWrestlers([$wrestlerA, $wrestlerB]);
 
         $this->assertEquals('Wrestler A vs. Wrestler B', $match->present()->wrestlers);
     }
@@ -30,8 +29,8 @@ class MatchPresenterTest extends TestCase
     public function a_match_can_present_a_single_referee_in_a_match()
     {
         $referee = factory(Referee::class)->create(['first_name' => 'John', 'last_name' => 'Doe']);
-        $event = EventFactory::create(['date' => '2017-10-09']);
-        $match = MatchFactory::create(['event_id' => $event->id], [], [$referee], [], []);
+        $match = factory(Match::class)->create();
+        $match->addReferee($referee);
 
         $this->assertEquals('John Doe', $match->present()->referees);
     }
@@ -41,8 +40,8 @@ class MatchPresenterTest extends TestCase
     {
         $refereeA = factory(Referee::class)->create(['first_name' => 'John', 'last_name' => 'Doe']);
         $refereeB = factory(Referee::class)->create(['first_name' => 'Jane', 'last_name' => 'Scott']);
-        $event = EventFactory::create(['date' => '2017-10-09']);
-        $match = MatchFactory::create(['event_id' => $event->id], [], [$refereeA, $refereeB], [], []);
+        $match = factory(Match::class)->create();
+        $match->addReferees([$refereeA, $refereeB]);
 
         $this->assertEquals('John Doe, Jane Scott', $match->present()->referees);
     }
@@ -51,8 +50,8 @@ class MatchPresenterTest extends TestCase
     public function a_match_can_present_a_single_stipulation_in_a_match()
     {
         $stipulation = factory(Stipulation::class)->create(['name' => 'Cage Match']);
-        $event = EventFactory::create(['date' => '2017-10-09']);
-        $match = MatchFactory::create(['event_id' => $event->id], [], [], [], [$stipulation]);
+        $match = factory(Match::class)->create();
+        $match->addStipulation($stipulation);
 
         $this->assertEquals('Cage Match', $match->present()->stipulations);
     }
@@ -62,8 +61,8 @@ class MatchPresenterTest extends TestCase
     {
         $stipulationA = factory(Stipulation::class)->create(['name' => 'Cage Match']);
         $stipulationB = factory(Stipulation::class)->create(['name' => 'Ladder Match']);
-        $event = EventFactory::create(['date' => '2017-10-09']);
-        $match = MatchFactory::create(['event_id' => $event->id], [], [], [], [$stipulationA, $stipulationB]);
+        $match = factory(Match::class)->create();
+        $match->addStipulations([$stipulationA, $stipulationB]);
 
         $this->assertEquals('Cage Match, Ladder Match', $match->present()->stipulations);
     }
@@ -71,7 +70,7 @@ class MatchPresenterTest extends TestCase
     /** @test */
     public function a_first_match_in_an_event_should_be_presented_as_the_opening_match()
     {
-        $match = MatchFactory::create();
+        $match = factory(Match::class)->create();
         $loop = new stdClass;
         $loop->first = true;
         $loop->last = false;
@@ -82,7 +81,7 @@ class MatchPresenterTest extends TestCase
     /** @test */
     public function the_last_match_in_an_event_should_be_presented_as_the_opening_match()
     {
-        $match = MatchFactory::create();
+        $match = factory(Match::class)->create();
         $loop = new stdClass;
         $loop->first = false;
         $loop->last = true;
@@ -93,7 +92,7 @@ class MatchPresenterTest extends TestCase
     /** @test */
     public function a_match_in_an_event_that_isnt_the_first_or_last_should_be_presented_correctly()
     {
-        $match = MatchFactory::create(['match_number' => 2]);
+        $match = factory(Match::class)->create(['match_number' => 2]);
         $loop = new stdClass;
         $loop->first = false;
         $loop->last = false;

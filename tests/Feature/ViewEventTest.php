@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use EventFactory;
+use App\Models\Event;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class ViewEventTest extends TestCase
@@ -18,7 +18,7 @@ class ViewEventTest extends TestCase
 
         $this->setupAuthorizedUser('show-event');
 
-        $this->event = EventFactory::create([
+        $this->event = factory(Event::class)->create([
             'name' => 'Event Name',
             'slug' => 'event-slug',
             'date' => '2017-09-17'

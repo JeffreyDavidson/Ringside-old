@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
-use EventFactory;
-use MatchFactory;
+use App\Models\Event;
 use Tests\TestCase;
 use App\Models\Venue;
 use App\Models\Wrestler;
+use App\Models\Match;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class ViewVenueTest extends TestCase
@@ -62,8 +62,10 @@ class ViewVenueTest extends TestCase
     /** @test */
     public function venues_past_events_can_be_viewed_on_venue_page()
     {
-        $event = EventFactory::create(['name' => 'Event Name', 'venue_id' => $this->venue->id]);
-        MatchFactory::create(['event_id' => $event->id], factory(Wrestler::class, 2)->create());
+        $event = factory(Event::class)->create(['name' => 'Event Name', 'venue_id' => $this->venue->id]);
+        $match = factory(Match::class)->create(['event_id' => $event->id]);
+        $wrestlers = factory(Wrestler::class, 2)->create();
+        $match->addWrestlers($wrestlers);
 
         $response = $this->actingAs($this->authorizedUser)
                         ->get(route('venues.show', $this->venue->id));
