@@ -21,12 +21,14 @@ trait HasMatches
 
     /**
      * Returns the wrestler's past matches.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function pastMatches()
     {
-        return $this->matches()->where('date', '<', Carbon::today());
+        return $this->matches()->whereHas('event', function ($query) {
+            $query->where('date', '<', Carbon::today());
+        });
     }
 
     /**

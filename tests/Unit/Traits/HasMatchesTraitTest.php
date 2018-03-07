@@ -2,11 +2,11 @@
 
 namespace Tests\Feature\Unit;
 
-use EventFactory;
-use MatchFactory;
 use Tests\TestCase;
 use App\Models\Title;
 use App\Models\Wrestler;
+use App\Models\Event;
+use App\Models\Match;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class HasMatchesTraitTest extends TestCase
@@ -17,8 +17,9 @@ class HasMatchesTraitTest extends TestCase
     public function a_wrestler_with_matches_before_the_current_date_has_past_matches()
     {
         $wrestler = factory(Wrestler::class)->create();
-        $event = EventFactory::create(['date' => '2017-10-09']);
-        $match = MatchFactory::create(['event_id' => $event->id], [$wrestler], [], []);
+        $event = factory(Event::class)->create(['date' => '2017-10-09']);
+        $match = factory(Match::class)->create(['event_id' => $event->id]);
+        $match->addWrestler($wrestler);
 
         $this->assertTrue($wrestler->hasPastMatches());
         $this->assertEquals(1, $wrestler->pastMatches->count());
@@ -37,8 +38,9 @@ class HasMatchesTraitTest extends TestCase
     public function a_title_with_matches_before_current_date_has_past_matches()
     {
         $title = factory(Title::class)->create();
-        $event = EventFactory::create(['date' => '2017-10-09']);
-        $match = MatchFactory::create(['event_id' => $event->id], [], [], [$title]);
+        $event = factory(Event::class)->create(['date' => '2017-10-09']);
+        $match = factory(Match::class)->create(['event_id' => $event->id]);
+        $match->addTitle($title);
 
         $this->assertTrue($title->hasPastMatches());
         $this->assertEquals(1, $title->pastMatches->count());
