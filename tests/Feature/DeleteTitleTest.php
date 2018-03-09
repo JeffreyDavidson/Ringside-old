@@ -29,7 +29,7 @@ class DeleteTitleTest extends TestCase
                         ->delete(route('titles.destroy', $this->title->id));
 
         $response->assertStatus(302);
-        $this->assertSoftDeleted('titles', $this->title->toArray());
+        $this->assertSoftDeleted('titles', ['id' => $this->title->id, 'name' => $this->title->name]);
         $response->assertRedirect(route('titles.index'));
     }
 
