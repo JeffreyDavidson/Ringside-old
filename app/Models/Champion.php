@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Laracodes\Presenter\Traits\Presentable;
-use App\Collections\TitleChampionsCollection;
 
 class Champion extends Model
 {
@@ -57,7 +56,7 @@ class Champion extends Model
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeCurrent($query) 
+    public function scopeCurrent($query)
     {
         return $query->whereNull('lost_on');
     }

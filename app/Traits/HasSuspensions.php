@@ -13,7 +13,7 @@ trait HasSuspensions
     /**
      * Checks to see if the wrestler has past suspensions.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasPastSuspensions()
     {
@@ -38,7 +38,7 @@ trait HasSuspensions
     /**
      * Checks to see if the wrestler is currently suspended.
      *
-     * @return boolean
+     * @return bool
      */
     public function isSuspended()
     {
@@ -70,7 +70,7 @@ trait HasSuspensions
         }
 
         $this->setStatusToActive();
-        
+
         $this->currentSuspension()->lift();
 
         return $this;
