@@ -13,7 +13,7 @@ trait HasTitles
     /**
      * Checks to see if the wrestler has held any previous titles.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasPastTitlesHeld()
     {
@@ -49,14 +49,14 @@ trait HasTitles
      *
      * @param \App\Models\Title $title
      * @param datetime $date
-     * @return boolean
+     * @return bool
      */
     public function winTitle(Title $title, $date)
     {
         if ($this->hasTitle($title)) {
             throw new WrestlerAlreadyHasTitleException;
         }
-        
+
         $this->titles()->create(['title_id' => $title->id, 'won_on' => $date]);
     }
 
@@ -65,7 +65,7 @@ trait HasTitles
      *
      * @param \App\Models\Title $title
      * @param datetime $date
-     * @return boolean
+     * @return bool
      */
     public function loseTitle(Title $title, $date)
     {

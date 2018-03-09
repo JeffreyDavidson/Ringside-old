@@ -12,7 +12,7 @@ trait HasManagers
     /**
      * Checks to see if the wrestler has past managers.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasPastManagers()
     {
@@ -32,7 +32,7 @@ trait HasManagers
     /**
      * Checks to see if the wrestler has any current managers.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasCurrentManagers()
     {
@@ -42,7 +42,7 @@ trait HasManagers
     /**
      * Checks to see if the wrestler has a specific manager.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasManager($manager)
     {
@@ -65,7 +65,7 @@ trait HasManagers
      * A wrestler hires a given manager.
      *
      * @param \App\Models\Manager $manager
-     * @return boolean
+     * @return bool
      */
     public function hireManager($manager)
     {
@@ -80,7 +80,7 @@ trait HasManagers
      * A wrestler fires a given manager.
      *
      * @param \App\Models\Manager $manager
-     * @return boolean
+     * @return bool
      */
     public function fireManager($manager)
     {

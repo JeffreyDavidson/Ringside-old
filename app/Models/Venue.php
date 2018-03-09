@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Carbon\Carbon;
 
 class Venue extends Model
 {
@@ -40,7 +40,7 @@ class Venue extends Model
     /**
      * Returns a collection of events before the current date.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasPastEvents()
     {

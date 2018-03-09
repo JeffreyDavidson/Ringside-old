@@ -5,9 +5,9 @@ namespace App\Repositories;
 use App\Models\Title;
 use App\Models\Champion;
 
-class ChampionRepository {
-
-    public function mostTitleDefences() 
+class ChampionRepository
+{
+    public function mostTitleDefences()
     {
         return Champion::with('wrestler')
             ->selectRaw('COUNT(*) as count, wrestler_id')
@@ -17,7 +17,7 @@ class ChampionRepository {
             ->first();
     }
 
-    public function mostTitleReigns(Title $title) 
+    public function mostTitleReigns(Title $title)
     {
         return Champion::with('wrestler')
             ->selectRaw('COUNT(*) as count, wrestler_id')
@@ -27,7 +27,7 @@ class ChampionRepository {
             ->first();
     }
 
-    public function longestTitleReign() 
+    public function longestTitleReign()
     {
         return Champion::with('wrestler')
             ->select(DB::raw('DATEDIFF(IFNULL(DATE(champions.lost_on), NOW()), DATE(champions.won_on)) as length, wrestler_id'))

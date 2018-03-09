@@ -76,7 +76,7 @@ class Title extends Model
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function currentChampion() 
+    public function currentChampion()
     {
         return $this->champions()->whereNull('lost_on')->toHasOne();
     }
@@ -90,8 +90,8 @@ class Title extends Model
     public function scopeRetired($query)
     {
         return $query->whereNotNull('retired_at');
-    } 
-    
+    }
+
     /**
      * Scope a query to only include active titles.
      *
