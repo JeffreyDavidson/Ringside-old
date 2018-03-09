@@ -21,12 +21,6 @@ class EditWrestlerTest extends TestCase
 
         $this->setupAuthorizedUser(['edit-wrestler', 'update-wrestler']);
 
-        factory(WrestlerStatus::class)->create(['name' => 'Active']);
-        factory(WrestlerStatus::class)->create(['name' => 'Inactive']);
-        factory(WrestlerStatus::class)->create(['name' => 'Injured']);
-        factory(WrestlerStatus::class)->create(['name' => 'Suspended']);
-        factory(WrestlerStatus::class)->create(['name' => 'Retired']);
-
         $this->wrestler = factory(Wrestler::class)->create($this->oldAttributes());
     }
 

@@ -15,12 +15,6 @@ class AddWrestlerTest extends TestCase
     {
         parent::setUp();
 
-        factory(WrestlerStatus::class)->create(['name' => 'Active']);
-        factory(WrestlerStatus::class)->create(['name' => 'Inactive']);
-        factory(WrestlerStatus::class)->create(['name' => 'Injured']);
-        factory(WrestlerStatus::class)->create(['name' => 'Suspended']);
-        factory(WrestlerStatus::class)->create(['name' => 'Retired']);
-
         $this->setupAuthorizedUser(['create-wrestler', 'store-wrestler']);
     }
 

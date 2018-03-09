@@ -21,8 +21,8 @@ class EditEventTest extends TestCase
 
         $this->setupAuthorizedUser(['edit-event', 'update-event']);
 
-        $this->event = factory(Event::class)->create($this->oldAttributes());
-        $this->venue = factory(Venue::class)->create();
+        $this->venue = factory(Venue::class)->create(['id' => 1]);
+        $this->event = factory(Event::class)->create($this->oldAttributes(['venue_id' => $this->venue->id]));
     }
 
     private function oldAttributes($overrides = [])

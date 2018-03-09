@@ -29,7 +29,7 @@ class AddEventTest extends TestCase
             'name' => 'Event Name',
             'slug' => 'event-slug',
             'date' => '2017-09-17',
-            'venue_id' => 1
+            'venue_id' => $this->venue->id
         ], $overrides);
     }
 
@@ -191,7 +191,7 @@ class AddEventTest extends TestCase
                             'name' => 'Event Name',
                             'slug' => 'event-slug',
                             'date' => '2017-09-17',
-                            'venue_id' => 1
+                            'venue_id' => $this->venue->id
                         ]));
 
         tap(Event::first(), function ($event) use ($response) {
@@ -201,7 +201,7 @@ class AddEventTest extends TestCase
             $this->assertEquals('Event Name', $event->name);
             $this->assertEquals('event-slug', $event->slug);
             $this->assertEquals(Carbon::parse('2017-09-17'), $event->date);
-            $this->assertEquals(1, $event->venue_id);
+            $this->assertEquals($this->venue->id, $event->venue_id);
         });
     }
 }
