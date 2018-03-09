@@ -19,7 +19,7 @@ class MatchType extends Model
     /**
      * Checks to see if the match type needs additional referees.
      *
-     * @return boolean
+     * @return bool
      */
     public function needsMultipleReferees()
     {

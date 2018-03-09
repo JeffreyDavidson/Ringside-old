@@ -72,7 +72,7 @@ class Event extends Model
      * Adds a match to the event.
      *
      * @param \App\Models\Match $match
-     * @return boolean
+     * @return bool
      */
     public function addMatch(Match $match)
     {
