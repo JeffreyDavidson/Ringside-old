@@ -6,11 +6,11 @@ use Tests\TestCase;
 use App\Models\Wrestler;
 use App\Models\Title;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class HasTitlesTraitTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     /** @test */
     public function a_wrestler_can_win_a_title()

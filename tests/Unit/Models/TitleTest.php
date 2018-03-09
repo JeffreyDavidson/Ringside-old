@@ -7,11 +7,11 @@ use Tests\TestCase;
 use App\Models\Event;
 use App\Models\Title;
 use App\Models\Wrestler;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class TitleTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     protected $title;
 

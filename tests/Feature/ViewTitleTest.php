@@ -4,11 +4,11 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Models\Title;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ViewTitleTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     private $title;
 

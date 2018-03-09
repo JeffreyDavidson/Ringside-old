@@ -7,11 +7,11 @@ use App\Models\Event;
 use App\Models\Match;
 use App\Models\Wrestler;
 use App\Models\WrestlerStatus;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class EditWrestlerTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     private $wrestler;
 

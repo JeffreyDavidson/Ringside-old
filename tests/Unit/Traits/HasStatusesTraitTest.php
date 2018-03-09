@@ -5,11 +5,11 @@ namespace Tests\Unit\Traits;
 use Tests\TestCase;
 use App\Models\Wrestler;
 use App\Models\WrestlerStatus;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class HasStatusesTraitTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     /** @test */
     public function a_wrestler_can_be_active()

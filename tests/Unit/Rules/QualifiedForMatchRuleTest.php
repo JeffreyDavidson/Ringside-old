@@ -6,11 +6,11 @@ use App\Models\Event;
 use Tests\TestCase;
 use App\Models\Wrestler;
 use App\Rules\QualifiedForMatch;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class QualifiedForMatchRuleTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     /** @test */
     public function a_wrestler_with_a_hired_at_date_after_an_event_date_cannot_participate_in_the_match()

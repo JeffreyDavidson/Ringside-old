@@ -8,11 +8,11 @@ use App\Models\Referee;
 use App\Models\Wrestler;
 use App\Models\Stipulation;
 use App\Models\Match;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class MatchPresenterTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     /** @test */
     public function a_match_can_present_wrestlers_in_match()

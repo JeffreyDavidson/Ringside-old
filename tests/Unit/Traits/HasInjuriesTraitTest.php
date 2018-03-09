@@ -4,11 +4,11 @@ namespace Tests\Feature\Unit;
 
 use Tests\TestCase;
 use App\Models\Wrestler;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class HasInjuriesTraitTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     /** @test */
     public function an_wrestler_can_be_injured()

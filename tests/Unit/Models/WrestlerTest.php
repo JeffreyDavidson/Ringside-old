@@ -8,11 +8,11 @@ use App\Models\Title;
 use App\Models\Manager;
 use App\Models\Wrestler;
 use App\Models\WrestlerStatus;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class WrestlerTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     protected $wrestler;
 

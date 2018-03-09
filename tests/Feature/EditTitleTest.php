@@ -6,11 +6,11 @@ use Tests\TestCase;
 use App\Models\Event;
 use App\Models\Match;
 use App\Models\Title;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class EditTitleTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     private $title;
 

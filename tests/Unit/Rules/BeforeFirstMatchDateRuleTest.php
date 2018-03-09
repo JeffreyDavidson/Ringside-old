@@ -9,11 +9,11 @@ use App\Models\Referee;
 use App\Models\Match;
 use App\Models\Event;
 use App\Rules\BeforeFirstMatchDate;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class BeforeFirstMatchDateRuleTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     /** @test */
     public function a_wrestler_with_a_match_after_they_were_hired_cannot_have_their_hired_at_date_after_their_first_match()

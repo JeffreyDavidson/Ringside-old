@@ -4,11 +4,11 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Models\Stipulation;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class AddStipulationTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     public function setUp()
     {

@@ -5,11 +5,11 @@ namespace Tests\Unit;
 use Carbon\Carbon;
 use Tests\TestCase;
 use App\Models\Champion;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ChampionPresenterTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     /** @test */
     public function a_champions_won_on_date_can_be_formatted()

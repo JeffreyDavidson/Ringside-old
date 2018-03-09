@@ -6,11 +6,11 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Permission;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class HasRolesTraitTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     /** @test */
     public function a_user_can_be_assigned_a_role()

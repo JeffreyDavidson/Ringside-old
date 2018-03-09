@@ -6,11 +6,11 @@ use Carbon\Carbon;
 use Tests\TestCase;
 use App\Models\Event;
 use App\Models\Venue;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class VenueTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     protected $venue;
 

@@ -11,11 +11,11 @@ use App\Models\Referee;
 use App\Models\Wrestler;
 use App\Models\Stipulation;
 use App\Models\MatchType;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class MatchTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     protected $match;
 
@@ -95,7 +95,7 @@ class MatchTest extends TestCase
 
     /** @test */
     public function a_match_can_multiple_titles()
-    {        
+    {
         $titles = factory(Title::class, 2)->make();
 
         $this->match->addTitles($titles);

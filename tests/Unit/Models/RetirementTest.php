@@ -5,11 +5,11 @@ namespace Tests\Unit;
 use Tests\TestCase;
 use App\Models\Retirement;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class RetirementTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     protected $retirement;
 

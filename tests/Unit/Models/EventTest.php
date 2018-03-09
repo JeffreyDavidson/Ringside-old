@@ -6,11 +6,11 @@ use Tests\TestCase;
 use App\Models\Venue;
 use App\Models\Event;
 use App\Models\Match;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class EventTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     protected $event;
 

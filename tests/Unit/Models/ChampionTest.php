@@ -7,11 +7,11 @@ use App\Models\Title;
 use App\Models\Champion;
 use App\Models\Wrestler;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ChampionTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     protected $champion;
 

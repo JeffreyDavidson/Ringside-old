@@ -4,11 +4,11 @@ namespace Tests\Unit;
 
 use Tests\TestCase;
 use App\Models\Event;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class EventPresenterTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     /** @test */
     public function event_date_can_be_presented_as_formatted()

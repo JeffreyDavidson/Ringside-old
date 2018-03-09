@@ -5,11 +5,11 @@ namespace Tests\Unit;
 use Tests\TestCase;
 use App\Models\Injury;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class InjuryTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     protected $injury;
 

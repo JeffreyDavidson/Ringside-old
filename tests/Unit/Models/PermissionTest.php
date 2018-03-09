@@ -4,11 +4,11 @@ namespace Tests\Unit;
 
 use Tests\TestCase;
 use App\Models\Permission;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class PermissionTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     protected $permission;
 

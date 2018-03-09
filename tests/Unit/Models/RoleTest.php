@@ -5,11 +5,11 @@ namespace Tests\Unit;
 use Tests\TestCase;
 use App\Models\Role;
 use App\Models\Permission;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class RoleTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     protected $role;
 

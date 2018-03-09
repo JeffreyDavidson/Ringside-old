@@ -5,11 +5,11 @@ namespace Tests\Unit\Traits;
 use Tests\TestCase;
 use App\Models\Wrestler;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class HasSuspensionsTraitTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     /** @test */
     public function a_wrestler_can_be_suspended()

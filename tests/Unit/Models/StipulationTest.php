@@ -7,11 +7,11 @@ use Tests\TestCase;
 use App\Models\Event;
 use App\Models\Match;
 use App\Models\Stipulation;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class StipulationTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     protected $stipulation;
 

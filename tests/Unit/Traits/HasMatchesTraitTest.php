@@ -7,11 +7,11 @@ use App\Models\Title;
 use App\Models\Wrestler;
 use App\Models\Event;
 use App\Models\Match;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class HasMatchesTraitTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     /** @test */
     public function a_wrestler_with_matches_before_the_current_date_has_past_matches()

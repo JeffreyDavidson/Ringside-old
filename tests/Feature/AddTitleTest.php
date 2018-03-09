@@ -4,11 +4,11 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Models\Title;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class AddTitleTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     public function setUp()
     {
@@ -82,7 +82,7 @@ class AddTitleTest extends TestCase
      public function guests_cannot_create_a_title()
      {
         $response = $this->post(route('titles.index'), $this->validParams());
- 
+
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));
      }

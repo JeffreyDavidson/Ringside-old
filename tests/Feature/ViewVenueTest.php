@@ -7,11 +7,11 @@ use Tests\TestCase;
 use App\Models\Venue;
 use App\Models\Wrestler;
 use App\Models\Match;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ViewVenueTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     private $venue;
 

@@ -9,11 +9,11 @@ use App\Models\Match;
 use App\Models\Title;
 use App\Models\Manager;
 use App\Models\Wrestler;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ViewWrestlerBioTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     private $wrestler;
 
