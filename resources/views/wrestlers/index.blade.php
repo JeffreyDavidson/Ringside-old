@@ -19,6 +19,9 @@
                     <thead>
                         <th>ID</th>
                         <th>Name</th>
+                        <th>Status</th>
+                        <th>Height</th>
+                        <th>Weight</th>
                         <th>Actions</th>
                     </thead>
                     <tbody>
@@ -26,6 +29,9 @@
                         <tr>
                             <td>{{ $wrestler->id }}</td>
                             <td>{{ $wrestler->name }}</td>
+                            <td>{{ $wrestler->status->name }}</td>
+                            <td>{{ $wrestler->present()->height }}</td>
+                            <td>{{ $wrestler->weight }}</td>
                             <td>
                                 @can('edit', $wrestler)
                                     <a class="btn btn-sm btn-icon btn-flat btn-default" href="{{ route('wrestlers.edit', ['id' => $wrestler->id]) }}" data-toggle="tooltip" data-original-title="Edit">
