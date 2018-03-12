@@ -40,6 +40,16 @@ class Wrestler extends Model
     protected $dates = ['hired_at'];
 
     /**
+     * A wrestler has a status.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function status()
+    {
+        return $this->belongsTo(WrestlerStatus::class, 'status_id');
+    }
+
+    /**
      * A wrestler can have many managers.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -102,15 +112,5 @@ class Wrestler extends Model
     public function isCurrentlyAChampion()
     {
         return $this->currentTitlesHeld()->count() > 0;
-    }
-
-    /**
-     * Retrieves the status id attribute.
-     *
-     * @return int
-     */
-    public function status()
-    {
-        return $this->getAttribute('status_id');
     }
 }
