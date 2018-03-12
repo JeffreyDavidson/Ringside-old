@@ -15,20 +15,13 @@
             @endcan
         </div>
         <div class="panel-body container-fluid">
-                {{--<select class="form-control" id="status_id" name="status_id" v-model="status" v-if="status !== null">--}}
-                    {{--<option value="0">Choose One</option>--}}
-                    {{--<option :value="status.id" v-for="status in statuses">@{{ status.name }}</option>--}}
-                {{--</select>--}}
-                {{--<vuetable ref="vuetable" :api-mode="false" :data="filteredList" :fields="['id', 'name']">--}}
-                {{--</vuetable>--}}
-                <table id="wrestlersList" class="table table-striped table-bordered datatable" cellspacing="0" width="100%">
+                <table class="table table-striped table-bordered datatable" cellspacing="0" width="100%">
                     <thead>
-                        <th @click="sort('ID')">ID</th>
-                        <th @click="sort('Name')">Name</th>
+                        <th>ID</th>
+                        <th>Name</th>
                         <th>Actions</th>
                     </thead>
                     <tbody>
-                        <tr is="wrestler-row" v-for="wrestler in wrestlers" :wrestler="wrestler" url="{{route('wrestlers.index')}}"></tr>
                     @foreach($wrestlers as $wrestler)
                         <tr>
                             <td>{{ $wrestler->id }}</td>
@@ -60,19 +53,4 @@
                 </table>
         </div>
     </div>
-@endsection
-
-@section('footer-scripts')
-    {{--<script type="text/javascript">--}}
-        {{--$(document).ready(function() {--}}
-            {{--$('#wrestlersList').DataTable({--}}
-                {{--"pagingType": "full_numbers",--}}
-                {{--"columnDefs": [--}}
-                    {{--{ "width": "20px", "targets": 0 },--}}
-                    {{--{ "width": "150px", "targets": -1 },--}}
-                    {{--{ "targets": -1, "orderable": false }--}}
-                {{--]--}}
-            {{--});--}}
-        {{--} );--}}
-    {{--</script>--}}
 @endsection
