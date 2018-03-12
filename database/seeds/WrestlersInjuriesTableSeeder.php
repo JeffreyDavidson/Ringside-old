@@ -17,7 +17,7 @@ class WrestlersInjuriesTableSeeder extends Seeder
             $injuredAt = $this->getInjuredAtDate($wrestler);
             $healedAt = $this->getHealedAtDate($injuredAt);
             $wrestler->injure($injuredAt);
-            $wrestler->heal($healedAt);
+            $wrestler->recover($healedAt);
         });
     }
 
