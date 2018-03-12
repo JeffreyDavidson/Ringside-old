@@ -20,21 +20,21 @@ $factory->define(Wrestler::class, function (Faker $faker) {
 });
 
 $factory->state(\Wrestler::class, 'active', function () {
-    return ['status_id' => WrestlerStatus::ACTIVE];
+    return ['status_id' => 1];
 });
 
 $factory->state(App\Models\Wrestler::class, 'inactive', function () {
-    return ['status_id' => WrestlerStatus::INACTIVE];
+    return ['status_id' => 2];
 });
 
 $factory->state(Wrestler::class, 'injured', function () {
-    return ['status_id' => WrestlerStatus::INJURED];
+    return ['status_id' => 3];
 });
 
 $factory->state(Wrestler::class, 'suspended', function () {
-    return ['status_id' => WrestlerStatus::SUSPENDED];
+    return ['status_id' => 4];
 });
 
 $factory->state(Wrestler::class, 'retired', function () {
-    return ['status_id' => WrestlerStatus::RETIRED];
+    return ['status_id' => 5];
 });
