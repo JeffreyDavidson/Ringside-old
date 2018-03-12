@@ -19,7 +19,7 @@ class WrestlersController extends Controller
     {
         $this->authorize('index', Wrestler::class);
 
-        $wrestlers = Wrestler::all();
+        $wrestlers = Wrestler::with('status')->get();
 
         return response()->view('wrestlers.index', ['wrestlers' => $wrestlers]);
     }
