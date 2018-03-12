@@ -6,20 +6,15 @@ use App\Models\WrestlerStatus;
 
 trait HasStatuses
 {
-    public $status_id;
-
     abstract public function status();
 
     public function isActive()
     {
-        return $this->status() == WrestlerStatus::ACTIVE;
+        return $this->status_id == WrestlerStatus::where('name', 'Active')->get()->id;
     }
 
     public function isInactive()
     {
-        return $this->status() == WrestlerStatus::INACTIVE;
-    }
-
         return $this->status_id == WrestlerStatus::where('name', 'Inactive')->get()->id;
     }
 
@@ -30,14 +25,14 @@ trait HasStatuses
 
     public function setStatusToActive()
     {
-        $this->update(['status_id' => WrestlerStatus::ACTIVE]);
+        $this->update(['status_id' => WrestlerStatus::where('name', 'Active')->get()->id]);
 
         return $this;
     }
 
     public function setStatusToInactive()
     {
-        $this->update(['status_id' => WrestlerStatus::INACTIVE]);
+        $this->update(['status_id' => WrestlerStatus::where('name', 'Inactive')->get()->id]);
 
         return $this;
     }
