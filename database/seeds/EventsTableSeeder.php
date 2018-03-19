@@ -48,7 +48,7 @@ class EventsTableSeeder extends Seeder
     public function addTitles($match)
     {
         if (chance(5)) {
-            $match->addTitle($title = Title::valid($match->event->date)->inRandomOrder()->first());
+            $match->addTitle($title = Title::active($match->event->date)->inRandomOrder()->first());
         }
     }
 
@@ -75,7 +75,7 @@ class EventsTableSeeder extends Seeder
         if ($match->isTitleMatch()) {
             if (chance(3)) {
                 $champions = $match->titles->map(function ($title) {
-                    return $title->getCurrentChampion();
+                    return $title->currentChampion();
                 })->filter();
                 $match->setWinner($champions->random());
             }
@@ -89,7 +89,7 @@ class EventsTableSeeder extends Seeder
     {
         if ($match->isTitleMatch()) {
             $champions = $match->titles->map(function ($title) {
-                return $title->getCurrentChampion();
+                return $title->currentChampion();
             })->filter();
 
             if ($champions->count() === 1) {

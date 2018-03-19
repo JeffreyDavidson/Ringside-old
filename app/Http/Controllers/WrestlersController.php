@@ -33,9 +33,7 @@ class WrestlersController extends Controller
     {
         $this->authorize('create', Wrestler::class);
 
-        $statuses = WrestlerStatus::available();
-
-        return response()->view('wrestlers.create', ['wrestler' => new Wrestler, 'statuses' => $statuses]);
+        return response()->view('wrestlers.create', ['wrestler' => new Wrestler]);
     }
 
     /**
@@ -87,9 +85,7 @@ class WrestlersController extends Controller
     {
         $this->authorize('edit', Wrestler::class);
 
-        $statuses = WrestlerStatus::available($wrestler->status->name);
-
-        return response()->view('wrestlers.edit', ['wrestler' => $wrestler, 'statuses' => $statuses]);
+        return response()->view('wrestlers.edit', ['wrestler' => $wrestler]);
     }
 
     /**
@@ -103,17 +99,6 @@ class WrestlersController extends Controller
     {
         $this->authorize('edit', Wrestler::class);
 
-        /* TODO: Figure out if I should do a Rule or how I should handle the change better from going from status to status. */
-        //if ($wrestler->status() != $request->status_id) {
-        //    if ($wrestler->status() == WrestlerStatus::RETIRED) {
-        //        $wrestler->unretire();
-        //    } else if ($wrestler->status() == WrestlerStatus::INJURED) {
-        //        $wrestler->heal();
-        //    } else if ($wrestler->status() == WrestlerStatus::SUSPENDED) {
-        //        $wrestler->rejoin();
-        //    }
-        //}
-
         $wrestler->update([
             'name' => $request->name,
             'slug' => $request->slug,
@@ -124,14 +109,6 @@ class WrestlersController extends Controller
             'weight' => $request->weight,
             'signature_move' => $request->signature_move,
         ]);
-
-        //if ($request->status_id == WrestlerStatus::INJURED) {
-        //    $wrestler->injure();
-        //} else if ($request->status_id == WrestlerStatus::SUSPENDED) {
-        //    $wrestler->suspend();
-        //} else if ($request->status_id == WrestlerStatus::RETIRED) {
-        //    $wrestler->retire();
-        //}
 
         return redirect()->route('wrestlers.index');
     }
