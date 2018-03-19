@@ -1,48 +1,20 @@
 {{ csrf_field() }}
 
-<div class="form-group @if ($errors->has('name')) {{ 'has-danger' }} @endif">
-    <label class="form-control-label" for="name">Name</label>
-    <input type="text" class="form-control" id="name" name="name" value="{{ old('name') ?? $venue->name }}"/>
-    @if ($errors->has('name')) <small class="form-control-feedback">{{ $errors->first('name') }}</small> @endif
-</div>
-
-<div class="form-group @if ($errors->has('address')) {{ 'has-danger' }} @endif">
-    <label class="form-control-label" for="address">Address</label>
-    <input type="text" class="form-control" id="address" name="address" value="{{ old('address') ?? $venue->address }}"/>
-    @if ($errors->has('address')) <small class="form-control-feedback">{{ $errors->first('address') }}</small> @endif
-</div>
+{{ Form::bsText('name', old('name', $venue->name), [], true, 'Name') }}
+{{ Form::bsText('address', old('address', $venue->address), [], true, 'Address') }}
 
 <div class="row">
     <div class="col-md-6">
-        <div class="form-group @if ($errors->has('city')) {{ 'has-danger' }} @endif">
-            <label class="form-control-label" for="city">City</label>
-            <input type="text" class="form-control" id="city" name="city" value="{{ old('city') ?? $venue->city }}"/>
-            @if ($errors->has('city')) <small class="form-control-feedback">{{ $errors->first('city') }}</small> @endif
-        </div>
+        {{ Form::bsText('city', old('city', $venue->city), [], true, 'City') }}
     </div>
+
     <div class="col-md-3">
-        <div class="form-group @if ($errors->has('state')) {{ 'has-danger' }} @endif">
-            <label class="form-control-label" for="state">State</label>
-            <select name="state" class="form-control" id="state" value="{{ old('state') ?? $venue->state }}">
-                <option value="0">Choose One</option>
-                @foreach(App\Http\Utilities\State::all() as $state)
-                    <option value="{{ $state }}" @if($state == (old('state') ?? $venue->state)) {{ 'selected="selected"' }} @endif>{{$state}}</option>
-                @endforeach
-            </select>
-            @if ($errors->has('state')) <small class="form-control-feedback">{{ $errors->first('state') }}</small> @endif
-        </div>
+        {{ Form::bsSelect('state', App\Http\Utilities\State::options(), old('state', $venue->state), [], true, 'State') }}
     </div>
+
     <div class="col-md-3">
-        <div class="form-group @if ($errors->has('postcode')) {{ 'has-danger' }} @endif">
-            <label class="form-control-label" for="postcode">Postcode</label>
-            <input type="text" class="form-control" id="postcode" name="postcode" value="{{ old('postcode') ?? $venue->postcode }}"/>
-            @if ($errors->has('postcode')) <small class="form-control-feedback">{{ $errors->first('postcode') }}</small> @endif
-        </div>
+        {{ Form::bsText('postcode', old('postcode', $venue->postcode), [], true, 'Postcode') }}
     </div>
 </div>
 
-<div class="form-group">
-    <button type="submit" class="btn btn-primary">
-        {{ $submitButtonText ?? 'Create Venue' }}
-    </button>
-</div>
+{{ Form::bsSubmit($submitButtonText ?? 'Create Venue') }}
