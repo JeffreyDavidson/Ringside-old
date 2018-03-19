@@ -62,7 +62,7 @@ class HasStatusesTraitTest extends TestCase
     /** @test */
     public function it_can_retrieve_all_suspended_wrestlers()
     {
-        factory(Wrestler::class, 3)->states('suspended')->create();
+        $wrestlers = factory(Wrestler::class, 3)->states('suspended')->create();
 
         $this->assertEquals(3, Wrestler::hasStatus('Suspended')->get()->count());
     }
@@ -74,7 +74,7 @@ class HasStatusesTraitTest extends TestCase
 
         $wrestler->setStatusToInactive();
 
-        $this->assertEquals(2, $wrestler->status_id);
+        $this->assertTrue($wrestler->isInactive());
     }
 
     /** @test */
@@ -84,6 +84,6 @@ class HasStatusesTraitTest extends TestCase
 
         $wrestler->setStatusToActive();
 
-        $this->assertEquals(1, $wrestler->status_id);
+        $this->assertTrue($wrestler->isActive());
     }
 }

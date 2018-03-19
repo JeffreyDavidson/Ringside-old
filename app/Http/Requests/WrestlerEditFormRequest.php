@@ -34,7 +34,7 @@ class WrestlerEditFormRequest extends FormRequest
                 'integer',
                 'not_in:0',
                 'exists:wrestler_statuses,id',
-                Rule::in(WrestlerStatus::available($this->wrestler->status(), false)->values()->toArray())
+                Rule::in(WrestlerStatus::available($this->wrestler->status->name)->pluck('id')->toArray())
             ],
             'weight' => 'required|integer',
             'hometown' => 'required',

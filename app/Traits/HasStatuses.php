@@ -10,31 +10,49 @@ trait HasStatuses
 
     public function isActive()
     {
-        return $this->status_id == WrestlerStatus::where('name', 'Active')->get()->id;
+        return $this->status_id == WrestlerStatus::where('name', 'Active')->first()->id;
     }
 
     public function isInactive()
     {
-        return $this->status_id == WrestlerStatus::where('name', 'Inactive')->get()->id;
+        return $this->status_id == WrestlerStatus::where('name', 'Inactive')->first()->id;
     }
 
     public function scopeHasStatus($query, $status)
     {
-        return $query->where('status_id', WrestlerStatus::where('name', $status));
+        $status = WrestlerStatus::where('name', $status)->first();
+
+        return $query->where('status_id', $status->id);
     }
 
     public function setStatusToActive()
     {
-        $this->update(['status_id' => WrestlerStatus::where('name', 'Active')->get()->id]);
+        $status = WrestlerStatus::where('name', 'Active')->first();
+
+        $this->update(['status_id' => $status->id]);
 
         return $this;
     }
 
     public function setStatusToInactive()
     {
-        $this->update(['status_id' => WrestlerStatus::where('name', 'Inactive')->get()->id]);
+        $status = WrestlerStatus::where('name', 'Inactive')->first();
+
+        $this->update(['status_id' => $status->id]);
 
         return $this;
+    }
+
+    /**
+     * Return the available statuses for this entity.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function availableStatuses()
+    {
+        $status = $this->status_id ? $this->status->name : null;
+
+        return WrestlerStatus::available($status)->get();
     }
 
     // TODO: Adjust job of changing the status of the wrestler.

@@ -10,7 +10,7 @@ $factory->define(Wrestler::class, function (Faker $faker) {
     return [
         'name' => $name,
         'slug' => str_slug($name),
-        'status_id' => WrestlerStatus::ACTIVE,
+        'status_id' => 1,
         'hometown' => $faker->city.', '.$faker->state,
         'height' => $faker->numberBetween(63, 84),
         'weight' => $faker->numberBetween(175, 400),
@@ -19,7 +19,7 @@ $factory->define(Wrestler::class, function (Faker $faker) {
     ];
 });
 
-$factory->state(\Wrestler::class, 'active', function () {
+$factory->state(App\Models\Wrestler::class, 'active', function () {
     return ['status_id' => 1];
 });
 

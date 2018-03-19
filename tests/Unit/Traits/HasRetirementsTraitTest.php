@@ -19,7 +19,8 @@ class HasRetirementsTraitTest extends TestCase
         $wrestler->retire();
 
         $this->assertEquals(1, $wrestler->retirements->count());
-        $this->assertEquals(2, $wrestler->status());
+        $this->assertTrue($wrestler->isInactive());
+        $this->assertTrue($wrestler->isRetired());
         $this->assertNull($wrestler->retirements()->first()->ended_at);
     }
 
@@ -31,7 +32,8 @@ class HasRetirementsTraitTest extends TestCase
         $wrestler->unretire();
 
         $this->assertNotNull($wrestler->retirements()->first()->ended_at);
-        $this->assertEquals(1, $wrestler->status());
+        $this->assertTrue($wrestler->isActive());
+        $this->assertFalse($wrestler->isRetired());
     }
 
     /** @test */
@@ -59,6 +61,7 @@ class HasRetirementsTraitTest extends TestCase
         $wrestler->retire();
 
         $this->assertEquals(1, $wrestler->retirements->count());
+
     }
 
     /**
