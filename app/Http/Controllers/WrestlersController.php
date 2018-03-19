@@ -87,7 +87,7 @@ class WrestlersController extends Controller
     {
         $this->authorize('edit', Wrestler::class);
 
-        $statuses = WrestlerStatus::available($wrestler->status());
+        $statuses = WrestlerStatus::available($wrestler->status->name);
 
         return response()->view('wrestlers.edit', ['wrestler' => $wrestler, 'statuses' => $statuses]);
     }

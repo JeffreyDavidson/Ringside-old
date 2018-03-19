@@ -108,7 +108,7 @@ class EventsTableSeeder extends Seeder
 
     public function addReferees($match)
     {
-        if ($match->needsMoreThanOneReferee()) {
+        if ($match->type->needsMultipleReferees()) {
             $referees = Referee::inRandomOrder()->take(4)->get();
             $match->addReferees($referees);
         } else {
