@@ -44,13 +44,7 @@ class VenuesController extends Controller
     {
         $this->authorize('create', Venue::class);
 
-        Venue::create([
-            'name' => $request->name,
-            'address' => $request->address,
-            'city' => $request->city,
-            'state' => $request->state,
-            'postcode' => $request->postcode,
-        ]);
+        Venue::create($request->only('name', 'address', 'city', 'state', 'postcode'));
 
         return redirect()->route('venues.index');
     }
@@ -92,13 +86,7 @@ class VenuesController extends Controller
     {
         $this->authorize('edit', Venue::class);
 
-        $venue->update([
-            'name' => $request->name,
-            'address' => $request->address,
-            'city' => $request->city,
-            'state' => $request->state,
-            'postcode' => $request->postcode,
-        ]);
+        $venue->update($request->only('name', 'address', 'city', 'state', 'postcode'));
 
         return redirect()->route('venues.index');
     }

@@ -47,14 +47,14 @@ class WrestlersController extends Controller
         $this->authorize('create', Wrestler::class);
 
         Wrestler::create([
-            'name' => $request->name,
-            'slug' => $request->slug,
-            'status_id' => $request->status_id,
-            'hired_at' => Carbon::parse($request->hired_at),
-            'hometown' => $request->hometown,
-            'height' => ($request->feet * 12) + $request->inches,
-            'weight' => $request->weight,
-            'signature_move' => $request->signature_move,
+            'name' => $request->input('name'),
+            'slug' => $request->input('slug'),
+            'status_id' => $request->input('status_id'),
+            'hired_at' => Carbon::parse($request->input('hired_at')),
+            'hometown' => $request->input('hometown'),
+            'height' => ($request->input('feet') * 12) + $request->input('inches'),
+            'weight' => $request->input('weight'),
+            'signature_move' => $request->input('signature_move'),
         ]);
 
         return redirect()->route('wrestlers.index');
@@ -100,14 +100,14 @@ class WrestlersController extends Controller
         $this->authorize('edit', Wrestler::class);
 
         $wrestler->update([
-            'name' => $request->name,
-            'slug' => $request->slug,
-            'status_id' => $request->status_id,
-            'hired_at' => $request->hired_at,
-            'hometown' => $request->hometown,
-            'height' => ($request->feet * 12) + $request->inches,
-            'weight' => $request->weight,
-            'signature_move' => $request->signature_move,
+            'name' => $request->input('name'),
+            'slug' => $request->input('slug'),
+            'status_id' => $request->input('status_id'),
+            'hired_at' => $request->input('hired_at'),
+            'hometown' => $request->input('hometown'),
+            'height' => ($request->input('feet') * 12) + $request->input('inches'),
+            'weight' => $request->input('weight'),
+            'signature_move' => $request->input('signature_move'),
         ]);
 
         return redirect()->route('wrestlers.index');
