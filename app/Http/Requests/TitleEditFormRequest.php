@@ -15,7 +15,7 @@ class TitleEditFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return \Auth::user()->hasPermission('update-title');
+        return $this->user()->hasPermission('update-title');
     }
 
     /**
@@ -28,7 +28,7 @@ class TitleEditFormRequest extends FormRequest
         return [
             'name' => ['required', Rule::unique('titles', 'name')->ignore($this->title->id)],
             'slug' => ['required', Rule::unique('titles', 'slug')->ignore($this->title->id)],
-            'introduced_at' => ['required', 'date', new BeforeFirstMatchDate($this->title)],
+            'introduced_at' => ['required', 'date_format:m/d/Y', new BeforeFirstMatchDate($this->title)],
         ];
     }
 }
