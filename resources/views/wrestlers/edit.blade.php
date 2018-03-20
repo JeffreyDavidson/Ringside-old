@@ -15,7 +15,7 @@
         <div class="panel-body container-fluid">
             <form method="POST" action="{{ route('wrestlers.update', $wrestler->id) }}">
                 {{ method_field('PATCH') }}
-                @include('wrestlers.form', [
+                @include('wrestlers.partials.form', [
                     'submitButtonText' => 'Update Wrestler'
                 ])
             </form>
