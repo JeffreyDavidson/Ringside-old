@@ -77,4 +77,14 @@ trait HasTitles
 
         return $titleHeld->update(['lost_on' => $date ?: $this->freshTimestamp()]);
     }
+
+    /**
+     * Determines if a wrestler is a champion.
+     *
+     * @return bool
+     */
+    public function isCurrentlyAChampion()
+    {
+        return $this->currentTitlesHeld()->count() > 0;
+    }
 }
