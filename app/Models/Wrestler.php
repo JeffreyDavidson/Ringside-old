@@ -108,9 +108,4 @@ class Wrestler extends Model
     {
         return $this->hasMany(Retirement::class);
     }
-
-    public function isCurrentlyAChampion()
-    {
-        return $this->currentTitlesHeld()->count() > 0;
-    }
 }
