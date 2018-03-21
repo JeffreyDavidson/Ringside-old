@@ -2,7 +2,6 @@
 
 use App\Models\Wrestler;
 use Faker\Generator as Faker;
-use App\Models\WrestlerStatus;
 
 $factory->define(Wrestler::class, function (Faker $faker) {
     $name = $faker->sentence;
