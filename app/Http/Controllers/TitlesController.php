@@ -44,11 +44,7 @@ class TitlesController extends Controller
     {
         $this->authorize('create', Title::class);
 
-        Title::create([
-            'name' => $request->name,
-            'slug' => $request->slug,
-            'introduced_at' => $request->introduced_at,
-        ]);
+        Title::create($request->only('name', 'slug', 'introduced_at'));
 
         return redirect()->route('titles.index');
     }
@@ -90,11 +86,7 @@ class TitlesController extends Controller
     {
         $this->authorize('edit', Title::class);
 
-        $title->update([
-            'name' => $request->name,
-            'slug' => $request->slug,
-            'introduced_at' => $request->introduced_at,
-        ]);
+        $title->update($request->only('name', 'slug', 'introduced_at'));
 
         return redirect()->route('titles.index');
     }

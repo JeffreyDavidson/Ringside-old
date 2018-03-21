@@ -14,7 +14,7 @@ class StipulationEditFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return \Auth::user()->hasPermission('update-stipulation');
+        return $this->user()->hasPermission('update-stipulation');
     }
 
     /**

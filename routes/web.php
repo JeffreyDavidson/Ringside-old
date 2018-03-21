@@ -11,10 +11,6 @@
 |
 */
 
-Route::get('/', function () {
-    return view('dashboard');
-})->name('dashboard');
-
 Route::get('login', function () {
     \Auth::loginUsingId(1);
 
@@ -22,6 +18,9 @@ Route::get('login', function () {
 })->name('login');
 
 Route::group(['middleware' => 'auth'], function () {
+    Route::get('/', function () {
+        return view('dashboard');
+    })->name('dashboard');
     Route::group(['prefix' => 'roster'], function () {
         Route::resource('wrestlers', 'WrestlersController');
     });

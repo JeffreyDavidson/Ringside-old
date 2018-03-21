@@ -16,7 +16,7 @@ class WrestlerEditFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return \Auth::user()->hasPermission('update-wrestler');
+        return $this->user()->hasPermission('update-wrestler');
     }
 
     /**
@@ -34,7 +34,7 @@ class WrestlerEditFormRequest extends FormRequest
                 'integer',
                 'not_in:0',
                 'exists:wrestler_statuses,id',
-                Rule::in(WrestlerStatus::available($this->wrestler->status(), false)->values()->toArray())
+                Rule::in(WrestlerStatus::available($this->wrestler->status->name)->pluck('id')->toArray())
             ],
             'weight' => 'required|integer',
             'hometown' => 'required',
@@ -56,19 +56,5 @@ class WrestlerEditFormRequest extends FormRequest
             'status_id.not_in' => 'The selected status is invalid.',
             'status_id.in' => 'The selected status is invalid.',
         ];
-    }
-
-    /**
-     * Configure the validator instance.
-     *
-     * @param  \Illuminate\Validation\Validator  $validator
-     * @return void
-     */
-    public function withValidator($validator)
-    {
-        $validator->after(function ($validator) {
-            // return $validator;
-            // dd($validator->errors());
-        });
     }
 }

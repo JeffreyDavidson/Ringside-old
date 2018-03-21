@@ -3,8 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class MacroServiceProvider extends ServiceProvider
 {
@@ -15,14 +15,14 @@ class MacroServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        HasMany::macro('toHasOne', function(){
+        HasMany::macro('toHasOne', function () {
             return new HasOne(
                 $this->getQuery(),
                 $this->getParent(),
                 $this->foreignKey,
                 $this->localKey
             );
-         });
+        });
     }
 
     /**

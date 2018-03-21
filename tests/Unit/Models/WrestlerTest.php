@@ -2,10 +2,7 @@
 
 namespace Tests\Unit;
 
-use Carbon\Carbon;
 use Tests\TestCase;
-use App\Models\Title;
-use App\Models\Manager;
 use App\Models\Wrestler;
 use App\Models\WrestlerStatus;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -21,6 +18,12 @@ class WrestlerTest extends TestCase
         parent::setUp();
 
         $this->wrestler = factory(Wrestler::class)->create();
+    }
+
+    /** @test */
+    public function a_wrestler_has_a_status()
+    {
+        $this->assertInstanceOf(WrestlerStatus::class, $this->wrestler->status);
     }
 
     /** @test */
@@ -57,13 +60,5 @@ class WrestlerTest extends TestCase
     public function a_wrestler_can_have_many_retirements()
     {
         $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->wrestler->retirements);
-    }
-
-    /** @test */
-    public function a_wrestlers_status_can_be_returned()
-    {
-        $wrestler = factory(Wrestler::class)->create(['status_id' => 1]);
-
-        $this->assertEquals(1, $this->wrestler->status());
     }
 }

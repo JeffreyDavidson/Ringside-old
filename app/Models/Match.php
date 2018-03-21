@@ -174,7 +174,7 @@ class Match extends Model
     /**
      * Determines if the match has a title associated to it.
      *
-     * @return boolean
+     * @return bool
      */
     public function isTitleMatch()
     {
@@ -192,7 +192,7 @@ class Match extends Model
 
         if ($this->isTitleMatch()) {
             $this->titles->each(function ($title) use ($wrestler) {
-                if (!$wrestler->hasTitle($title)) {
+                if (! $wrestler->hasTitle($title)) {
                     $title->setNewChampion($wrestler, $this->event->date);
                 }
             });
@@ -214,7 +214,7 @@ class Match extends Model
      * Add a match to an event.
      *
      * @param  \App\Models\Event $event
-     * @return boolean
+     * @return bool
      */
     public function addToEvent(Event $event)
     {

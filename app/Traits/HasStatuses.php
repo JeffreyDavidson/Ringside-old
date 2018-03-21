@@ -6,57 +6,53 @@ use App\Models\WrestlerStatus;
 
 trait HasStatuses
 {
-    public $status_id;
-
     abstract public function status();
 
     public function isActive()
     {
-        return $this->status() == WrestlerStatus::ACTIVE;
+        return $this->status_id == WrestlerStatus::where('name', 'Active')->first()->id;
     }
 
     public function isInactive()
     {
-        return $this->status() == WrestlerStatus::INACTIVE;
+        return $this->status_id == WrestlerStatus::where('name', 'Inactive')->first()->id;
     }
 
-    public function scopeActive($query)
+    public function scopeHasStatus($query, $status)
     {
-        return $query->where('status_id', WrestlerStatus::ACTIVE);
-    }
+        $status = WrestlerStatus::where('name', $status)->first();
 
-    public function scopeInjured($query)
-    {
-        return $query->where('status_id', WrestlerStatus::INJURED);
-    }
-
-    public function scopeSuspended($query)
-    {
-        return $query->where('status_id', WrestlerStatus::SUSPENDED);
-    }
-
-    public function scopeRetired($query)
-    {
-        return $query->where('status_id', WrestlerStatus::RETIRED);
-    }
-
-    public function scopeInactive($query)
-    {
-        return $query->where('status_id', WrestlerStatus::INACTIVE);
+        return $query->where('status_id', $status->id);
     }
 
     public function setStatusToActive()
     {
-        $this->update(['status_id' => WrestlerStatus::ACTIVE]);
+        $status = WrestlerStatus::where('name', 'Active')->first();
+
+        $this->update(['status_id' => $status->id]);
 
         return $this;
     }
 
     public function setStatusToInactive()
     {
-        $this->update(['status_id' => WrestlerStatus::INACTIVE]);
+        $status = WrestlerStatus::where('name', 'Inactive')->first();
+
+        $this->update(['status_id' => $status->id]);
 
         return $this;
+    }
+
+    /**
+     * Return the available statuses for this entity.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function availableStatuses()
+    {
+        $status = $this->status_id ? $this->status->name : null;
+
+        return WrestlerStatus::available($status)->get();
     }
 
     // TODO: Adjust job of changing the status of the wrestler.

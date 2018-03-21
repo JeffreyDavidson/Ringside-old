@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\Wrestler;
-use App\Models\WrestlerStatus;
 use App\Http\Requests\WrestlerEditFormRequest;
 use App\Http\Requests\WrestlerCreateFormRequest;
 
@@ -19,7 +18,7 @@ class WrestlersController extends Controller
     {
         $this->authorize('index', Wrestler::class);
 
-        $wrestlers = Wrestler::all();
+        $wrestlers = Wrestler::with('status')->get();
 
         return response()->view('wrestlers.index', ['wrestlers' => $wrestlers]);
     }
@@ -33,9 +32,7 @@ class WrestlersController extends Controller
     {
         $this->authorize('create', Wrestler::class);
 
-        $statuses = WrestlerStatus::available();
-
-        return response()->view('wrestlers.create', ['wrestler' => new Wrestler, 'statuses' => $statuses]);
+        return response()->view('wrestlers.create', ['wrestler' => new Wrestler]);
     }
 
     /**
@@ -49,14 +46,14 @@ class WrestlersController extends Controller
         $this->authorize('create', Wrestler::class);
 
         Wrestler::create([
-            'name' => $request->name,
-            'slug' => $request->slug,
-            'status_id' => $request->status_id,
-            'hired_at' => Carbon::parse($request->hired_at),
-            'hometown' => $request->hometown,
-            'height' => ($request->feet * 12) + $request->inches,
-            'weight' => $request->weight,
-            'signature_move' => $request->signature_move,
+            'name' => $request->input('name'),
+            'slug' => $request->input('slug'),
+            'status_id' => $request->input('status_id'),
+            'hired_at' => Carbon::parse($request->input('hired_at')),
+            'hometown' => $request->input('hometown'),
+            'height' => ($request->input('feet') * 12) + $request->input('inches'),
+            'weight' => $request->input('weight'),
+            'signature_move' => $request->input('signature_move'),
         ]);
 
         return redirect()->route('wrestlers.index');
@@ -87,9 +84,7 @@ class WrestlersController extends Controller
     {
         $this->authorize('edit', Wrestler::class);
 
-        $statuses = WrestlerStatus::available($wrestler->status());
-
-        return response()->view('wrestlers.edit', ['wrestler' => $wrestler, 'statuses' => $statuses]);
+        return response()->view('wrestlers.edit', ['wrestler' => $wrestler]);
     }
 
     /**
@@ -103,35 +98,16 @@ class WrestlersController extends Controller
     {
         $this->authorize('edit', Wrestler::class);
 
-        /* TODO: Figure out if I should do a Rule or how I should handle the change better from going from status to status. */
-        //if ($wrestler->status() != $request->status_id) {
-        //    if ($wrestler->status() == WrestlerStatus::RETIRED) {
-        //        $wrestler->unretire();
-        //    } else if ($wrestler->status() == WrestlerStatus::INJURED) {
-        //        $wrestler->heal();
-        //    } else if ($wrestler->status() == WrestlerStatus::SUSPENDED) {
-        //        $wrestler->rejoin();
-        //    }
-        //}
-
         $wrestler->update([
-            'name' => $request->name,
-            'slug' => $request->slug,
-            'status_id' => $request->status_id,
-            'hired_at' => $request->hired_at,
-            'hometown' => $request->hometown,
-            'height' => ($request->feet * 12) + $request->inches,
-            'weight' => $request->weight,
-            'signature_move' => $request->signature_move,
+            'name' => $request->input('name'),
+            'slug' => $request->input('slug'),
+            'status_id' => $request->input('status_id'),
+            'hired_at' => $request->input('hired_at'),
+            'hometown' => $request->input('hometown'),
+            'height' => ($request->input('feet') * 12) + $request->input('inches'),
+            'weight' => $request->input('weight'),
+            'signature_move' => $request->input('signature_move'),
         ]);
-
-        //if ($request->status_id == WrestlerStatus::INJURED) {
-        //    $wrestler->injure();
-        //} else if ($request->status_id == WrestlerStatus::SUSPENDED) {
-        //    $wrestler->suspend();
-        //} else if ($request->status_id == WrestlerStatus::RETIRED) {
-        //    $wrestler->retire();
-        //}
 
         return redirect()->route('wrestlers.index');
     }

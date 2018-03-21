@@ -3,7 +3,6 @@
 namespace App\Rules;
 
 use Carbon\Carbon;
-use App\Models\Wrestler;
 use Illuminate\Contracts\Validation\Rule;
 
 class QualifiedForMatch implements Rule
@@ -30,9 +29,9 @@ class QualifiedForMatch implements Rule
      * @param  mixed  $value
      * @return bool
      */
-    public function passes($attribute, $wrestler)
+    public function passes($attribute, $model)
     {
-        return $wrestler->hired_at->lte(Carbon::parse($this->eventDate));
+        return $model->$attribute->lte(Carbon::parse($this->eventDate));
     }
 
     /**
@@ -42,6 +41,6 @@ class QualifiedForMatch implements Rule
      */
     public function message()
     {
-        return 'This wrestler is not qualified for the match.';
+        return 'This '.strtolower(get_class($model)).' is not qualified for the match.';
     }
 }

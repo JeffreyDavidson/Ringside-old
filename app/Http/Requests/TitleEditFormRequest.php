@@ -15,7 +15,7 @@ class TitleEditFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return \Auth::user()->hasPermission('update-title');
+        return $this->user()->hasPermission('update-title');
     }
 
     /**

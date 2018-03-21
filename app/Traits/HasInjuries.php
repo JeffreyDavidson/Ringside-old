@@ -2,9 +2,9 @@
 
 namespace App\Traits;
 
+use Carbon\Carbon;
 use App\Exceptions\WrestlerNotInjuredException;
 use App\Exceptions\WrestlerAlreadyInjuredException;
-use Carbon\Carbon;
 
 trait HasInjuries
 {
@@ -18,7 +18,7 @@ trait HasInjuries
     /**
      * Checks to see if the wrestler has past injuries.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasPastInjuries()
     {
@@ -43,7 +43,7 @@ trait HasInjuries
     /**
      * Checks to see if the wrestler is currently injured.
      *
-     * @return boolean
+     * @return bool
      */
     public function isInjured()
     {

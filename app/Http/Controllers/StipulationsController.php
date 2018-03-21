@@ -44,10 +44,7 @@ class StipulationsController extends Controller
     {
         $this->authorize('create', Stipulation::class);
 
-        Stipulation::create([
-            'name' => $request->name,
-            'slug' => $request->slug,
-        ]);
+        Stipulation::create($request->only('name', 'slug'));
 
         return redirect()->route('stipulations.index');
     }
@@ -89,10 +86,7 @@ class StipulationsController extends Controller
     {
         $this->authorize('edit', Stipulation::class);
 
-        $stipulation->update([
-            'name' => $request->name,
-            'slug' => $request->slug,
-        ]);
+        $stipulation->update($request->only('name', 'slug'));
 
         return redirect()->route('stipulations.index');
     }

@@ -30,7 +30,7 @@ class DeleteVenueTest extends TestCase
                         ->delete(route('venues.destroy', $this->venue->id));
 
         $response->assertStatus(302);
-        $this->assertSoftDeleted('venues', $this->venue->toArray());
+        $this->assertSoftDeleted('venues', ['id' => $this->venue->id, 'name' => $this->venue->name]);
         $response->assertRedirect(route('venues.index'));
     }
 

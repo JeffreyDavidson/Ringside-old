@@ -6,7 +6,6 @@ use Carbon\Carbon;
 
 trait HasMatches
 {
-
     abstract public function matches();
 
     /**
@@ -34,7 +33,7 @@ trait HasMatches
     /**
      * Checks to see if the wrestler has past matches.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasPastMatches()
     {

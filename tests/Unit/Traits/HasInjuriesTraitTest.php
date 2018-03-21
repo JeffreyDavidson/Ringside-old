@@ -18,7 +18,7 @@ class HasInjuriesTraitTest extends TestCase
         $wrestler->injure();
 
         $this->assertEquals(1, $wrestler->injuries->count());
-        $this->assertEquals(2, $wrestler->status());
+        $this->assertTrue($wrestler->isInactive());
         $this->assertNull($wrestler->injuries()->first()->healed_at);
         $this->assertTrue($wrestler->isInjured());
     }
@@ -31,7 +31,7 @@ class HasInjuriesTraitTest extends TestCase
         $wrestler->recover();
 
         $this->assertNotNull($wrestler->injuries()->first()->healed_at);
-        $this->assertEquals(1, $wrestler->status());
+        $this->assertTrue($wrestler->isActive());
         $this->assertFalse($wrestler->isInjured());
     }
 

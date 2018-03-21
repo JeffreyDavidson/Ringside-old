@@ -44,12 +44,7 @@ class EventsController extends Controller
     {
         $this->authorize('create', Event::class);
 
-        Event::create([
-            'name' => $request->name,
-            'slug' => $request->slug,
-            'date' => $request->date,
-            'venue_id' => $request->venue_id,
-        ]);
+        Event::create($request->only('name', 'slug', 'date', 'venue_id'));
 
         return redirect()->route('events.index');
     }
@@ -91,12 +86,7 @@ class EventsController extends Controller
     {
         $this->authorize('edit', Event::class);
 
-        $event->update([
-            'name' => $request->name,
-            'slug' => $request->slug,
-            'date' => $request->date,
-            'venue_id' => $request->venue_id,
-        ]);
+        $event->update($request->only('name', 'slug', 'date', 'venue_id'));
 
         return redirect()->route('events.index');
     }

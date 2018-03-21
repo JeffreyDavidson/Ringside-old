@@ -14,7 +14,7 @@
         </div>
         <div class="panel-body container-fluid">
             <form method="POST" action="{{ route('events.index') }}">
-                @include('events.form', compact('event'))
+                @include('events.partials.form', compact('event'))
             </form>
         </div>
     </div>

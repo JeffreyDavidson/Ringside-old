@@ -40,7 +40,6 @@ class AddWrestlerTest extends TestCase
                         ->get(route('wrestlers.create'));
 
         $response->assertSuccessful();
-        $response->assertViewHas('statuses');
     }
 
     /** @test */
@@ -56,7 +55,7 @@ class AddWrestlerTest extends TestCase
 
             $this->assertEquals('Wrestler Name', $wrestler->name);
             $this->assertEquals('wrestler-slug', $wrestler->slug);
-            $this->assertEquals('1', $wrestler->status());
+            $this->assertEquals('1', $wrestler->status_id);
             $this->assertEquals('2017-09-08', $wrestler->hired_at->toDateString());
             $this->assertEquals('Laraville, ON', $wrestler->hometown);
             $this->assertEquals(82, $wrestler->height);

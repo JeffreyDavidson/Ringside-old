@@ -14,7 +14,7 @@ class VenueEditFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return \Auth::user()->hasPermission('update-venue');
+        return $this->user()->hasPermission('update-venue');
     }
 
     /**

@@ -13,7 +13,7 @@ class WrestlerCreateFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return \Auth::user()->hasPermission('store-wrestler');
+        return $this->user()->hasPermission('store-wrestler');
     }
 
     /**

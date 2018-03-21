@@ -6,36 +6,44 @@ use Illuminate\Database\Eloquent\Model;
 
 class WrestlerStatus extends Model
 {
-    const ACTIVE = 1;
-    const INACTIVE = 2;
-    const INJURED = 3;
-    const SUSPENDED = 4;
-    const RETIRED = 5;
-
-    public static function available($current_status = null, $map = true)
+    /**
+     * Get the available status options.
+     *
+     * @param  string|null  $current
+     * @return \Illuminate\Support\Collection
+     */
+    public function getAvailableOptions(string $current = null)
     {
-        $options = collect([self::ACTIVE, self::INACTIVE]);
+        // These are the default options; if $current is equal to null, this is all
+        // that will be returned.
+        $options = collect(['Active', 'Inactive']);
 
-        if ($current_status != null) {
-            if ($current_status == self::ACTIVE) {
-                $options = $options->merge([self::INJURED, self::SUSPENDED, self::RETIRED]);
-            } elseif ($current_status == self::INACTIVE) {
-                $options = $options->merge([self::RETIRED]);
-            } elseif ($current_status == self::INJURED) {
-                $options = $options->merge([self::INJURED, self::RETIRED]);
-            } elseif ($current_status == self::SUSPENDED) {
-                $options = $options->merge([self::SUSPENDED, self::RETIRED]);
-            } else {
-                $options = $options->merge([self::RETIRED]);
-            }
-        }
+        // This part should be self-explanatory, but if you have any questions, just ask.
+        switch ($current) {
+            case 'Active':
+                return $options->merge(['Injured', 'Suspended', 'Retired']);
 
-        if ($map) {
-            return $options->map(function ($option) {
-                return WrestlerStatus::find($option);
-            });
+            case 'Injured':
+                return $options->merge(['Injured', 'Retired']);
+
+            case 'Suspended':
+                return $options->merge(['Suspended', 'Retired']);
         }
 
         return $options;
+    }
+
+    /**
+     * Limit the query to the available options.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  string|null  $current
+     * @return \Illuminate\Database\Query\Builder
+     */
+    public function scopeAvailable($query, $current = null)
+    {
+        $options = $this->getAvailableOptions($current)->toArray();
+
+        return $query->whereIn('name', $options);
     }
 }

@@ -12,7 +12,7 @@ class HasStatusesTraitTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function a_wrestler_can_be_active()
+    public function a_wrestler_with_a_status_id_of_one_is_active()
     {
         $wrestler = factory(Wrestler::class)->create(['status_id' => 1]);
 
@@ -20,7 +20,7 @@ class HasStatusesTraitTest extends TestCase
     }
 
     /** @test */
-    public function a_wrestler_can_be_inactive()
+    public function a_wrestler_with_a_status_id_of_two_is_inactive()
     {
         $wrestler = factory(Wrestler::class)->create(['status_id' => 2]);
 
@@ -30,51 +30,51 @@ class HasStatusesTraitTest extends TestCase
     /** @test */
     public function it_can_get_all_active_users()
     {
-        factory(Wrestler::class, 3)->create(['status_id' => WrestlerStatus::ACTIVE]);
+        factory(Wrestler::class, 3)->states('active')->create();
 
-        $this->assertEquals(3, Wrestler::active()->get()->count());
+        $this->assertEquals(3, Wrestler::hasStatus('Active')->get()->count());
     }
 
     /** @test */
     public function it_can_get_all_inactive_users()
     {
-        factory(Wrestler::class, 3)->create(['status_id' => WrestlerStatus::INACTIVE]);
+        factory(Wrestler::class, 3)->states('inactive')->create();
 
-        $this->assertEquals(3, Wrestler::inactive()->get()->count());
+        $this->assertEquals(3, Wrestler::hasStatus('Inactive')->get()->count());
     }
 
     /** @test */
     public function it_can_retrieve_all_injured_wrestlers()
     {
-        factory(Wrestler::class, 3)->create(['status_id' => WrestlerStatus::INJURED]);
+        factory(Wrestler::class, 3)->states('injured')->create();
 
-        $this->assertEquals(3, Wrestler::injured()->get()->count());
+        $this->assertEquals(3, Wrestler::hasStatus('Injured')->get()->count());
     }
 
     /** @test */
     public function it_can_retrieve_all_retired_wrestlers()
     {
-        factory(Wrestler::class, 3)->create(['status_id' => WrestlerStatus::RETIRED]);
+        factory(Wrestler::class, 3)->states('retired')->create();
 
-        $this->assertEquals(3, Wrestler::retired()->get()->count());
+        $this->assertEquals(3, Wrestler::hasStatus('Retired')->get()->count());
     }
 
     /** @test */
     public function it_can_retrieve_all_suspended_wrestlers()
     {
-        factory(Wrestler::class, 3)->create(['status_id' => WrestlerStatus::SUSPENDED]);
+        $wrestlers = factory(Wrestler::class, 3)->states('suspended')->create();
 
-        $this->assertEquals(3, Wrestler::suspended()->get()->count());
+        $this->assertEquals(3, Wrestler::hasStatus('Suspended')->get()->count());
     }
 
     /** @test */
     public function it_can_change_a_users_active_status_to_inactive()
     {
-        $wrestler = factory(Wrestler::class)->create(['status_id' => 1]);
+        $wrestler = factory(Wrestler::class)->states('active')->create();
 
         $wrestler->setStatusToInactive();
 
-        $this->assertEquals(WrestlerStatus::INACTIVE, $wrestler->status());
+        $this->assertTrue($wrestler->isInactive());
     }
 
     /** @test */
@@ -84,6 +84,6 @@ class HasStatusesTraitTest extends TestCase
 
         $wrestler->setStatusToActive();
 
-        $this->assertEquals(WrestlerStatus::ACTIVE, $wrestler->status());
+        $this->assertTrue($wrestler->isActive());
     }
 }

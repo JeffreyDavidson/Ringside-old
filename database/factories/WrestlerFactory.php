@@ -2,7 +2,6 @@
 
 use App\Models\Wrestler;
 use Faker\Generator as Faker;
-use App\Models\WrestlerStatus;
 
 $factory->define(Wrestler::class, function (Faker $faker) {
     $name = $faker->sentence;
@@ -10,7 +9,7 @@ $factory->define(Wrestler::class, function (Faker $faker) {
     return [
         'name' => $name,
         'slug' => str_slug($name),
-        'status_id' => WrestlerStatus::ACTIVE,
+        'status_id' => 1,
         'hometown' => $faker->city.', '.$faker->state,
         'height' => $faker->numberBetween(63, 84),
         'weight' => $faker->numberBetween(175, 400),
@@ -19,22 +18,22 @@ $factory->define(Wrestler::class, function (Faker $faker) {
     ];
 });
 
-$factory->state(\Wrestler::class, 'active', function () {
-    return ['status_id' => WrestlerStatus::ACTIVE];
+$factory->state(App\Models\Wrestler::class, 'active', function () {
+    return ['status_id' => 1];
 });
 
 $factory->state(App\Models\Wrestler::class, 'inactive', function () {
-    return ['status_id' => WrestlerStatus::INACTIVE];
+    return ['status_id' => 2];
 });
 
 $factory->state(Wrestler::class, 'injured', function () {
-    return ['status_id' => WrestlerStatus::INJURED];
+    return ['status_id' => 3];
 });
 
 $factory->state(Wrestler::class, 'suspended', function () {
-    return ['status_id' => WrestlerStatus::SUSPENDED];
+    return ['status_id' => 4];
 });
 
 $factory->state(Wrestler::class, 'retired', function () {
-    return ['status_id' => WrestlerStatus::RETIRED];
+    return ['status_id' => 5];
 });

@@ -60,7 +60,6 @@ class EditWrestlerTest extends TestCase
                         ->get(route('wrestlers.edit', $this->wrestler->id));
 
         $response->assertSuccessful();
-        $this->assertTrue($response->data('wrestler')->is($this->wrestler));
     }
 
     /** @test */
@@ -85,7 +84,7 @@ class EditWrestlerTest extends TestCase
             $this->assertEquals('New Name', $wrestler->name);
             $this->assertEquals('new-slug', $wrestler->slug);
             $this->assertEquals('2017-09-10', $wrestler->hired_at->toDateString());
-            $this->assertEquals(1, $wrestler->status());
+            $this->assertEquals(1, $wrestler->status_id);
             $this->assertEquals('Laraville, FL', $wrestler->hometown);
             $this->assertEquals(63, $wrestler->height);
             $this->assertEquals(175, $wrestler->weight);
@@ -96,7 +95,6 @@ class EditWrestlerTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_edit_a_wrestler_with_matches()
     {
-        $this->withoutExceptionHandling();
         $event = factory(Event::class)->create(['date' => '2017-10-11']);
         $match = factory(Match::class)->create(['event_id' => $event->id]);
         $match->addWrestler($this->wrestler);
@@ -220,6 +218,7 @@ class EditWrestlerTest extends TestCase
     /** @test */
     public function wrestler_status_can_be_changed()
     {
+        $this->withoutExceptionHandling();
         $response = $this->actingAs($this->authorizedUser)
                         ->from(route('wrestlers.edit', $this->wrestler->id))
                         ->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
@@ -228,7 +227,7 @@ class EditWrestlerTest extends TestCase
 
         $response->assertRedirect(route('wrestlers.index'));
         tap($this->wrestler->fresh(), function ($wrestler) {
-            $this->assertEquals(4, $wrestler->status());
+            $this->assertEquals(4, $wrestler->status_id);
         });
     }
 

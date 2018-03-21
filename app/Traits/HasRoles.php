@@ -25,7 +25,7 @@ trait HasRoles
      * Checks to see if the user's role has the given permission.
      *
      * @param  string $permissionSlug
-     * @return boolean
+     * @return bool
      */
     public function hasPermission($permissionSlug)
     {
@@ -36,7 +36,7 @@ trait HasRoles
      * Check to see if the supplied role matches the user's role.
      *
      * @param  \App\Models\Role $role
-     * @return boolean
+     * @return bool
      */
     public function hasRole(Role $role)
     {

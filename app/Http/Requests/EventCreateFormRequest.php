@@ -14,7 +14,7 @@ class EventCreateFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return $this->user()->hasPermission('store-event');
     }
 
     /**

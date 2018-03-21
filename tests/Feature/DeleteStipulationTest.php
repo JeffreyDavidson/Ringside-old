@@ -29,7 +29,7 @@ class DeleteStipulationTest extends TestCase
                         ->delete(route('stipulations.destroy', $this->stipulation->id));
 
         $response->assertStatus(302);
-        $this->assertSoftDeleted('stipulations', $this->stipulation->toArray());
+        $this->assertSoftDeleted('stipulations', ['id' => $this->stipulation->id, 'name' => $this->stipulation->name]);
         $response->assertRedirect(route('stipulations.index'));
     }
 
