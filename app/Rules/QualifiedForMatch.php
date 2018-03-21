@@ -3,7 +3,6 @@
 namespace App\Rules;
 
 use Carbon\Carbon;
-use App\Models\Wrestler;
 use Illuminate\Contracts\Validation\Rule;
 
 class QualifiedForMatch implements Rule

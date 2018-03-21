@@ -13,6 +13,7 @@
 
 Route::get('login', function () {
     \Auth::loginUsingId(1);
+
     return redirect(route('dashboard'));
 })->name('login');
 

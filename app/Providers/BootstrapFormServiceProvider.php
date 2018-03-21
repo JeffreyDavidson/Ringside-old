@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Form;
+use Illuminate\Support\ServiceProvider;
 
 class BootstrapFormServiceProvider extends ServiceProvider
 {
