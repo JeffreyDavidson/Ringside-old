@@ -19,6 +19,7 @@
                 <thead>
                     <th>ID</th>
                     <th>Name</th>
+                    <th>Slug</th>
                     <th>Date</th>
                     <th>Arena</th>
                     <th>Actions</th>
@@ -28,6 +29,7 @@
                     <tr>
                         <td>{{ $event->id }}</td>
                         <td>{{ $event->name }}</td>
+                        <td>{{ $event->slug }}</td>
                         <td>{{ $event->present()->date }}</td>
                         <td>{{ $event->venue->name }}</td>
                         <td>

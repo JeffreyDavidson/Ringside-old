@@ -5,6 +5,7 @@ namespace Tests\Feature\Unit;
 use App\Models\Event;
 use Tests\TestCase;
 use App\Models\Wrestler;
+use App\Models\Title;
 use App\Rules\QualifiedForMatch;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -32,5 +33,27 @@ class QualifiedForMatchRuleTest extends TestCase
         $validator = new QualifiedForMatch($event->date);
 
         $this->assertTrue($validator->passes('hired_at', $wrestler));
+    }
+
+    /** @test */
+    public function a_title_with_a_introduced_at_date_after_an_event_date_cannot_be_involved_in_the_match()
+    {
+        $title = factory(Title::class)->create(['introduced_at' => '2017-10-10']);
+        $event = factory(Event::class)->create(['date' => '2017-10-09']);
+
+        $validator = new QualifiedForMatch($event->date);
+
+        $this->assertFalse($validator->passes('introduced_at', $title));
+    }
+
+    /** @test */
+    public function a_title_with_a_introduced_at_date_before_or_equal_to_an_event_date_can_participate_in_the_match()
+    {
+        $title = factory(Title::class)->create(['introduced_at' => '2017-10-08']);
+        $event = factory(Event::class)->create(['date' => '2017-10-09']);
+
+        $validator = new QualifiedForMatch($event->date);
+
+        $this->assertTrue($validator->passes('introduced_at', $title));
     }
 }

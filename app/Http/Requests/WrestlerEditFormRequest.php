@@ -57,18 +57,4 @@ class WrestlerEditFormRequest extends FormRequest
             'status_id.in' => 'The selected status is invalid.',
         ];
     }
-
-    /**
-     * Configure the validator instance.
-     *
-     * @param  \Illuminate\Validation\Validator  $validator
-     * @return void
-     */
-    public function withValidator($validator)
-    {
-        $validator->after(function ($validator) {
-            // return $validator;
-            // dd($validator->errors());
-        });
-    }
 }

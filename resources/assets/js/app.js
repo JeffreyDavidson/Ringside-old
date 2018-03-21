@@ -14,7 +14,6 @@ require('./bootstrap');
  */
 
 // Vue.component('example', require('./components/Example.vue'));
-require('./components/WrestlerTable.js');
 
 const app = new Vue({
     el: '#app'

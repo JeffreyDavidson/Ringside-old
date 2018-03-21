@@ -20,5 +20,5 @@
 </div>
 
 {{ Form::bsText('signature_move', old('signature_move', $wrestler->signature_move), [], true, 'Signature Move') }}
-{{ Form::bsDate('hired_at', old('hired_at', optional($wrestler->hired_at)->format('m/d/Y')), [], true, 'Date Hired') }}
+{{ Form::bsDate('hired_at', old('hired_at', optional($wrestler->hired_at)->format('Y-m-d')), [], true, 'Date Hired') }}
 {{ Form::bsSubmit($submitButtonText ?? 'Create Wrestler') }}
