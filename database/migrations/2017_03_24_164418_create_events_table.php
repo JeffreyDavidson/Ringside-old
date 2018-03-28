@@ -17,7 +17,7 @@ class CreateEventsTable extends Migration
             $table->increments('id');
             $table->string('name')->unique();
             $table->string('slug')->unique();
-            $table->dateTime('date');
+            $table->timestamp('date');
             $table->unsignedInteger('venue_id');
             $table->timestamps();
             $table->softDeletes();

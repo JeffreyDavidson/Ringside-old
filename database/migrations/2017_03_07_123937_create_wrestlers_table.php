@@ -18,7 +18,7 @@ class CreateWrestlersTable extends Migration
             $table->string('name')->unique();
             $table->string('slug')->unique();
             $table->unsignedInteger('status_id')->index();
-            $table->dateTime('hired_at')->nullable();
+            $table->timestamp('hired_at')->nullable();
             $table->string('hometown');
             $table->integer('height');
             $table->integer('weight');
