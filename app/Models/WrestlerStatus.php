@@ -12,7 +12,7 @@ class WrestlerStatus extends Model
      * @param  string|null  $current
      * @return \Illuminate\Support\Collection
      */
-    public function getAvailableOptions(string $current = null)
+    public static function getAvailableOptions(string $current = null)
     {
         // These are the default options; if $current is equal to null, this is all
         // that will be returned.
@@ -28,6 +28,9 @@ class WrestlerStatus extends Model
 
             case 'Suspended':
                 return $options->merge(['Suspended', 'Retired']);
+
+            case 'Retired':
+                return $options->merge(['Retired']);
         }
 
         return $options;

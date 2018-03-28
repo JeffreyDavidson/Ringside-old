@@ -185,22 +185,27 @@ class Match extends Model
      * Sets the winner of the match.
      *
      * @param \App\Models\Wrestler $wrestler
+     * @return
      */
     public function setWinner(Wrestler $wrestler)
     {
-        $this->update(['winner_id' => $wrestler->id, 'loser_id' => $this->wrestlers->except($wrestler->id)->first()->id]);
+        $this->update([
+            'winner_id' => $wrestler->id,
+            'loser_id' => $this->wrestlers->except($wrestler->id)->first()->id
+        ]);
 
         if ($this->isTitleMatch()) {
             $this->titles->each(function ($title) use ($wrestler) {
-                if (! $wrestler->hasTitle($title)) {
-                    $title->setNewChampion($wrestler, $this->event->date);
+                if ($title->currentChampion->wrestler->id !== $wrestler->id) {
+                    $title->setChampion($wrestler, $this->event->date);
                 }
             });
         }
+
+        return $this;
     }
 
     /**
-     * TODO: Find out what I should do about type for date.
      * Retrieves the date of the event for the match.
      *
      * @return string

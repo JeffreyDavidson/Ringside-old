@@ -45,13 +45,6 @@ class EventsTableSeeder extends Seeder
         });
     }
 
-    public function addTitles($match)
-    {
-        if (chance(5)) {
-            $match->addTitle($title = Title::active($match->event->date)->inRandomOrder()->first());
-        }
-    }
-
     public function addMatches(Event $event)
     {
         $matchesCount = rand(6, 10);
@@ -67,42 +60,6 @@ class EventsTableSeeder extends Seeder
             $this->addTitles($match);
             $this->addWrestlers($match);
             $this->setWinner($match);
-        }
-    }
-
-    public function setWinner($match)
-    {
-        if ($match->isTitleMatch()) {
-            if (chance(3)) {
-                $champions = $match->titles->map(function ($title) {
-                    return $title->currentChampion();
-                })->filter();
-                $match->setWinner($champions->random());
-            }
-            $match->setWinner($match->wrestlers->random());
-        } else {
-            $match->setWinner($match->wrestlers->random());
-        }
-    }
-
-    public function addWrestlers($match)
-    {
-        if ($match->isTitleMatch()) {
-            $champions = $match->titles->map(function ($title) {
-                return $title->currentChampion();
-            })->filter();
-
-            if ($champions->count() === 1) {
-                $match->addWrestler($champions->first());
-                $match->addWrestler(Wrestler::inRandomOrder()->get()->reject($champions->first())->first());
-            } elseif ($champions->count() > 1) {
-                $match->addWrestlers($champions);
-                $match->addWrestler(Wrestler::inRandomOrder()->reject($champions)->first());
-            } else {
-                $match->addWrestlers(Wrestler::inRandomOrder()->take(2)->get());
-            }
-        } else {
-            $match->addWrestlers(Wrestler::inRandomOrder()->take(2)->get());
         }
     }
 
@@ -122,5 +79,53 @@ class EventsTableSeeder extends Seeder
             $stipulation = Stipulation::inRandomOrder()->first();
             $match->addStipulation($stipulation);
         }
+    }
+
+    public function addTitles($match)
+    {
+        if (chance(5)) {
+            $match->addTitle($title = Title::active($match->event->date)->inRandomOrder()->first());
+        }
+    }
+
+    public function addWrestlers($match)
+    {
+        // If this isn't a title match we just want to add two random wrestlers
+        if (! $match->isTitleMatch()) {
+            return $match->addWrestlers(Wrestler::inRandomOrder()->take(2)->get());
+        }
+
+        // Otherwise, we're going to start by adding the title holder(s)
+        $wrestlers = $match->titles->map(function ($title) {
+            return optional($title->currentChampion)->wrestler;
+        })->filter();
+
+        // If we haven't returned any wrestlers, we want to add two random
+        // wrestlers. If we did, we only want to add one — but we ought
+        // to ensure that we don't add one who has already been added.
+        $randoms = Wrestler::inRandomOrder()
+            ->whereNotIn('id', $wrestlers->pluck('id')->all())
+            ->take($wrestlers->count() ? 1 : 2)
+            ->get();
+        $wrestlers->merge($randoms);
+
+        // Finally, add the wrestlers
+        return $match->addWrestlers($wrestlers);
+    }
+
+    public function setWinner($match)
+    {
+        $match->load('wrestlers');
+        // If this is a title match give the champion a 3% chance to retain their title.
+        if ($match->isTitleMatch() && chance(3)) {
+            $champions = $match->titles->map(function ($title) {
+                return $title->currentChampion;
+            })->filter();
+
+            $match->setWinner($champions->random());
+        }
+
+        // Otherwise just choose a random winner.
+        $match->setWinner($match->wrestlers->random());
     }
 }

@@ -59,9 +59,10 @@ class Title extends Model
      * @param datetime $date
      * @return void
      */
-    public function setNewChampion(Wrestler $wrestler, $date)
+    public function setChampion(Wrestler $wrestler, $date)
     {
-        if ($champion = $this->currentChampion) {
+        $champion = $this->currentChampion;
+        if ($champion !== null && $wrestler->id !== $champion->id) {
             $champion->loseTitle($this, $date);
         }
 

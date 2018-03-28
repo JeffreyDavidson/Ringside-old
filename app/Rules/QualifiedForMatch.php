@@ -8,18 +8,24 @@ use Illuminate\Contracts\Validation\Rule;
 class QualifiedForMatch implements Rule
 {
     /**
-     * @var \App\Models\Wrestler
+     * @var \App\Models\Event
      */
     private $eventDate;
+
+    /**
+     * @var \App\Models\*
+     */
+    private $model;
 
     /**
      * Create a new rule instance.
      *
      * @param $eventDate
      */
-    public function __construct($eventDate)
+    public function __construct($eventDate, $model)
     {
         $this->eventDate = $eventDate;
+        $this->model = $model;
     }
 
     /**
@@ -41,6 +47,6 @@ class QualifiedForMatch implements Rule
      */
     public function message()
     {
-        return 'This '.strtolower(get_class($model)).' is not qualified for the match.';
+        return 'This '.strtolower(class_basename(get_class($this->model))).' is not qualified for the match.';
     }
 }
