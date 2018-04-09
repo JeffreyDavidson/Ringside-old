@@ -49,6 +49,20 @@ class TitleTest extends TestCase
     }
 
     /** @test */
+    public function a_title_can_set_a_champion()
+    {
+        $wrestlerA = factory(Wrestler::class)->create();
+        $wrestlerB = factory(Wrestler::class)->create();
+        $this->title->setChampion($wrestlerA, Carbon::yesterday());
+        $this->assertEquals($this->title->currentChampion, $wrestlerA);
+        $this->title->refresh();
+
+        $this->title->setChampion($wrestlerB, Carbon::today());
+
+        $this->assertEquals($this->title->currentChampion->id, $wrestlerB->id);
+    }
+
+    /** @test */
     public function can_get_all_active_titles()
     {
         $activeTitleA = factory(Title::class)->create(['retired_at' => NULL, 'introduced_at' => Carbon::yesterday()]);

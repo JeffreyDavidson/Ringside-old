@@ -62,11 +62,14 @@ class Title extends Model
     public function setChampion(Wrestler $wrestler, $date)
     {
         $champion = $this->currentChampion;
+
         if ($champion !== null && $wrestler->id !== $champion->id) {
-            $champion->loseTitle($this, $date);
+            $champion->wrestler->loseTitle($this, $date);
         }
 
-        $wrestler->winTitle($this, $date);
+        if ($champion === null || $wrestler->id !== $champion->id) {
+            $wrestler->winTitle($this, $date);
+        }
 
         $this->setRelation('currentChampion', $wrestler);
     }

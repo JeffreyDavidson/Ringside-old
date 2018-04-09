@@ -160,14 +160,15 @@ class MatchTest extends TestCase
     /** @test */
     public function a_title_match_champion_can_be_set_as_winner()
     {
-        $event = factory(Event::class)->create(['date' => Carbon::parse('2018-03-05')]);
-        $match = factory(Match::class)->create(['event_id' => $event->id]);
         $wrestlerA = factory(Wrestler::class)->create();
+        $title = factory(Title::class)->create();
+        $title->setChampion($wrestlerA, Carbon::parse('2018-03-03'));
+
+        $event = factory(Event::class)->create(['date' => '2018-03-05']);
+        $match = factory(Match::class)->create(['event_id' => $event->id]);
         $wrestlerB = factory(Wrestler::class)->create();
-        $title = factory(Title::class)->create(['introduced_at' => Carbon::parse('2018-03-01')]);
         $match->addWrestlers([$wrestlerA, $wrestlerB]);
         $match->addTitle($title);
-        $title->setChampion($wrestlerA, Carbon::parse('2018-03-03'));
 
         $match->setWinner($wrestlerA);
 
@@ -179,20 +180,22 @@ class MatchTest extends TestCase
     /** @test */
     public function a_title_match_non_champion_can_be_set_as_winner()
     {
+        $wrestlerA = factory(Wrestler::class)->create();
+        $title = factory(Title::class)->create();
+        $title->setChampion($wrestlerA, Carbon::parse('2018-03-03'));
+
         $event = factory(Event::class)->create(['date' => Carbon::parse('2018-03-05')]);
         $match = factory(Match::class)->create(['event_id' => $event->id]);
-        $wrestlerA = factory(Wrestler::class)->create();
         $wrestlerB = factory(Wrestler::class)->create();
-        $title = factory(Title::class)->create(['introduced_at' => Carbon::parse('2018-03-01')]);
         $match->addWrestlers([$wrestlerA, $wrestlerB]);
         $match->addTitle($title);
-        $title->setChampion($wrestlerA, Carbon::parse('2018-03-03'));
 
         $match->setWinner($wrestlerB);
 
+        $title->refresh();
         $this->assertEquals($wrestlerB->id, $match->winner_id);
         $this->assertEquals($wrestlerA->id, $match->loser_id);
-        $this->assertEquals($wrestlerB, $title->currentChampion);
+        $this->assertEquals($wrestlerB->id, $title->currentChampion->id);
     }
 
     /** @test */

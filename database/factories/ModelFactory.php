@@ -69,7 +69,7 @@ $factory->define(App\Models\Title::class, function (Faker\Generator $faker) {
     return [
         'name' => $name,
         'slug' => str_slug($name),
-        'introduced_at' => $faker->date(),
+        'introduced_at' => Carbon::now(),
     ];
 });
 
@@ -114,7 +114,7 @@ $factory->define(App\Models\Champion::class, function (Faker\Generator $faker) {
         'title_id' => function () {
             return factory(App\Models\Title::class)->create()->id;
         },
-        'won_on' => $faker->date(),
+        'won_on' => Carbon::now(),
     ];
 });
 

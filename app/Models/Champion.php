@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Laracodes\Presenter\Traits\Presentable;
+use Carbon\Carbon;
+use App\Collections\ChampionCollection;
 
 class Champion extends Model
 {
@@ -59,5 +61,28 @@ class Champion extends Model
     public function scopeCurrent($query)
     {
         return $query->whereNull('lost_on');
+    }
+
+    /**
+     * Calculates the length of time during championship reign.
+     *
+     * @return integer
+     */
+    public function timeSpentAsChampion()
+    {
+        $lostOn = $this->lost_on ?? Carbon::now();
+
+        return $lostOn->diffInDays($this->won_on);
+    }
+
+    /**
+     * Create a new Eloquent Collection instance.
+     *
+     * @param  array  $models
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function newCollection(array $models = [])
+    {
+        return new ChampionCollection($models);
     }
 }

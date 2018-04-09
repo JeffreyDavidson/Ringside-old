@@ -4,10 +4,23 @@ namespace App\Repositories;
 
 use App\Models\Title;
 use App\Models\Champion;
+use Carbon\Carbon;
 
 class ChampionRepository
 {
-    public function mostTitleDefences()
+    public function mostTitleDefenses()
+    {
+        $champion = Champion::with('wrestler')
+            ->selectRaw('COUNT(*) as count, wrestler_id')
+            ->where('title_id', $title->id)
+            ->orderBy('count', 'desc')
+            ->groupBy('wrestler_id')
+            ->first();
+
+        return $champion->wrestler;
+    }
+
+    public static function mostTitleReigns(Title $title)
     {
         return Champion::with('wrestler')
             ->selectRaw('COUNT(*) as count, wrestler_id')
@@ -17,23 +30,17 @@ class ChampionRepository
             ->first();
     }
 
-    public function mostTitleReigns(Title $title)
+    public static function longestTitleReign(Title $title)
     {
-        return Champion::with('wrestler')
-            ->selectRaw('COUNT(*) as count, wrestler_id')
-            ->where('title_id', $title->id)
-            ->orderBy('count', 'desc')
-            ->groupBy('wrestler_id')
-            ->first();
-    }
-
-    public function longestTitleReign()
-    {
-        return Champion::with('wrestler')
-            ->select(DB::raw('DATEDIFF(IFNULL(DATE(champions.lost_on), NOW()), DATE(champions.won_on)) as length, wrestler_id'))
+        $champions = Champion::with('wrestler')
+            ->select('champions.lost_on', 'champions.won_on', 'wrestler_id')
             ->where('title_id', $title->id)
             ->orderBy('length', 'desc')
             ->groupBy('length', 'wrestler_id')
-            ->first();
+            ->get();
+
+        return $champions->sortByDesc(function ($champion) {
+            return $champion->timeSpentAsChampion();
+        })->first();
     }
 }

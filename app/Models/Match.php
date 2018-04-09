@@ -196,7 +196,7 @@ class Match extends Model
 
         if ($this->isTitleMatch()) {
             $this->titles->each(function ($title) use ($wrestler) {
-                if ($title->currentChampion->wrestler->id !== $wrestler->id) {
+                if (! $wrestler->hasTitle($title)) {
                     $title->setChampion($wrestler, $this->event->date);
                 }
             });

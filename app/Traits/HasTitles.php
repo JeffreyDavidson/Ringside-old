@@ -30,7 +30,13 @@ trait HasTitles
         return $this->titles()->whereNotNull('lost_on');
     }
 
-    public function hasTitle($title)
+    /**
+     * Checks to see if the wrestler is the champion of a specific title.
+     *
+     * @param \App\Models\Title $title
+     * @return Boolean
+     */
+    public function hasTitle(Title $title)
     {
         $this->load('currentTitlesHeld.title');
 
@@ -39,6 +45,11 @@ trait HasTitles
         });
     }
 
+    /**
+     * Retrieves a collection of titles currently held by wrestler.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
     public function currentTitlesHeld()
     {
         return $this->titles()->whereNull('lost_on');
