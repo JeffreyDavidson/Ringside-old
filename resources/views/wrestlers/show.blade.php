@@ -89,13 +89,13 @@
                     <th>Opponent(s)</th>
                 </thead>
                 <tbody>
-                @foreach($wrestler->matches as $match)
-                    <tr>
-                        <td>{{ $match->id }}</td>
-                        <td>{{ $match->event->name }}</td>
-                        <td>{{ $match->competitors }}</td>
-                    </tr>
-                @endforeach
+                    @foreach($wrestler->matches as $match)
+                        <tr>
+                            <td>{{ $match->id }}</td>
+                            <td>{{ $match->event->name }}</td>
+                            <td>{{ $match->competitors }}</td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
