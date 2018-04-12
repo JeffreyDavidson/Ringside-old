@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Unit;
+namespace Tests\Unit\Rules;
 
 use App\Models\Event;
 use Tests\TestCase;
