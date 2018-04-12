@@ -59,17 +59,17 @@ class ChampionRepositoryTest extends TestCase
     /** @test */
     public function it_can_get_the_champion_with_the_most_title_defenses()
     {
-        $wrestlerA = factory(Wrestler::class)->create(['name' => 'Wrestler 1']);
-        $wrestlerB = factory(Wrestler::class)->create(['name' => 'Wrestler 2']);
-        $wrestlerC = factory(Wrestler::class)->create(['name' => 'Wrestler 3']);
+        $wrestlerA = factory(Wrestler::class)->create(['name' => 'Wrestler A']);
+        $wrestlerB = factory(Wrestler::class)->create(['name' => 'Wrestler B']);
+        $wrestlerC = factory(Wrestler::class)->create(['name' => 'Wrestler C']);
         $title = factory(Title::class)->create();
-;
-        factory(Champion::class)->create(['wrestler_id' => $wrestlerA->id, 'title_id' => $title->id, 'won_on' => Carbon::parse('2018-01-03'), 'lost_on' => Carbon::parse('2018-01-05')]);
-        factory(Champion::class)->create(['wrestler_id' => $wrestlerB->id, 'title_id' => $title->id, 'won_on' => Carbon::parse('2018-01-05'), 'lost_on' => Carbon::parse('2018-01-10')]);
-        factory(Champion::class)->create(['wrestler_id' => $wrestlerC->id, 'title_id' => $title->id, 'won_on' => Carbon::parse('2018-01-10'), 'lost_on' => Carbon::parse('2018-04-06')]);
 
-        $champion = ChampionRepository::longestTitleReign($title);
+        factory(Champion::class)->create(['wrestler_id' => $wrestlerA->id, 'title_id' => $title->id, 'successful_defenses' => 3]);
+        factory(Champion::class)->create(['wrestler_id' => $wrestlerB->id, 'title_id' => $title->id, 'successful_defenses' => 6]);
+        factory(Champion::class)->create(['wrestler_id' => $wrestlerC->id, 'title_id' => $title->id, 'successful_defenses' => 5]);
 
-        $this->assertEquals($wrestlerC->id, $champion->wrestler->id);
+        $champion = ChampionRepository::mostTitleDefenses($title);
+
+        $this->assertEquals($wrestlerB->id, $champion->wrestler->id);
     }
 }

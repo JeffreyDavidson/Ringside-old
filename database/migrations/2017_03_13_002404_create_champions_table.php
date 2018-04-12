@@ -19,6 +19,7 @@ class CreateChampionsTable extends Migration
             $table->unsignedInteger('wrestler_id')->index();
             $table->timestamp('won_on');
             $table->timestamp('lost_on')->nullable();
+            $table->unsignedInteger('successful_defenses')->default(0);
             $table->timestamps();
 
             $table->unique(['title_id', 'wrestler_id', 'won_on']);

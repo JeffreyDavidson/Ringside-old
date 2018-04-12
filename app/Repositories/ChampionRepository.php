@@ -8,16 +8,12 @@ use Carbon\Carbon;
 
 class ChampionRepository
 {
-    public function mostTitleDefenses()
+    public static function mostTitleDefenses(Title $title)
     {
-        $champion = Champion::with('wrestler')
-            ->selectRaw('COUNT(*) as count, wrestler_id')
+        return Champion::with('wrestler')
             ->where('title_id', $title->id)
-            ->orderBy('count', 'desc')
-            ->groupBy('wrestler_id')
+            ->orderBy('successful_defenses', 'desc')
             ->first();
-
-        return $champion->wrestler;
     }
 
     public static function mostTitleReigns(Title $title)
