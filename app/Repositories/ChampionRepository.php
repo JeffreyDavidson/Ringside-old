@@ -19,10 +19,8 @@ class ChampionRepository
     public static function mostTitleReigns(Title $title)
     {
         return Champion::with('wrestler')
-            ->selectRaw('COUNT(*) as count, wrestler_id')
             ->where('title_id', $title->id)
             ->orderBy('count', 'desc')
-            ->groupBy('wrestler_id')
             ->first();
     }
 

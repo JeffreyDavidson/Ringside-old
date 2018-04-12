@@ -22,12 +22,12 @@ class ChampionCollectionTest extends TestCase
     {
         $titleA = factory(Title::class)->create();
         $titleB = factory(Title::class)->create();
-
         factory(Champion::class, 2)->create(['title_id' => $titleA->id]);
         factory(Champion::class, 4)->create(['title_id' => $titleB->id]);
 
-        $champions = Champion::all();
+        $groups = Champion::all()->groupByTitle();
 
-        $this->assertCount(2, $champions->groupByTitle()->id, $titleA->id);
+        $this->assertCount(2, $groups[$titleA->id]);
+        $this->assertCount(4, $groups[$titleB->id]);
     }
 }
