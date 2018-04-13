@@ -128,4 +128,22 @@ class EventsTableSeeder extends Seeder
         // Otherwise just choose a random winner.
         $match->setWinner($match->wrestlers->random());
     }
+
+    protected function dates(Carbon $from, Carbon $to, $day, $last = false)
+    {
+        $step = $from->copy()->startOfMonth();
+        $modification = sprintf($last ? 'last %s of next month' : 'next %s', $day);
+
+        $dates = [];
+        while ($step->modify($modification)->lte($to)) {
+            $dates[$step->timestamp] = $step->copy();
+        }
+
+        return $dates;
+    }
+
+    function chance(int $percent)
+    {
+        return rand(0, 100) < $percent;
+    }
 }
