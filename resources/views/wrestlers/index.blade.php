@@ -15,30 +15,8 @@
             @endcan
         </div>
         <div class="panel-body container-fluid">
-            <table class="table table-striped table-bordered datatable" cellspacing="0" width="100%">
-                <thead>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Status</th>
-                    <th>Height</th>
-                    <th>Weight</th>
-                    <th>Actions</th>
-                </thead>
-                <tbody>
-                    @foreach($wrestlers as $wrestler)
-                        <tr>
-                            <td>{{ $wrestler->id }}</td>
-                            <td>{{ $wrestler->name }}</td>
-                            <td>{{ $wrestler->status->name }}</td>
-                            <td>{{ $wrestler->present()->height }}</td>
-                            <td>{{ $wrestler->weight }}</td>
-                            <td>
-                                @include('partials.actions', ['resource' => 'wrestlers', 'model' => $wrestler])
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+            @include('wrestlers.partials.table')
+            {{ $wrestlers->links() }}
         </div>
     </div>
 @endsection
