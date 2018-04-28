@@ -15,7 +15,7 @@
             @endcan
         </div>
         <div class="panel-body container-fluid">
-            @inclukde('events.partials.table')
+            @include('events.partials.table')
         </div>
     </div>
 @endsection
