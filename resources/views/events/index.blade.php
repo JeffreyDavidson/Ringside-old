@@ -16,6 +16,7 @@
         </div>
         <div class="panel-body container-fluid">
             @include('events.partials.table')
+            {{ $events->links() }}
         </div>
     </div>
 @endsection
