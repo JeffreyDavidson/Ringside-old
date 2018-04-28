@@ -17,7 +17,7 @@ class EventsController extends Controller
     {
         $this->authorize('index', Event::class);
 
-        $events = Event::with('venue')->get();
+        $events = Event::with('venue')->paginate(10);
 
         return response()->view('events.index', ['events' => $events]);
     }

@@ -17,7 +17,7 @@ class TitlesController extends Controller
     {
         $this->authorize('index', Title::class);
 
-        $titles = Title::all();
+        $titles = Title::paginate(10);
 
         return response()->view('titles.index', ['titles' => $titles]);
     }

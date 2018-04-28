@@ -18,7 +18,7 @@ class WrestlersController extends Controller
     {
         $this->authorize('index', Wrestler::class);
 
-        $wrestlers = Wrestler::with('status')->get();
+        $wrestlers = Wrestler::with('status')->paginate(10);
 
         return response()->view('wrestlers.index', ['wrestlers' => $wrestlers]);
     }
