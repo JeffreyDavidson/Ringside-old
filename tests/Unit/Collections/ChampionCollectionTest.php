@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Collections;
 
 use Tests\TestCase;
 use App\Models\Champion;

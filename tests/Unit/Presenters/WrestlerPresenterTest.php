@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Presenters;
 
 use Tests\TestCase;
 use App\Models\Wrestler;

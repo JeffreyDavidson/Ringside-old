@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Unit;
+namespace Tests\Unit\Traits;
 
 use Tests\TestCase;
 use App\Models\Wrestler;

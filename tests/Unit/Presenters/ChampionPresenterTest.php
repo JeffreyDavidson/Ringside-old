@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Presenters;
 
 use Carbon\Carbon;
 use Tests\TestCase;
