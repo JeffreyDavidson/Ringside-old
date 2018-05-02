@@ -106,6 +106,6 @@ class Wrestler extends Model
      */
     public function retirements()
     {
-        return $this->hasMany(Retirement::class);
+        return $this->morphMany(Retirement::class, 'retirement');
     }
 }

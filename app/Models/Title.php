@@ -53,6 +53,16 @@ class Title extends Model
     }
 
     /**
+     * A title can have many retirements.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function retirements()
+    {
+        return $this->morphMany(Retirement::class, 'retirement');
+    }
+
+    /**
      * Crowns the new champion for the title.
      *
      * @param \App\Models\Wrestler $wrestler
