@@ -33,4 +33,9 @@ class TitlePolicy
     {
         return $user->hasPermission('delete-title');
     }
+
+    public function retire(User $user)
+    {
+        return $user->hasPermission('retire-title');
+    }
 }
