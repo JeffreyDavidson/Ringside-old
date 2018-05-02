@@ -14,7 +14,7 @@
                 <td>{{ $wrestler->name }}</td>
                 <td>{{ $wrestler->status->name }}</td>
                 <td>{{ $wrestler->present()->height }}</td>
-                <td>{{ $wrestler->weight }}</td>
+                <td>{{ $wrestler->weight }} lbs.</td>
                 <td>
                     @include('partials.actions', ['resource' => 'wrestlers', 'model' => $wrestler])
                 </td>
