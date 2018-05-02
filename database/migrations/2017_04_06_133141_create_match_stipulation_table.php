@@ -17,7 +17,6 @@ class CreateMatchStipulationTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('match_id')->index();
             $table->unsignedInteger('stipulation_id')->index();
-            $table->timestamps();
 
             $table->unique(['match_id', 'stipulation_id']);
             $table->foreign('match_id')->references('id')->on('matches');
