@@ -42,6 +42,7 @@ class DatabaseSeeder extends Seeder
         foreach ($this->toTruncate as $table) {
             DB::table($table)->truncate();
         }
+
         $this->call(RolesAndPermissionTableSeeder::class);
         $this->call(UsersTableSeeder::class);
         $this->call(WrestlerStatusesTableSeeder::class);
