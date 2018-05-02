@@ -195,15 +195,11 @@ class Match extends Model
         ]);
 
         if ($this->isTitleMatch()) {
-            // dd($this);
-            dd($this->titles);
             $this->titles->each(function ($title) use ($wrestler) {
-                // dd($title);
                 if (! $wrestler->hasTitle($title)) {
                     $title->setChampion($wrestler, $this->event->date);
                 } else {
-                    // dd($title);
-                    $title->champion->increment('successful_defenses');
+                    $title->currentChampion->increment('successful_defenses');
                 }
             });
         }
