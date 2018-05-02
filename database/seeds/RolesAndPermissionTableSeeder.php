@@ -33,6 +33,7 @@ class RolesAndPermissionTableSeeder extends Seeder
         $updateTitle = Permission::create(['name' => 'Update Title',  'slug' => 'update-title']);
         $showTitle = Permission::create(['name' => 'Show Title',  'slug' => 'show-title']);
         $deleteTitle = Permission::create(['name' => 'Delete Title',  'slug' => 'delete-title']);
+        $retireTitle = Permission::create(['name' => 'Retire Title',  'slug' => 'retire-title']);
 
         $viewStipulations = Permission::create(['name' => 'View Stipulations',  'slug' => 'view-stipulations']);
         $createStipulation = Permission::create(['name' => 'Create Stipulation',  'slug' => 'create-stipulation']);
@@ -73,6 +74,7 @@ class RolesAndPermissionTableSeeder extends Seeder
         $admin->givePermissionTo($updateTitle);
         $admin->givePermissionTo($showTitle);
         $admin->givePermissionTo($deleteTitle);
+        $admin->givePermissionTo($retireTitle);
 
         $admin->givePermissionTo($viewStipulations);
         $admin->givePermissionTo($createStipulation);
@@ -113,6 +115,7 @@ class RolesAndPermissionTableSeeder extends Seeder
         $superAdmin->givePermissionTo($updateTitle);
         $superAdmin->givePermissionTo($showTitle);
         $superAdmin->givePermissionTo($deleteTitle);
+        $superAdmin->givePermissionTo($retireTitle);
 
         $superAdmin->givePermissionTo($viewStipulations);
         $superAdmin->givePermissionTo($createStipulation);
