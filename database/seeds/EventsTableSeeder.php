@@ -28,7 +28,7 @@ class EventsTableSeeder extends Seeder
             'thursday' => false,
             'sunday' => true
         ])->flatMap(function ($bool, $day) use ($start, $nextMonth) {
-            return dates($start, $nextMonth, $day, $bool);
+            return $this->dates($start, $nextMonth, $day, $bool);
         })->sort(function ($a, $b) {
             return strtotime($a) - strtotime($b);
         })->values()->map(function ($date, $key) {
@@ -75,7 +75,7 @@ class EventsTableSeeder extends Seeder
 
     public function addStipulations($match)
     {
-        if (chance(3)) {
+        if ($this->chance(3)) {
             $stipulation = Stipulation::inRandomOrder()->first();
             $match->addStipulation($stipulation);
         }
@@ -83,7 +83,7 @@ class EventsTableSeeder extends Seeder
 
     public function addTitles($match)
     {
-        if (chance(5)) {
+        if ($this->chance(5)) {
             $match->addTitle($title = Title::active($match->event->date)->inRandomOrder()->first());
         }
     }
@@ -107,7 +107,8 @@ class EventsTableSeeder extends Seeder
             ->whereNotIn('id', $wrestlers->pluck('id')->all())
             ->take($wrestlers->count() ? 1 : 2)
             ->get();
-        $wrestlers->merge($randoms);
+
+        $wrestlers = $wrestlers->merge($randoms);
 
         // Finally, add the wrestlers
         return $match->addWrestlers($wrestlers);
@@ -116,10 +117,11 @@ class EventsTableSeeder extends Seeder
     public function setWinner($match)
     {
         $match->load('wrestlers');
+
         // If this is a title match give the champion a 3% chance to retain their title.
-        if ($match->isTitleMatch() && chance(3)) {
+        if ($match->isTitleMatch() && $this->chance(3)) {
             $champions = $match->titles->map(function ($title) {
-                return $title->currentChampion;
+                return optional($title->currentChampion)->wrestler;
             })->filter();
 
             $match->setWinner($champions->random());
@@ -142,7 +144,7 @@ class EventsTableSeeder extends Seeder
         return $dates;
     }
 
-    function chance(int $percent)
+    protected function chance(int $percent)
     {
         return rand(0, 100) < $percent;
     }
