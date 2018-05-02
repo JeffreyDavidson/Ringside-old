@@ -14,7 +14,7 @@
                 <td>{{ $title->slug }}</td>
                 <td>{{ $title->present()->introduced_at }}</td>
                 <td>
-                    @include('partials.actions', ['resource' => 'titles', 'model' => $title])
+                    @include('partials.actions', ['resource' => 'titles', 'model' => $title, 'actions' => collect(['edit', 'show', 'delete', 'retire'])])
                 </td>
             </tr>
         @endforeach
