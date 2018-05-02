@@ -26,6 +26,7 @@ Route::group(['middleware' => 'auth'], function () {
     });
     Route::resource('events', 'EventsController');
     Route::resource('titles', 'TitlesController');
+    Route::get('titles/{title}/retire', 'TitlesController@retire')->name('titles.retire');
     Route::resource('stipulations', 'StipulationsController');
     Route::resource('venues', 'VenuesController');
 });

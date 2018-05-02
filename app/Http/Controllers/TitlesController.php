@@ -105,4 +105,13 @@ class TitlesController extends Controller
 
         return redirect()->route('titles.index');
     }
+
+    public function retire(Title $title)
+    {
+        $this->authorize('retire', $title);
+
+        $title->retire();
+
+        return redirect()->route('titles.index');
+    }
 }
