@@ -37,9 +37,9 @@ class TitleTest extends TestCase
     /** @test */
     public function can_get_all_retired_titles()
     {
-        $retiredTitleA = factory(Title::class)->create(['retired_at' => Carbon::yesterday()]);
-        $retiredTitleB = factory(Title::class)->create(['retired_at' => Carbon::yesterday()]);
-        $activeTitle = factory(Title::class)->create(['retired_at' => NULL]);
+        $retiredTitleA = factory(Title::class)->create()->retire();
+        $retiredTitleB = factory(Title::class)->create()->retire();
+        $activeTitle = factory(Title::class)->create();
 
         $retiredTitles = Title::retired()->get();
 

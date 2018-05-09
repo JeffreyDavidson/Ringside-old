@@ -6,10 +6,11 @@ use App\Traits\HasMatches;
 use Illuminate\Database\Eloquent\Model;
 use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\HasRetirements;
 
 class Title extends Model
 {
-    use HasMatches, Presentable, SoftDeletes;
+    use HasMatches, HasRetirements, Presentable, SoftDeletes;
 
     /**
      * Assign which presenter to be used for model.
@@ -30,7 +31,7 @@ class Title extends Model
      *
      * @var array
      */
-    protected $dates = ['introduced_at', 'retired_at'];
+    protected $dates = ['introduced_at'];
 
     /**
      * A title can have many champions.
@@ -103,7 +104,7 @@ class Title extends Model
      */
     public function scopeRetired($query)
     {
-        return $query->whereNotNull('retired_at');
+        return $query->retirements()->whereNotNull('retired_at');
     }
 
     /**
@@ -114,6 +115,8 @@ class Title extends Model
      */
     public function scopeActive($query, $date)
     {
-        return $query->whereNull('retired_at')->where('introduced_at', '<=', $date);
+        return $query->whereDoesntHave('retirements', function ($q) {
+            $q->whereNotNull('ended_at');
+        })->where('introduced_at', '<=', $date);
     }
 }
