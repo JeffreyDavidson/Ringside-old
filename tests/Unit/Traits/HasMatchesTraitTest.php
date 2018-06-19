@@ -19,7 +19,7 @@ class HasMatchesTraitTest extends TestCase
         $wrestler = factory(Wrestler::class)->create();
         $event = factory(Event::class)->create(['date' => '2017-10-09']);
         $match = factory(Match::class)->create(['event_id' => $event->id]);
-        $match->addWrestler($wrestler);
+        $match->addWrestler($wrestler, 0);
 
         $this->assertTrue($wrestler->hasPastMatches());
         $this->assertEquals(1, $wrestler->pastMatches->count());

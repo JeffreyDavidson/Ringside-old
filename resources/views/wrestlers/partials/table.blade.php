@@ -16,7 +16,7 @@
                 <td>{{ $wrestler->present()->height }}</td>
                 <td>{{ $wrestler->weight }} lbs.</td>
                 <td>
-                    @include('partials.actions', ['resource' => 'wrestlers', 'model' => $wrestler])
+                    @include('partials.actions', ['resource' => 'wrestlers', 'model' => $wrestler, 'actions' => collect(['edit', 'show', 'delete', 'retire'])])
                 </td>
             </tr>
         @endforeach

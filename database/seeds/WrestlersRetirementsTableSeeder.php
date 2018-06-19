@@ -15,7 +15,8 @@ class WrestlersRetirementsTableSeeder extends Seeder
     public function run()
     {
         Wrestler::hasStatus('Retired')->each(function ($wrestler) {
-            Retirement::create(['wrestler_id' => $wrestler->id, 'retired_at' => Carbon::now()->subMonths(3)]);
+            $wrestler->retire();
+            // Retirement::create(['wrestler_id' => $wrestler->id, 'retired_at' => Carbon::now()->subMonths(3)]);
         });
     }
 }

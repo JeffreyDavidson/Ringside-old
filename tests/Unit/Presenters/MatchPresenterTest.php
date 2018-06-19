@@ -20,9 +20,28 @@ class MatchPresenterTest extends TestCase
         $wrestlerA = factory(Wrestler::class)->create(['name' => 'Wrestler A']);
         $wrestlerB = factory(Wrestler::class)->create(['name' => 'Wrestler B']);
         $match = factory(Match::class)->create();
-        $match->addWrestlers([$wrestlerA, $wrestlerB]);
+        $match->addWrestlers([
+            0 => [$wrestlerA],
+            1 => [$wrestlerB]
+        ]);
 
         $this->assertEquals('Wrestler A vs. Wrestler B', $match->present()->wrestlers);
+    }
+
+    /** @test */
+    public function a_match_can_present_multiple_wrestlers_on_the_same_side()
+    {
+        $wrestlerA = factory(Wrestler::class)->create(['name' => 'Wrestler A']);
+        $wrestlerB = factory(Wrestler::class)->create(['name' => 'Wrestler B']);
+        $wrestlerC = factory(Wrestler::class)->create(['name' => 'Wrestler C']);
+        $wrestlerD = factory(Wrestler::class)->create(['name' => 'Wrestler D']);
+        $match = factory(Match::class)->create();
+        $match->addWrestlers([
+            0 => [$wrestlerA, $wrestlerC],
+            1 => [$wrestlerB, $wrestlerD]
+        ]);
+
+        $this->assertEquals('Wrestler A & Wrestler C vs. Wrestler B & Wrestler D', $match->present()->wrestlers);
     }
 
     /** @test */
@@ -43,28 +62,7 @@ class MatchPresenterTest extends TestCase
         $match = factory(Match::class)->create();
         $match->addReferees([$refereeA, $refereeB]);
 
-        $this->assertEquals('John Doe, Jane Scott', $match->present()->referees);
-    }
-
-    /** @test */
-    public function a_match_can_present_a_single_stipulation_in_a_match()
-    {
-        $stipulation = factory(Stipulation::class)->create(['name' => 'Cage Match']);
-        $match = factory(Match::class)->create();
-        $match->addStipulation($stipulation);
-
-        $this->assertEquals('Cage Match', $match->present()->stipulations);
-    }
-
-    /** @test */
-    public function a_match_can_present_multiple_stipulations_in_a_match()
-    {
-        $stipulationA = factory(Stipulation::class)->create(['name' => 'Cage Match']);
-        $stipulationB = factory(Stipulation::class)->create(['name' => 'Ladder Match']);
-        $match = factory(Match::class)->create();
-        $match->addStipulations([$stipulationA, $stipulationB]);
-
-        $this->assertEquals('Cage Match, Ladder Match', $match->present()->stipulations);
+        $this->assertEquals('John Doe & Jane Scott', $match->present()->referees);
     }
 
     /** @test */
@@ -79,7 +77,7 @@ class MatchPresenterTest extends TestCase
     }
 
     /** @test */
-    public function the_last_match_in_an_event_should_be_presented_as_the_opening_match()
+    public function the_last_match_in_an_event_should_be_presented_as_the_main_event()
     {
         $match = factory(Match::class)->create();
         $loop = new stdClass;

@@ -64,8 +64,10 @@ class ViewVenueTest extends TestCase
     {
         $event = factory(Event::class)->create(['name' => 'Event Name', 'venue_id' => $this->venue->id]);
         $match = factory(Match::class)->create(['event_id' => $event->id]);
-        $wrestlers = factory(Wrestler::class, 2)->create();
-        $match->addWrestlers($wrestlers);
+        $wrestlerA = factory(Wrestler::class)->create();
+        $wrestlerB = factory(Wrestler::class)->create();
+        $match->addWrestler($wrestlerA, 0);
+        $match->addWrestler($wrestlerB, 1);
 
         $response = $this->actingAs($this->authorizedUser)
                         ->get(route('venues.show', $this->venue->id));

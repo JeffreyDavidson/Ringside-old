@@ -3,11 +3,13 @@
 namespace App\Providers;
 
 use App\Models\Event;
+use App\Models\Match;
 use App\Models\Title;
 use App\Models\Venue;
 use App\Models\Wrestler;
 use App\Models\Stipulation;
 use App\Policies\EventPolicy;
+use App\Policies\MatchPolicy;
 use App\Policies\TitlePolicy;
 use App\Policies\VenuePolicy;
 use App\Policies\WrestlerPolicy;
@@ -24,6 +26,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         Wrestler::class => WrestlerPolicy::class,
         Event::class => EventPolicy::class,
+        Match::class => MatchPolicy::class,
         Title::class => TitlePolicy::class,
         Stipulation::class => StipulationPolicy::class,
         Venue::class => VenuePolicy::class,

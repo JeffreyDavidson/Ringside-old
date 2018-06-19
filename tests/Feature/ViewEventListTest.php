@@ -20,6 +20,7 @@ class ViewEventListTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_view_the_list_of_events()
     {
+        $this->withoutExceptionHandling();
         $eventA = factory(Event::class)->create();
         $eventB = factory(Event::class)->create();
         $eventC = factory(Event::class)->create();

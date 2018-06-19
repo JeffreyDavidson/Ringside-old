@@ -177,7 +177,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\MacroServiceProvider::class,
-        App\Providers\BootstrapFormServiceProvider::class
+        App\Providers\BootstrapFormServiceProvider::class,
+        App\Providers\ValidationServiceProvider::class,
     ],
 
     /*

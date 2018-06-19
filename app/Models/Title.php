@@ -60,7 +60,7 @@ class Title extends Model
      */
     public function retirements()
     {
-        return $this->morphMany(Retirement::class, 'retirement');
+        return $this->morphMany(Retirement::class, 'retireable');
     }
 
     /**

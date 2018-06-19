@@ -36,9 +36,9 @@ class EventTest extends TestCase
     /** @test */
     public function an_event_can_get_the_main_event_match()
     {
-        $matchA = factory(Match::class)->create(['event_id' => $this->event->id]);
-        $matchB = factory(Match::class)->create(['event_id' => $this->event->id]);
-        $matchC = factory(Match::class)->create(['event_id' => $this->event->id]);
+        $matchA = factory(Match::class)->create(['event_id' => $this->event->id, 'match_number' => 1]);
+        $matchB = factory(Match::class)->create(['event_id' => $this->event->id, 'match_number' => 2]);
+        $matchC = factory(Match::class)->create(['event_id' => $this->event->id, 'match_number' => 3]);
 
         $mainEvent = $this->event->mainEvent;
 

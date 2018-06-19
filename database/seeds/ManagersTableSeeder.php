@@ -20,14 +20,14 @@ class ManagersTableSeeder extends Seeder
 
         for ($this->managerCount; $this->managerCount <= 5; $this->managerCount++) {
             factory(Manager::class)->create([
-                'hired_at' => $startingDate,
+                'hired_at' => $startingDate->hour(mt_rand(9, 18)),
             ]);
         }
 
         while ($startingDate->addYears(2)->lte($now)) {
             for ($x = 1; $x <= 3; $x++) {
                 factory(Manager::class)->create([
-                    'hired_at' => $startingDate,
+                    'hired_at' => $startingDate->hour(mt_rand(9, 18)),
                 ]);
                 $this->managerCount++;
             }
@@ -35,7 +35,7 @@ class ManagersTableSeeder extends Seeder
 
         while ($startingDate->addYears(2)->lte(Carbon::now())) {
             factory(Manager::class, 3)->create([
-                'hired_at' => $startingDate,
+                'hired_at' => $startingDate->hour(mt_rand(9, 18)),
             ]);
         }
     }

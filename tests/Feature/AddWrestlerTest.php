@@ -43,6 +43,15 @@ class AddWrestlerTest extends TestCase
     }
 
     /** @test */
+    public function users_who_dont_have_permission_cannot_view_the_add_wrestler_form()
+    {
+        $response = $this->actingAs($this->unauthorizedUser)
+                        ->get(route('wrestlers.create'));
+
+        $response->assertStatus(403);
+    }
+
+    /** @test */
     public function users_who_have_permission_can_create_a_wrestler()
     {
         $response = $this->actingAs($this->authorizedUser)
@@ -62,15 +71,6 @@ class AddWrestlerTest extends TestCase
             $this->assertEquals(175, $wrestler->weight);
             $this->assertEquals('Wrestler Signature Move', $wrestler->signature_move);
         });
-    }
-
-    /** @test */
-    public function users_who_dont_have_permission_cannot_view_the_add_wrestler_form()
-    {
-        $response = $this->actingAs($this->unauthorizedUser)
-                        ->get(route('wrestlers.create'));
-
-        $response->assertStatus(403);
     }
 
     /** @test */

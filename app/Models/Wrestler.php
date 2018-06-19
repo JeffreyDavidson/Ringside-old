@@ -100,12 +100,27 @@ class Wrestler extends Model
     }
 
     /**
-     * A wrestler can have many retirements.
+     * Scope a query to only include wrestlers hired before a specific date.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function retirements()
+    public function scopeHiredBefore($query, $date)
     {
-        return $this->morphMany(Retirement::class, 'retirement');
+        return $query->where('hired_at', '<', $date);
     }
+
+    /**
+     * Scope a query to only include wrestlers hired before a specific date.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    // public function scopeHiredBefore($query, $date)
+    // {
+    //     return $query->whereDoesntHave('retirements', function ($q) {
+    //         $q->whereNotNull('ended_at');
+    //     });
+    // }
+
 }

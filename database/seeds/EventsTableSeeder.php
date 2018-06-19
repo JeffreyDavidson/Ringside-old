@@ -23,6 +23,9 @@ class EventsTableSeeder extends Seeder
         $start = Carbon::parse('First Monday of January 1990');
         $nextMonth = Carbon::now()->addMonth();
 
+        // Gather dates for Mondays, Thursdays, and Sundays from the given start date
+        // up until the the current date + 1 month. Then for each of those dates up until
+        // the current date + 2 weeks create an event with matches.
         collect([
             'monday' => false,
             'thursday' => false,
@@ -36,18 +39,25 @@ class EventsTableSeeder extends Seeder
                 'name' => 'Event '.($key + 1),
                 'slug' => 'event'.($key + 1),
                 'venue_id' => Venue::inRandomOrder()->first()->id,
-                'date' => $date
+                'date' => $date->hour(19)
             ]);
         })->filter(function ($event) {
-            return $event->date->lt(Carbon::today());
+            return $event->date->lte(Carbon::today()->addWeeks(2));
         })->each(function ($event) {
             $this->addMatches($event);
         });
     }
 
+    /**
+     * Genrate a random number of matches for the passed in event.
+     *
+     * @param App\Models\Event $event
+     * @return void
+     */
     public function addMatches(Event $event)
     {
         $matchesCount = rand(6, 10);
+
         for ($matchNumber = 1; $matchNumber <= $matchesCount; $matchNumber++) {
             $match = $event->matches()->save(factory(Match::class)->create([
                 'match_type_id' => MatchType::inRandomOrder()->first()->id,
@@ -56,9 +66,10 @@ class EventsTableSeeder extends Seeder
             ]));
 
             $this->addReferees($match);
-            $this->addStipulations($match);
+            $this->addStipulation($match);
             $this->addTitles($match);
             $this->addWrestlers($match);
+            $this->setDecision($match);
             $this->setWinner($match);
         }
     }
@@ -66,14 +77,14 @@ class EventsTableSeeder extends Seeder
     public function addReferees($match)
     {
         if ($match->type->needsMultipleReferees()) {
-            $referees = Referee::inRandomOrder()->take(4)->get();
+            $referees = Referee::inRandomOrder()->hiredBefore($match->date)->take(4)->get();
             $match->addReferees($referees);
         } else {
-            $match->addReferee(Referee::inRandomOrder()->first());
+            $match->addReferee(Referee::inRandomOrder()->hiredBefore($match->date)->first());
         }
     }
 
-    public function addStipulations($match)
+    public function addStipulation($match)
     {
         if ($this->chance(3)) {
             $stipulation = Stipulation::inRandomOrder()->first();
@@ -90,9 +101,22 @@ class EventsTableSeeder extends Seeder
 
     public function addWrestlers($match)
     {
-        // If this isn't a title match we just want to add two random wrestlers
+        // If this isn't a title match we just want to add random wrestlers
         if (! $match->isTitleMatch()) {
-            return $match->addWrestlers(Wrestler::inRandomOrder()->take(2)->get());
+            // Only take enough wrestlers for the amtch if there is a limit.
+            $wrestlersForMatch = Wrestler::inRandomOrder()
+                                    ->hiredBefore($match->date)
+                                    ->get();
+
+            if (!is_null($match->type->total_competitors)) {
+                $wrestlers = $wrestlersForMatch->take($match->type->total_competitors);
+            } else {
+                $wrestlers = $wrestlersForMatch->take(rand(5, $wrestlersForMatch->count()));
+            }
+
+            $chunkedWrestlers = $wrestlers->chunk($match->type->number_of_sides);
+
+            return $match->addWrestlers($chunkedWrestlers);
         }
 
         // Otherwise, we're going to start by adding the title holder(s)
@@ -104,6 +128,7 @@ class EventsTableSeeder extends Seeder
         // wrestlers. If we did, we only want to add one — but we ought
         // to ensure that we don't add one who has already been added.
         $randoms = Wrestler::inRandomOrder()
+            ->hiredBefore($match->date)
             ->whereNotIn('id', $wrestlers->pluck('id')->all())
             ->take($wrestlers->count() ? 1 : 2)
             ->get();
@@ -114,12 +139,17 @@ class EventsTableSeeder extends Seeder
         return $match->addWrestlers($wrestlers);
     }
 
+    public function setDecision($match)
+    {
+
+    }
+
     public function setWinner($match)
     {
         $match->load('wrestlers');
 
         // If this is a title match give the champion a 3% chance to retain their title.
-        if ($match->isTitleMatch() && $this->chance(3)) {
+        if ($match->isTitleMatch() && $this->chance(10)) {
             $champions = $match->titles->map(function ($title) {
                 return optional($title->currentChampion)->wrestler;
             })->filter();

@@ -97,7 +97,8 @@ class EditWrestlerTest extends TestCase
     {
         $event = factory(Event::class)->create(['date' => '2017-10-11']);
         $match = factory(Match::class)->create(['event_id' => $event->id]);
-        $match->addWrestler($this->wrestler);
+        $sideNumber = mt_rand(0, $match->type->number_of_sides);
+        $match->addWrestler($this->wrestler, $sideNumber);
 
         $response = $this->actingAs($this->authorizedUser)
                         ->from(route('wrestlers.edit', $this->wrestler->id))
@@ -252,7 +253,8 @@ class EditWrestlerTest extends TestCase
     {
         $event = factory(Event::class)->create(['date' => '2017-11-09']);
         $match = factory(Match::class)->create(['event_id' => $event->id]);
-        $match->addWrestler($this->wrestler);
+        $sideNumber = mt_rand(0, $match->type->number_of_sides);
+        $match->addWrestler($this->wrestler, $sideNumber);
 
         $response = $this->actingAs($this->authorizedUser)
                         ->from(route('wrestlers.edit', $this->wrestler->id))

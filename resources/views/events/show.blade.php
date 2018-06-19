@@ -33,8 +33,8 @@
                         @endforeach
                     @endif
                 </p>
-                @if ($match->stipulations->count() > 0)
-                    <p>{{ $match->present()->stipulations }} Match</p>
+                @if ($match->stipulation)
+                    <p>{{ $match->stipulation->name }}</p>
                 @endif
                 <p>
                     Referee(s): {{ $match->present()->referees }}

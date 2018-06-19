@@ -24,9 +24,13 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::group(['prefix' => 'roster'], function () {
         Route::resource('wrestlers', 'WrestlersController');
+        Route::get('wrestlers/{wrestler}/retire', 'WrestlersController@retire')->name('wrestlers.retire');
     });
 
     Route::resource('events', 'EventsController');
+    Route::get('events/{event}/archive', 'EventsController@archive')->name('events.archive');
+    Route::get('events/{event}/matches/create', 'MatchesController@create')->name('matches.create');
+    Route::post('events/{event}/matches', 'MatchesController@store')->name('matches.store');
     Route::resource('titles', 'TitlesController');
     Route::get('titles/{title}/retire', 'TitlesController@retire')->name('titles.retire');
     Route::resource('stipulations', 'StipulationsController');

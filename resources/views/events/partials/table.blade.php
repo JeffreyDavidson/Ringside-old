@@ -16,7 +16,7 @@
                 <td>{{ $event->present()->date }}</td>
                 <td>{{ $event->venue->name }}</td>
                 <td>
-                    @include('partials.actions', ['resource' => 'events', 'model' => $event])
+                    @include('partials.actions', ['resource' => 'events', 'model' => $event, 'actions' => collect(['edit', 'show', 'delete', 'archive'])])
                 </td>
             </tr>
         @endforeach

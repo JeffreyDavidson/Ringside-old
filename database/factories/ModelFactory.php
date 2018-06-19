@@ -38,9 +38,7 @@ $factory->define(App\Models\WrestlerStatus::class, function (Faker\Generator $fa
 
 $factory->define(App\Models\Injury::class, function (Faker\Generator $faker) {
     return [
-        'wrestler_id' => function () {
-            return factory(App\Models\Wrestler::class)->create()->id;
-        },
+        'wrestler_id' => factory(App\Models\Wrestler::class)->lazy(),
         'injured_at' => Carbon::now('-2 years'),
         'healed_at' => Carbon::now('-2 days'),
     ];
@@ -48,9 +46,8 @@ $factory->define(App\Models\Injury::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Models\Retirement::class, function (Faker\Generator $faker) {
     return [
-        'wrestler_id' => function () {
-            return factory(App\Models\Wrestler::class)->create()->id;
-        },
+        'retireable_id' => factory(App\Models\Wrestler::class)->lazy(),
+        'retireable_type' => factory(App\Models\Wrestler::class)->lazy(),
         'retired_at' => Carbon::now('-2 years'),
         'ended_at' => Carbon::now('-2 days'),
     ];
@@ -83,13 +80,19 @@ $factory->state(App\Models\Title::class, 'retired', function ($faker) {
 
 $factory->define(App\Models\Match::class, function (Faker\Generator $faker) {
     return [
-        'event_id' => function () {
-            return factory(App\Models\Event::class)->create()->id;
+        'event_id' => factory(App\Models\Event::class)->lazy(),
+        'match_number' => $faker->numberBetween(6, 10),
+        'match_type_id' => factory(App\Models\MatchType::class)->lazy(),
+        'stipulation_id' => factory(App\Models\Stipulation::class)->lazy(),
+        'preview' => $faker->paragraphs(3, true)
+    ];
+});
+
+$factory->state(App\Models\Match::class, 'retired', function ($faker) {
+    return [
+        'retired_at' => function (array $title) use ($faker) {
+            return $faker->dateTimeBetween($title['introduced_at']);
         },
-        'match_type_id' => function () {
-            return factory(App\Models\MatchType::class)->create()->id;
-        },
-        'preview' => $faker->paragraphs(3, true),
     ];
 });
 
@@ -100,20 +103,14 @@ $factory->define(App\Models\Event::class, function (Faker\Generator $faker) {
         'name' => $name,
         'slug' => str_slug($name),
         'date' => $faker->dateTimeBetween('-10 years'),
-        'venue_id' => function () {
-            return factory(App\Models\Venue::class)->create()->id;
-        },
+        'venue_id' => factory(App\Models\Venue::class)->lazy()
     ];
 });
 
 $factory->define(App\Models\Champion::class, function (Faker\Generator $faker) {
     return [
-        'wrestler_id' => function () {
-            return factory(App\Models\Wrestler::class)->create()->id;
-        },
-        'title_id' => function () {
-            return factory(App\Models\Title::class)->create()->id;
-        },
+        'wrestler_id' => factory(App\Models\Wrestler::class)->lazy(),
+        'title_id' => factory(App\Models\Title::class)->lazy(),
         'won_on' => Carbon::now(),
     ];
 });
@@ -124,7 +121,8 @@ $factory->define(App\Models\MatchType::class, function (Faker\Generator $faker) 
     return [
         'name' => $name,
         'slug' => str_slug($name),
-        'number_of_competitors' => 2
+        'number_of_sides' => $faker->randomDigitNotNull,
+        'total_competitors' => 2
     ];
 });
 
@@ -166,9 +164,7 @@ $factory->define(App\Models\Referee::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Models\Suspension::class, function (Faker\Generator $faker) {
     return [
-        'wrestler_id' => function () {
-            return factory(App\Models\Wrestler::class)->create()->id;
-        },
+        'wrestler_id' => factory(App\Models\Wrestler::class)->lazy(),
         'suspended_at' => Carbon::now('-2 years'),
         'ended_at' => Carbon::now('-2 days'),
     ];

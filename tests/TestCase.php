@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Role;
 use App\Models\Permission;
 use App\Models\WrestlerStatus;
+use App\Models\MatchDecision;
 use PHPUnit\Framework\Assert;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\TestResponse;
@@ -50,6 +51,7 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
 
         $this->setupUnauthorizedUser();
         $this->setupWrestlerStatuses();
+        $this->setupMatchDecisions();
     }
 
     /**
@@ -90,5 +92,24 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
         factory(WrestlerStatus::class)->create(['id' => 3, 'name' => 'Injured']);
         factory(WrestlerStatus::class)->create(['id' => 4, 'name' => 'Suspended']);
         factory(WrestlerStatus::class)->create(['id' => 5, 'name' => 'Retired']);
+    }
+
+    protected function setupMatchDecisions()
+    {
+        factory(MatchDecision::class)->create(['id' => 1, 'name' => 'Pinfall', 'slug' => 'pinfall']);
+        factory(MatchDecision::class)->create(['id' => 2, 'name' => 'Submission', 'slug' => 'submission']);
+        factory(MatchDecision::class)->create(['id' => 3, 'name' => 'Disqualification', 'slug' => 'dq']);
+        factory(MatchDecision::class)->create(['id' => 4, 'name' => 'Countout', 'slug' => 'countout']);
+        factory(MatchDecision::class)->create(['id' => 5, 'name' => 'Knockout', 'slug' => 'knockout']);
+        factory(MatchDecision::class)->create(['id' => 6, 'name' => 'Stipulation', 'slug' => 'stipulation']);
+        factory(MatchDecision::class)->create(['id' => 7, 'name' => 'Forfeit', 'slug' => 'forfeit']);
+        factory(MatchDecision::class)->create(['id' => 8, 'name' => 'Time Limit Draw', 'slug' => 'draw']);
+        factory(MatchDecision::class)->create(['id' => 9, 'name' => 'No Decision', 'slug' => 'nodecision']);
+        factory(MatchDecision::class)->create(['id' => 10, 'name' => 'Reversed Decision', 'slug' => 'revdecision']);
+    }
+
+    protected function dumpSessionErrors()
+    {
+        dd(app('session.store')->get('errors')->getBag('default'));
     }
 }

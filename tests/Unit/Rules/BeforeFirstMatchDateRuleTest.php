@@ -22,7 +22,7 @@ class BeforeFirstMatchDateRuleTest extends TestCase
 
         $event = factory(Event::class)->create(['date' => '2017-10-10']);
         $match = factory(Match::class)->create(['event_id' => $event->id]);
-        $match->addWrestler($wrestler);
+        $match->addWrestler($wrestler, 0);
 
         $validator = new BeforeFirstMatchDate($wrestler);
 
@@ -35,7 +35,7 @@ class BeforeFirstMatchDateRuleTest extends TestCase
         $wrestler = factory(Wrestler::class)->create(['hired_at' => '2017-10-07']);
         $event = factory(Event::class)->create(['date' => '2017-10-12']);
         $match = factory(Match::class)->create(['event_id' => $event->id]);
-        $match->addWrestler($wrestler);
+        $match->addWrestler($wrestler, 0);
 
         $validator = new BeforeFirstMatchDate($wrestler);
 

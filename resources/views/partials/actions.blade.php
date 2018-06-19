@@ -1,3 +1,5 @@
+{{-- {{dd($actions)}} --}}
+
 @if ($actions->contains('edit'))
     @can('edit', $model)
         <a class="btn btn-sm btn-icon btn-flat btn-default" href="{{ route($resource.'.edit', $model) }}" data-toggle="tooltip" data-original-title="Edit">
@@ -29,6 +31,14 @@
 @if ($actions->contains('retire'))
     @can('retire', $model)
         <a class="btn btn-sm btn-icon btn-flat btn-default" href="{{ route($resource.'.retire', $model) }}" data-toggle="tooltip" data-original-title="Retire">
+            <i class="icon wb-star" aria-hidden="true"></i>
+        </a>
+    @endcan
+@endif
+
+@if ($actions->contains('archive'))
+    @can('archive', $model)
+        <a class="btn btn-sm btn-icon btn-flat btn-default" href="{{ route($resource.'.archive', $model) }}" data-toggle="tooltip" data-original-title="Archive">
             <i class="icon wb-star" aria-hidden="true"></i>
         </a>
     @endcan

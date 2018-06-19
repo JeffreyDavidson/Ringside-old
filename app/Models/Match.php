@@ -15,7 +15,7 @@ class Match extends Model
      *
      * @var array
      */
-    protected $with = ['wrestlers', 'stipulations', 'referees', 'titles'];
+    protected $with = ['wrestlers', 'stipulation', 'referees', 'titles'];
 
     /**
      * Assign which presenter to be used for model.
@@ -38,7 +38,7 @@ class Match extends Model
      */
     public function wrestlers()
     {
-        return $this->belongsToMany(Wrestler::class);
+        return $this->belongsToMany(Wrestler::class)->withPivot('side_number');
     }
 
     /**
@@ -82,13 +82,23 @@ class Match extends Model
     }
 
     /**
-     * A match can have many stipulations.
+     * A match can have a stipulation.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function stipulations()
+    public function stipulation()
     {
-        return $this->belongsToMany(Stipulation::class);
+        return $this->belongsTo(Stipulation::class);
+    }
+
+    /**
+     * A match has a type.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function decision()
+    {
+        return $this->belongsTo(MatchDecision::class, 'match_decision_id');
     }
 
     /**
@@ -96,9 +106,9 @@ class Match extends Model
      *
      * @param \App\Models\Wrestler $wrestler
      */
-    public function addWrestler(Wrestler $wrestler)
+    public function addWrestler(Wrestler $wrestler, $sideNumber)
     {
-        $this->wrestlers()->save($wrestler);
+        $this->wrestlers()->attach($wrestler->id, ['side_number' => $sideNumber]);
     }
 
     /**
@@ -108,7 +118,11 @@ class Match extends Model
      */
     public function addWrestlers($wrestlers)
     {
-        $this->wrestlers()->saveMany($wrestlers);
+        foreach ($wrestlers as $sideNumber => $wrestlersGroup) {
+            foreach ($wrestlersGroup as $wrestler) {
+                $this->addWrestler($wrestler, $sideNumber);
+            }
+        }
     }
 
     /**
@@ -138,17 +152,7 @@ class Match extends Model
      */
     public function addStipulation(Stipulation $stipulation)
     {
-        $this->stipulations()->save($stipulation);
-    }
-
-    /**
-     * Add a array of stipulations to a match.
-     *
-     * @param array $stipulations
-     */
-    public function addStipulations($stipulations)
-    {
-        $this->stipulations()->saveMany($stipulations);
+        $this->update(['stipulation_id' => $stipulation->id]);
     }
 
     /**
@@ -187,17 +191,20 @@ class Match extends Model
      * @param \App\Models\Wrestler $wrestler
      * @return
      */
-    public function setWinner(Wrestler $wrestler)
+    public function setWinner(Wrestler $wrestler, $matchDecisionSlug)
     {
+        $matchDecision = MatchDecision::where('slug', $matchDecisionSlug)->first();
+
         $this->update([
+            'match_decision_id' => $matchDecision->id,
             'winner_id' => $wrestler->id,
             'loser_id' => $this->wrestlers->except($wrestler->id)->first()->id
         ]);
 
         if ($this->isTitleMatch()) {
             $this->titles->each(function ($title) use ($wrestler) {
-                if (! $wrestler->hasTitle($title)) {
-                    $title->setChampion($wrestler, $this->event->date);
+                if (! $wrestler->hasTitle($title) && $this->decision->titleCanChangeHands()) {
+                    $title->setChampion($wrestler, $this->date);
                 } else {
                     $title->currentChampion->increment('successful_defenses');
                 }

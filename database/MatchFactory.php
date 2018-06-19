@@ -6,7 +6,7 @@ use App\Models\Wrestler;
 
 class MatchFactory
 {
-    public static function create($overrides = [], $wrestlers = [], $referees = [], $titles = [], $stipulations = [])
+    public static function create($overrides = [], $wrestlers = [], $referees = [], $titles = [])
     {
         $match = factory(Match::class)->create($overrides);
 
@@ -15,8 +15,6 @@ class MatchFactory
         self::addRefereesForMatch($referees, $match);
 
         self::addTitlesForMatch($titles, $match);
-
-        self::addStipulationsForMatch($stipulations, $match);
 
         return $match;
     }
@@ -31,10 +29,10 @@ class MatchFactory
         $numberOfWrestlersToAddToMatch = $numberOfCompetitorsForMatch - count($wrestlers);
 
         if (count($wrestlers) > (int) $numberOfCompetitorsForMatch) {
-            // Throw exception
+            throw new Exception('There are too many wrestlers trying to be added to this match.');
         }
 
-        $match->wrestlers()->saveMany($wrestlers);
+        $match->addWrestlers($wrestlers);
 
         if ($numberOfWrestlersToAddToMatch > 0) {
             $wrestlersToAddToMatch = factory(Wrestler::class, $numberOfWrestlersToAddToMatch)->create();
@@ -48,29 +46,20 @@ class MatchFactory
      */
     public static function addRefereesForMatch($referees, $match)
     {
-        if (count($referees) > 2) {
-            // Throw exception
+        $refereesForMatch = collect($referees);
+        // Check to see if we are trying to add multiple referees for a match that doesn't need multiple referees.
+
+        $requiredReferees = $match->type->needsMultipleReferees() ? 2 : 1;
+        $refereesToCreate = $requiredReferees - $refereesForMatch->count();
+        if ($refereesForMatch->count() >= $requiredReferees) {
+            throw new Exception('Too many referees trying to be adding to a match.');
         }
 
-        $match->referees()->saveMany($referees);
+        if ($refereesToCreate) {
+            $refereesForMatch = $refereesForMatch->concat(factory(Referee::class, $refereesToCreate)->create());
+        }
 
-        // if ($match->needsTwoReferees()) {
-        //     $numberOfRefereesToAdd = 2 - count($referees);
-
-        //     if ($numberOfRefereesToAdd) {
-        //         $refereesToAdd = factory(Referee::class, $numberOfRefereesToAdd)->create();
-        //         array_push($refereesForMatch, $refereesToAdd);
-        //         array_push($refereesForMatch, $referees);
-        //     }
-        // }
-
-        // if (count($referees) == 0) {
-        //     array_push($refereesForMatch, factory(Referee::class)->create());
-        // } elseif (count($referees) == 1) {
-        //     array_push($refereesForMatch, $referees);
-        // }
-
-        // $match->addReferees($refereesForMatch);
+        $match->addReferees($refereesForMatch);
     }
 
     /**
@@ -80,14 +69,5 @@ class MatchFactory
     public static function addTitlesForMatch($titles, $match)
     {
         $match->titles()->saveMany($titles);
-    }
-
-    /**
-     * @param $referees
-     * @param $match
-     */
-    public static function addStipulationsForMatch($stipulations, $match)
-    {
-        $match->stipulations()->saveMany($stipulations);
     }
 }

@@ -3,12 +3,21 @@
 namespace App\Traits;
 
 use Carbon\Carbon;
+use App\Models\Retirement;
 use App\Exceptions\WrestlerNotRetiredException;
 use App\Exceptions\WrestlerAlreadyRetiredException;
 
 trait HasRetirements
 {
-    abstract public function retirements();
+    /**
+     * A wrestler can have many retirements.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function retirements()
+    {
+        return $this->morphMany(Retirement::class, 'retireable');
+    }
 
     public function hasPastRetirements()
     {

@@ -135,7 +135,8 @@ class ViewWrestlerBioTest extends TestCase
     {
         $event = factory(Event::class)->create(['name' => 'Event Name', 'date' => Carbon::parse('tomorrow')]);
         $match = factory(Match::class)->create(['event_id' => $event->id]);
-        $match->addWrestler($this->wrestler);
+        $match->addWrestler($this->wrestler, 0);
+        $match->addWrestler(factory(Wrestler::class)->create(), 1);
 
         $response = $this->actingAs($this->authorizedUser)
                         ->get(route('wrestlers.show', $this->wrestler->id));
@@ -148,7 +149,8 @@ class ViewWrestlerBioTest extends TestCase
     {
         $event = factory(Event::class)->create(['name' => 'Event Name', 'date' => Carbon::now()->subMonth()]);
         $match = factory(Match::class)->create(['event_id' => $event->id]);
-        $match->addWrestler($this->wrestler);
+        $match->addWrestler($this->wrestler, 0);
+        $match->addWrestler(factory(Wrestler::class)->create(), 1);
 
         $response = $this->actingAs($this->authorizedUser)
                         ->get(route('wrestlers.show', $this->wrestler->id));

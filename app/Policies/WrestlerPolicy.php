@@ -33,4 +33,9 @@ class WrestlerPolicy
     {
         return $user->hasPermission('delete-wrestler');
     }
+
+    public function retire(User $user)
+    {
+        return $user->hasPermission('retire-wrestler');
+    }
 }
