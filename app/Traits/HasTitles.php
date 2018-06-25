@@ -38,8 +38,6 @@ trait HasTitles
      */
     public function hasTitle(Title $title)
     {
-        $this->load('currentTitlesHeld.title');
-
         return $this->currentTitlesHeld->contains(function ($champion) use ($title) {
             return $champion->title->is($title);
         });
@@ -52,8 +50,7 @@ trait HasTitles
      */
     public function currentTitlesHeld()
     {
-        return $this->championships()->whereNull('lost_on');
-        // return $this->titles()->whereNull('lost_on')->with('title')->pluck('title');
+        return $this->championships()->whereNull('lost_on')->with('title')->get()->pluck('title');
     }
 
     /**

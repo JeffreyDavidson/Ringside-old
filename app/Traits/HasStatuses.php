@@ -2,8 +2,6 @@
 
 namespace App\Traits;
 
-use App\Models\WrestlerStatus;
-
 trait HasStatuses
 {
     public function isActive()
