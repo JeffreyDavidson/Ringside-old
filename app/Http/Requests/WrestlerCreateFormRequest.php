@@ -26,11 +26,9 @@ class WrestlerCreateFormRequest extends FormRequest
         return [
             'name' => 'required|unique:wrestlers,name',
             'slug' => 'required|unique:wrestlers,slug',
-            'status_id' => [
+            'status' => [
                 'required',
-                'integer',
-                'not_in:0',
-                'exists:wrestler_statuses,id'
+                'string',
             ],
             'hometown' => 'required',
             'feet' => 'required|integer',
@@ -38,19 +36,6 @@ class WrestlerCreateFormRequest extends FormRequest
             'weight' => 'required|integer',
             'signature_move' => 'required',
             'hired_at' => 'required|date',
-        ];
-    }
-
-    /**
-     * Get the error messages for the defined validation rules.
-     *
-     * @return array
-     */
-    public function messages()
-    {
-        return [
-            'status_id.not_in' => 'The selected status is invalid.',
-            'status_id.in' => 'The selected status is invalid.',
         ];
     }
 }

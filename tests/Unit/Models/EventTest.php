@@ -54,4 +54,14 @@ class EventTest extends TestCase
 
         $this->assertEquals($match->event_id, $this->event->id);
     }
+
+    /** @test */
+    public function an_event_can_be_archived()
+    {
+        $event = factory(Event::class)->create();
+
+        $event->archive();
+
+        $this->assertNotNull($event->archived_at);
+    }
 }

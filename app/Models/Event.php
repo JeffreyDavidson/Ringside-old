@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -77,5 +78,30 @@ class Event extends Model
     public function addMatch(Match $match)
     {
         $this->matches()->save($match);
+    }
+
+    /**
+     * Archive an event.
+     *
+     * @return bool
+     */
+    public function archive()
+    {
+        $this->update(['archived_at' => Carbon::now()]);
+    }
+
+    public function scopeScheduled($query)
+    {
+        return $query->where('date', '>=', Carbon::today());
+    }
+
+    public function scopePrevious($query)
+    {
+        return $query->where('date', '<', Carbon::today());
+    }
+
+    public function scopeArchived($query)
+    {
+        return $query->whereNotNull('archived_at');
     }
 }

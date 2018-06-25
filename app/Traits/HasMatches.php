@@ -39,4 +39,16 @@ trait HasMatches
     {
         return $this->pastMatches->isNotEmpty();
     }
+
+    /**
+     * Returns the wrestler's past matches.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function scheduledMatches()
+    {
+        return $this->matches()->whereHas('event', function ($query) {
+            $query->where('date', '>=', Carbon::today());
+        });
+    }
 }

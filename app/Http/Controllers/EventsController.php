@@ -17,9 +17,11 @@ class EventsController extends Controller
     {
         $this->authorize('index', Event::class);
 
-        $events = Event::with('venue')->paginate(10);
+        $scheduledEvents = Event::scheduled()->with('venue')->paginate(10);
+        $previousEvents = Event::previous()->with('venue')->paginate(10);
+        $archivedEvents = Event::previous()->archived()->with('venue')->paginate(10);
 
-        return response()->view('events.index', ['events' => $events]);
+        return response()->view('events.index', compact('scheduledEvents', 'previousEvents', 'archivedEvents'));
     }
 
     /**
@@ -105,4 +107,22 @@ class EventsController extends Controller
 
         return redirect()->route('events.index');
     }
+
+    /**
+     * Archives the specified event.
+     *
+     * @param  Event $event
+     * @return \Illuminate\Http\Response
+     */
+    public function archive(Event $event)
+    {
+        $this->authorize('archive', Event::class);
+
+        $event->archive();
+
+        return redirect()->route('events.index');
+    }
+
+
+
 }

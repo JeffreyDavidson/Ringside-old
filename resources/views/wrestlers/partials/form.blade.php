@@ -2,7 +2,7 @@
 
 {{ Form::bsText('name', old('name', $wrestler->name), [], true, 'Name') }}
 {{ Form::bsText('slug', old('slug', $wrestler->slug), [], true, 'Slug') }}
-{{ Form::bsSelect('status_id', $wrestler->availableStatuses()->pluck('name', 'id'), old('status_id', $wrestler->status_id), [], true, 'Status') }}
+{{ Form::bsSelect('status', $wrestler->availableStatuses()->pluck('name', 'id'), old('status', $wrestler->status), [], true, 'Status') }}
 {{ Form::bsText('hometown', old('hometown', $wrestler->hometown), [], true, 'Hometown') }}
 
 <div class="row">

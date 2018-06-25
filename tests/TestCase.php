@@ -5,7 +5,6 @@ namespace Tests;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Permission;
-use App\Models\WrestlerStatus;
 use App\Models\MatchDecision;
 use PHPUnit\Framework\Assert;
 use Illuminate\Database\Eloquent\Collection;
@@ -50,7 +49,6 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
         });
 
         $this->setupUnauthorizedUser();
-        $this->setupWrestlerStatuses();
         $this->setupMatchDecisions();
     }
 
@@ -83,15 +81,6 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
         $this->unauthorizedUser = factory(User::class)->create();
         $role = factory(Role::class)->create();
         $this->unauthorizedUser->assignRole($role);
-    }
-
-    protected function setupWrestlerStatuses()
-    {
-        factory(WrestlerStatus::class)->create(['id' => 1, 'name' => 'Active']);
-        factory(WrestlerStatus::class)->create(['id' => 2, 'name' => 'Inactive']);
-        factory(WrestlerStatus::class)->create(['id' => 3, 'name' => 'Injured']);
-        factory(WrestlerStatus::class)->create(['id' => 4, 'name' => 'Suspended']);
-        factory(WrestlerStatus::class)->create(['id' => 5, 'name' => 'Retired']);
     }
 
     protected function setupMatchDecisions()

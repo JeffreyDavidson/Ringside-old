@@ -28,7 +28,9 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::resource('events', 'EventsController');
-    Route::get('events/{event}/archive', 'EventsController@archive')->name('events.archive');
+    Route::patch('events/{event}/archive', 'EventsController@archive')->name('events.archive');
+    Route::get('events/{event}/results', 'ResultsController@edit')->name('results.edit');
+    Route::patch('events/{event}/results', 'ResultsController@update')->name('results.update');
     Route::get('events/{event}/matches/create', 'MatchesController@create')->name('matches.create');
     Route::post('events/{event}/matches', 'MatchesController@store')->name('matches.store');
     Route::resource('titles', 'TitlesController');

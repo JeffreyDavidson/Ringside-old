@@ -9,7 +9,6 @@ class DatabaseSeeder extends Seeder
         'permissions',
         'permission_role',
         'users',
-        'wrestler_statuses',
         'wrestlers',
         'injuries',
         'retirements',
@@ -23,7 +22,6 @@ class DatabaseSeeder extends Seeder
         'stipulations',
         'match_decisions',
         'match_wrestler',
-        'match_stipulation',
         'match_title',
         'venues',
         'referees',
@@ -45,7 +43,6 @@ class DatabaseSeeder extends Seeder
 
         $this->call(RolesAndPermissionTableSeeder::class);
         $this->call(UsersTableSeeder::class);
-        $this->call(WrestlerStatusesTableSeeder::class);
         $this->call(WrestlersTableSeeder::class);
         $this->call(RefereesTableSeeder::class);
         $this->call(WrestlersInjuriesTableSeeder::class);

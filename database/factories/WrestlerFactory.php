@@ -9,7 +9,7 @@ $factory->define(Wrestler::class, function (Faker $faker) {
     return [
         'name' => $name,
         'slug' => str_slug($name),
-        'status_id' => 1,
+        'status' => 'Active',
         'hometown' => $faker->city.', '.$faker->state,
         'height' => $faker->numberBetween(63, 84),
         'weight' => $faker->numberBetween(175, 400),
@@ -19,21 +19,21 @@ $factory->define(Wrestler::class, function (Faker $faker) {
 });
 
 $factory->state(App\Models\Wrestler::class, 'active', function () {
-    return ['status_id' => 1];
+    return ['status' => 'Active'];
 });
 
 $factory->state(App\Models\Wrestler::class, 'inactive', function () {
-    return ['status_id' => 2];
+    return ['status' => 'Inactive'];
 });
 
 $factory->state(Wrestler::class, 'injured', function () {
-    return ['status_id' => 3];
+    return ['status' => 'Injured'];
 });
 
 $factory->state(Wrestler::class, 'suspended', function () {
-    return ['status_id' => 4];
+    return ['status' => 'Suspended'];
 });
 
 $factory->state(Wrestler::class, 'retired', function () {
-    return ['status_id' => 5];
+    return ['status' => 'Retired'];
 });

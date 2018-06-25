@@ -11,6 +11,8 @@ use App\Models\Referee;
 use App\Models\Wrestler;
 use App\Models\Stipulation;
 use App\Models\MatchType;
+use App\Models\Champion;
+use MatchFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class MatchTest extends TestCase
@@ -172,23 +174,10 @@ class MatchTest extends TestCase
     /** @test */
     public function a_title_changes_hands_when_a_non_champion_wins_a_title_match()
     {
-        // $wrestlerA = factory(Wrestler::class)->create(['name' => 'Wrestler A']);
-        // $title = factory(Title::class)->create();
-        // $title->setChampion($wrestlerA, Carbon::parse('2018-03-03'));
-
-        // $event = factory(Event::class)->create(['date' => Carbon::parse('2018-03-05')]);
-        // $match = factory(Match::class)->create(['event_id' => $event->id]);
-        // $wrestlerB = factory(Wrestler::class)->create(['name' => 'Wrestler B']);
-        // $match->addWrestlers([
-        //     0 => [$wrestlerA],
-        //     1 => [$wrestlerB]
-        // ]);
-        // $match->addTitle($title);
-
-        $match = factory(Match::class)->states('asTitleWithCurrentChampion')->create();
-        $wrestlerA = $match->title->currentChampion;
+        $title = factory(Title::class)->create();
+        $champion = factory(Champion::class)->create(['title_id' => $title->id, 'won_on' => Carbon::now()->subWeeks(2)]);
         $wrestlerB = factory(Wrestler::class)->create();
-        $match->addWrestlers([[$wrestlerA], [$wrestlerB]]);
+        $match = (new MatchFactory)->create([], [$champion->wrestler, $wrestlerB], [], [$title]);
 
         $match->setWinner($wrestlerB, 'pinfall');
 
@@ -210,7 +199,6 @@ class MatchTest extends TestCase
     {
         $event = factory(Event::class)->create();
         $match = factory(Match::class)->create();
-        dd($match);
 
         $match->addToEvent($event);
 

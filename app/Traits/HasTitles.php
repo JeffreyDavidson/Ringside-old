@@ -27,6 +27,7 @@ trait HasTitles
      */
     public function pastTitlesHeld()
     {
+        dd($this->titles);
         return $this->titles()->whereNotNull('lost_on');
     }
 

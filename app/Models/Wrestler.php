@@ -18,6 +18,12 @@ class Wrestler extends Model
     use HasStatuses, HasManagers, HasTitles, HasRetirements, HasSuspensions,
         HasInjuries, HasMatches, SoftDeletes, Presentable;
 
+    public const STATUS_ACTIVE = 'Active';
+    public const STATUS_INACTIVE = 'Inactive';
+    public const STATUS_INJURED = 'Injured';
+    public const STATUS_SUSPENDED = 'Suspended';
+    public const STATUS_RETIRED = 'Retired';
+
     /**
      * Assign which presenter to be used for model.
      *
@@ -40,16 +46,6 @@ class Wrestler extends Model
     protected $dates = ['hired_at'];
 
     /**
-     * A wrestler has a status.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function status()
-    {
-        return $this->belongsTo(WrestlerStatus::class, 'status_id');
-    }
-
-    /**
      * A wrestler can have many managers.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -66,7 +62,7 @@ class Wrestler extends Model
      */
     public function titles()
     {
-        return $this->hasMany(Champion::class);
+        return $this->hasManyThrough(Title::class, Champion::class);
     }
 
     /**

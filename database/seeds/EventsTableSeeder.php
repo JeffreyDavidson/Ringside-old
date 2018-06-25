@@ -9,6 +9,7 @@ use App\Models\Referee;
 use App\Models\Wrestler;
 use App\Models\MatchType;
 use App\Models\Stipulation;
+use App\Models\MatchDecision;
 use Illuminate\Database\Seeder;
 
 class EventsTableSeeder extends Seeder
@@ -101,42 +102,40 @@ class EventsTableSeeder extends Seeder
 
     public function addWrestlers($match)
     {
-        // If this isn't a title match we just want to add random wrestlers
-        if (! $match->isTitleMatch()) {
-            // Only take enough wrestlers for the amtch if there is a limit.
-            $wrestlersForMatch = Wrestler::inRandomOrder()
-                                    ->hiredBefore($match->date)
-                                    ->get();
-
-            if (!is_null($match->type->total_competitors)) {
-                $wrestlers = $wrestlersForMatch->take($match->type->total_competitors);
-            } else {
-                $wrestlers = $wrestlersForMatch->take(rand(5, $wrestlersForMatch->count()));
-            }
-
-            $chunkedWrestlers = $wrestlers->chunk($match->type->number_of_sides);
-
-            return $match->addWrestlers($chunkedWrestlers);
+        // If Match is a title match then get all champions for the associated titles.
+        if ($match->isTitleMatch()) {
+            $champions = $match->titles->map(function ($title) {
+                return optional($title->currentChampion)->wrestler;
+            })->filter();
         }
 
-        // Otherwise, we're going to start by adding the title holder(s)
-        $wrestlers = $match->titles->map(function ($title) {
-            return optional($title->currentChampion)->wrestler;
-        })->filter();
+        // Retrieve wrestlers that are not the champions and were hired before event.
+        $availableWrestlers = Wrestler::inRandomOrder()
+                                    ->hiredBefore($match->date)
+                                    // ->when($champions->isNotEmpty(), function ($collection) use ($champions) {
+                                    //     return $collection->whereNotIn('id', $champions->pluck('id')->all());
+                                    // })
+                                    ->get();
 
-        // If we haven't returned any wrestlers, we want to add two random
-        // wrestlers. If we did, we only want to add one — but we ought
-        // to ensure that we don't add one who has already been added.
-        $randoms = Wrestler::inRandomOrder()
-            ->hiredBefore($match->date)
-            ->whereNotIn('id', $wrestlers->pluck('id')->all())
-            ->take($wrestlers->count() ? 1 : 2)
-            ->get();
+        // Only get enough wrestlers needed for match.
+        if (!is_null($match->type->total_competitors)) {
+            if ($champions->isNotEmpty()) {
+                // There are champions so make sure not to include that count in how many to get.
+                $wrestlersForMatch = $nonChampions->take($match->type->total_competitors - $champions->count());
+            } else {
+                // There are not any champions so just get enough wrestlers to add to match.
+                $wrestlersForMatch = $nonChampions->take($match->type->total_competitors);
+            }
+        } else {
+            // There is no set maximum amount for how many wrestlers can be in a match.
+            $wrestlersForMatch = $nonChampions->take(rand(5, $nonChampions->count() - $champions->count()));
+        }
 
-        $wrestlers = $wrestlers->merge($randoms);
+        $wrestlersForMatch = $wrestlersForMatch->concat($champions);
 
-        // Finally, add the wrestlers
-        return $match->addWrestlers($wrestlers);
+        $wrestlersForMatch = $wrestlersForMatch->split($match->type->number_of_sides);
+
+        return $match->addWrestlers($wrestlersForMatch);
     }
 
     public function setDecision($match)
@@ -158,7 +157,8 @@ class EventsTableSeeder extends Seeder
         }
 
         // Otherwise just choose a random winner.
-        $match->setWinner($match->wrestlers->random());
+        $decisionSlug = MatchDecision::inRandomOrder()->first()->slug;
+        $match->setWinner($match->wrestlers->random(), $decisionSlug);
     }
 
     protected function dates(Carbon $from, Carbon $to, $day, $last = false)

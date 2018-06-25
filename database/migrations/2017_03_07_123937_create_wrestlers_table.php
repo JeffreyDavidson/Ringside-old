@@ -17,7 +17,7 @@ class CreateWrestlersTable extends Migration
             $table->increments('id');
             $table->string('name')->unique();
             $table->string('slug')->unique();
-            $table->unsignedInteger('status_id')->index();
+            $table->string('status');
             $table->timestamp('hired_at')->nullable();
             $table->string('hometown');
             $table->integer('height');
@@ -25,8 +25,6 @@ class CreateWrestlersTable extends Migration
             $table->string('signature_move')->unique();
             $table->timestamps();
             $table->softDeletes();
-
-            $table->foreign('status_id')->references('id')->on('wrestler_statuses');
         });
     }
 

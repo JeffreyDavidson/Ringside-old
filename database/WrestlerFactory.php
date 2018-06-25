@@ -1,11 +1,10 @@
 <?php
 
 use App\Models\Match;
-use App\Models\Event;
 use App\Models\Referee;
 use App\Models\Wrestler;
 
-class MatchFactory
+class WrestlerFactory
 {
     public static function create($overrides = [], $wrestlers = [], $referees = [], $titles = [])
     {
@@ -18,13 +17,6 @@ class MatchFactory
         self::addTitlesForMatch($titles, $match);
 
         return $match;
-    }
-
-    public static function createForWrestlerOnDate($wrestler, $date)
-    {
-        $event = factory(Event::class)->create(['date' => $date]);
-
-        return self::create(['event_id' => $event->id], [$wrestler]);
     }
 
     /**

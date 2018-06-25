@@ -6,8 +6,6 @@ use App\Models\WrestlerStatus;
 
 trait HasStatuses
 {
-    abstract public function status();
-
     public function isActive()
     {
         return $this->status_id == WrestlerStatus::where('name', 'Active')->first()->id;

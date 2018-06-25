@@ -121,8 +121,8 @@ $factory->define(App\Models\MatchType::class, function (Faker\Generator $faker) 
     return [
         'name' => $name,
         'slug' => str_slug($name),
-        'number_of_sides' => $faker->randomDigitNotNull,
-        'total_competitors' => 2
+        'number_of_sides' => 2,
+        'total_competitors' => $faker->randomDigitNotNull
     ];
 });
 
