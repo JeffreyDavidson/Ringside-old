@@ -111,13 +111,13 @@ class ViewWrestlerBioTest extends TestCase
     public function wrestlers_current_titles_held_can_be_viewed_on_wrestler_bio()
     {
         $currentTitleA = TitleFactory::createReignForWrestlerBetweenDates($this->wrestler, Carbon::today()->subMonths(2), NULL);
+        dd($currentTitleA);
         $currentTitleB = TitleFactory::createReignForWrestlerBetweenDates($this->wrestler, Carbon::yesterday(), NULL);
         $pastTitle = TitleFactory::createReignForWrestlerBetweenDates($this->wrestler, Carbon::today()->subDays(4), Carbon::yesterday());
 
         $response = $this->actingAs($this->authorizedUser)
                         ->get(route('wrestlers.show', $this->wrestler->id));
 
-        dd($response->data('wrestler')->currentTitlesHeld);
         $response->data('wrestler')->currentTitlesHeld->assertContains($currentTitleA);
         $response->data('wrestler')->currentTitlesHeld->assertContains($currentTitleB);
         $response->data('wrestler')->currentTitlesHeld->assertNotContains($pastTitle);

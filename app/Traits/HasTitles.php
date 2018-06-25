@@ -8,7 +8,7 @@ use App\Exceptions\WrestlerNotTitleChampionException;
 
 trait HasTitles
 {
-    abstract public function titles();
+    abstract public function championships();
 
     /**
      * Checks to see if the wrestler has held any previous titles.
@@ -27,8 +27,7 @@ trait HasTitles
      */
     public function pastTitlesHeld()
     {
-        dd($this->titles);
-        return $this->titles()->whereNotNull('lost_on');
+        return $this->championships()->whereNotNull('lost_on');
     }
 
     /**
@@ -53,7 +52,8 @@ trait HasTitles
      */
     public function currentTitlesHeld()
     {
-        return $this->titles()->whereNull('lost_on');
+        return $this->championships()->whereNull('lost_on');
+        // return $this->titles()->whereNull('lost_on')->with('title')->pluck('title');
     }
 
     /**
@@ -69,7 +69,7 @@ trait HasTitles
             throw new WrestlerAlreadyHasTitleException;
         }
 
-        $this->titles()->create(['title_id' => $title->id, 'won_on' => $date]);
+        $this->championships()->create(['id' => $title->id, 'won_on' => $date]);
     }
 
     /**

@@ -60,9 +60,9 @@ class Wrestler extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function titles()
+    public function championships()
     {
-        return $this->hasManyThrough(Title::class, Champion::class);
+        return $this->hasMany(Champion::class);
     }
 
     /**
