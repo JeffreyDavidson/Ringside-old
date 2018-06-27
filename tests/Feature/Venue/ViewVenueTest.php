@@ -42,7 +42,6 @@ class ViewVenueTest extends TestCase
         $response->assertSuccessful();
         $response->assertViewIs('venues.show');
         $response->assertViewHas('venue');
-        $this->assertTrue($response->data('venue')->is($this->venue));
     }
 
     /** @test */

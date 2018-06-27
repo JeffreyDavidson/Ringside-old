@@ -24,7 +24,7 @@ class AddWrestlerTest extends TestCase
         return array_merge([
             'name' => 'Wrestler Name',
             'slug' => 'wrestler-slug',
-            'status_id' => 1,
+            'status' => 'active',
             'hired_at' => '2017-09-08',
             'hometown' => 'Laraville, ON',
             'feet' => 6,
@@ -74,7 +74,7 @@ class AddWrestlerTest extends TestCase
 
             $this->assertEquals('Wrestler Name', $wrestler->name);
             $this->assertEquals('wrestler-slug', $wrestler->slug);
-            $this->assertEquals('1', $wrestler->status_id);
+            $this->assertEquals('active', $wrestler->status);
             $this->assertEquals('2017-09-08', $wrestler->hired_at->toDateString());
             $this->assertEquals('Laraville, ON', $wrestler->hometown);
             $this->assertEquals(82, $wrestler->height);
@@ -168,22 +168,33 @@ class AddWrestlerTest extends TestCase
         $this->response = $this->actingAs($this->authorizedUser)
                             ->from(route('wrestlers.create'))
                             ->post(route('wrestlers.index'), $this->validParams([
-                                'status_id' => '',
+                                'status' => '',
                             ]));
 
-        $this->assertFormError('status_id');
+        $this->assertFormError('status');
     }
 
-    /** @test */
-    public function wrestler_status_must_exist_in_database()
+    public function wrestler_status_must_be_a_string()
     {
         $this->response = $this->actingAs($this->authorizedUser)
                             ->from(route('wrestlers.create'))
                             ->post(route('wrestlers.index'), $this->validParams([
-                                'status_id' => 99,
+                                'status' => 99,
                             ]));
 
-        $this->assertFormError('status_id');
+        $this->assertFormError('status');
+    }
+
+
+    public function wrestler_status_must_exist()
+    {
+        $this->response = $this->actingAs($this->authorizedUser)
+                            ->from(route('wrestlers.create'))
+                            ->post(route('wrestlers.index'), $this->validParams([
+                                'status' => 'abc',
+                            ]));
+
+        $this->assertFormError('status');
     }
 
     /** @test */

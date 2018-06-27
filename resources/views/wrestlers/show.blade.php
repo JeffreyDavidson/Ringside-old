@@ -23,8 +23,8 @@
     @if($wrestler->isCurrentlyAChampion())
         <h2>Current Titles</h2>
         <ul>
-            @foreach($wrestler->currentTitlesHeld as $champion)
-                <li>{{ $champion->title->name }}</li>
+            @foreach($wrestler->currentTitlesHeld() as $title)
+                <li>{{ $title->name }}</li>
             @endforeach
         </ul>
     @endif
@@ -32,7 +32,7 @@
     @if($wrestler->hasCurrentManagers())
         <h2>Current Managers</h2>
         <ul>
-            @foreach($wrestler->currentManagers as $manager)
+            @foreach($wrestler->currentManagers() as $manager)
                 <li>{{ $manager->present()->fullName() }}</li>
             @endforeach
         </ul>
@@ -41,20 +41,20 @@
     @if($wrestler->hasPastManagers())
         <h2>Previous Managers</h2>
         <ul>
-            @foreach($wrestler->pastManagers as $manager)
+            @foreach($wrestler->pastManagers() as $manager)
                 <li>{{ $manager->present()->fullName() }}</li>
             @endforeach
         </ul>
     @endif
 
-    @if ($wrestler->hasPastTitlesHeld())
+    {{-- @if ($wrestler->hasPastTitlesHeld())
         <h2>Previous Titles Held</h2>
         <ul>
-            @foreach($wrestler->pastTitlesHeld->groupByTitle() as $titles)
+            @foreach($wrestler->pastTitlesHeld->groupByTitle() as $title)
                 <li>{{ "{$titles->first()->title->name} ({$titles->count()}x)" }}</li>
             @endforeach
         </ul>
-    @endif
+    @endif --}}
 
     @if($wrestler->hasPastInjuries())
         <h2>Previous Injuries</h2>

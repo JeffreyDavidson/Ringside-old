@@ -6,6 +6,7 @@ use Tests\TestCase;
 use App\Models\Wrestler;
 use App\Models\Title;
 use Carbon\Carbon;
+use TitleFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class HasTitlesTraitTest extends TestCase
@@ -49,7 +50,7 @@ class HasTitlesTraitTest extends TestCase
         $wrestler->winTitle($titleA, Carbon::now());
         $wrestler->winTitle($titleB, Carbon::now());
 
-        $this->assertEquals(2, $wrestler->currentTitlesHeld()->count());
+        $this->assertEquals(2, $wrestler->currentTitlesHeld->count());
     }
 
     /**
@@ -65,7 +66,7 @@ class HasTitlesTraitTest extends TestCase
 
         $wrestler->winTitle($title, Carbon::now());
 
-        $this->assertEquals(1, $wrestler->currentTitles->count());
+        $this->assertEquals(1, $wrestler->currentTitlesHeld->count());
     }
 
     /**
@@ -81,5 +82,35 @@ class HasTitlesTraitTest extends TestCase
         $wrestler->loseTitle($title, Carbon::now());
 
         $this->assertEquals(0, $wrestler->pastTitlesHeld->count());
+    }
+
+    /** @test */
+    public function current_titles_held_returns_a_collection_of_active_titles()
+    {
+        $wrestler = factory(Wrestler::class)->create();
+        $currentTitleA = TitleFactory::createReignForWrestlerBetweenDates($wrestler, Carbon::today()->subMonths(2), NULL);
+        $currentTitleB = TitleFactory::createReignForWrestlerBetweenDates($wrestler, Carbon::yesterday(), NULL);
+        $pastTitle = TitleFactory::createReignForWrestlerBetweenDates($wrestler, Carbon::today()->subDays(4), Carbon::yesterday());
+
+        $currentTitlesHeld = $wrestler->currentTitlesHeld();
+
+        $currentTitlesHeld->assertContains($currentTitleA);
+        $currentTitlesHeld->assertContains($currentTitleB);
+        $currentTitlesHeld->assertNotContains($pastTitle);
+    }
+
+    /** @test */
+    public function past_titles_held_returns_a_collection_of_past_titles()
+    {
+        $wrestler = factory(Wrestler::class)->create();
+        $pastTitleA = TitleFactory::createReignForWrestlerBetweenDates($wrestler, Carbon::today()->subMonths(2), Carbon::today()->subMonths(1));
+        $pastTitleB = TitleFactory::createReignForWrestlerBetweenDates($wrestler, Carbon::today()->subWeeks(3), Carbon::today()->subWeeks(2));
+        $currentTitle = TitleFactory::createReignForWrestlerBetweenDates($wrestler, Carbon::yesterday(), NULL);
+
+        $currentTitlesHeld = $wrestler->currentTitlesHeld();
+
+        $currentTitlesHeld->assertContains($pastTitleA);
+        $currentTitlesHeld->assertContains($pastTitleB);
+        $currentTitlesHeld->assertNotContains($currentTitle);
     }
 }

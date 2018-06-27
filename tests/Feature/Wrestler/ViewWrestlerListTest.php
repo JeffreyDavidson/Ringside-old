@@ -20,19 +20,18 @@ class ViewWrestlerListTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_view_the_list_of_wrestlers()
     {
-        $this->withoutExceptionHandling();
-        $wrestlerA = factory(Wrestler::class)->create();
-        $wrestlerB = factory(Wrestler::class)->create();
-        $wrestlerC = factory(Wrestler::class)->create();
+        factory(Wrestler::class)->create(['name' => 'Wrestler A']);
+        factory(Wrestler::class)->create(['name' => 'Wrestler B']);
+        factory(Wrestler::class)->create(['name' => 'Wrestler C']);
 
         $response = $this->actingAs($this->authorizedUser)
                         ->get(route('wrestlers.index'));
 
         $response->assertSuccessful();
         $response->assertViewIs('wrestlers.index');
-        $response->data('wrestlers')->assertContains($wrestlerA);
-        $response->data('wrestlers')->assertContains($wrestlerB);
-        $response->data('wrestlers')->assertContains($wrestlerC);
+        $response->assertSee('Wrestler A');
+        $response->assertSee('Wrestler B');
+        $response->assertSee('Wrestler C');
     }
 
     /** @test */

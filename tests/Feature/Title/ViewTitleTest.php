@@ -34,7 +34,7 @@ class ViewTitleTest extends TestCase
         $response->assertSuccessful();
         $response->assertViewIs('titles.show');
         $response->assertViewHas('title');
-        $this->assertTrue($response->data('title')->is($this->title));
+        $response->assertViewHas('title');
     }
 
     /** @test */

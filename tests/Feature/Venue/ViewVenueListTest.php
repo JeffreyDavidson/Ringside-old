@@ -20,18 +20,18 @@ class ViewVenueListTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_view_the_list_of_venues()
     {
-        $venueA = factory(Venue::class)->create();
-        $venueB = factory(Venue::class)->create();
-        $venueC = factory(Venue::class)->create();
+        factory(Venue::class)->create(['name' => 'Venue A']);
+        factory(Venue::class)->create(['name' => 'Venue B']);
+        factory(Venue::class)->create(['name' => 'Venue C']);
 
         $response = $this->actingAs($this->authorizedUser)
                         ->get(route('venues.index'));
 
         $response->assertSuccessful();
         $response->assertViewIs('venues.index');
-        $response->data('venues')->assertContains($venueA);
-        $response->data('venues')->assertContains($venueB);
-        $response->data('venues')->assertContains($venueC);
+        $response->assertSee('Venue A');
+        $response->assertSee('Venue B');
+        $response->assertSee('Venue C');
     }
 
     /** @test */

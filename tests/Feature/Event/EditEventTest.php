@@ -62,7 +62,7 @@ class EditEventTest extends TestCase
 
         $response->assertSuccessful();
         $response->assertViewIs('events.edit');
-        $this->assertTrue($response->data('event')->is($this->event));
+        $response->assertViewHas('event');
     }
 
     /** @test */

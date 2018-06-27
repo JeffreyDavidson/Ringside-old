@@ -28,7 +28,7 @@ class EditWrestlerTest extends TestCase
         return array_merge([
             'name' => 'Old Name',
             'slug' => 'old-slug',
-            'status' => 'Active',
+            'status' => 'active',
             'hometown' => 'Old City, Old State',
             'height' => 63,
             'weight' => 175,
@@ -42,7 +42,7 @@ class EditWrestlerTest extends TestCase
         return array_merge([
             'name' => 'Wrestler Name',
             'slug' => 'wrestler-slug',
-            'status' => 'Active',
+            'status' => 'active',
             'hometown' => 'Laraville, FL',
             'feet' => 6,
             'inches' => 3,
@@ -67,7 +67,7 @@ class EditWrestlerTest extends TestCase
 
         $response->assertSuccessful();
         $response->assertViewIs('wrestlers.edit');
-        $this->assertTrue($response->data('wrestler')->is($this->wrestler));
+        $response->assertViewHas('wrestler');
     }
 
     /** @test */
@@ -78,7 +78,7 @@ class EditWrestlerTest extends TestCase
                         ->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
                             'name' => 'New Name',
                             'slug' => 'new-slug',
-                            'status_id' => 1,
+                            'status' => 'active',
                             'hometown' => 'Laraville, FL',
                             'feet' => 5,
                             'inches' => 3,
@@ -92,7 +92,7 @@ class EditWrestlerTest extends TestCase
             $this->assertEquals('New Name', $wrestler->name);
             $this->assertEquals('new-slug', $wrestler->slug);
             $this->assertEquals('2017-09-10', $wrestler->hired_at->toDateString());
-            $this->assertEquals(1, $wrestler->status_id);
+            $this->assertEquals('active', $wrestler->status);
             $this->assertEquals('Laraville, FL', $wrestler->hometown);
             $this->assertEquals(63, $wrestler->height);
             $this->assertEquals(175, $wrestler->weight);
@@ -205,18 +205,52 @@ class EditWrestlerTest extends TestCase
         $this->assertFormError('slug', 'old-slug', $this->wrestler->slug);
     }
 
+    public function wrestler_status_must_be_a_required()
+    {
+        $this->response = $this->actingAs($this->authorizedUser)
+                            ->from(route('wrestlers.create'))
+                            ->post(route('wrestlers.index'), $this->validParams([
+                                'status' => '',
+                            ]));
+
+        $this->assertFormError('status', 'active', $this->wrestler->status);
+    }
+
+    public function wrestler_status_must_be_a_string()
+    {
+        $this->response = $this->actingAs($this->authorizedUser)
+                            ->from(route('wrestlers.create'))
+                            ->post(route('wrestlers.index'), $this->validParams([
+                                'status' => 99,
+                            ]));
+
+        $this->assertFormError('status', 'active', $this->wrestler->status);
+    }
+
+    /** @test */
+    public function wrestler_status_must_be_a_valid_status()
+    {
+        $this->response = $this->actingAs($this->authorizedUser)
+                            ->from(route('wrestlers.edit', $this->wrestler->id))
+                            ->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
+                                'status' => 'abc',
+                            ]));
+
+        $this->assertFormError('status', 'active', $this->wrestler->status);
+    }
+
     /** @test */
     public function wrestler_status_can_be_changed_to_an_available_status()
     {
         $response = $this->actingAs($this->authorizedUser)
                             ->from(route('wrestlers.edit', $this->wrestler->id))
                             ->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([
-                                'status_id' => 4,
+                                'status' => 'retired',
                             ]));
 
         $response->assertRedirect(route('wrestlers.index'));
         tap($this->wrestler->fresh(), function ($wrestler) {
-            $this->assertEquals(4, $wrestler->status_id);
+            $this->assertEquals('retired', $wrestler->status);
         });
     }
 

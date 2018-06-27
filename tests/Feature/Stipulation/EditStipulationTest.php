@@ -55,7 +55,7 @@ class EditStipulationTest extends TestCase
 
         $response->assertSuccessful();
         $response->assertViewIs('stipulations.edit');
-        $this->assertTrue($response->data('stipulation')->is($this->stipulation));
+        $response->assertViewHas('stipulation');
     }
 
     /** @test */

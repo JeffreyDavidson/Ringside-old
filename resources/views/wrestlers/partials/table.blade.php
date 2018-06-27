@@ -12,7 +12,7 @@
             <tr>
                 <td>{{ $wrestler->id }}</td>
                 <td>{{ $wrestler->name }}</td>
-                <td>{{ $wrestler->status->name }}</td>
+                <td>{{ ucfirst($wrestler->status) }}</td>
                 <td>{{ $wrestler->present()->height }}</td>
                 <td>{{ $wrestler->weight }} lbs.</td>
                 <td>

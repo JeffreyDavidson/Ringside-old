@@ -6,7 +6,6 @@ use App\Traits\HasTitles;
 use App\Traits\HasMatches;
 use App\Traits\HasInjuries;
 use App\Traits\HasManagers;
-use App\Traits\HasStatuses;
 use App\Traits\HasRetirements;
 use App\Traits\HasSuspensions;
 use Illuminate\Database\Eloquent\Model;
@@ -15,14 +14,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Wrestler extends Model
 {
-    use HasStatuses, HasManagers, HasTitles, HasRetirements, HasSuspensions,
+    use HasManagers, HasTitles, HasRetirements, HasSuspensions,
         HasInjuries, HasMatches, SoftDeletes, Presentable;
 
-    public const STATUS_ACTIVE = 'Active';
-    public const STATUS_INACTIVE = 'Inactive';
-    public const STATUS_INJURED = 'Injured';
-    public const STATUS_SUSPENDED = 'Suspended';
-    public const STATUS_RETIRED = 'Retired';
+    public const STATUS_ACTIVE = 'active';
+    public const STATUS_INACTIVE = 'inactive';
+    public const STATUS_INJURED = 'injured';
+    public const STATUS_SUSPENDED = 'suspended';
+    public const STATUS_RETIRED = 'retired';
 
     /**
      * Assign which presenter to be used for model.
@@ -104,6 +103,54 @@ class Wrestler extends Model
     public function scopeHiredBefore($query, $date)
     {
         return $query->where('hired_at', '<', $date);
+    }
+
+    public function getAvailableStatusesAttribute()
+    {
+        // These are the default options; if $current is equal to null, this is all
+        // that will be returned.
+        $options = collect([Wrestler::STATUS_ACTIVE, Wrestler::STATUS_INACTIVE]);
+
+        // This part should be self-explanatory, but if you have any questions, just ask.
+        switch ($this->status) {
+            case Wrestler::STATUS_ACTIVE:
+                return $options->merge([Wrestler::STATUS_INJURED, Wrestler::STATUS_SUSPENDED, Wrestler::STATUS_RETIRED]);
+
+            case Wrestler::STATUS_INJURED:
+                return $options->merge([Wrestler::STATUS_INJURED, Wrestler::STATUS_RETIRED]);
+
+            case Wrestler::STATUS_SUSPENDED:
+                return $options->merge([Wrestler::STATUS_SUSPENDED, Wrestler::STATUS_RETIRED]);
+
+            case Wrestler::STATUS_RETIRED:
+                return $options->merge([Wrestler::STATUS_RETIRED]);
+        }
+
+        return $options->values();
+    }
+
+    public function is($status) {
+        return $this->status === $status;
+    }
+
+    public function scopeActive(Builder $query) {
+        $query->where('status', Wrestler::STATUS_ACTIVE);
+    }
+
+    public function scopeInactive(Builder $query) {
+        $query->where('status', Wrestler::STATUS_INACTIVE);
+    }
+
+    public function scopeInjured(Builder $query) {
+        $query->where('status', Wrestler::STATUS_INJURED);
+    }
+
+    public function scopeSuspended(Builder $query) {
+        $query->where('status', Wrestler::STATUS_SUSPENDED);
+    }
+
+    public function scopeRetired(Builder $query) {
+        $query->where('status', Wrestler::STATUS_RETIRED);
     }
 
     /**

@@ -17,7 +17,7 @@ trait HasTitles
      */
     public function hasPastTitlesHeld()
     {
-        return $this->pastTitlesHeld->isNotEmpty();
+        return $this->pastTitlesHeld()->isNotEmpty();
     }
 
     /**
@@ -27,7 +27,7 @@ trait HasTitles
      */
     public function pastTitlesHeld()
     {
-        return $this->championships()->whereNotNull('lost_on');
+        return $this->championships()->whereNotNull('lost_on')->with('title')->get()->pluck('title');
     }
 
     /**
@@ -38,8 +38,8 @@ trait HasTitles
      */
     public function hasTitle(Title $title)
     {
-        return $this->currentTitlesHeld->contains(function ($champion) use ($title) {
-            return $champion->title->is($title);
+        return $this->currentTitlesHeld()->contains(function ($currentTitle) use ($title) {
+            return $currentTitle->is($title);
         });
     }
 
@@ -66,7 +66,7 @@ trait HasTitles
             throw new WrestlerAlreadyHasTitleException;
         }
 
-        $this->championships()->create(['id' => $title->id, 'won_on' => $date]);
+        $this->championships()->create(['title_id' => $title->id, 'won_on' => $date]);
     }
 
     /**
@@ -82,9 +82,9 @@ trait HasTitles
             throw new WrestlerNotTitleChampionException;
         }
 
-        $titleHeld = $this->currentTitlesHeld()->where('title_id', $title->id)->first();
+        $titleHeld = $this->currentTitlesHeld()->firstWhere('id', $title->id);
 
-        return $titleHeld->update(['lost_on' => $date ?: $this->freshTimestamp()]);
+        return $titleHeld->currentChampion->update(['lost_on' => $date ?: $this->freshTimestamp()]);
     }
 
     /**

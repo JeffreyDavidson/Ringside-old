@@ -18,7 +18,7 @@ class WrestlersController extends Controller
     {
         $this->authorize('index', Wrestler::class);
 
-        $wrestlers = Wrestler::with('status')->paginate(10);
+        $wrestlers = Wrestler::paginate(10);
 
         return response()->view('wrestlers.index', ['wrestlers' => $wrestlers]);
     }
@@ -68,8 +68,6 @@ class WrestlersController extends Controller
     public function show(Wrestler $wrestler)
     {
         $this->authorize('show', Wrestler::class);
-
-        $wrestler->load('currentManagers', 'pastManagers', 'currentTitlesHeld', 'pastTitlesHeld', 'scheduledMatches', 'pastMatches');
 
         return response()->view('wrestlers.show', ['wrestler' => $wrestler]);
     }

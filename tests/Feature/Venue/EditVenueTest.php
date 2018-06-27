@@ -61,7 +61,7 @@ class EditVenueTest extends TestCase
 
         $response->assertSuccessful();
         $response->assertViewIs('venues.edit');
-        $this->assertTrue($response->data('venue')->is($this->venue));
+        $response->assertViewHas('venue');
     }
 
     /** @test */

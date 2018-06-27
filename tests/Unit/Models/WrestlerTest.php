@@ -21,12 +21,6 @@ class WrestlerTest extends TestCase
     }
 
     /** @test */
-    public function a_wrestler_has_a_status()
-    {
-        $this->assertInstanceOf(WrestlerStatus::class, $this->wrestler->status);
-    }
-
-    /** @test */
     public function a_wrestler_can_have_many_managers()
     {
         $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->wrestler->managers);
@@ -35,7 +29,7 @@ class WrestlerTest extends TestCase
     /** @test */
     public function a_wrestler_can_hold_many_titles()
     {
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->wrestler->titles);
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->wrestler->championships);
     }
 
     /** @test */

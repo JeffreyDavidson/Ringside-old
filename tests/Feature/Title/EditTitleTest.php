@@ -59,7 +59,7 @@ class EditTitleTest extends TestCase
 
         $response->assertSuccessful();
         $response->assertViewIs('titles.edit');
-        $this->assertTrue($response->data('title')->is($this->title));
+        $response->assertViewHas('title');
     }
 
     /** @test */

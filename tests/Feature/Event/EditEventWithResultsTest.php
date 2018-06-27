@@ -29,8 +29,8 @@ class EditEventWithResultsTest extends TestCase
                         ->get(route('results.edit', $this->event));
 
         $response->assertSuccessful();
-        $response->assertViewIs('results.edit');
-        $this->assertTrue($response->data('event')->is($this->event));
+        $response->assertViewIs('events.results');
+        $response->assertViewHas('event');
     }
 
     /** @test */

@@ -33,7 +33,6 @@ class ViewStipulationTest extends TestCase
         $response->assertSuccessful();
         $response->assertViewIs('stipulations.show');
         $response->assertViewHas('stipulation');
-        $this->assertTrue($response->data('stipulation')->is($this->stipulation));
     }
 
     /** @test */

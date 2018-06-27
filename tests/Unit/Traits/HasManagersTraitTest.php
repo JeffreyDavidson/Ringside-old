@@ -80,4 +80,34 @@ class HasManagersTraitTest extends TestCase
 
         $this->assertEquals(0, $wrestler->pastManagers()->count());
     }
+
+    /** @test */
+    public function wrestlers_current_managers_can_be_viewed_on_wrestler_bio()
+    {
+        $currentManagerA = ManagerFactory::createHiredTimeForWrestlerBetweenDates($this->wrestler, Carbon::today()->subMonths(5), NULL);
+        $currentManagerB = ManagerFactory::createHiredTimeForWrestlerBetweenDates($this->wrestler, Carbon::today()->subMonths(2), NULL);
+        $pastManager = ManagerFactory::createHiredTimeForWrestlerBetweenDates($this->wrestler, Carbon::today()->subWeeks(2), Carbon::today());
+
+        $response = $this->actingAs($this->authorizedUser)
+                        ->get(route('wrestlers.show', $this->wrestler->id));
+
+        $response->data('wrestler')->currentManagers->assertContains($currentManagerA);
+        $response->data('wrestler')->currentManagers->assertContains($currentManagerB);
+        $response->data('wrestler')->currentManagers->assertNotContains($pastManager);
+    }
+
+    /** @test */
+    public function wrestlers_past_managers_can_be_viewed_on_wrestler_bio()
+    {
+        $pastManagerA = ManagerFactory::createHiredTimeForWrestlerBetweenDates($this->wrestler, Carbon::today()->subMonths(5), Carbon::today()->subMonths(3));
+        $pastManagerB = ManagerFactory::createHiredTimeForWrestlerBetweenDates($this->wrestler, Carbon::today()->subMonths(2), Carbon::today()->subWeeks(3));
+        $currentManager = ManagerFactory::createHiredTimeForWrestlerBetweenDates($this->wrestler, Carbon::yesterday(), NULL);
+
+        $response = $this->actingAs($this->authorizedUser)
+                        ->get(route('wrestlers.show', $this->wrestler->id));
+
+        $response->data('wrestler')->pastManagers->assertContains($pastManagerA);
+        $response->data('wrestler')->pastManagers->assertContains($pastManagerA);
+        $response->data('wrestler')->pastManagers->assertNotContains($currentManager);
+    }
 }
