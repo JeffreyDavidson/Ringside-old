@@ -53,17 +53,6 @@ class Champion extends Model
     }
 
     /**
-     * Scope a query to only return current champions.
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeCurrent($query)
-    {
-        return $query->whereNull('lost_on');
-    }
-
-    /**
      * Calculates the length of time during championship reign.
      *
      * @return integer

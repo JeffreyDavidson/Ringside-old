@@ -86,10 +86,10 @@ class Title extends Model
     }
 
     /**
-     * Scope a query to only return the current champion.
+     * Returns the current champion for the title.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return App\Models\Wrestler
      */
     public function currentChampion()
     {

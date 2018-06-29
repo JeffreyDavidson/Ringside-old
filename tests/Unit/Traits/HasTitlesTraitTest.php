@@ -7,6 +7,7 @@ use App\Models\Wrestler;
 use App\Models\Title;
 use Carbon\Carbon;
 use TitleFactory;
+use PHPUnit\Framework\Assert;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class HasTitlesTraitTest extends TestCase
@@ -36,7 +37,7 @@ class HasTitlesTraitTest extends TestCase
 
         tap($wrestler->fresh(), function ($wrestler) {
             $this->assertTrue($wrestler->hasPastTitlesHeld());
-            $this->assertEquals(1, $wrestler->pastTitlesHeld->count());
+            $this->assertEquals(1, $wrestler->pastTitlesHeld()->count());
         });
     }
 
@@ -50,7 +51,7 @@ class HasTitlesTraitTest extends TestCase
         $wrestler->winTitle($titleA, Carbon::now());
         $wrestler->winTitle($titleB, Carbon::now());
 
-        $this->assertEquals(2, $wrestler->currentTitlesHeld->count());
+        $this->assertEquals(2, $wrestler->currentTitlesHeld()->count());
     }
 
     /**
@@ -66,7 +67,7 @@ class HasTitlesTraitTest extends TestCase
 
         $wrestler->winTitle($title, Carbon::now());
 
-        $this->assertEquals(1, $wrestler->currentTitlesHeld->count());
+        $this->assertEquals(1, $wrestler->currentTitlesHeld()->count());
     }
 
     /**
@@ -74,14 +75,14 @@ class HasTitlesTraitTest extends TestCase
      *
      * @test
      */
-    public function a_wrestler_who_does_not_have_the_title_cannot_lose_the_title()
+    public function a_wrestler_who_does_not_have_a_title_cannot_lose_the_title()
     {
         $wrestler = factory(Wrestler::class)->create();
         $title = factory(Title::class)->create();
 
         $wrestler->loseTitle($title, Carbon::now());
 
-        $this->assertEquals(0, $wrestler->pastTitlesHeld->count());
+        $this->assertEquals(0, $wrestler->pastTitlesHeld()->count());
     }
 
     /** @test */
@@ -94,9 +95,9 @@ class HasTitlesTraitTest extends TestCase
 
         $currentTitlesHeld = $wrestler->currentTitlesHeld();
 
-        $currentTitlesHeld->assertContains($currentTitleA);
-        $currentTitlesHeld->assertContains($currentTitleB);
-        $currentTitlesHeld->assertNotContains($pastTitle);
+        $this->assertTrue($currentTitlesHeld->contains('id', $currentTitleA->id));
+        $this->assertTrue($currentTitlesHeld->contains('id', $currentTitleB->id));
+        $this->assertFalse($currentTitlesHeld->contains('id', $pastTitle->id));
     }
 
     /** @test */
@@ -107,10 +108,10 @@ class HasTitlesTraitTest extends TestCase
         $pastTitleB = TitleFactory::createReignForWrestlerBetweenDates($wrestler, Carbon::today()->subWeeks(3), Carbon::today()->subWeeks(2));
         $currentTitle = TitleFactory::createReignForWrestlerBetweenDates($wrestler, Carbon::yesterday(), NULL);
 
-        $currentTitlesHeld = $wrestler->currentTitlesHeld();
+        $pastTitlesHeld = $wrestler->pastTitlesHeld();
 
-        $currentTitlesHeld->assertContains($pastTitleA);
-        $currentTitlesHeld->assertContains($pastTitleB);
-        $currentTitlesHeld->assertNotContains($currentTitle);
+        $this->assertTrue($pastTitlesHeld->contains('id', $pastTitleA->id));
+        $this->assertTrue($pastTitlesHeld->contains('id', $pastTitleB->id));
+        $this->assertFalse($pastTitlesHeld->contains('id', $currentTitle->id));
     }
 }

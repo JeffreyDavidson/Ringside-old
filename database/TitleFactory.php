@@ -4,7 +4,7 @@ use App\Models\Title;
 
 class TitleFactory
 {
-    public static function createReignForWrestlerBetweenDates($wrestler, $start, $end)
+    public static function createReignForWrestlerBetweenDates($wrestler, $start, $end = NULL)
     {
         $title = factory(Title::class)->create(['introduced_at' => $start->subWeeks(2)]);
 

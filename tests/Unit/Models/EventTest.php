@@ -34,7 +34,7 @@ class EventTest extends TestCase
     }
 
     /** @test */
-    public function an_event_can_get_the_main_event_match()
+    public function the_last_match_in_an_event_is_the_main_event()
     {
         $matchA = factory(Match::class)->create(['event_id' => $this->event->id, 'match_number' => 1]);
         $matchB = factory(Match::class)->create(['event_id' => $this->event->id, 'match_number' => 2]);
@@ -58,10 +58,8 @@ class EventTest extends TestCase
     /** @test */
     public function an_event_can_be_archived()
     {
-        $event = factory(Event::class)->create();
+        $this->event->archive();
 
-        $event->archive();
-
-        $this->assertNotNull($event->archived_at);
+        $this->assertNotNull($this->event->archived_at);
     }
 }

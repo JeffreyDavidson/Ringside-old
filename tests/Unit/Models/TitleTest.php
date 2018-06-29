@@ -29,7 +29,7 @@ class TitleTest extends TestCase
     }
 
     /** @test */
-    public function a_title_belongs_to_matches()
+    public function a_title_belongs_to_many_matches()
     {
         $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->title->matches);
     }

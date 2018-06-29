@@ -35,25 +35,12 @@ class ChampionTest extends TestCase
     }
 
     /** @test */
-    public function it_can_retrieve_current_champions()
+    public function a_length_of_championship_reign_can_be_returned_in_days()
     {
-        $titleA = factory(Title::class)->create();
-        $titleB = factory(Title::class)->create();
-        $wrestlerA = factory(Wrestler::class)->create();
-        $wrestlerB = factory(Wrestler::class)->create();
-        $wrestlerC = factory(Wrestler::class)->create();
-        $wrestlerD = factory(Wrestler::class)->create();
-        factory(Champion::class)->create(['title_id' => $titleA->id, 'wrestler_id' => $wrestlerA->id, 'won_on' => '2017-01-16', 'lost_on' => '2017-02-16']);
-        factory(Champion::class)->create(['title_id' => $titleA->id, 'wrestler_id' => $wrestlerB->id, 'won_on' => '2017-02-16', 'lost_on' => NULL]);
-        factory(Champion::class)->create(['title_id' => $titleB->id, 'wrestler_id' => $wrestlerC->id, 'won_on' => '2017-03-16', 'lost_on' => '2017-04-16']);
-        factory(Champion::class)->create(['title_id' => $titleB->id, 'wrestler_id' => $wrestlerD->id, 'won_on' => '2017-04-16', 'lost_on' => NULL]);
+        $champion = factory(Champion::class)->create(['won_on' => '2018-02-14', 'lost_on' => '2018-06-28']);
 
-        $currentChampions = Champion::current()->get();
+        $days = $champion->timeSpentAsChampion();
 
-        $this->assertEquals(2, $currentChampions->count());
-        $this->assertTrue($currentChampions->contains('wrestler_id', $wrestlerB->id));
-        $this->assertTrue($currentChampions->contains('wrestler_id', $wrestlerD->id));
-        $this->assertFalse($currentChampions->contains('wrestler_id', $wrestlerA->id));
-        $this->assertFalse($currentChampions->contains('wrestler_id', $wrestlerC->id));
+        $this->assertEquals(134, $days);
     }
 }

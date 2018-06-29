@@ -27,7 +27,10 @@ trait HasTitles
      */
     public function pastTitlesHeld()
     {
+        // dd($this->championships()->whereNotNull('lost_on'));
+        // dd($this->championships()->whereNotNull('lost_on')->with('title')->get()->pluck('title'));
         return $this->championships()->whereNotNull('lost_on')->with('title')->get()->pluck('title');
+        // return new \Illuminate\Database\Eloquent\Collection($this->championships()->whereNotNull('lost_on')->with('title')->get()->pluck('title'));
     }
 
     /**

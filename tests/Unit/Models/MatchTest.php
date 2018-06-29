@@ -13,6 +13,7 @@ use App\Models\Stipulation;
 use App\Models\MatchType;
 use App\Models\Champion;
 use MatchFactory;
+use TitleFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class MatchTest extends TestCase
@@ -157,8 +158,9 @@ class MatchTest extends TestCase
     public function a_title_champion_keeps_title_if_they_win_match()
     {
         $wrestlerA = factory(Wrestler::class)->create();
-        $title = factory(Title::class)->create();
-        $title->setChampion($wrestlerA, Carbon::parse('2018-03-03'));
+        $title = TitleFactory::createReignForWrestlerBetweenDates($wrestlerA, Carbon::parse('2018-03-03'));
+
+        $this->assertTrue($title->currentChampion->wrestler->is($wrestlerA));
 
         $event = factory(Event::class)->create(['date' => '2018-03-05']);
         $match = factory(Match::class)->create(['event_id' => $event->id]);
@@ -168,7 +170,7 @@ class MatchTest extends TestCase
 
         $match->setWinner($wrestlerA, 'dq');
 
-        $this->assertEquals($wrestlerA, $title->currentChampion);
+        $this->assertTrue($title->currentChampion->wrestler->is($wrestlerA));
     }
 
     /** @test */
