@@ -26,7 +26,7 @@ class ViewEventTest extends TestCase
     }
 
     /** @test */
-    public function users_who_have_permission_can_view_a_event()
+    public function users_who_have_permission_can_view_an_event()
     {
         $response = $this->actingAs($this->authorizedUser)
                         ->get(route('events.show', $this->event->id));
@@ -34,11 +34,10 @@ class ViewEventTest extends TestCase
         $response->assertSuccessful();
         $response->assertViewIs('events.show');
         $response->assertViewHas('event');
-        $response->assertViewHas('event');
     }
 
     /** @test */
-    public function users_who_dont_have_permission_cannot_view_a_event()
+    public function users_who_dont_have_permission_cannot_view_an_event()
     {
         $response = $this->actingAs($this->unauthorizedUser)
                         ->get(route('events.show', $this->event->id));
@@ -47,7 +46,7 @@ class ViewEventTest extends TestCase
     }
 
     /** @test */
-    public function guests_cannot_view_a_event()
+    public function guests_cannot_view_an_event()
     {
         $response = $this->get(route('events.show', $this->event->id));
 

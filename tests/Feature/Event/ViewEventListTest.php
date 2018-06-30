@@ -38,7 +38,6 @@ class ViewEventListTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_view_the_list_of_previous_events()
     {
-        $this->withoutExceptionHandling();
         $eventA = factory(Event::class)->create(['date' => Carbon::today()->subWeeks(2)]);
         $eventB = factory(Event::class)->create(['date' => Carbon::today()->subWeeks(2)]);
         $eventC = factory(Event::class)->create(['date' => Carbon::today()]);
@@ -56,7 +55,6 @@ class ViewEventListTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_view_the_list_of_archived_events()
     {
-        $this->withoutExceptionHandling();
         $eventA = factory(Event::class)->create(['date' => Carbon::today()->yesterday(), 'archived_at' => Carbon::now()]);
         $eventB = factory(Event::class)->create(['date' => Carbon::today()->subWeeks(2), 'archived_at' => Carbon::yesterday()]);
         $eventC = factory(Event::class)->create(['date' => Carbon::today()]);

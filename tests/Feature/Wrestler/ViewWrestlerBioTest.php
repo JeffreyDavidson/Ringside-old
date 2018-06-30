@@ -32,12 +32,21 @@ class ViewWrestlerBioTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_view_a_wrestler_bio()
     {
+        $wrestler = $this->wrestler;
         $response = $this->actingAs($this->authorizedUser)
                         ->get(route('wrestlers.show', $this->wrestler->id));
 
         $response->assertSuccessful();
         $response->assertViewIs('wrestlers.show');
-        $response->assertViewHas('wrestler');
+        $response->assertViewHas('wrestler', function ($viewWrestler) use ($wrestler) {
+            return $viewWrestler->id === $wrestler->id;
+        });
+
+        $response->assertSee('Wrestler 1');
+        $response->assertSee('Kansas City, Missouri');
+        $response->assertSee('6\'1"');
+        $response->assertSee('251 lbs.');
+        $response->assertSee('Powerbomb');
     }
 
     /** @test */
@@ -56,18 +65,5 @@ class ViewWrestlerBioTest extends TestCase
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));
-    }
-
-    /** @test */
-    public function wrestlers_bio_information_can_be_viewed_on_wrestler_bio()
-    {
-        $response = $this->actingAs($this->authorizedUser)
-                        ->get(route('wrestlers.show', $this->wrestler->id));
-
-        $response->assertSee('Wrestler 1');
-        $response->assertSee('Kansas City, Missouri');
-        $response->assertSee('6\'1"');
-        $response->assertSee('251 lbs.');
-        $response->assertSee('Powerbomb');
     }
 }
