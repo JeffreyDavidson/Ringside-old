@@ -18,8 +18,8 @@ class EventsController extends Controller
         $this->authorize('index', Event::class);
 
         $scheduledEvents = Event::scheduled()->with('venue')->paginate(10);
-        $previousEvents = Event::previous()->with('venue')->paginate(10);
-        $archivedEvents = Event::previous()->archived()->with('venue')->paginate(10);
+        $previousEvents = Event::past()->with('venue')->paginate(10);
+        $archivedEvents = Event::past()->archived()->with('venue')->paginate(10);
 
         return response()->view('events.index', compact('scheduledEvents', 'previousEvents', 'archivedEvents'));
     }
