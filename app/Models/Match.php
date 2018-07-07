@@ -102,6 +102,26 @@ class Match extends Model
     }
 
     /**
+     * A match can have many losers.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function winner()
+    {
+        return $this->belongsTo(Wrestler::class);
+    }
+
+    /**
+     * A match can have many losers.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function losers()
+    {
+        return $this->belongsToMany(Wrestler::class, 'match_loser');
+    }
+
+    /**
      * Add a wrestler to a match.
      *
      * @param \App\Models\Wrestler $wrestler

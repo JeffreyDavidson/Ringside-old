@@ -21,7 +21,7 @@
         <div class="panel panel-bordered panel-primary">
             <div class="panel-heading">
                 <div class="panel-title">
-                    {{ $match->present()->match_number($loop) }}
+                    {{ $match->present()->match_number }}
                 </div>
             </div>
             <div class="panel-body">

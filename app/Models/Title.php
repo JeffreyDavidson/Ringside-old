@@ -31,7 +31,7 @@ class Title extends Model
      *
      * @var array
      */
-    protected $dates = ['introduced_at'];
+    protected $dates = ['introduced_at', 'retired_at'];
 
     /**
      * A title can have many champions.
@@ -96,15 +96,9 @@ class Title extends Model
         return $this->champions()->whereNull('lost_on')->toHasOne();
     }
 
-    /**
-     * Scope a query to only retired titles.
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeRetired($query)
+    public function hasAChampion()
     {
-        return $query->retirements()->whereNotNull('retired_at');
+        return $this->champions()->whereNull('lost_on')->exists();
     }
 
     /**
@@ -115,8 +109,17 @@ class Title extends Model
      */
     public function scopeActive($query, $date)
     {
-        return $query->whereDoesntHave('retirements', function ($q) {
-            $q->whereNotNull('ended_at');
-        })->where('introduced_at', '<=', $date);
+        return $query->where('introduced_at', '<=', $date)->whereNull('retired_at');
+    }
+
+    /**
+     * Scope a query to only retired titles.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeRetired($query)
+    {
+        return $query->whereNotNull('retired_at');
     }
 }

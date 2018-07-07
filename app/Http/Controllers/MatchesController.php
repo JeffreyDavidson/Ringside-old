@@ -30,10 +30,9 @@ class MatchesController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Event $event, MatchCreateFormRequest $request)
-    {;
+    {
         foreach ($request->matches as $match) {
             $matchObj = $event->matches()->create([
-                'match_number' => $match['match_number'],
                 'match_type_id' => $match['match_type_id'],
                 'stipulation_id' => $match['stipulation_id'],
                 'preview' => $match['preview']

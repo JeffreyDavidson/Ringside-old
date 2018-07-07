@@ -27,6 +27,23 @@ class MatchFactory
         return self::create(['event_id' => $event->id], [$wrestler]);
     }
 
+    public function createOnDate($date, $overrides, $wrestlers, $referees, $titles)
+    {
+        $event = factory(Event::class)->create(['date' => $date]);
+
+        return self::create(['event_id' => $event->id], [$wrestler], $referees, $titles);
+    }
+
+    public static function createTitleMatchWithNoChampion($overrides, $title, $wrestlers)
+    {
+        return self::create($overrides, $wrestlers, [], $title);
+    }
+
+    public static function createTitleMatchWithChampion($overrides, $title, $wrestlers)
+    {
+        return self::create($overrides, $wrestlers, [], $title);
+    }
+
     /**
      * @param $wrestlers
      * @param $match
@@ -80,6 +97,6 @@ class MatchFactory
      */
     public static function addTitlesForMatch($titles, $match)
     {
-        $match->titles()->saveMany($titles);
+        $match->titles()->attach($titles);
     }
 }

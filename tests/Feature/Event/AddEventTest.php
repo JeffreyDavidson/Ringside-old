@@ -188,7 +188,7 @@ class AddEventTest extends TestCase
 
             $this->assertEquals('Event Name', $event->name);
             $this->assertEquals('event-slug', $event->slug);
-            $this->assertEquals(Carbon::parse('2017-09-17'), $event->date);
+            $this->assertEquals('2017-09-17', $event->date->toDateString());
             $this->assertEquals($this->venue->id, $event->venue_id);
         });
     }

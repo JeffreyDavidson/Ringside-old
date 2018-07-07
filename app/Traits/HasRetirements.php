@@ -9,34 +9,9 @@ use App\Exceptions\WrestlerAlreadyRetiredException;
 
 trait HasRetirements
 {
-    /**
-     * A wrestler can have many retirements.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
-     */
-    public function retirements()
-    {
-        return $this->morphMany(Retirement::class, 'retireable');
-    }
-
-    public function hasPastRetirements()
-    {
-        return $this->pastRetirements->isNotEmpty();
-    }
-
-    public function pastRetirements()
-    {
-        return $this->retirements()->whereNotNull('ended_at');
-    }
-
-    public function currentRetirement()
-    {
-        return $this->retirements()->whereNull('ended_at')->first();
-    }
-
     public function isRetired()
     {
-        return $this->retirements()->whereNull('ended_at')->count() > 0;
+        return is_null($this->retired_at);
     }
 
     public function retire()

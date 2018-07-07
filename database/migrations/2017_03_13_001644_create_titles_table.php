@@ -18,6 +18,7 @@ class CreateTitlesTable extends Migration
             $table->string('name')->unique();
             $table->string('slug')->unique();
             $table->timestamp('introduced_at');
+            $table->timestamp('retired_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

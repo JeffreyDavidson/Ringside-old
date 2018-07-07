@@ -4,6 +4,7 @@ namespace Tests\Unit\Traits;
 
 use Tests\TestCase;
 use App\Models\Wrestler;
+use App\Models\Title;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -76,5 +77,18 @@ class HasRetirementsTraitTest extends TestCase
         $wrestler->unretire();
 
         $this->assertEquals(0, $wrestler->retirements->count());
+    }
+
+    /** @test */
+    public function a_title_can_be_retired()
+    {
+        $title = factory(Title::class)->create();
+
+        $title->retire();
+
+        $this->assertEquals(1, $title->retirements->count());
+        $this->assertTrue($title->isInactive());
+        $this->assertTrue($title->isRetired());
+        $this->assertNull($title->retirements()->first()->ended_at);
     }
 }

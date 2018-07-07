@@ -81,10 +81,10 @@ $factory->state(App\Models\Title::class, 'retired', function ($faker) {
 $factory->define(App\Models\Match::class, function (Faker\Generator $faker) {
     return [
         'event_id' => factory(App\Models\Event::class)->lazy(),
-        'match_number' => $faker->numberBetween(6, 10),
         'match_type_id' => factory(App\Models\MatchType::class)->lazy(),
         'stipulation_id' => factory(App\Models\Stipulation::class)->lazy(),
-        'preview' => $faker->paragraphs(3, true)
+        'preview' => $faker->paragraphs(3, true),
+        'result' => $faker->paragraphs(3, true)
     ];
 });
 

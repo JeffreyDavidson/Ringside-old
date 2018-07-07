@@ -5,6 +5,7 @@ namespace Tests\Feature\Event;
 use Carbon\Carbon;
 use Tests\TestCase;
 use App\Models\Event;
+use MatchFactory;
 use App\Models\Match;
 use App\Models\MatchType;
 use App\Models\Wrestler;
@@ -43,18 +44,17 @@ class AddMatchesToEventTest extends TestCase
     {
         return array_replace_recursive([
             'matches' => [
-                0 => [
-                    'match_number' => 1,
+                [
                     'match_type_id' => $this->matchtype->id,
                     'stipulations_id' => $this->stipulation->id,
                     'titles' => [$this->title->id],
                     'referees' => [$this->referee->id],
                     'wrestlers' => [
-                        0 => [$this->wrestlerA->id],
-                        1 => [$this->wrestlerB->id],
+                        [$this->wrestlerA->id],
+                        [$this->wrestlerB->id],
                     ],
                     'preview' => 'Maecenas faucibus mollis interdum. Etiam porta sem malesuada magna mollis euismod. Cras mattis consectetur purus sit amet fermentum. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Curabitur blandit tempus porttitor. Vestibulum id ligula porta felis euismod semper.',
-                ]
+                ],
             ]
         ], $overrides);
     }
@@ -111,7 +111,6 @@ class AddMatchesToEventTest extends TestCase
                         ->post(route('matches.store', ['event' => $this->event->id]), [
                             'matches' => [
                                 0 => [
-                                    'match_number' => 1,
                                     'match_type_id' => $this->matchtype->id,
                                     'stipulation_id' => $this->stipulation->id,
                                     'titles' => [$this->title->id],
@@ -130,7 +129,6 @@ class AddMatchesToEventTest extends TestCase
             $response->assertRedirect(route('events.show', $this->event->id));
 
             $this->assertTrue($match->event->is($this->event));
-            $this->assertEquals(1, $match->match_number);
             $this->assertEquals($this->matchtype->name, $match->type->name);
             $this->assertEquals($this->stipulation->name, $match->stipulation->name);
             $this->assertEquals(1, $match->titles->count());
@@ -154,61 +152,13 @@ class AddMatchesToEventTest extends TestCase
     }
 
     /** @test */
-    public function match_number_is_required()
-    {
-        $this->response = $this->actingAs($this->authorizedUser)
-                        ->from(route('matches.create', ['event' => $this->event->id]))
-                        ->post(route('matches.store', ['event' => $this->event->id]), $this->validParams([
-                            'matches' => [
-                                0 => [
-                                    'match_number' => ''
-                                ]
-                            ]
-                        ]));
-
-        $this->assertFormError('matches.*.match_number');
-    }
-
-    /** @test */
-    public function match_number_must_be_an_integer()
-    {
-        $this->response = $this->actingAs($this->authorizedUser)
-                        ->from(route('matches.create', ['event' => $this->event->id]))
-                        ->post(route('matches.store', ['event' => $this->event->id]), $this->validParams([
-                            'matches' => [
-                                0 => [
-                                    'match_number' => 'a-string-not-an-integer'
-                                ]
-                            ]
-                        ]));
-
-        $this->assertFormError('matches.*.match_number');
-    }
-
-    /** @test */
-    public function match_number_must_be_at_least_one()
-    {
-        $this->response = $this->actingAs($this->authorizedUser)
-                        ->from(route('matches.create', ['event' => $this->event->id]))
-                        ->post(route('matches.store', ['event' => $this->event->id]), $this->validParams([
-                            'matches' => [
-                                0 => [
-                                    'match_number' => 0
-                                ]
-                            ]
-                        ]));
-
-        $this->assertFormError('matches.*.match_number');
-    }
-
-    /** @test */
     public function match_type_is_required()
     {
         $this->response = $this->actingAs($this->authorizedUser)
                         ->from(route('matches.create', ['event' => $this->event->id]))
                         ->post(route('matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
-                                0 => [
+                                [
                                     'match_type_id' => ''
                                 ]
                             ]
@@ -224,7 +174,7 @@ class AddMatchesToEventTest extends TestCase
                         ->from(route('matches.create', ['event' => $this->event->id]))
                         ->post(route('matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
-                                0 => [
+                                [
                                     'match_type_id' => 'a-string-not-an-integer'
                                 ]
                             ]
@@ -240,7 +190,7 @@ class AddMatchesToEventTest extends TestCase
                         ->from(route('matches.create', ['event' => $this->event->id]))
                         ->post(route('matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
-                                0 => [
+                                [
                                     'match_type_id' => 99
                                 ]
                             ]
@@ -256,7 +206,7 @@ class AddMatchesToEventTest extends TestCase
                         ->from(route('matches.create', ['event' => $this->event->id]))
                         ->post(route('matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
-                                0 => [
+                                [
                                     'stipulation_id' => ''
                                 ]
                             ]
@@ -265,7 +215,7 @@ class AddMatchesToEventTest extends TestCase
         tap(Event::first()->matches->first(), function ($match) use ($response) {
             $response->assertStatus(302);
             $response->assertRedirect(route('events.show', $this->event->id));
-            $this->assertNull($match->stipulation);
+            $this->assertNull($match->stipulation_id);
         });
     }
 
@@ -276,8 +226,8 @@ class AddMatchesToEventTest extends TestCase
                         ->from(route('matches.create', ['event' => $this->event->id]))
                         ->post(route('matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
-                                0 => [
-                                    'stipulation_id' => ['a-string-not-an-integer']
+                                [
+                                    'stipulation_id' => 'a-string-not-an-integer'
                                 ]
                             ]
                         ]));
@@ -292,8 +242,8 @@ class AddMatchesToEventTest extends TestCase
                         ->from(route('matches.create', ['event' => $this->event->id]))
                         ->post(route('matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
-                                0 => [
-                                    'stipulation_id' => [99]
+                                [
+                                    'stipulation_id' => 99
                                 ]
                             ]
                         ]));
@@ -308,7 +258,7 @@ class AddMatchesToEventTest extends TestCase
                         ->from(route('matches.create', ['event' => $this->event->id]))
                         ->post(route('matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
-                                0 => [
+                                [
                                     'titles' => 'a-string-not-an-array'
                                 ]
                             ]
@@ -324,7 +274,7 @@ class AddMatchesToEventTest extends TestCase
                         ->from(route('matches.create', ['event' => $this->event->id]))
                         ->post(route('matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
-                                0 => [
+                                [
                                     'titles' => [1,2,3,1]
                                 ]
                             ]
@@ -340,7 +290,7 @@ class AddMatchesToEventTest extends TestCase
                         ->from(route('matches.create', ['event' => $this->event->id]))
                         ->post(route('matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
-                                0 => [
+                                [
                                     'titles' => ['a-string-not-an-integer']
                                 ]
                             ]
@@ -356,7 +306,7 @@ class AddMatchesToEventTest extends TestCase
                         ->from(route('matches.create', ['event' => $this->event->id]))
                         ->post(route('matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
-                                0 => [
+                                [
                                     'titles' => [99]
                                 ]
                             ]
@@ -372,7 +322,7 @@ class AddMatchesToEventTest extends TestCase
                         ->from(route('matches.create', ['event' => $this->event->id]))
                         ->post(route('matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
-                                0 => [
+                                [
                                     'referees' => ''
                                 ]
                             ]
@@ -388,7 +338,7 @@ class AddMatchesToEventTest extends TestCase
                         ->from(route('matches.create', ['event' => $this->event->id]))
                         ->post(route('matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
-                                0 => [
+                                [
                                     'referees' => 'a-string-not-an-array'
                                 ]
                             ]
@@ -404,7 +354,7 @@ class AddMatchesToEventTest extends TestCase
                         ->from(route('matches.create', ['event' => $this->event->id]))
                         ->post(route('matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
-                                0 => [
+                                [
                                     'referees' => [1,2,3,1]
                                 ]
                             ]
@@ -420,7 +370,7 @@ class AddMatchesToEventTest extends TestCase
                         ->from(route('matches.create', ['event' => $this->event->id]))
                         ->post(route('matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
-                                0 => [
+                                [
                                     'referees' => ['a-string-not-an-integer']
                                 ]
                             ]
@@ -436,7 +386,7 @@ class AddMatchesToEventTest extends TestCase
                         ->from(route('matches.create', ['event' => $this->event->id]))
                         ->post(route('matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
-                                0 => [
+                                [
                                     'referees' => [99]
                                 ]
                             ]
@@ -452,7 +402,7 @@ class AddMatchesToEventTest extends TestCase
                         ->from(route('matches.create', ['event' => $this->event->id]))
                         ->post(route('matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
-                                0 => [
+                                [
                                     'wrestlers' => ''
                                 ]
                             ]
@@ -468,7 +418,7 @@ class AddMatchesToEventTest extends TestCase
                         ->from(route('matches.create', ['event' => $this->event->id]))
                         ->post(route('matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
-                                0 => [
+                                [
                                     'wrestlers' => 'a-string-not-an-array'
                                 ]
                             ]
@@ -484,10 +434,10 @@ class AddMatchesToEventTest extends TestCase
                         ->from(route('matches.create', ['event' => $this->event->id]))
                         ->post(route('matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
-                                0 => [
+                                [
                                     'wrestlers' => [
-                                        0 => [1,2],
-                                        1 => [3,1]
+                                        [1,2],
+                                        [3,1]
                                     ]
                                 ]
                             ]
@@ -503,10 +453,9 @@ class AddMatchesToEventTest extends TestCase
                         ->from(route('matches.create', ['event' => $this->event->id]))
                         ->post(route('matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
-                                0 => [
+                                [
                                     'wrestlers' => [
-                                        0 => ['a-string-not-an-integer'],
-                                        1 => 1
+                                        ['a-string-not-an-integer'],
                                     ]
                                 ]
                             ]
@@ -522,9 +471,9 @@ class AddMatchesToEventTest extends TestCase
                         ->from(route('matches.create', ['event' => $this->event->id]))
                         ->post(route('matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
-                                0 => [
+                                [
                                     'wrestlers' => [
-                                        0 => [99],
+                                        [99],
                                     ]
                                 ]
                             ]
@@ -542,7 +491,7 @@ class AddMatchesToEventTest extends TestCase
                         ->from(route('matches.create', ['event' => $this->event->id]))
                         ->post(route('matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
-                                0 => [
+                                [
                                     'match_type_id' => $matchType->id,
                                 ]
                             ]
@@ -561,9 +510,9 @@ class AddMatchesToEventTest extends TestCase
                         ->from(route('matches.create', ['event' => $this->event->id]))
                         ->post(route('matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
-                                0 => [
+                                [
                                     'wrestlers' => [
-                                        0 => [$wrestler->id]
+                                        [$wrestler->id]
                                     ]
                                 ]
                             ]
@@ -579,7 +528,7 @@ class AddMatchesToEventTest extends TestCase
                         ->from(route('matches.create', ['event' => $this->event->id]))
                         ->post(route('matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
-                                0 => [
+                                [
                                     'preview' => ''
                                 ]
                             ]
@@ -595,7 +544,7 @@ class AddMatchesToEventTest extends TestCase
                         ->from(route('matches.create', ['event' => $this->event->id]))
                         ->post(route('matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
-                                0 => [
+                                [
                                     'preview' => []
                                 ]
                             ]

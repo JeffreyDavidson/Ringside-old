@@ -36,7 +36,6 @@ class MatchCreateFormRequest extends FormRequest
 
             // if we get no competitors the match type id is wrong which will get caught below
             $competitors = (int) MatchType::whereKey($match['match_type_id'])->value('total_competitors');
-            // dd($competitors);
 
             if (!$competitors) return;
 
@@ -45,7 +44,7 @@ class MatchCreateFormRequest extends FormRequest
 
             //now we just flatten our wrestlers again, and count them
             $flattened = array_flatten($match['wrestlers']);
-            // dd(count($flattened));
+
             if (count($flattened) !== $competitors) {
                 $matchIndex = explode('.', $attribute)[1];
                 $fail("Match {$matchIndex} must have {$competitors} competitors");
@@ -65,7 +64,6 @@ class MatchCreateFormRequest extends FormRequest
         $rules = [
             'matches'                  => ['array'],
             'matches.*'                => [$validateWrestlerNumbers],
-            'matches.*.match_number'   => ['required', 'integer', 'min:1'],
             'matches.*.match_type_id'  => ['required', 'integer', Rule::exists('match_types', 'id')],
             'matches.*.stipulation_id' => ['nullable', 'integer', Rule::exists('stipulations', 'id')],
             'matches.*.titles'         => ['array'],

@@ -17,7 +17,7 @@ class CreateRetirementsTable extends Migration
             $table->increments('id');
             $table->morphs('retireable');
             $table->datetime('retired_at');
-            $table->timestamp('ended_at')->nullable();
+            $table->datetime ('ended_at')->nullable();
             $table->timestamps();
         });
     }

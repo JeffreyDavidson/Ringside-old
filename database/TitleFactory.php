@@ -6,7 +6,7 @@ class TitleFactory
 {
     public static function createReignForWrestlerBetweenDates($wrestler, $start, $end = NULL)
     {
-        $title = factory(Title::class)->create(['introduced_at' => $start->subWeeks(2)]);
+        $title = factory(Title::class)->create(['introduced_at' => $start->copy()->subWeeks(2)]);
 
         $wrestler->winTitle($title, $start);
 

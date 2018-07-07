@@ -81,10 +81,7 @@ class MatchTest extends TestCase
         $wrestlerA = factory(Wrestler::class)->create();
         $wrestlerB = factory(Wrestler::class)->create();
 
-        $this->match->addWrestlers([
-            0 => [$wrestlerA],
-            1 => [$wrestlerB]
-        ]);
+        $this->match->addWrestlers([[$wrestlerA],[$wrestlerB]]);
 
         $this->assertCount(2, $this->match->wrestlers);
     }
@@ -155,39 +152,6 @@ class MatchTest extends TestCase
     }
 
     /** @test */
-    public function a_title_champion_keeps_title_if_they_win_match()
-    {
-        $wrestlerA = factory(Wrestler::class)->create();
-        $title = TitleFactory::createReignForWrestlerBetweenDates($wrestlerA, Carbon::parse('2018-03-03'));
-
-        $this->assertTrue($title->currentChampion->wrestler->is($wrestlerA));
-
-        $event = factory(Event::class)->create(['date' => '2018-03-05']);
-        $match = factory(Match::class)->create(['event_id' => $event->id]);
-        $wrestlerB = factory(Wrestler::class)->create();
-        $match->addWrestlers([[$wrestlerA],[$wrestlerB]]);
-        $match->addTitle($title);
-
-        $match->setWinner($wrestlerA, 'dq');
-
-        $this->assertTrue($title->currentChampion->wrestler->is($wrestlerA));
-    }
-
-    /** @test */
-    public function a_title_changes_hands_when_a_non_champion_wins_a_title_match()
-    {
-        $title = factory(Title::class)->create();
-        $champion = factory(Champion::class)->create(['title_id' => $title->id, 'won_on' => Carbon::now()->subWeeks(2)]);
-        $wrestlerB = factory(Wrestler::class)->create();
-        $match = (new MatchFactory)->create([], [$champion->wrestler, $wrestlerB], [], [$title]);
-
-        $match->setWinner($wrestlerB, 'pinfall');
-
-        $title->refresh();
-        $this->assertEquals($wrestlerB, $title->currentChampion);
-    }
-
-    /** @test */
     public function a_match_can_return_its_event_date()
     {
         $event = factory(Event::class)->create(['date' => '2018-02-01']);
@@ -205,5 +169,18 @@ class MatchTest extends TestCase
         $match->addToEvent($event);
 
         $this->assertEquals($match->id, $event->mainEvent->id);
+    }
+
+    /** @test */
+    public function match_type_is_incremented_by_1_on_create()
+    {
+        $event = factory(Event::class)->create();
+        $matchA = factory(Match::class)->create(['event_id' => $event->id]);
+        $matchB = factory(Match::class)->create(['event_id' => $event->id]);
+        $matchC = factory(Match::class)->create(['event_id' => $event->id]);
+
+        $this->assertEquals(1, $matchA->match_number);
+        $this->assertEquals(2, $matchB->match_number);
+        $this->assertEquals(3, $matchC->match_number);
     }
 }
