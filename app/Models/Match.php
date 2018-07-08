@@ -218,7 +218,7 @@ class Match extends Model
         $this->update([
             'match_decision_id' => $matchDecision->id,
             'winner_id' => $wrestler->id,
-            'loser_id' => $this->wrestlers->except($wrestler->id)->first()->id
+            'loser_id' => $this->wrestlers->except($wrestler->id)->first()->id,
         ]);
 
         if ($this->isTitleMatch()) {

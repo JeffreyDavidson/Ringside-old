@@ -30,7 +30,7 @@ class EventsTableSeeder extends Seeder
         collect([
             'monday' => false,
             'thursday' => false,
-            'sunday' => true
+            'sunday' => true,
         ])->flatMap(function ($bool, $day) use ($start, $nextMonth) {
             return $this->dates($start, $nextMonth, $day, $bool);
         })->sort(function ($a, $b) {
@@ -40,7 +40,7 @@ class EventsTableSeeder extends Seeder
                 'name' => 'Event '.($key + 1),
                 'slug' => 'event'.($key + 1),
                 'venue_id' => Venue::inRandomOrder()->first()->id,
-                'date' => $date->hour(19)
+                'date' => $date->hour(19),
             ]);
         })->filter(function ($event) {
             return $event->date->lte(Carbon::today()->addWeeks(2));

@@ -35,7 +35,7 @@ class WrestlerEditFormRequest extends FormRequest
             'feet' => 'required|integer',
             'inches' => 'required|integer|max:11',
             'signature_move' => 'required',
-            'hired_at' => ['required', 'date', new BeforeFirstMatchDate($this->wrestler)]
+            'hired_at' => ['required', 'date', new BeforeFirstMatchDate($this->wrestler)],
         ];
     }
 }

@@ -30,7 +30,7 @@ class Retirement extends Model
     public function end()
     {
         return tap($this)->update([
-            'ended_at' => Carbon::now()
+            'ended_at' => Carbon::now(),
         ]);
     }
 }

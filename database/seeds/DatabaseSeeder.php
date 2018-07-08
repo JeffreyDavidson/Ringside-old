@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
         'match_title',
         'venues',
         'referees',
-        'match_referee'
+        'match_referee',
     ];
 
     /**

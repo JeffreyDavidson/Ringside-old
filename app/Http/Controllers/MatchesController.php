@@ -34,7 +34,7 @@ class MatchesController extends Controller
             $matchObj = $event->matches()->create([
                 'match_type_id' => $match['match_type_id'],
                 'stipulation_id' => $match['stipulation_id'],
-                'preview' => $match['preview']
+                'preview' => $match['preview'],
             ]);
 
             if (! empty($match['titles'])) {

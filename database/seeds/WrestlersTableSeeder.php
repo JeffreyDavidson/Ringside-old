@@ -24,7 +24,7 @@ class WrestlersTableSeeder extends Seeder
                 'name' => 'Wrestler '.$this->wrestlerCount,
                 'slug' => 'wrestler'.$this->wrestlerCount,
                 'hired_at' => $startingDate->hour(mt_rand(9, 18)),
-                'signature_move' => 'Signature Move '.$this->wrestlerCount
+                'signature_move' => 'Signature Move '.$this->wrestlerCount,
             ]);
         }
 
@@ -35,7 +35,7 @@ class WrestlersTableSeeder extends Seeder
                     'name' => 'Wrestler '.$this->wrestlerCount,
                     'slug' => 'wrestler'.$this->wrestlerCount,
                     'hired_at' => $startingDate->hour(mt_rand(9, 18)),
-                    'signature_move' => 'Signature Move '.$this->wrestlerCount
+                    'signature_move' => 'Signature Move '.$this->wrestlerCount,
                 ]);
                 $this->wrestlerCount++;
             }
