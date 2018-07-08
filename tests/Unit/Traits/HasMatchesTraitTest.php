@@ -7,6 +7,7 @@ use App\Models\Title;
 use App\Models\Wrestler;
 use App\Models\Event;
 use App\Models\Match;
+use MatchFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class HasMatchesTraitTest extends TestCase

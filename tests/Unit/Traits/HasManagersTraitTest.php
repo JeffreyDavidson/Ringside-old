@@ -5,6 +5,7 @@ namespace Tests\Unit\Traits;
 use Tests\TestCase;
 use App\Models\Wrestler;
 use App\Models\Manager;
+use ManagerFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class HasManagersTraitTest extends TestCase

@@ -6,8 +6,6 @@ use Laravel\Dusk\DuskServiceProvider;
 use Illuminate\Support\ServiceProvider;
 use Barryvdh\Debugbar\ServiceProvider as Debugbar;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
-use App\Models\Match;
-use App\Observers\MatchObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -18,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Match::observe(MatchObserver::class);
+
     }
 
     /**

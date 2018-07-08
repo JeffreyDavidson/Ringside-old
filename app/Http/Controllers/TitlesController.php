@@ -106,6 +106,12 @@ class TitlesController extends Controller
         return redirect()->route('titles.index');
     }
 
+    /**
+     * Retires the specified title.
+     *
+     * @param  Title $title
+     * @return \Illuminate\Http\Response
+     */
     public function retire(Title $title)
     {
         $this->authorize('retire', $title);

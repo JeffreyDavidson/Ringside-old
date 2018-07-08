@@ -27,11 +27,6 @@ class WrestlerCreateFormRequest extends FormRequest
         return [
             'name' => 'required|unique:wrestlers,name',
             'slug' => 'required|unique:wrestlers,slug',
-            'status' => [
-                'required',
-                'string',
-                Rule::in((new Wrestler)->available_statuses)
-            ],
             'hometown' => 'required',
             'feet' => 'required|integer',
             'inches' => 'required|integer|max:11',

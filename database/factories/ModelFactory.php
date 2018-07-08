@@ -46,8 +46,8 @@ $factory->define(App\Models\Injury::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Models\Retirement::class, function (Faker\Generator $faker) {
     return [
-        'retireable_id' => factory(App\Models\Wrestler::class)->lazy(),
-        'retireable_type' => factory(App\Models\Wrestler::class)->lazy(),
+        'retiree_id' => $faker->randomDigitNotNull,
+        'retiree_type' => $faker->sentence,
         'retired_at' => Carbon::now('-2 years'),
         'ended_at' => Carbon::now('-2 days'),
     ];
@@ -66,16 +66,17 @@ $factory->define(App\Models\Title::class, function (Faker\Generator $faker) {
     return [
         'name' => $name,
         'slug' => str_slug($name),
+        'is_active' => true,
         'introduced_at' => Carbon::now(),
     ];
 });
 
-$factory->state(App\Models\Title::class, 'retired', function ($faker) {
-    return [
-        'retired_at' => function (array $title) use ($faker) {
-            return $faker->dateTimeBetween($title['introduced_at']);
-        },
-    ];
+$factory->state(App\Models\Title::class, 'active', function ($faker) {
+    return ['is_active' => true];
+});
+
+$factory->state(App\Models\Title::class, 'inactive', function ($faker) {
+    return ['is_active' => false];
 });
 
 $factory->define(App\Models\Match::class, function (Faker\Generator $faker) {

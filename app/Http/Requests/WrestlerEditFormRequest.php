@@ -30,11 +30,6 @@ class WrestlerEditFormRequest extends FormRequest
         return [
             'name' => ['required', Rule::unique('wrestlers', 'name')->ignore($this->wrestler->id)],
             'slug' => ['required', Rule::unique('wrestlers', 'slug')->ignore($this->wrestler->id)],
-            'status' => [
-                'required',
-                'string',
-                Rule::in($this->wrestler->available_statuses)
-            ],
             'weight' => 'required|integer',
             'hometown' => 'required',
             'feet' => 'required|integer',

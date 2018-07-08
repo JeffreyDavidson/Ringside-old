@@ -19,7 +19,7 @@ class HasSuspensionsTraitTest extends TestCase
         $wrestler->suspend();
 
         $this->assertEquals(1, $wrestler->suspensions->count());
-        $this->assertTrue($wrestler->isInactive());
+        $this->assertFalse($wrestler->is_active);
         $this->assertNull($wrestler->suspensions()->first()->ended_at);
         $this->assertTrue($wrestler->isSuspended());
     }
@@ -32,7 +32,7 @@ class HasSuspensionsTraitTest extends TestCase
         $wrestler->unsuspend();
 
         $this->assertNotNull($wrestler->suspensions->last()->ended_at);
-        $this->assertTrue($wrestler->isActive());
+        $this->assertTrue($wrestler->is_active);
         $this->assertFalse($wrestler->isSuspended());
     }
 

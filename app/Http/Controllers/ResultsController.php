@@ -9,6 +9,12 @@ use Illuminate\Http\Request;
 
 class ResultsController extends Controller
 {
+    /**
+     * Show the form for editing an events results.
+     *
+     * @param  Event  $event
+     * @return \Illuminate\Http\Response
+     */
     public function edit(Event $event)
     {
         $this->authorize('editResults', Event::class);
@@ -16,6 +22,13 @@ class ResultsController extends Controller
         return view('events.results', ['event' => $event]);
     }
 
+    /**
+     * Update the specified event with results from matches.
+     *
+     * @param EventResultsFormRequest $request
+     * @param  Event $event
+     * @return \Illuminate\Http\Response
+     */
     public function update(EventResultsFormRequest $request, Event $event)
     {
         foreach ($request->matches as $index => $match) {

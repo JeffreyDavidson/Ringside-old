@@ -34,8 +34,11 @@ class MatchFactory
         return self::create(['event_id' => $event->id], [$wrestler], $referees, $titles);
     }
 
-    public static function createTitleMatchWithNoChampion($overrides, $title, $wrestlers)
+    public static function createTitleMatchWithNoChampion($overrides)
     {
+        $title = factory(Title::class)->create(['introduced_at' => $event->date->subWeeks(2)]);
+        $wrestlers = factory(Wrestler::class, 2)->create(['hired_at' => $event->date->subWeeks(2)]);
+
         return self::create($overrides, $wrestlers, [], $title);
     }
 

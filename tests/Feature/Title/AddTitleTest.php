@@ -2,8 +2,9 @@
 
 namespace Tests\Feature\Title;
 
-use Tests\TestCase;
 use App\Models\Title;
+use Carbon\Carbon;
+use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class AddTitleTest extends TestCase
@@ -49,6 +50,7 @@ class AddTitleTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_create_a_title()
     {
+        $this->withoutExceptionHandling();
         $response = $this->actingAs($this->authorizedUser)
                         ->post(route('titles.index'), $this->validParams());
 
@@ -59,6 +61,34 @@ class AddTitleTest extends TestCase
             $this->assertEquals('Title Name', $title->name);
             $this->assertEquals('title-slug', $title->slug);
             $this->assertEquals('2017-08-04', $title->introduced_at->toDateString());
+        });
+    }
+
+    /** @test */
+    public function a_title_that_is_introduced_today_or_before_is_active()
+    {
+        $response = $this->actingAs($this->authorizedUser)
+                        ->from(route('titles.create'))
+                        ->post(route('titles.index'), $this->validParams([
+                            'introduced_at' => Carbon::today()
+                        ]));
+
+        tap(Title::first(), function ($title) use ($response) {
+            $this->assertTrue($title->is_active);
+        });
+    }
+
+    /** @test */
+    public function a_title_that_is_hired_after_today_or_before_is_inactive()
+    {
+        $response = $this->actingAs($this->authorizedUser)
+                        ->from(route('titles.create'))
+                        ->post(route('titles.index'), $this->validParams([
+                            'introduced_at' => Carbon::tomorrow()
+                        ]));
+
+        tap(Title::first(), function ($title) use ($response) {
+            $this->assertFalse($title->is_active);
         });
     }
 

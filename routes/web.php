@@ -34,7 +34,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('events/{event}/matches/create', 'MatchesController@create')->name('matches.create');
     Route::post('events/{event}/matches', 'MatchesController@store')->name('matches.store');
     Route::resource('titles', 'TitlesController');
-    Route::get('titles/{title}/retire', 'TitlesController@retire')->name('titles.retire');
+    Route::patch('titles/{title}/retire', 'TitlesController@retire')->name('titles.retire');
     Route::resource('stipulations', 'StipulationsController');
     Route::resource('venues', 'VenuesController');
 });

@@ -46,6 +46,17 @@ trait HasSuspensions
     }
 
     /**
+     * Scope a query to only include wrestlers that are currently suspended.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeSuspended($query)
+    {
+        $query->isSuspended();
+    }
+
+    /**
      * Suspends the wrestler.
      *
      * @return ?
@@ -56,7 +67,7 @@ trait HasSuspensions
             throw new WrestlerAlreadySuspendedException;
         }
 
-        $this->setStatusToInactive();
+        $this->inactivate();
 
         $this->suspensions()->create(['suspended_at' => Carbon::now()]);
 
@@ -69,7 +80,7 @@ trait HasSuspensions
             throw new WrestlerNotSuspendedException;
         }
 
-        $this->setStatusToActive();
+        $this->activate();
 
         $this->currentSuspension()->lift();
 

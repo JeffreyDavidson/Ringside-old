@@ -3,14 +3,15 @@
 namespace App\Models;
 
 use App\Traits\HasMatches;
+use App\Traits\HasRetirements;
+use App\Traits\HasStatus;
 use Illuminate\Database\Eloquent\Model;
 use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Traits\HasRetirements;
 
 class Title extends Model
 {
-    use HasMatches, HasRetirements, Presentable, SoftDeletes;
+    use HasMatches, HasRetirements, HasStatus, Presentable, SoftDeletes;
 
     /**
      * Assign which presenter to be used for model.
@@ -31,7 +32,16 @@ class Title extends Model
      *
      * @var array
      */
-    protected $dates = ['introduced_at', 'retired_at'];
+    protected $dates = ['introduced_at'];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
 
     /**
      * A title can have many champions.
@@ -60,7 +70,7 @@ class Title extends Model
      */
     public function retirements()
     {
-        return $this->morphMany(Retirement::class, 'retireable');
+        return $this->morphMany(Retirement::class, 'retiree');
     }
 
     /**
@@ -96,30 +106,13 @@ class Title extends Model
         return $this->champions()->whereNull('lost_on')->toHasOne();
     }
 
+    /**
+     * Checks to see if the title has a champion.
+     *
+     * @return bool
+     */
     public function hasAChampion()
     {
         return $this->champions()->whereNull('lost_on')->exists();
-    }
-
-    /**
-     * Scope a query to only include active titles.
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeActive($query, $date)
-    {
-        return $query->where('introduced_at', '<=', $date)->whereNull('retired_at');
-    }
-
-    /**
-     * Scope a query to only retired titles.
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeRetired($query)
-    {
-        return $query->whereNotNull('retired_at');
     }
 }

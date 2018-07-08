@@ -48,8 +48,7 @@ class WrestlersController extends Controller
         Wrestler::create([
             'name' => $request->input('name'),
             'slug' => $request->input('slug'),
-            'status' => $request->input('status'),
-            'hired_at' => Carbon::parse($request->input('hired_at')),
+            'hired_at' => $request->input('hired_at'),
             'hometown' => $request->input('hometown'),
             'height' => ($request->input('feet') * 12) + $request->input('inches'),
             'weight' => $request->input('weight'),
@@ -99,7 +98,6 @@ class WrestlersController extends Controller
         $wrestler->update([
             'name' => $request->input('name'),
             'slug' => $request->input('slug'),
-            'status' => $request->input('status'),
             'hired_at' => $request->input('hired_at'),
             'hometown' => $request->input('hometown'),
             'height' => ($request->input('feet') * 12) + $request->input('inches'),

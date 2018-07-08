@@ -1,8 +1,7 @@
 {{ csrf_field() }}
 
 {{ Form::bsText('name', old('name', $wrestler->name), [], true, 'Name') }}
-{{ Form::bsText('slug', old('slug', $wrestler->slug), [], true, 'Slug') }}
-{{ Form::bsSelect('status', $wrestler->available_statuses, old('status', $wrestler->status), [], true, 'Status') }}
+{{ Form::bsText('slug', old('slug', $wrestler->slug), [], true, 'Slug') }} }}
 {{ Form::bsText('hometown', old('hometown', $wrestler->hometown), [], true, 'Hometown') }}
 
 <div class="row">

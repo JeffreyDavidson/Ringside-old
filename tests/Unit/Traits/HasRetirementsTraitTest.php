@@ -20,7 +20,7 @@ class HasRetirementsTraitTest extends TestCase
         $wrestler->retire();
 
         $this->assertEquals(1, $wrestler->retirements->count());
-        $this->assertTrue($wrestler->isInactive());
+        $this->assertFalse($wrestler->is_active);
         $this->assertTrue($wrestler->isRetired());
         $this->assertNull($wrestler->retirements()->first()->ended_at);
     }
@@ -33,7 +33,7 @@ class HasRetirementsTraitTest extends TestCase
         $wrestler->unretire();
 
         $this->assertNotNull($wrestler->retirements()->first()->ended_at);
-        $this->assertTrue($wrestler->isActive());
+        $this->assertTrue($wrestler->is_active);
         $this->assertFalse($wrestler->isRetired());
     }
 
@@ -51,7 +51,7 @@ class HasRetirementsTraitTest extends TestCase
     }
 
     /**
-     * @expectedException \App\Exceptions\WrestlerAlreadyRetiredException
+     * @expectedException \App\Exceptions\ModelAlreadyRetiredException
      *
      * @test
      */
@@ -66,7 +66,7 @@ class HasRetirementsTraitTest extends TestCase
     }
 
     /**
-     * @expectedException \App\Exceptions\WrestlerNotRetiredException
+     * @expectedException \App\Exceptions\ModelNotRetiredException
      *
      * @test
      */
@@ -87,7 +87,7 @@ class HasRetirementsTraitTest extends TestCase
         $title->retire();
 
         $this->assertEquals(1, $title->retirements->count());
-        $this->assertTrue($title->isInactive());
+        $this->assertFalse($title->is_active);
         $this->assertTrue($title->isRetired());
         $this->assertNull($title->retirements()->first()->ended_at);
     }

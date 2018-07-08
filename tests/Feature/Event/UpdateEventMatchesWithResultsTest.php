@@ -134,11 +134,7 @@ class UpdateEventMatchesWithResultsTest extends TestCase
     public function a_title_match_with_no_champion_can_crown_a_champion_depending_on_match_decision()
     {
         $event = factory(Event::class)->create();
-        $match = MatchFactory::createTitleMatchWithNoChampion(
-                            ['event_id' => $event->id, 'match_type_id' => $this->matchtype->id],
-                            factory(Title::class)->create(['introduced_at' => $event->date->subWeeks(2)]),
-                            factory(Wrestler::class, 2)->create(['hired_at' => $event->date->subWeeks(2)])
-                        );
+        $match = MatchFactory::createTitleMatchWithNoChampion(['event_id' => $event->id, 'match_type_id' => $this->matchtype->id]);
 
         $response = $this->actingAs($this->authorizedUser)
                         ->from(route('results.edit', ['event' => $event->id]))

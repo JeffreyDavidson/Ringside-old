@@ -179,6 +179,7 @@ return [
         App\Providers\MacroServiceProvider::class,
         App\Providers\BootstrapFormServiceProvider::class,
         App\Providers\ValidationServiceProvider::class,
+        App\Providers\ObserverServiceProvider::class,
     ],
 
     /*
