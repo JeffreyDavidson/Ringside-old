@@ -56,7 +56,7 @@ $factory->define(App\Models\Retirement::class, function (Faker\Generator $faker)
 $factory->define(App\Models\Manager::class, function (Faker\Generator $faker) {
     return [
         'first_name' => $faker->firstName,
-        'last_name' => $faker->lastName
+        'last_name' => $faker->lastName,
     ];
 });
 
@@ -85,7 +85,7 @@ $factory->define(App\Models\Match::class, function (Faker\Generator $faker) {
         'match_type_id' => factory(App\Models\MatchType::class)->lazy(),
         'stipulation_id' => factory(App\Models\Stipulation::class)->lazy(),
         'preview' => $faker->paragraphs(3, true),
-        'result' => $faker->paragraphs(3, true)
+        'result' => $faker->paragraphs(3, true),
     ];
 });
 
@@ -104,7 +104,7 @@ $factory->define(App\Models\Event::class, function (Faker\Generator $faker) {
         'name' => $name,
         'slug' => str_slug($name),
         'date' => $faker->dateTimeBetween('-10 years'),
-        'venue_id' => factory(App\Models\Venue::class)->lazy()
+        'venue_id' => factory(App\Models\Venue::class)->lazy(),
     ];
 });
 
@@ -123,7 +123,7 @@ $factory->define(App\Models\MatchType::class, function (Faker\Generator $faker) 
         'name' => $name,
         'slug' => str_slug($name),
         'number_of_sides' => 2,
-        'total_competitors' => $faker->randomDigitNotNull
+        'total_competitors' => $faker->randomDigitNotNull,
     ];
 });
 
@@ -151,7 +151,7 @@ $factory->define(App\Models\Venue::class, function (Faker\Generator $faker) {
         'address' => $faker->streetAddress,
         'city' => $faker->city,
         'state' => $faker->state,
-        'postcode' => substr($faker->postcode, 0, 5)
+        'postcode' => substr($faker->postcode, 0, 5),
     ];
 });
 
@@ -159,7 +159,7 @@ $factory->define(App\Models\Referee::class, function (Faker\Generator $faker) {
     return [
         'first_name' => $faker->firstName,
         'last_name' => $faker->lastName,
-        'hired_at' => Carbon::parse('-2 weeks')
+        'hired_at' => Carbon::parse('-2 weeks'),
     ];
 });
 

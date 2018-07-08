@@ -26,7 +26,7 @@ class TitleCreateFormRequest extends FormRequest
         return [
             'name' => 'required|unique:titles,name',
             'slug' => 'required|unique:titles,slug',
-            'introduced_at' => 'required|date'
+            'introduced_at' => 'required|date',
         ];
     }
 }

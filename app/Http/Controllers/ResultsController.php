@@ -35,7 +35,7 @@ class ResultsController extends Controller
             $retrievedMatch->update([
                 'match_decision_id' => $match['match_decision_id'],
                 'winner_id' => $match['winner_id'],
-                'result' => $match['result']
+                'result' => $match['result'],
             ]);
 
             $losers = $retrievedMatch->wrestlers->except($match['winner_id']);
