@@ -37,7 +37,7 @@ trait HasTitles
      * Checks to see if the wrestler is the champion of a specific title.
      *
      * @param \App\Models\Title $title
-     * @return Boolean
+     * @return bool
      */
     public function hasTitle(Title $title)
     {

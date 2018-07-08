@@ -3,9 +3,9 @@
 namespace App\Traits;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use App\Exceptions\ModelNotRetiredException;
 use App\Exceptions\ModelAlreadyRetiredException;
-use Illuminate\Database\Eloquent\Builder;
 
 trait HasRetirements
 {

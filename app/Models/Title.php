@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Traits\HasStatus;
 use App\Traits\HasMatches;
 use App\Traits\HasRetirements;
-use App\Traits\HasStatus;
 use Illuminate\Database\Eloquent\Model;
 use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;

@@ -3,9 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Models\Event;
+use Illuminate\Validation\Rule;
 use App\Rules\WrestlerInvolvedInMatch;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class EventResultsFormRequest extends FormRequest
 {
@@ -30,7 +30,7 @@ class EventResultsFormRequest extends FormRequest
     {
         $this->expectedMatchesCount = Event::find(request()->event->id)->matches()->count();
 
-        $rules =  [
+        $rules = [
             'matches'                  => ['array', 'size:'.$this->expectedMatchesCount],
             'matches.*.match_decision_id' => ['required', 'integer', 'min:1', Rule::exists('match_decisions', 'id')],
             'matches.*.winner_id' => [

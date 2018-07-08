@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Models\Match;
 use App\Http\Requests\EventResultsFormRequest;
-use Illuminate\Http\Request;
 
 class ResultsController extends Controller
 {
@@ -44,7 +43,7 @@ class ResultsController extends Controller
             $retrievedMatch->losers()->saveMany($losers);
 
             if ($retrievedMatch->isTitleMatch()) {
-                foreach($retrievedMatch->titles as $title) {
+                foreach ($retrievedMatch->titles as $title) {
                     if ($title->hasAChampion()) {
                         if (! $retrievedMatch->winner->hasTitle($title) && $retrievedMatch->decision->titleCanChangeHands()) {
                             $retrievedMatch->winner->winTitle($title, $retrievedMatch->date);

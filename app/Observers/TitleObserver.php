@@ -2,8 +2,8 @@
 
 namespace App\Observers;
 
-use App\Models\Title;
 use Carbon\Carbon;
+use App\Models\Title;
 
 class TitleObserver
 {

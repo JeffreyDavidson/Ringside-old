@@ -22,9 +22,9 @@ class MatchTypesTableSeeder extends Seeder
         factory(MatchType::class)->create(['name' => 'Ten Man Tag Team Match', 'slug' => '10man', 'number_of_sides' => 2, 'total_competitors' => 20]);
         factory(MatchType::class)->create(['name' => 'Two On One Handicap Match', 'slug' => '21handicap', 'number_of_sides' => 2, 'total_competitors' => 3]);
         factory(MatchType::class)->create(['name' => 'Three On Two Handicap Match', 'slug' => '32handicap', 'number_of_sides' => 2, 'total_competitors' => 5]);
-        factory(MatchType::class)->create(['name' => 'Battle Royal Match', 'slug' => 'battleroyal', 'number_of_sides' => NULL, 'total_competitors' => NULL]);
-        factory(MatchType::class)->create(['name' => 'Royal Rumble Match', 'slug' => 'royalrumble', 'number_of_sides' => NULL, 'total_competitors' => NULL]);
+        factory(MatchType::class)->create(['name' => 'Battle Royal Match', 'slug' => 'battleroyal', 'number_of_sides' => null, 'total_competitors' => null]);
+        factory(MatchType::class)->create(['name' => 'Royal Rumble Match', 'slug' => 'royalrumble', 'number_of_sides' => null, 'total_competitors' => null]);
         factory(MatchType::class)->create(['name' => 'Tornado Tag Team Match', 'slug' => 'tornadotag', 'number_of_sides' => 2, 'total_competitors' => 4]);
-        factory(MatchType::class)->create(['name' => 'Gauntlet Match', 'slug' => 'gauntlet', 'number_of_sides' => 2, 'total_competitors' => NULL]);
+        factory(MatchType::class)->create(['name' => 'Gauntlet Match', 'slug' => 'gauntlet', 'number_of_sides' => 2, 'total_competitors' => null]);
     }
 }

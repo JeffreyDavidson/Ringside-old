@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Match;
 use App\Models\Event;
+use App\Models\Match;
 use App\Http\Requests\MatchCreateFormRequest;
 
 class MatchesController extends Controller

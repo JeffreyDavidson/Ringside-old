@@ -4,7 +4,6 @@ namespace App\Repositories;
 
 use App\Models\Title;
 use App\Models\Champion;
-use Carbon\Carbon;
 
 class ChampionRepository
 {

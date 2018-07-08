@@ -2,13 +2,11 @@
 
 namespace App\Http\Requests;
 
-use App\Models\MatchType;
 use App\Models\Wrestler;
-use App\Models\Event;
+use App\Models\MatchType;
+use Illuminate\Validation\Rule;
 use App\Rules\QualifiedForMatch;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 
 class MatchCreateFormRequest extends FormRequest
 {
@@ -32,15 +30,21 @@ class MatchCreateFormRequest extends FormRequest
         $date = request()->event->date;
 
         $validateWrestlerNumbers = function ($attribute, $match, $fail) {
-            if (is_null($match['match_type_id'])) return;
+            if (is_null($match['match_type_id'])) {
+                return;
+            }
 
             // if we get no competitors the match type id is wrong which will get caught below
             $competitors = (int) MatchType::whereKey($match['match_type_id'])->value('total_competitors');
 
-            if (!$competitors) return;
+            if (! $competitors) {
+                return;
+            }
 
             // Wrestlers input is not valid format, will get caught below
-            if(!isset($match['wrestlers']) || !is_array($match['wrestlers'])) return;
+            if (! isset($match['wrestlers']) || ! is_array($match['wrestlers'])) {
+                return;
+            }
 
             //now we just flatten our wrestlers again, and count them
             $flattened = array_flatten($match['wrestlers']);

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
 use App\Models\Wrestler;
 use App\Http\Requests\WrestlerEditFormRequest;
 use App\Http\Requests\WrestlerCreateFormRequest;

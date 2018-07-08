@@ -122,7 +122,4 @@ class EventsController extends Controller
 
         return redirect()->route('events.index');
     }
-
-
-
 }

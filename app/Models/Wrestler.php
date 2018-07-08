@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\HasStatus;
 use App\Traits\HasTitles;
 use App\Traits\HasMatches;
 use App\Traits\HasInjuries;
 use App\Traits\HasManagers;
 use App\Traits\HasRetirements;
 use App\Traits\HasSuspensions;
-use App\Traits\HasStatus;
 use Illuminate\Database\Eloquent\Model;
 use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;

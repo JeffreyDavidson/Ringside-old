@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Match;
 use App\Models\Event;
+use App\Models\Match;
 use App\Models\Referee;
 use App\Models\Wrestler;
 
