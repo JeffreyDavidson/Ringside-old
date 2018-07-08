@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Laracodes\Presenter\Traits\Presentable;
 use Carbon\Carbon;
 use App\Collections\ChampionCollection;
+use Illuminate\Database\Eloquent\Model;
+use Laracodes\Presenter\Traits\Presentable;
 
 class Champion extends Model
 {
@@ -55,7 +55,7 @@ class Champion extends Model
     /**
      * Calculates the length of time during championship reign.
      *
-     * @return integer
+     * @return int
      */
     public function timeSpentAsChampion()
     {

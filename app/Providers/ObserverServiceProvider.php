@@ -9,7 +9,6 @@ use App\Observers\MatchObserver;
 use App\Observers\TitleObserver;
 use App\Observers\WrestlerObserver;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Validator;
 
 class ObserverServiceProvider extends ServiceProvider
 {

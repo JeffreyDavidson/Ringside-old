@@ -2,8 +2,8 @@
 
 namespace App\Observers;
 
-use App\Models\Wrestler;
 use Carbon\Carbon;
+use App\Models\Wrestler;
 
 class WrestlerObserver
 {

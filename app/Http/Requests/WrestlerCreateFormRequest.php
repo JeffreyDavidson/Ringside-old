@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Http\Requests;
+
 use App\Models\Wrestler;
-use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class WrestlerCreateFormRequest extends FormRequest

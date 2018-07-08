@@ -11,6 +11,5 @@ class WrestlerManagerTableSeeder extends Seeder
      */
     public function run()
     {
-
     }
 }

@@ -10,7 +10,7 @@ class ManagerFactory
 
         $wrestler->hireManager($manager, $start);
 
-        if (!is_null($end)) {
+        if (! is_null($end)) {
             $wrestler->fireManager($manager, $end);
         }
 

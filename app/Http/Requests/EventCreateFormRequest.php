@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\QualifiedForMatch;
 use Illuminate\Foundation\Http\FormRequest;
 
 class EventCreateFormRequest extends FormRequest

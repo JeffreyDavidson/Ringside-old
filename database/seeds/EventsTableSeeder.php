@@ -118,7 +118,7 @@ class EventsTableSeeder extends Seeder
                                     ->get();
 
         // Only get enough wrestlers needed for match.
-        if (!is_null($match->type->total_competitors)) {
+        if (! is_null($match->type->total_competitors)) {
             if ($champions->isNotEmpty()) {
                 // There are champions so make sure not to include that count in how many to get.
                 $wrestlersForMatch = $nonChampions->take($match->type->total_competitors - $champions->count());
@@ -140,7 +140,6 @@ class EventsTableSeeder extends Seeder
 
     public function setDecision($match)
     {
-
     }
 
     public function setWinner($match)
