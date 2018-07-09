@@ -9,7 +9,7 @@ use App\Models\MatchType;
 use App\Models\MatchDecision;
 use App\Models\Title;
 use App\Models\Champion;
-use MatchFactory;
+use Facades\MatchFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UpdateEventMatchesWithResultsTest extends TestCase
@@ -19,6 +19,7 @@ class UpdateEventMatchesWithResultsTest extends TestCase
     private $event;
     private $match;
     private $matchtype;
+    private $title;
     private $response;
 
     public function setUp()
@@ -28,8 +29,12 @@ class UpdateEventMatchesWithResultsTest extends TestCase
         $this->setupAuthorizedUser(['edit-event-results', 'update-event-results']);
 
         $this->event = factory(Event::class)->create();
+
         $this->matchtype = factory(MatchType::class)->create(['number_of_sides' => 2, 'total_competitors' => 2]);
-        $this->match = MatchFactory::create(['event_id' => $this->event->id, 'match_number' => 1, 'match_type_id' => $this->matchtype->id], factory(Wrestler::class, 2)->create());
+        $this->title = factory(Title::class)->create();
+        $this->match = MatchFactory::forEvent($this->event)
+                                ->withMatchtype($this->matchtype)
+                                ->create();
     }
 
     private function validParams($overrides = [])
@@ -38,7 +43,7 @@ class UpdateEventMatchesWithResultsTest extends TestCase
             'matches' => [
                 [
                     'match_decision_id' => 1,
-                    'winner_id' => 1,
+                    'winner_id' => $this->match->wrestlers->random()->id,
                     'result' => 'Donec sed odio dui. Cras mattis consectetur purus sit amet fermentum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.'
                 ]
             ]
@@ -104,7 +109,7 @@ class UpdateEventMatchesWithResultsTest extends TestCase
     }
 
     /** @test */
-    public function winners_and_losers_can_be_separated_based_off_result_of_match()
+    public function winners_and_losers_can_be_separated_based_off_decision_of_match()
     {
         $response = $this->actingAs($this->authorizedUser)
                         ->from(route('results.edit', ['event' => $this->event->id]))
@@ -134,7 +139,10 @@ class UpdateEventMatchesWithResultsTest extends TestCase
     public function a_title_match_with_no_champion_can_crown_a_champion_depending_on_match_decision()
     {
         $event = factory(Event::class)->create();
-        $match = MatchFactory::createTitleMatchWithNoChampion(['event_id' => $event->id, 'match_type_id' => $this->matchtype->id]);
+        $match = MatchFactory::forEvent($event)
+                ->withMatchType($this->matchtype)
+                ->withTitles($this->title)
+                ->create();
 
         $response = $this->actingAs($this->authorizedUser)
                         ->from(route('results.edit', ['event' => $event->id]))
@@ -142,7 +150,34 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                             'matches' => [
                                 [
                                     'match_decision_id' => MatchDecision::titleCanBeWonBySlug()->first()->id,
-                                    'winner_id' => $event->matches->first()->wrestlers->first()->id,
+                                    'winner_id' => $match->wrestlers->first()->id
+                                ]
+                            ]
+                        ]));
+
+        tap($event->matches->first()->fresh(), function ($match) use ($response) {
+            $match->titles->each(function ($title, $key) use ($match) {
+                $this->assertEquals($match->winner_id, $title->currentChampion->wrestler_id);
+            });
+        });
+    }
+
+    /** @test */
+    public function a_title_match_with_no_champion_can_not_crown_a_champion_when_the_match_decision_does_not_allow_a_champion_to_be_crowned()
+    {
+        $event = factory(Event::class)->create();
+        $match = MatchFactory::forEvent($event)
+                ->withMatchType($this->matchtype)
+                ->withTitle($this->title)
+                ->create();
+
+        $response = $this->actingAs($this->authorizedUser)
+                        ->from(route('results.edit', ['event' => $event->id]))
+                        ->patch(route('results.update', ['event' => $event->id]), $this->validParams([
+                            'matches' => [
+                                [
+                                    'match_decision_id' => MatchDecision::titleCanNotBeWonBySlug()->first()->id,
+                                    'winner_id' => $match->wrestlers->first()->id
                                 ]
                             ]
                         ]));
@@ -158,14 +193,12 @@ class UpdateEventMatchesWithResultsTest extends TestCase
     public function a_title_match_with_a_set_champion_that_wins_a_title_match_keeps_the_title_and_increases_successful_defenses()
     {
         $event = factory(Event::class)->create(['date' => '2018-04-27 19:00:00']);
-        $title = factory(Title::class)->create(['introduced_at' => $event->date->subMonths(5)]);
-        $champion = factory(Champion::class)->create(['title_id' => $title->id, 'wrestler_id' => factory(Wrestler::class)->create(['hired_at' => $event->date->subMonths(4)])]);
-
-        $match = MatchFactory::createTitleMatchWithChampion(
-                            ['event_id' => $event->id, 'match_type_id' => $this->matchtype->id],
-                            [$title],
-                            [$champion->wrestler, factory(Wrestler::class)->create(['hired_at' => $event->date->subWeeks(2)])]
-                        );
+        $title = factory(Title::class)->create(['introduced_at' => $event->date->copy()->subMonths(4)]);
+        $match = MatchFactory::forEvent($event)
+                ->withMatchType($this->matchtype)
+                ->withTitle($title)
+                ->withChampion()
+                ->create();
 
         $response = $this->actingAs($this->authorizedUser)
                         ->from(route('results.edit', ['event' => $event->id]))
@@ -173,7 +206,7 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                             'matches' => [
                                 [
                                     'match_decision_id' => MatchDecision::titleCanBeWonBySlug()->first()->id,
-                                    'winner_id' => $champion->wrestler->id,
+                                    'winner_id' => $match->titles->first()->champion->wrestler_id,
                                 ]
                             ]
                         ]));

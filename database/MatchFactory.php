@@ -1,75 +1,95 @@
 <?php
 
 use App\Models\Event;
+use App\Models\MatchType;
 use App\Models\Match;
+use App\Models\Title;
+use App\Models\Champion;
 use App\Models\Referee;
 use App\Models\Wrestler;
 
 class MatchFactory
 {
-    public static function create($overrides = [], $wrestlers = [], $referees = [], $titles = [])
+    public $event_id = null;
+    public $match_type_id = null;
+    public $stipulation_id = null;
+    public $champion = null;
+    public $titles = null;
+
+    public function create()
     {
-        $match = factory(Match::class)->create($overrides);
+        $match = factory(Match::class)->create([
+            'event_id' => $this->event_id ?? factory(Event::class)->create(),
+            'match_type_id' => $this->match_type_id ?? factory(MatchType::class)->create(),
+            'stipulation_id' => $this->stipulation_id ?? null,
+        ]);
 
-        self::addWrestlersForMatch($wrestlers, $match);
+        $wrestlers = factory(Wrestler::class, (int) $match->type->total_competitors)->create(['hired_at' => $match->date->copy()->subMonths(2)]);
+        $wrestlersForMatch = $wrestlers->split($match->type->number_of_sides);
 
-        self::addRefereesForMatch($referees, $match);
+        $match->addWrestlers($wrestlersForMatch);
 
-        self::addTitlesForMatch($titles, $match);
+        if (! is_null($this->titles)) {
+            $match->addTitles($this->titles);
+        }
 
         return $match;
     }
 
-    public static function createForWrestlerOnDate($wrestler, $date)
+    public function forEvent(Event $event)
     {
-        $event = factory(Event::class)->create(['date' => $date]);
+        $this->event_id = $event->id;
 
-        return self::create(['event_id' => $event->id], [$wrestler]);
+        return $this;
     }
 
-    public function createOnDate($date, $overrides, $wrestlers, $referees, $titles)
+    public function forMatchNumber($matchNumber)
     {
-        $event = factory(Event::class)->create(['date' => $date]);
+        $this->match_number = $match_number;
 
-        return self::create(['event_id' => $event->id], [$wrestler], $referees, $titles);
+        return $this;
     }
 
-    public static function createTitleMatchWithNoChampion($overrides)
+    public function withMatchType(MatchType $matchtype)
     {
-        $title = factory(Title::class)->create(['introduced_at' => $event->date->subWeeks(2)]);
-        $wrestlers = factory(Wrestler::class, 2)->create(['hired_at' => $event->date->subWeeks(2)]);
+        $this->match_type_id = $matchtype->id;
 
-        return self::create($overrides, $wrestlers, [], $title);
+        return $this;
     }
 
-    public static function createTitleMatchWithChampion($overrides, $title, $wrestlers)
+    public function withStipulation(Stipulation $stipulation)
     {
-        return self::create($overrides, $wrestlers, [], $title);
+        $this->stipulation_id = $stipulation->id;
+
+        return $this;
     }
 
-    /**
-     * @param $wrestlers
-     * @param $match
-     */
-    public static function addWrestlersForMatch($wrestlers, $match)
+    public function withTitle($titles)
     {
-        $wrestlersForMatch = collect($wrestlers);
+        $this->titles = $titles;
 
-        $numberOfCompetitorsForMatch = $match->type->total_competitors;
-        $wrestlersAlreadyInMatch = $wrestlersForMatch->count();
-        $numberOfWrestlersToAddToMatch = $numberOfCompetitorsForMatch - $wrestlersAlreadyInMatch;
+        return $this;
+    }
 
-        if ($wrestlersAlreadyInMatch > (int) $numberOfCompetitorsForMatch) {
-            throw new Exception('There are too many wrestlers trying to be added to this match.');
-        }
+    public function withWrestlers($wrestlers)
+    {
+        $this->wrestlers = $wrestlers;
 
-        if ($numberOfWrestlersToAddToMatch > 0) {
-            $wrestlersForMatch = $wrestlersForMatch->concat(factory(Wrestler::class, $numberOfWrestlersToAddToMatch)->create());
-        }
+        return $this;
+    }
 
-        $wrestlersForMatch = $wrestlersForMatch->split($match->type->number_of_sides);
+    public function withChampion()
+    {
+        // // How many days between two dates
+        // $diffInDays = $sixMonthsAgo->diffInDays($hiredOn);
 
-        $match->addWrestlers($wrestlersForMatch);
+        // // Get a random number in the range of $diffInDays
+        // $randomDays = rand(0, $diffInDays);
+
+        // //add that many days to $hiredOn
+        // $randomDate = $hiredOn->addDays($randomDays);
+
+        // return $this;
     }
 
     /**
@@ -92,14 +112,5 @@ class MatchFactory
         }
 
         $match->addReferees($refereesForMatch);
-    }
-
-    /**
-     * @param $titles
-     * @param $match
-     */
-    public static function addTitlesForMatch($titles, $match)
-    {
-        $match->titles()->attach($titles);
     }
 }
