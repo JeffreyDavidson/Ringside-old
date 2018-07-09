@@ -1,9 +1,9 @@
 <?php
 
+use Carbon\Carbon;
 use App\Models\Event;
 use App\Models\Venue;
 use Facades\MatchFactory;
-use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
 class EventFactory

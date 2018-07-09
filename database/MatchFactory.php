@@ -1,12 +1,10 @@
 <?php
 
 use App\Models\Event;
-use App\Models\MatchType;
 use App\Models\Match;
-use App\Models\Title;
-use App\Models\Champion;
 use App\Models\Referee;
 use App\Models\Wrestler;
+use App\Models\MatchType;
 
 class MatchFactory
 {
