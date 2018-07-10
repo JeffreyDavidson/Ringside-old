@@ -116,8 +116,8 @@ class AddMatchesToEventTest extends TestCase
                                     'titles' => [$this->title->id],
                                     'referees' => [$this->referee->id],
                                     'wrestlers' => [
-                                        0 => [$this->wrestlerA->id],
-                                        1 => [$this->wrestlerB->id],
+                                        [$this->wrestlerA->id],
+                                        [$this->wrestlerB->id],
                                     ],
                                     'preview' => 'Maecenas faucibus mollis interdum. Etiam porta sem malesuada magna mollis euismod. Cras mattis consectetur purus sit amet fermentum. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Curabitur blandit tempus porttitor. Vestibulum id ligula porta felis euismod semper.',
                                 ]
