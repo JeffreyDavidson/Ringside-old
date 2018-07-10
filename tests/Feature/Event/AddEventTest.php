@@ -134,7 +134,7 @@ class AddEventTest extends TestCase
         $this->assertFormError('date');
     }
 
-    ///** @test */
+    /** @test */
     public function event_date_must_be_date()
     {
         $this->response = $this->actingAs($this->authorizedUser)
