@@ -12,7 +12,16 @@ class MatchFactory
     public $match_type_id = null;
     public $stipulation_id = null;
     public $champion = null;
-    public $titles = null;
+    public $wrestlers;
+    public $titles;
+    public $referees;
+
+    public function __construct()
+    {
+        $this->wrestlers = collect();
+        $this->titles = collect();
+        $this->referees = collect();
+    }
 
     public function create()
     {
@@ -22,14 +31,39 @@ class MatchFactory
             'stipulation_id' => $this->stipulation_id ?? null,
         ]);
 
-        $wrestlers = factory(Wrestler::class, (int) $match->type->total_competitors)->create(['hired_at' => $match->date->copy()->subMonths(2)]);
-        $wrestlersForMatch = $wrestlers->split($match->type->number_of_sides);
+        // I need to make sure that the amount of wrestlers that are added to
+        // the match are of the match types total competitors value and the
+        // wrestlers must have be hired before the date of the event that
+        // match belongs to. I will also need to split the collection
+        // of wrestlers because its easier to split the wrestlers based
+        // on the match types number of sides value for that type.
+        // Then I need to add the collection of wrestlers to
+        // the match.
 
-        $match->addWrestlers($wrestlersForMatch);
-
-        if (! is_null($this->titles)) {
-            $match->addTitles($this->titles);
+        // If I call the withWrestler method I want to make sure that the
+        // wrstler passed into the method is INCLUDED into the match.
+        // dd($this->wrestlers);
+        if ($this->wrestlers->isEmpty()) {
+            // dd('is empty');
+            $numWrestlersToAddToMatch = $match->type->total_competitors;
+            $wrestlersForMatch = factory(Wrestler::class, (int) $numWrestlersToAddToMatch)->create(['hired_at' => $match->date->copy()->subMonths(2)]);
+            $concatenatedWrestlers = $this->wrestlers->push($wrestlersForMatch);
+            $this->wrestlers = $concatenatedWrestlers;
+        } else {
+            $numWrestlersToAddToMatch = $match->type->total_competitors - $this->wrestlers->count();
+            $wrestlersForMatch = factory(Wrestler::class, (int) $numWrestlersToAddToMatch)->create(['hired_at' => $match->date->copy()->subMonths(2)]);
+            $concatenatedWrestlers = $this->wrestlers->push($wrestlersForMatch);
+            $this->wrestlers = $concatenatedWrestlers;
         }
+        // dd($this->wrestlers);
+        // dd($wrestlersForMatch);
+        $splitWrestlers = $this->wrestlers->split($match->type->number_of_sides);
+
+        $match->addWrestlers($splitWrestlers);
+
+        // if (! is_null($this->titles)) {
+        //     $match->addTitles($this->titles);
+        // }
 
         return $match;
     }
@@ -76,6 +110,15 @@ class MatchFactory
         return $this;
     }
 
+    public function withWrestler(Wrestler $wrestler)
+    {
+        $concatenated = $this->wrestlers->push([$wrestler]);
+
+        $this->wrestlers = $concatenated;
+
+        return $this;
+    }
+
     public function withChampion()
     {
         // // How many days between two dates
@@ -106,7 +149,7 @@ class MatchFactory
         }
 
         if ($refereesToCreate) {
-            $refereesForMatch = $refereesForMatch->concat(factory(Referee::class, $refereesToCreate)->create());
+            $refereesForMatch = $refereesForMatch->push(factory(Referee::class, $refereesToCreate)->create());
         }
 
         $match->addReferees($refereesForMatch);

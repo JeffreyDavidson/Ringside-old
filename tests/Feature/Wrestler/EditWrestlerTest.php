@@ -219,7 +219,7 @@ class EditWrestlerTest extends TestCase
     public function wrestler_hired_at_date_must_be_before_first_competed_for_match()
     {
         $event = factory(Event::class)->create(['date' => '2017-11-09']);
-        MatchFactory::forEvent($event)->withWrestler($this->wrestler)->create();
+        $match = MatchFactory::forEvent($event)->withWrestler($this->wrestler)->create();
 
         $this->response = $this->actingAs($this->authorizedUser)
                             ->from(route('wrestlers.edit', $this->wrestler->id))

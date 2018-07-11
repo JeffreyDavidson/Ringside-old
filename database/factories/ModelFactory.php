@@ -67,7 +67,7 @@ $factory->define(App\Models\Title::class, function (Faker\Generator $faker) {
         'name' => $name,
         'slug' => str_slug($name),
         'is_active' => true,
-        'introduced_at' => Carbon::now(),
+        'introduced_at' => Carbon::now()->subMonths(8),
     ];
 });
 
@@ -123,7 +123,7 @@ $factory->define(App\Models\MatchType::class, function (Faker\Generator $faker) 
         'name' => $name,
         'slug' => str_slug($name),
         'number_of_sides' => 2,
-        'total_competitors' => $faker->randomDigitNotNull,
+        'total_competitors' => 2,
     ];
 });
 
