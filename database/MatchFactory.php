@@ -40,30 +40,11 @@ class MatchFactory
         // Then I need to add the collection of wrestlers to
         // the match.
 
-        // If I call the withWrestler method I want to make sure that the
-        // wrstler passed into the method is INCLUDED into the match.
-        // dd($this->wrestlers);
-        if ($this->wrestlers->isEmpty()) {
-            // dd('is empty');
-            $numWrestlersToAddToMatch = $match->type->total_competitors;
-            $wrestlersForMatch = factory(Wrestler::class, (int) $numWrestlersToAddToMatch)->create(['hired_at' => $match->date->copy()->subMonths(2)]);
-            $concatenatedWrestlers = $this->wrestlers->push($wrestlersForMatch);
-            $this->wrestlers = $concatenatedWrestlers;
-        } else {
-            $numWrestlersToAddToMatch = $match->type->total_competitors - $this->wrestlers->count();
-            $wrestlersForMatch = factory(Wrestler::class, (int) $numWrestlersToAddToMatch)->create(['hired_at' => $match->date->copy()->subMonths(2)]);
-            $concatenatedWrestlers = $this->wrestlers->push($wrestlersForMatch);
-            $this->wrestlers = $concatenatedWrestlers;
+        $this->addWrestlersForMatch($match);
+
+        if ($this->titles->isEmpty()) {
+            $match->addTitles($this->titles);
         }
-        // dd($this->wrestlers);
-        // dd($wrestlersForMatch);
-        $splitWrestlers = $this->wrestlers->split($match->type->number_of_sides);
-
-        $match->addWrestlers($splitWrestlers);
-
-        // if (! is_null($this->titles)) {
-        //     $match->addTitles($this->titles);
-        // }
 
         return $match;
     }
@@ -96,23 +77,30 @@ class MatchFactory
         return $this;
     }
 
-    public function withTitle($titles)
+    public function withTitle($title)
     {
-        $this->titles = $titles;
+        $this->titles->push($title);
+
+        return $this;
+    }
+
+    public function withTitles($titles)
+    {
+        $this->titles->merge($titles);
 
         return $this;
     }
 
     public function withWrestlers($wrestlers)
     {
-        $this->wrestlers = $wrestlers;
+        $this->wrestlers->merge($wrestlers);
 
         return $this;
     }
 
     public function withWrestler(Wrestler $wrestler)
     {
-        $concatenated = $this->wrestlers->push([$wrestler]);
+        $concatenated = $this->wrestlers->push($wrestler);
 
         $this->wrestlers = $concatenated;
 
@@ -131,6 +119,25 @@ class MatchFactory
         // $randomDate = $hiredOn->addDays($randomDays);
 
         // return $this;
+    }
+
+    public function addWrestlersForMatch($match)
+    {
+        if ($this->wrestlers->isEmpty()) {
+            $numWrestlersToAddToMatch = $match->type->total_competitors;
+            $wrestlersForMatch = factory(Wrestler::class, (int) $numWrestlersToAddToMatch)->create(['hired_at' => $match->date->copy()->subMonths(2)]);
+            $concatenatedWrestlers = $this->wrestlers->merge($wrestlersForMatch);
+            $this->wrestlers = $concatenatedWrestlers;
+        } else {
+            $numWrestlersToAddToMatch = $match->type->total_competitors - $this->wrestlers->count();
+            $wrestlersForMatch = factory(Wrestler::class, (int) $numWrestlersToAddToMatch)->create(['hired_at' => $match->date->copy()->subMonths(2)]);
+            $concatenatedWrestlers = $this->wrestlers->merge($wrestlersForMatch);
+            $this->wrestlers = $concatenatedWrestlers;
+        }
+
+        $splitWrestlers = $this->wrestlers->split($match->type->number_of_sides);
+
+        $match->addWrestlers($splitWrestlers);
     }
 
     /**
