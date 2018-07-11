@@ -59,6 +59,8 @@ class VenuesController extends Controller
     {
         $this->authorize('show', Venue::class);
 
+        // $venue->load('pastEvents');
+
         return response()->view('venues.show', ['venue' => $venue]);
     }
 

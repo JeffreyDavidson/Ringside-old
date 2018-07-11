@@ -141,7 +141,7 @@ class UpdateEventMatchesWithResultsTest extends TestCase
         $event = factory(Event::class)->create();
         $match = MatchFactory::forEvent($event)
                 ->withMatchType($this->matchtype)
-                ->withTitles($this->title)
+                ->withTitle($this->title)
                 ->create();
 
         $response = $this->actingAs($this->authorizedUser)
@@ -182,9 +182,10 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                             ]
                         ]));
 
+
         tap($event->matches->first()->fresh(), function ($match) use ($response) {
             $match->titles->each(function ($title, $key) use ($match) {
-                $this->assertEquals($match->winner_id, $title->currentChampion->wrestler_id);
+                $this->assertNull($title->currentChampion);
             });
         });
     }
@@ -194,10 +195,12 @@ class UpdateEventMatchesWithResultsTest extends TestCase
     {
         $event = factory(Event::class)->create(['date' => '2018-04-27 19:00:00']);
         $title = factory(Title::class)->create(['introduced_at' => $event->date->copy()->subMonths(4)]);
+        $wrestler = factory(Wrestler::class)->create(['hired_at' => $event->date->copy()->subMonths(4)]);
         $match = MatchFactory::forEvent($event)
                 ->withMatchType($this->matchtype)
                 ->withTitle($title)
-                ->withChampion()
+                ->withWrestler($wrestler)
+                ->withChampion($wrestler, $title)
                 ->create();
 
         $response = $this->actingAs($this->authorizedUser)
@@ -206,15 +209,14 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                             'matches' => [
                                 [
                                     'match_decision_id' => MatchDecision::titleCanBeWonBySlug()->first()->id,
-                                    'winner_id' => $match->titles->first()->champion->wrestler_id,
+                                    'winner_id' => $wrestler->id,
                                 ]
                             ]
                         ]));
 
         tap($event->matches->first()->fresh(), function ($match) use ($response) {
             $match->titles->each(function ($title, $key) use ($match) {
-                $this->assertEquals($match->winner_id, $title->currentChampion->wrestler_id);
-                $this->assertEquals(1, $title->currentChampion->successful_defenses);
+                $this->assertEquals(1, $title->currentChampion->fresh()->successful_defenses);
             });
         });
     }

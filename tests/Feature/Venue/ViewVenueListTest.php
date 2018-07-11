@@ -17,6 +17,12 @@ class ViewVenueListTest extends TestCase
         $this->setupAuthorizedUser('view-venues');
     }
 
+    public function a_user_must_be_authorized_to_view_the_venue_index_page()
+    {
+        $response = $this->actingAs($this->authorizedUser)
+                        ->get(route('venues.index'));
+    }
+
     /** @test */
     public function users_who_have_permission_can_view_the_list_of_venues()
     {

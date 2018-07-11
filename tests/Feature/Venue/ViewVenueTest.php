@@ -2,14 +2,11 @@
 
 namespace Tests\Feature\Venue;
 
-use App\Models\Event;
-use Tests\TestCase;
 use App\Models\Venue;
-use App\Models\Wrestler;
-use App\Models\Match;
+use Facades\EventFactory;
+use Carbon\Carbon;
+use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use EventFactory;
-use MatchFactory;
 
 class ViewVenueTest extends TestCase
 {
@@ -32,7 +29,6 @@ class ViewVenueTest extends TestCase
         ]);
     }
 
-    /** TODO: Find out why the bottom two assertions are different. */
     /** @test */
     public function users_who_have_permission_can_view_a_venue()
     {
@@ -63,20 +59,12 @@ class ViewVenueTest extends TestCase
     }
 
     /** @test */
-    public function venues_past_events_can_be_viewed_on_venue_page()
+    public function venues_past_events_are_loaded_for_venue_page()
     {
-        (new EventFactory)->create(['name' => 'Event A', 'venue_id' => $this->venue->id]);
-        (new EventFactory)->create(['name' => 'Event B', 'venue_id' => $this->venue->id]);
-        (new EventFactory)->create(['name' => 'Event C', 'venue_id' => $this->venue->id]);
-
         $response = $this->actingAs($this->authorizedUser)
                         ->get(route('venues.show', $this->venue->id));
+        // dd($response->data('venue'));
 
-        $response->assertSuccessful();
-        $response->assertViewIs('venues.show');
-        $response->assertViewHas('venue');
-        $response->assertSee('Event A');
-        $response->assertSee('Event B');
-        $response->assertSee('Event C');
+        $this->assertTrue($response->data('venue')->relationLoaded('pastEvents'));
     }
 }

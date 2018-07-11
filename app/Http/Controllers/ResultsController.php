@@ -48,7 +48,7 @@ class ResultsController extends Controller
                         if (! $retrievedMatch->winner->hasTitle($title) && $retrievedMatch->decision->titleCanChangeHands()) {
                             $retrievedMatch->winner->winTitle($title, $retrievedMatch->date);
                         } else {
-                            $title->champion->increment('successful_defenses');
+                            $title->currentChampion->increment('successful_defenses');
                         }
                     } elseif ($retrievedMatch->decision->titleCanBeWon()) {
                         $retrievedMatch->winner->winTitle($title, $retrievedMatch->date);

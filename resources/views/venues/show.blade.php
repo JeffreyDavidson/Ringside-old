@@ -18,6 +18,7 @@
             <p>{{ $venue->address }}<br>{{ $venue->city }}, {{ $venue->state }} {{ $venue->postcode }}</p>
         </div>
     </div>
+
     @if ($venue->hasPastEvents())
         <div class="panel panel-bordered panel-primary">
             <div class="panel-heading">
@@ -34,7 +35,7 @@
                         <th>Actions</th>
                     </thead>
                     <tbody>
-                        @foreach($venue->pastEvents as $event)
+                        {{-- @foreach($venue->pastEvents as $event)
                             <tr>
                                 <td>{{ $event->id }}</td>
                                 <td>{{ $event->name }}</td>
@@ -46,7 +47,7 @@
                                     </a>
                                 </td>
                             </tr>
-                        @endforeach
+                        @endforeach --}}
                     </tbody>
                 </table>
             </div>

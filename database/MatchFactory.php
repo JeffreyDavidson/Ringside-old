@@ -4,6 +4,8 @@ use App\Models\Event;
 use App\Models\Match;
 use App\Models\Referee;
 use App\Models\Wrestler;
+use App\Models\Title;
+use App\Models\Champion;
 use App\Models\MatchType;
 
 class MatchFactory
@@ -42,7 +44,7 @@ class MatchFactory
 
         $this->addWrestlersForMatch($match);
 
-        if ($this->titles->isEmpty()) {
+        if ($this->titles->isNotEmpty()) {
             $match->addTitles($this->titles);
         }
 
@@ -107,18 +109,11 @@ class MatchFactory
         return $this;
     }
 
-    public function withChampion()
+    public function withChampion(Wrestler $wrestler, Title $title)
     {
-        // // How many days between two dates
-        // $diffInDays = $sixMonthsAgo->diffInDays($hiredOn);
+        factory(Champion::class)->create(['wrestler_id' => $wrestler->id, 'title_id' => $title->id, 'won_on' => $title->introduced_at->copy()->subMonths(4)]);
 
-        // // Get a random number in the range of $diffInDays
-        // $randomDays = rand(0, $diffInDays);
-
-        // //add that many days to $hiredOn
-        // $randomDate = $hiredOn->addDays($randomDays);
-
-        // return $this;
+        return $this;
     }
 
     public function addWrestlersForMatch($match)

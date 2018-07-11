@@ -54,8 +54,23 @@ class MatchDecision extends Model
         return in_array($this->slug, $this->decisionsATitleCanBeWon);
     }
 
+    /**
+     * Checks to see if the match decision can cause a title to be given to a non champion.
+     *
+     * @return bool
+     */
+    public function titleCanNotBeWon()
+    {
+        return ! in_array($this->slug, $this->decisionsATitleCanBeWon);
+    }
+
     public function scopeTitleCanBeWonBySlug($query)
     {
         return $query->whereIn('slug', $this->decisionsATitleCanBeWon);
+    }
+
+    public function scopeTitleCanNotBeWonBySlug($query)
+    {
+        return $query->whereNotIn('slug', $this->decisionsATitleCanBeWon);
     }
 }
