@@ -43,7 +43,7 @@ trait HasStatus
      *
      * @return bool
      */
-    public function inactivate()
+    public function deactivate()
     {
         return $this->update(['is_active' => false]);
     }

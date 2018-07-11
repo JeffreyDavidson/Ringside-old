@@ -75,7 +75,7 @@ trait HasRetirements
             throw new ModelAlreadyRetiredException;
         }
 
-        $this->inactivate();
+        $this->deactivate();
 
         $this->retirements()->create(['retired_at' => Carbon::now()]);
 
