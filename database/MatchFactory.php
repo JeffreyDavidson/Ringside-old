@@ -33,15 +33,6 @@ class MatchFactory
             'stipulation_id' => $this->stipulation_id ?? null,
         ]);
 
-        // I need to make sure that the amount of wrestlers that are added to
-        // the match are of the match types total competitors value and the
-        // wrestlers must have be hired before the date of the event that
-        // match belongs to. I will also need to split the collection
-        // of wrestlers because its easier to split the wrestlers based
-        // on the match types number of sides value for that type.
-        // Then I need to add the collection of wrestlers to
-        // the match.
-
         $this->addWrestlersForMatch($match);
 
         if ($this->titles->isNotEmpty()) {
