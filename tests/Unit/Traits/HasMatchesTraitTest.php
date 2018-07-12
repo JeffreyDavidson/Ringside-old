@@ -19,8 +19,7 @@ class HasMatchesTraitTest extends TestCase
     {
         $wrestler = factory(Wrestler::class)->create();
         $event = factory(Event::class)->create(['date' => '2017-10-09']);
-        $match = factory(Match::class)->create(['event_id' => $event->id]);
-        $match->addWrestler($wrestler, 0);
+        MactchFactory::forEvent($event)->withWrestler($wrestler);
 
         $this->assertTrue($wrestler->hasPastMatches());
         $this->assertEquals(1, $wrestler->pastMatches->count());
@@ -59,6 +58,12 @@ class HasMatchesTraitTest extends TestCase
         /** @test */
         public function wrestlers_currently_scheduled_matches_can_be_viewed_on_wrestler_bio()
         {
+            $wrestler = factory(Wrestler::class)->create();
+            $event = factory(Event::class)->create(['date' => Carbon::tomorrow()]);
+            MactchFactory::forEvent($event)->withWrestler($wrestler);
+            MactchFactory::forEvent($event)->withWrestler($wrestler);
+            MactchFactory::forEvent($event)->withWrestler($wrestler);
+
             $scheduledMatchA = MatchFactory::createForWrestlerOnDate($this->wrestler, Carbon::tomorrow());
             $scheduledMatchB = MatchFactory::createForWrestlerOnDate($this->wrestler, Carbon::today());
             $pastMatch = MatchFactory::createForWrestlerOnDate($this->wrestler, Carbon::today()->subWeeks(2));
@@ -74,6 +79,7 @@ class HasMatchesTraitTest extends TestCase
         /** @test */
         public function wrestlers_past_matches_can_be_viewed_on_wrestler_bio()
         {
+
             $pastMatchA = MatchFactory::createForWrestlerOnDate($this->wrestler, Carbon::yesterday());
             $pastMatchB = MatchFactory::createForWrestlerOnDate($this->wrestler, Carbon::today()->subWeeks(2));
             $scheduledMatch = MatchFactory::createForWrestlerOnDate($this->wrestler, Carbon::today());

@@ -71,7 +71,7 @@ class AddMatchesToEventTest extends TestCase
     public function users_who_have_permission_can_view_the_add_match_page()
     {
         $response = $this->actingAs($this->authorizedUser)
-                        ->get(route('matches.create', ['event' => 1]));
+                        ->get(route('matches.create', ['event' => $this->event->id]));
 
         $response->assertSuccessful();
     }
@@ -80,7 +80,7 @@ class AddMatchesToEventTest extends TestCase
     public function users_who_dont_have_permission_cannot_view_the_add_event_page()
     {
         $response = $this->actingAs($this->unauthorizedUser)
-                        ->get(route('matches.create', ['event' => 1]));
+                        ->get(route('matches.create', ['event' => $this->event->id]));
 
         $response->assertStatus(403);
     }
@@ -88,7 +88,7 @@ class AddMatchesToEventTest extends TestCase
     /** @test */
     public function guests_cannot_view_the_add_event_page()
     {
-        $response = $this->get(route('matches.create', ['event' => 1]));
+        $response = $this->get(route('matches.create', ['event' => $this->event->id]));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));

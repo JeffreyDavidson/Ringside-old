@@ -26,8 +26,8 @@ class ArchiveEventTest extends TestCase
     public function users_who_have_permission_can_archive_an_event()
     {
         $response = $this->actingAs($this->authorizedUser)
-                        ->from(route('events.index', ['event' => 1]))
-                        ->patch(route('events.archive', ['event' => 1]));
+                        ->from(route('events.index', ['event' => $this->event->id]))
+                        ->patch(route('events.archive', ['event' => $this->event->id]));
 
         $response->assertStatus(302);
         $this->assertDatabaseHas('events', ['id' => $this->event->id, 'name' => $this->event->name, 'archived_at' => Carbon::now()]);
@@ -38,8 +38,8 @@ class ArchiveEventTest extends TestCase
     public function users_who_dont_have_permission_cannot_archive_an_event()
     {
         $response = $this->actingAs($this->unauthorizedUser)
-                        ->from(route('events.index', ['event' => 1]))
-                        ->patch(route('events.archive', ['event' => 1]));
+                        ->from(route('events.index', ['event' => $this->event->id]))
+                        ->patch(route('events.archive', ['event' => $this->event->id]));
 
         $response->assertStatus(403);
     }
@@ -48,8 +48,8 @@ class ArchiveEventTest extends TestCase
     public function guests_cannot_archive_an_event()
     {
         $response = $this
-                    ->from(route('events.index', ['event' => 1]))
-                    ->patch(route('events.archive', ['event' => 1]));
+                    ->from(route('events.index', ['event' => $this->event->id]))
+                    ->patch(route('events.archive', ['event' => $this->event->id]));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));
