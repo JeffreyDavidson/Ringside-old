@@ -176,7 +176,7 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                         ->patch(route('results.update', ['event' => $event->id]), $this->validParams([
                             'matches' => [
                                 [
-                                    'match_decision_id' => MatchDecision::titleCanNotBeWonBySlug()->first()->id,
+                                    'match_decision_id' => MatchDecision::titleCannotBeWonBySlug()->first()->id,
                                     'winner_id' => $match->wrestlers->first()->id
                                 ]
                             ]
@@ -217,6 +217,70 @@ class UpdateEventMatchesWithResultsTest extends TestCase
         tap($event->matches->first()->fresh(), function ($match) use ($response) {
             $match->titles->each(function ($title, $key) use ($match) {
                 $this->assertEquals(1, $title->currentChampion->fresh()->successful_defenses);
+            });
+        });
+    }
+
+    /** @test */
+    public function a_title_match_with_a_set_champion_that_loses_a_title_match_loses_title_if_the_title_can_change_hands()
+    {
+        $event = factory(Event::class)->create(['date' => '2018-04-27 19:00:00']);
+        $title = factory(Title::class)->create(['introduced_at' => $event->date->copy()->subMonths(4)]);
+        $wrestler = factory(Wrestler::class)->create(['hired_at' => $event->date->copy()->subMonths(4)]);
+        $champion = factory(Wrestler::class)->create(['hired_at' => $event->date->copy()->subMonths(6)]);
+        $match = MatchFactory::forEvent($event)
+                ->withMatchType($this->matchtype)
+                ->withTitle($title)
+                ->withWrestlers([$wrestler, $champion])
+                ->withChampion($champion, $title)
+                ->create();
+
+        $response = $this->actingAs($this->authorizedUser)
+                        ->from(route('results.edit', ['event' => $event->id]))
+                        ->patch(route('results.update', ['event' => $event->id]), $this->validParams([
+                            'matches' => [
+                                [
+                                    'match_decision_id' => MatchDecision::titleCanChangeHandsBySlug()->first()->id,
+                                    'winner_id' => $wrestler->id,
+                                ]
+                            ]
+                        ]));
+
+        tap($event->matches->first()->fresh(), function ($match) use ($response) {
+            $match->titles->each(function ($title, $key) use ($match) {
+                $this->assertEquals($match->winner_id, $title->currentChampion->winner_id);
+            });
+        });
+    }
+
+    /** @test */
+    public function a_title_match_with_a_set_champion_that_loses_a_title_match_keeps_title_if_the_title_cannot_change_hands()
+    {
+        $event = factory(Event::class)->create(['date' => '2018-04-27 19:00:00']);
+        $title = factory(Title::class)->create(['introduced_at' => $event->date->copy()->subMonths(4)]);
+        $wrestler = factory(Wrestler::class)->create(['hired_at' => $event->date->copy()->subMonths(4)]);
+        $champion = factory(Wrestler::class)->create(['hired_at' => $event->date->copy()->subMonths(6)]);
+        $match = MatchFactory::forEvent($event)
+                ->withMatchType($this->matchtype)
+                ->withTitle($title)
+                ->withWrestlers([$wrestler, $champion])
+                ->withChampion($champion, $title)
+                ->create();
+
+        $response = $this->actingAs($this->authorizedUser)
+                        ->from(route('results.edit', ['event' => $event->id]))
+                        ->patch(route('results.update', ['event' => $event->id]), $this->validParams([
+                            'matches' => [
+                                [
+                                    'match_decision_id' => MatchDecision::titleCannotChangeHandsBySlug()->first()->id,
+                                    'winner_id' => $wrestler->id,
+                                ]
+                            ]
+                        ]));
+
+        tap($event->matches->first()->fresh(), function ($match) use ($response) {
+            $match->titles->each(function ($title, $key) use ($match) {
+                $this->assertNotEquals($match->winner_id, $title->currentChampion->wrestler_id);
             });
         });
     }
