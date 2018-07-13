@@ -86,7 +86,9 @@ class MatchFactory
 
     public function withWrestlers($wrestlers)
     {
-        $this->wrestlers->merge($wrestlers);
+        $merged = $this->wrestlers->merge($wrestlers);
+
+        $this->wrestlers = $merged;
 
         return $this;
     }
@@ -109,6 +111,7 @@ class MatchFactory
 
     public function addWrestlersForMatch($match)
     {
+
         if ($this->wrestlers->isEmpty()) {
             $numWrestlersToAddToMatch = $match->type->total_competitors;
             $wrestlersForMatch = factory(Wrestler::class, (int) $numWrestlersToAddToMatch)->create(['hired_at' => $match->date->copy()->subMonths(2)]);

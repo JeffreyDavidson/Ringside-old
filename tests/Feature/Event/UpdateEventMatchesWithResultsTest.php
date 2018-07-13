@@ -228,10 +228,11 @@ class UpdateEventMatchesWithResultsTest extends TestCase
         $title = factory(Title::class)->create(['introduced_at' => $event->date->copy()->subMonths(4)]);
         $wrestler = factory(Wrestler::class)->create(['hired_at' => $event->date->copy()->subMonths(4)]);
         $champion = factory(Wrestler::class)->create(['hired_at' => $event->date->copy()->subMonths(6)]);
+        $wrestlersForMatch = collect([$wrestler, $champion]);
         $match = MatchFactory::forEvent($event)
                 ->withMatchType($this->matchtype)
                 ->withTitle($title)
-                ->withWrestlers([$wrestler, $champion])
+                ->withWrestlers($wrestlersForMatch)
                 ->withChampion($champion, $title)
                 ->create();
 
@@ -248,7 +249,7 @@ class UpdateEventMatchesWithResultsTest extends TestCase
 
         tap($event->matches->first()->fresh(), function ($match) use ($response) {
             $match->titles->each(function ($title, $key) use ($match) {
-                $this->assertEquals($match->winner_id, $title->currentChampion->winner_id);
+                $this->assertEquals($match->winner_id, $title->currentChampion->wrestler_id);
             });
         });
     }
