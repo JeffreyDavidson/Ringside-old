@@ -7,7 +7,8 @@ use App\Models\Title;
 use App\Models\Wrestler;
 use App\Models\Event;
 use App\Models\Match;
-use MatchFactory;
+use Facades\MatchFactory;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class HasMatchesTraitTest extends TestCase
@@ -19,7 +20,7 @@ class HasMatchesTraitTest extends TestCase
     {
         $wrestler = factory(Wrestler::class)->create();
         $event = factory(Event::class)->create(['date' => '2017-10-09']);
-        MactchFactory::forEvent($event)->withWrestler($wrestler);
+        MatchFactory::forEvent($event)->withWrestler($wrestler);
 
         $this->assertTrue($wrestler->hasPastMatches());
         $this->assertEquals(1, $wrestler->pastMatches->count());
@@ -55,40 +56,37 @@ class HasMatchesTraitTest extends TestCase
         $this->assertFalse($title->hasPastMatches());
     }
 
-        /** @test */
-        public function wrestlers_currently_scheduled_matches_can_be_viewed_on_wrestler_bio()
-        {
-            $wrestler = factory(Wrestler::class)->create();
-            $event = factory(Event::class)->create(['date' => Carbon::tomorrow()]);
-            MactchFactory::forEvent($event)->withWrestler($wrestler);
-            MactchFactory::forEvent($event)->withWrestler($wrestler);
-            MactchFactory::forEvent($event)->withWrestler($wrestler);
+    /** @test */
+    public function wrestlers_currently_scheduled_matches_can_be_viewed_on_wrestler_bio()
+    {
+        $wrestler = factory(Wrestler::class)->create();
+        $eventA = factory(Event::class)->create(['date' => Carbon::tomorrow()]);
+        $eventB = factory(Event::class)->create(['date' => Carbon::today()]);
+        $eventC = factory(Event::class)->create(['date' => Carbon::today()->subWeeks(2)]);
+        $scheduledMatchA = MatchFactory::forEvent($eventA)->withWrestler($wrestler);
+        $scheduledMatchB = MatchFactory::forEvent($eventB)->withWrestler($wrestler);
+        $pastMatch = MatchFactory::forEvent($eventC)->withWrestler($wrestler);
 
-            $scheduledMatchA = MatchFactory::createForWrestlerOnDate($this->wrestler, Carbon::tomorrow());
-            $scheduledMatchB = MatchFactory::createForWrestlerOnDate($this->wrestler, Carbon::today());
-            $pastMatch = MatchFactory::createForWrestlerOnDate($this->wrestler, Carbon::today()->subWeeks(2));
+        $scheduledMatches = $wrestler->scheduledMatches;
 
-            $response = $this->actingAs($this->authorizedUser)
-                            ->get(route('wrestlers.show', $this->wrestler->id));
+        $response->data('wrestler')->scheduledMatches->assertContains($scheduledMatchA);
+        $response->data('wrestler')->scheduledMatches->assertContains($scheduledMatchB);
+        $response->data('wrestler')->scheduledMatches->assertNotContains($pastMatch);
+    }
 
-            $response->data('wrestler')->scheduledMatches->assertContains($scheduledMatchA);
-            $response->data('wrestler')->scheduledMatches->assertContains($scheduledMatchB);
-            $response->data('wrestler')->scheduledMatches->assertNotContains($pastMatch);
-        }
+    /** @test */
+    public function wrestlers_past_matches_can_be_viewed_on_wrestler_bio()
+    {
 
-        /** @test */
-        public function wrestlers_past_matches_can_be_viewed_on_wrestler_bio()
-        {
+        $pastMatchA = MatchFactory::createForWrestlerOnDate($this->wrestler, Carbon::yesterday());
+        $pastMatchB = MatchFactory::createForWrestlerOnDate($this->wrestler, Carbon::today()->subWeeks(2));
+        $scheduledMatch = MatchFactory::createForWrestlerOnDate($this->wrestler, Carbon::today());
 
-            $pastMatchA = MatchFactory::createForWrestlerOnDate($this->wrestler, Carbon::yesterday());
-            $pastMatchB = MatchFactory::createForWrestlerOnDate($this->wrestler, Carbon::today()->subWeeks(2));
-            $scheduledMatch = MatchFactory::createForWrestlerOnDate($this->wrestler, Carbon::today());
+        $response = $this->actingAs($this->authorizedUser)
+                        ->get(route('wrestlers.show', $this->wrestler->id));
 
-            $response = $this->actingAs($this->authorizedUser)
-                            ->get(route('wrestlers.show', $this->wrestler->id));
-
-            $response->data('wrestler')->pastMatches->assertContains($pastMatchA);
-            $response->data('wrestler')->pastMatches->assertContains($pastMatchB);
-            $response->data('wrestler')->pastMatches->assertNotContains($scheduledMatch);
-        }
+        $response->data('wrestler')->pastMatches->assertContains($pastMatchA);
+        $response->data('wrestler')->pastMatches->assertContains($pastMatchB);
+        $response->data('wrestler')->pastMatches->assertNotContains($scheduledMatch);
+    }
 }

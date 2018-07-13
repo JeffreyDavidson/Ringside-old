@@ -88,7 +88,7 @@ class MatchPresenterTest extends TestCase
     }
 
     /** @test */
-    public function a_match_in_an_event_that_isnt_the_first_or_last_should_be_presented_correctly()
+    public function a_match_in_an_event_that_is_not_the_first_or_last_should_be_presented_correctly()
     {
         $match = factory(Match::class)->create(['match_number' => 2]);
         $loop = new stdClass;
