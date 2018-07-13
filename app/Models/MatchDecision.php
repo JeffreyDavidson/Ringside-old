@@ -45,16 +45,6 @@ class MatchDecision extends Model
     }
 
     /**
-     * Checks to see if the match decision can cause a title to change hands.
-     *
-     * @return bool
-     */
-    public function titleCannotChangeHands()
-    {
-        return in_array($this->slug, $this->decisionsTitlesChangeHands);
-    }
-
-    /**
      * Checks to see if the match decision can cause a title to be given to a non champion.
      *
      * @return bool
@@ -62,16 +52,6 @@ class MatchDecision extends Model
     public function titleCanBeWon()
     {
         return in_array($this->slug, $this->decisionsATitleCanBeWon);
-    }
-
-    /**
-     * Checks to see if the match decision can cause a title to be given to a non champion.
-     *
-     * @return bool
-     */
-    public function titleCannotBeWon()
-    {
-        return ! in_array($this->slug, $this->decisionsATitleCanBeWon);
     }
 
     public function scopeTitleCanBeWonBySlug($query)
