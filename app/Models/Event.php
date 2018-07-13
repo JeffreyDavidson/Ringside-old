@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 
 class Event extends Model
 {
@@ -96,7 +97,7 @@ class Event extends Model
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeScheduled($query)
+    public function scopeScheduled(Builder $query)
     {
         return $query->where('date', '>=', Carbon::today());
     }
@@ -107,7 +108,7 @@ class Event extends Model
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopePast($query)
+    public function scopePast(Builder $query)
     {
         return $query->where('date', '<', Carbon::today());
     }
@@ -118,7 +119,7 @@ class Event extends Model
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeArchived($query)
+    public function scopeArchived(Builder $query)
     {
         return $query->whereNotNull('archived_at');
     }

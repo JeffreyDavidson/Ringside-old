@@ -12,6 +12,7 @@ use App\Traits\HasSuspensions;
 use Illuminate\Database\Eloquent\Model;
 use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 
 class Wrestler extends Model
 {
