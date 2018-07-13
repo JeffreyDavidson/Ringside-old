@@ -10,9 +10,4 @@ class TitlePresenter extends Presenter
     {
         return $this->model->introduced_at->format('F j, Y');
     }
-
-    public function retiredAt()
-    {
-        return $this->model->retired_at->format('F j, Y');
-    }
 }

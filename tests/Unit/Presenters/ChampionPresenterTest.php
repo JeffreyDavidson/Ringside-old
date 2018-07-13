@@ -44,7 +44,7 @@ class ChampionPresenterTest extends TestCase
     }
 
     /** @test */
-    public function a_champions_length_of_reign_that_hasnt_lost_there_title_can_be_formatted_in_a_readable_format()
+    public function a_champions_length_of_reign_that_hasnt_lost_their_title_can_be_formatted_in_a_readable_format()
     {
         $champion = factory(Champion::class)->create(['won_on' => Carbon::now()->subDays(200), 'lost_on' => null]);
 

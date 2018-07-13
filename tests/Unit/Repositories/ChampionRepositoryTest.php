@@ -2,14 +2,13 @@
 
 namespace Tests\Unit\Repositories;
 
-use Tests\TestCase;
+use App\Models\Title;
 use App\Models\Champion;
 use App\Models\Wrestler;
-use App\Models\Title;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Exceptions\WrestlerNotTitleChampionException;
-use App\Repositories\ChampionRepository;
 use Carbon\Carbon;
+use Tests\TestCase;
+use App\Repositories\ChampionRepository;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ChampionRepositoryTest extends TestCase
 {
@@ -29,11 +28,10 @@ class ChampionRepositoryTest extends TestCase
         $title = factory(Title::class)->create();
 ;
         factory(Champion::class)->create(['wrestler_id' => $wrestlerA->id, 'title_id' => $title->id, 'won_on' => today()]);
-        factory(Champion::class)->create(['wrestler_id' => $wrestlerA->id, 'title_id' => $title->id, 'won_on' => today()->addMonth()]);
-        factory(Champion::class)->create(['wrestler_id' => $wrestlerA->id, 'title_id' => $title->id, 'won_on' => today()->addMonths(2)]);
-        factory(Champion::class)->create(['wrestler_id' => $wrestlerB->id, 'title_id' => $title->id, 'won_on' => today()->addMonths(3)]);
-        factory(Champion::class)->create(['wrestler_id' => $wrestlerC->id, 'title_id' => $title->id, 'won_on' => today()->addMonths(4)]);
-
+        factory(Champion::class)->create(['wrestler_id' => $wrestlerA->id, 'title_id' => $title->id, 'won_on' => today()->subMonth()]);
+        factory(Champion::class)->create(['wrestler_id' => $wrestlerA->id, 'title_id' => $title->id, 'won_on' => today()->subMonths(2)]);
+        factory(Champion::class)->create(['wrestler_id' => $wrestlerB->id, 'title_id' => $title->id, 'won_on' => today()->subMonths(3)]);
+        factory(Champion::class)->create(['wrestler_id' => $wrestlerC->id, 'title_id' => $title->id, 'won_on' => today()->subMonths(4)]);
         $champion = ChampionRepository::mostTitleReigns($title);
 
         $this->assertEquals($wrestlerA->id, $champion->wrestler->id);
