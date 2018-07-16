@@ -45,7 +45,7 @@ class EventResultsFormRequest extends FormRequest
         if (is_array($this->matches)) {
             foreach ($this->matches as $index => $match) {
                 $rules['matches.'.$index.'.winner_id'] = [
-                    new WrestlerInvolvedInMatch($index + 1),
+                    new WrestlerInvolvedInMatch($index + 1, request()->event),
                 ];
             }
         }

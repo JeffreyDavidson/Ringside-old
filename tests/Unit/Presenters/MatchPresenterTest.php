@@ -7,6 +7,7 @@ use Tests\TestCase;
 use App\Models\Referee;
 use App\Models\Wrestler;
 use App\Models\Stipulation;
+use App\Models\Event;
 use App\Models\Match;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -66,35 +67,24 @@ class MatchPresenterTest extends TestCase
     }
 
     /** @test */
-    public function a_first_match_in_an_event_should_be_presented_as_the_opening_match()
+    public function a_single_match_for_an_event_is_presented_as_the_main_event()
     {
-        $match = factory(Match::class)->create();
-        $loop = new stdClass;
-        $loop->first = true;
-        $loop->last = false;
+        $event = factory(Event::class)->create();
+        $match = factory(Match::class)->create(['event_id' => $event->id, 'match_number' => 1]);
 
-        $this->assertEquals('Opening Match', $match->present()->match_number($loop));
+        $this->assertEquals('Main Event', $match->present()->match_number());
     }
 
     /** @test */
-    public function the_last_match_in_an_event_should_be_presented_as_the_main_event()
+    public function match_numbers_in_an_event_should_be_presented_accordingly()
     {
-        $match = factory(Match::class)->create();
-        $loop = new stdClass;
-        $loop->first = false;
-        $loop->last = true;
+        $event = factory(Event::class)->create();
+        $matchA = factory(Match::class)->create(['event_id' => $event->id, 'match_number' => 1]);
+        $matchB = factory(Match::class)->create(['event_id' => $event->id, 'match_number' => 2]);
+        $matchC = factory(Match::class)->create(['event_id' => $event->id, 'match_number' => 3]);
 
-        $this->assertEquals('Main Event', $match->present()->match_number($loop));
-    }
-
-    /** @test */
-    public function a_match_in_an_event_that_is_not_the_first_or_last_should_be_presented_correctly()
-    {
-        $match = factory(Match::class)->create(['match_number' => 2]);
-        $loop = new stdClass;
-        $loop->first = false;
-        $loop->last = false;
-
-        $this->assertEquals('Match #2', $match->present()->match_number($loop));
+        $this->assertEquals('Opening Match', $matchA->present()->match_number());
+        $this->assertEquals('Match #2', $matchB->present()->match_number());
+        $this->assertEquals('Main Event', $matchC->present()->match_number());
     }
 }

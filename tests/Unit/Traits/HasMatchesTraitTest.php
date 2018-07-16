@@ -22,9 +22,9 @@ class HasMatchesTraitTest extends TestCase
         $eventA = factory(Event::class)->create(['date' => Carbon::tomorrow()]);
         $eventB = factory(Event::class)->create(['date' => Carbon::today()]);
         $eventC = factory(Event::class)->create(['date' => Carbon::today()->subWeeks(2)]);
-        $scheduledMatchA = MatchFactory::forEvent($eventA)->withTitle($title);
-        $scheduledMatchB = MatchFactory::forEvent($eventB)->withTitle($title);
-        $pastMatch = MatchFactory::forEvent($eventC)->withTitle($title);
+        $scheduledMatchA = MatchFactory::forEvent($eventA)->withTitle($title)->create();
+        $scheduledMatchB = MatchFactory::forEvent($eventB)->withTitle($title)->create();
+        $pastMatch = MatchFactory::forEvent($eventC)->withTitle($title)->create();
 
         $scheduledMatches = $title->scheduledMatches;
 
@@ -47,12 +47,12 @@ class HasMatchesTraitTest extends TestCase
         $title = factory(Title::class)->create();
         $event = factory(Event::class)->create(['date' => '2017-10-09']);
         $match = factory(Match::class)->create(['event_id' => $event->id]);
-        $eventA = factory(Event::class)->create(['date' => Carbon::tomorrow()]);
-        $eventB = factory(Event::class)->create(['date' => Carbon::today()]);
-        $eventC = factory(Event::class)->create(['date' => Carbon::today()->subWeeks(2)]);
-        $scheduledMatchA = MatchFactory::forEvent($eventA)->withTitle($title);
-        $scheduledMatchB = MatchFactory::forEvent($eventB)->withTitle($title);
-        $pastMatch = MatchFactory::forEvent($eventC)->withTitle($title);
+        $eventA = factory(Event::class)->create(['date' => Carbon::yesterday()]);
+        $eventB = factory(Event::class)->create(['date' => Carbon::today()->subWeeks(2)]);
+        $eventC = factory(Event::class)->create(['date' => Carbon::tomorrow()]);
+        $pastMatchA = MatchFactory::forEvent($eventA)->withTitle($title)->create();
+        $pastMatchB = MatchFactory::forEvent($eventB)->withTitle($title)->create();
+        $scheduledMatch = MatchFactory::forEvent($eventC)->withTitle($title)->create();
 
         $pastMatches = $title->pastMatches;
 
@@ -76,9 +76,9 @@ class HasMatchesTraitTest extends TestCase
         $eventA = factory(Event::class)->create(['date' => Carbon::tomorrow()]);
         $eventB = factory(Event::class)->create(['date' => Carbon::today()]);
         $eventC = factory(Event::class)->create(['date' => Carbon::today()->subWeeks(2)]);
-        $scheduledMatchA = MatchFactory::forEvent($eventA)->withWrestler($wrestler);
-        $scheduledMatchB = MatchFactory::forEvent($eventB)->withWrestler($wrestler);
-        $pastMatch = MatchFactory::forEvent($eventC)->withWrestler($wrestler);
+        $scheduledMatchA = MatchFactory::forEvent($eventA)->withWrestler($wrestler)->create();
+        $scheduledMatchB = MatchFactory::forEvent($eventB)->withWrestler($wrestler)->create();
+        $pastMatch = MatchFactory::forEvent($eventC)->withWrestler($wrestler)->create();
 
         $scheduledMatches = $wrestler->scheduledMatches;
 
@@ -93,10 +93,10 @@ class HasMatchesTraitTest extends TestCase
         $wrestler = factory(Wrestler::class)->create();
         $eventA = factory(Event::class)->create(['date' => Carbon::yesterday()]);
         $eventB = factory(Event::class)->create(['date' => Carbon::today()->subWeeks(2)]);
-        $eventC = factory(Event::class)->create(['date' => Carbon::today()->today(2)]);
-        $pastMatchA = MatchFactory::forEvent($eventA)->withWrestler($wrestler);
-        $pastMatchB = MatchFactory::forEvent($eventB)->withWrestler($wrestler);
-        $scheduledMatch = MatchFactory::forEvent($eventC)->withWrestler($wrestler);
+        $eventC = factory(Event::class)->create(['date' => Carbon::tomorrow()]);
+        $pastMatchA = MatchFactory::forEvent($eventA)->withWrestler($wrestler)->create();
+        $pastMatchB = MatchFactory::forEvent($eventB)->withWrestler($wrestler)->create();
+        $scheduledMatch = MatchFactory::forEvent($eventC)->withWrestler($wrestler)->create();
 
         $pastMatches = $wrestler->pastMatches;
 

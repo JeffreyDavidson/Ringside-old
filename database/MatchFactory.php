@@ -39,6 +39,8 @@ class MatchFactory
             $match->addTitles($this->titles);
         }
 
+        $this->emptyCollections();
+
         return $match;
     }
 
@@ -79,7 +81,9 @@ class MatchFactory
 
     public function withTitles($titles)
     {
-        $this->titles->merge($titles);
+        $merged = $this->titles->merge($titles);
+
+        $this->titles = $merged;
 
         return $this;
     }
@@ -95,9 +99,7 @@ class MatchFactory
 
     public function withWrestler(Wrestler $wrestler)
     {
-        $concatenated = $this->wrestlers->push($wrestler);
-
-        $this->wrestlers = $concatenated;
+        $this->wrestlers->push($wrestler);
 
         return $this;
     }
@@ -149,5 +151,20 @@ class MatchFactory
         }
 
         $match->addReferees($refereesForMatch);
+    }
+
+    public function emptyCollections()
+    {
+        if ($this->wrestlers->isNotEmpty()) {
+            $this->wrestlers = collect();
+        }
+
+        if ($this->titles->isNotEmpty()) {
+            $this->titles = collect();
+        }
+
+        if ($this->referees->isNotEmpty()) {
+            $this->referees = collect();
+        }
     }
 }
