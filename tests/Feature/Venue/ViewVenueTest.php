@@ -63,7 +63,6 @@ class ViewVenueTest extends TestCase
     {
         $response = $this->actingAs($this->authorizedUser)
                         ->get(route('venues.show', $this->venue->id));
-        // dd($response->data('venue'));
 
         $this->assertTrue($response->data('venue')->relationLoaded('pastEvents'));
     }

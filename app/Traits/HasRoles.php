@@ -17,7 +17,6 @@ trait HasRoles
      */
     public function assignRole(Role $role)
     {
-        // dd($this->role()->associate($role));
         return $this->role()->associate($role);
     }
 

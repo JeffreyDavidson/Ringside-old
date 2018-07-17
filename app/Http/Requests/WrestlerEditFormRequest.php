@@ -25,8 +25,6 @@ class WrestlerEditFormRequest extends FormRequest
      */
     public function rules()
     {
-        // dd('adfasdff');
-        // dd($this->wrestler->available_statuses->values());
         return [
             'name' => ['required', Rule::unique('wrestlers', 'name')->ignore($this->wrestler->id)],
             'slug' => ['required', Rule::unique('wrestlers', 'slug')->ignore($this->wrestler->id)],
