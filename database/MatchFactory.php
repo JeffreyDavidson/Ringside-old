@@ -20,9 +20,7 @@ class MatchFactory
 
     public function __construct()
     {
-        $this->wrestlers = collect();
-        $this->titles = collect();
-        $this->referees = collect();
+        $this->populateDefaults();
     }
 
     public function create()
@@ -39,7 +37,7 @@ class MatchFactory
             $match->addTitles($this->titles);
         }
 
-        $this->emptyCollections();
+        $this->populateDefaults();
 
         return $match;
     }
@@ -153,18 +151,10 @@ class MatchFactory
         $match->addReferees($refereesForMatch);
     }
 
-    public function emptyCollections()
+    public function populateDefaults()
     {
-        if ($this->wrestlers->isNotEmpty()) {
-            $this->wrestlers = collect();
-        }
-
-        if ($this->titles->isNotEmpty()) {
-            $this->titles = collect();
-        }
-
-        if ($this->referees->isNotEmpty()) {
-            $this->referees = collect();
-        }
+        $this->wrestlers = collect();
+        $this->titles = collect();
+        $this->referees = collect();
     }
 }
