@@ -70,21 +70,21 @@ class MatchPresenterTest extends TestCase
     public function a_single_match_for_an_event_is_presented_as_the_main_event()
     {
         $event = factory(Event::class)->create();
-        $match = factory(Match::class)->create(['event_id' => $event->id, 'match_number' => 1]);
+        $match = factory(Match::class)->create(['event_id' => $event->id]);
 
-        $this->assertEquals('Main Event', $match->present()->match_number());
+        $this->assertEquals('Main Event', $match->fresh()->present()->match_number());
     }
 
     /** @test */
     public function match_numbers_in_an_event_should_be_presented_accordingly()
     {
         $event = factory(Event::class)->create();
-        $matchA = factory(Match::class)->create(['event_id' => $event->id, 'match_number' => 1]);
-        $matchB = factory(Match::class)->create(['event_id' => $event->id, 'match_number' => 2]);
-        $matchC = factory(Match::class)->create(['event_id' => $event->id, 'match_number' => 3]);
+        $matchA = factory(Match::class)->create(['event_id' => $event->id]);
+        $matchB = factory(Match::class)->create(['event_id' => $event->id]);
+        $matchC = factory(Match::class)->create(['event_id' => $event->id]);
 
-        $this->assertEquals('Opening Match', $matchA->present()->match_number());
-        $this->assertEquals('Match #2', $matchB->present()->match_number());
-        $this->assertEquals('Main Event', $matchC->present()->match_number());
+        $this->assertEquals('Opening Match', $matchA->fresh()->present()->match_number());
+        $this->assertEquals('Match #2', $matchB->fresh()->present()->match_number());
+        $this->assertEquals('Main Event', $matchC->fresh()->present()->match_number());
     }
 }
