@@ -33,14 +33,4 @@ class ChampionTest extends TestCase
     {
         $this->assertInstanceOf(Title::class, $this->champion->title);
     }
-
-    /** @test */
-    public function a_length_of_championship_reign_can_be_returned_in_days()
-    {
-        $champion = factory(Champion::class)->create(['won_on' => '2018-02-14', 'lost_on' => '2018-06-28']);
-
-        $days = $champion->timeSpentAsChampion();
-
-        $this->assertEquals(134, $days);
-    }
 }

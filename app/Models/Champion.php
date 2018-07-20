@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use App\Collections\ChampionCollection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Laracodes\Presenter\Traits\Presentable;
 
 class Champion extends Model
@@ -50,18 +51,6 @@ class Champion extends Model
     public function wrestler()
     {
         return $this->belongsTo(Wrestler::class)->withTrashed();
-    }
-
-    /**
-     * Calculates the length of time during championship reign.
-     *
-     * @return int
-     */
-    public function timeSpentAsChampion()
-    {
-        $lostOn = $this->lost_on ?? Carbon::now();
-
-        return $lostOn->diffInDays($this->won_on);
     }
 
     /**

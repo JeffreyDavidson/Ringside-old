@@ -180,6 +180,7 @@ return [
         App\Providers\BootstrapFormServiceProvider::class,
         App\Providers\ValidationServiceProvider::class,
         App\Providers\ObserverServiceProvider::class,
+        App\Providers\ComposerServiceProvider::class,
     ],
 
     /*
