@@ -31,7 +31,12 @@ class WrestlerInvolvedInMatch implements Rule
      */
     public function passes($attribute, $value)
     {
-        return ($match = Match::query()->withMatchNumber($this->matchNumber)->forEvent($this->event)->first()) && $match->wrestlers->contains('id', $value);
+        return Match::withMatchNumber($this->matchNumber)
+            ->forEvent($this->event)
+            ->whereHas('wrestlers', function ($query) use ($value) {
+                $query->where('wrestlers.id', $value);
+            })
+            ->exists();
     }
 
     /**
