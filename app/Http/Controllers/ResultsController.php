@@ -31,7 +31,7 @@ class ResultsController extends Controller
     public function update(EventResultsFormRequest $request, Event $event)
     {
         foreach ($request->matches as $index => $match) {
-            $retrievedMatch = Match::where('match_number', $index + 1)->where('event_id', $event->id)->first();
+            $retrievedMatch = Match::withMatchNumber($index + 1)->forEvent($event)->first();
             $retrievedMatch->update([
                 'match_decision_id' => $match['match_decision_id'],
                 'winner_id' => $match['winner_id'],
