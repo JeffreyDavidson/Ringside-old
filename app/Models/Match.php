@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 
 class Match extends Model
 {
@@ -255,5 +256,15 @@ class Match extends Model
         $nextMatchNumber = $event->matches->max('match_number');
 
         return $this->update(['event_id' => $event->id, 'match_number' => $nextMatchNumber + 1]);
+    }
+
+    public function scopeForEvent(Builder $query, Event $event)
+    {
+        return $query->where('event_id', $event->id);
+    }
+
+    public function scopeWithMatchNumber(Builder $query, $matchNumber)
+    {
+        return $query->where('match_number', $matchNumber);
     }
 }
