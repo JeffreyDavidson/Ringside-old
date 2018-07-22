@@ -46,11 +46,20 @@ class ResultsController extends Controller
                 foreach ($retrievedMatch->titles as $title) {
                     if ($title->hasAChampion()) {
                         if (! $retrievedMatch->winner->hasTitle($title) && $retrievedMatch->decision->titleCanChangeHands()) {
+                            // $retrievedMatch->losers->each(function ($loser) use ($title) {
+                            //     if ($loser->hasTitle($title)) {
+                            //         $loser->loseTitle($title, $retrievedMatch->date);
+                            //     }
+                            // });
+                            // $title->currentChampion->loseTitle();
+                            $title->currentChampion->update(['lost_on' => $retrievedMatch->date]);
                             $retrievedMatch->winner->winTitle($title, $retrievedMatch->date);
                         } else {
                             $title->currentChampion->increment('successful_defenses');
                         }
                     } elseif ($retrievedMatch->decision->titleCanBeWon()) {
+                        // dd('title can be won');
+                        // dd($retrievedMatch->winner);
                         $retrievedMatch->winner->winTitle($title, $retrievedMatch->date);
                     }
                 }

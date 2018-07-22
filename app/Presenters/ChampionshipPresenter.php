@@ -4,7 +4,7 @@ namespace App\Presenters;
 
 use Laracodes\Presenter\Presenter;
 
-class ChampionPresenter extends Presenter
+class ChampionshipPresenter extends Presenter
 {
     public function wonOn()
     {

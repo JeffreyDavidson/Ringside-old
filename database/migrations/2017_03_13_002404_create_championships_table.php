@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateChampionsTable extends Migration
+class CreateChampionshipsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateChampionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('champions', function (Blueprint $table) {
+        Schema::create('championships', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('title_id')->index();
             $table->unsignedInteger('wrestler_id')->index();

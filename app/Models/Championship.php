@@ -3,12 +3,12 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use App\Collections\ChampionCollection;
+use App\Collections\ChampionshipCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Laracodes\Presenter\Traits\Presentable;
 
-class Champion extends Model
+class Championship extends Model
 {
     use Presentable;
 
@@ -17,7 +17,7 @@ class Champion extends Model
      *
      * @var string
      */
-    protected $presenter = 'App\Presenters\ChampionPresenter';
+    protected $presenter = 'App\Presenters\ChampionshipPresenter';
 
     /**
      * The attributes that should be mutated to dates.
@@ -54,6 +54,18 @@ class Champion extends Model
     }
 
     /**
+     * A champion can lose a title.
+     *
+     * @param \App\Models\Title $title
+     * @param datetime $date
+     * @return bool
+     */
+    public function loseTitle($date)
+    {
+        return $this->update(['lost_on' => $date ?: $this->freshTimestamp()]);
+    }
+
+    /**
      * Create a new Eloquent Collection instance.
      *
      * @param  array  $models
@@ -61,6 +73,6 @@ class Champion extends Model
      */
     public function newCollection(array $models = [])
     {
-        return new ChampionCollection($models);
+        return new ChampionshipCollection($models);
     }
 }

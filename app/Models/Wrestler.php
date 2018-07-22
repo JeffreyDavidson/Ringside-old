@@ -66,7 +66,7 @@ class Wrestler extends Model
      */
     public function championships()
     {
-        return $this->hasMany(Champion::class);
+        return $this->hasMany(Championships::class);
     }
 
     /**

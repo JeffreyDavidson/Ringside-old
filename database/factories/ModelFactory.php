@@ -108,7 +108,7 @@ $factory->define(App\Models\Event::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\Models\Champion::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\Championship::class, function (Faker\Generator $faker) {
     return [
         'wrestler_id' => factory(App\Models\Wrestler::class)->lazy(),
         'title_id' => factory(App\Models\Title::class)->lazy(),

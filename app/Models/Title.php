@@ -44,13 +44,13 @@ class Title extends Model
     ];
 
     /**
-     * A title can have many champions.
+     * A title can have many championships.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function champions()
     {
-        return $this->hasMany(Champion::class);
+        return $this->hasMany(Championship::class);
     }
 
     /**
@@ -71,28 +71,6 @@ class Title extends Model
     public function retirements()
     {
         return $this->morphMany(Retirement::class, 'retiree');
-    }
-
-    /**
-     * Crowns the new champion for the title.
-     *
-     * @param \App\Models\Wrestler $wrestler
-     * @param datetime $date
-     * @return void
-     */
-    public function setChampion(Wrestler $wrestler, $date)
-    {
-        $champion = $this->currentChampion;
-
-        if ($champion !== null && $wrestler->id !== $champion->id) {
-            $champion->wrestler->loseTitle($this, $date);
-        }
-
-        if ($champion === null || $wrestler->id !== $champion->id) {
-            $wrestler->winTitle($this, $date);
-        }
-
-        $this->setRelation('currentChampion', $wrestler);
     }
 
     /**

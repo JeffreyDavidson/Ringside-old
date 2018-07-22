@@ -23,9 +23,9 @@ class TitleTest extends TestCase
     }
 
     /** @test */
-    public function a_title_has_many_champions()
+    public function a_title_has_many_championships()
     {
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->title->champions);
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->title->championships);
     }
 
     /** @test */
@@ -38,19 +38,5 @@ class TitleTest extends TestCase
     public function a_title_has_many_retirements()
     {
         $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->title->retirements);
-    }
-
-    /** @test */
-    public function a_title_can_set_a_champion()
-    {
-        $wrestlerA = factory(Wrestler::class)->create();
-        $wrestlerB = factory(Wrestler::class)->create();
-        $this->title->setChampion($wrestlerA, Carbon::yesterday());
-        $this->assertEquals($this->title->currentChampion, $wrestlerA);
-        $this->title->refresh();
-
-        $this->title->setChampion($wrestlerB, Carbon::today());
-
-        $this->assertEquals($this->title->currentChampion->id, $wrestlerB->id);
     }
 }

@@ -3,7 +3,7 @@
 namespace Tests\Unit\Repositories;
 
 use App\Models\Title;
-use App\Models\Champion;
+use Facades\ChampionFactory;
 use App\Models\Wrestler;
 use Carbon\Carbon;
 use Tests\TestCase;
@@ -26,14 +26,14 @@ class TitleRecordsRepositoryTest extends TestCase
     /** @test */
     public function it_can_get_the_champion_with_the_most_title_defenses()
     {
-        $wrestlerA = factory(Wrestler::class)->create(['name' => 'Wrestler A']);
-        $wrestlerB = factory(Wrestler::class)->create(['name' => 'Wrestler B']);
-        $wrestlerC = factory(Wrestler::class)->create(['name' => 'Wrestler C']);
+        $wrestlerA = factory(Wrestler::class)->create();
+        $wrestlerB = factory(Wrestler::class)->create();
+        $wrestlerC = factory(Wrestler::class)->create();
         $title = factory(Title::class)->create();
 
-        factory(Champion::class)->create(['wrestler_id' => $wrestlerA->id, 'title_id' => $title->id, 'successful_defenses' => 3]);
-        factory(Champion::class)->create(['wrestler_id' => $wrestlerB->id, 'title_id' => $title->id, 'successful_defenses' => 6]);
-        factory(Champion::class)->create(['wrestler_id' => $wrestlerC->id, 'title_id' => $title->id, 'successful_defenses' => 5]);
+        ChampionFactory::forWrestler($wrestlerA)->forTitle($title)->withSuccessfulTitleDefenses(3)->create();
+        ChampionFactory::forWrestler($wrestlerB)->forTitle($title)->withSuccessfulTitleDefenses(6)->create();
+        ChampionFactory::forWrestler($wrestlerC)->forTitle($title)->withSuccessfulTitleDefenses(5)->create();
 
         $champions = $this->repository->mostTitleDefenses($title);
 
@@ -43,18 +43,16 @@ class TitleRecordsRepositoryTest extends TestCase
     /** @test */
     public function it_can_get_the_champion_with_the_most_title_reigns()
     {
-        $wrestlerA = factory(Wrestler::class)->create(['name' => 'Wrestler A']);
-        $wrestlerB = factory(Wrestler::class)->create(['name' => 'Wrestler B']);
-        $wrestlerC = factory(Wrestler::class)->create(['name' => 'Wrestler C']);
+        $wrestlerA = factory(Wrestler::class)->create();
+        $wrestlerB = factory(Wrestler::class)->create();
+        $wrestlerC = factory(Wrestler::class)->create();
         $title = factory(Title::class)->create();
-;
-        factory(Champion::class)->create(['wrestler_id' => $wrestlerA->id, 'title_id' => $title->id, 'won_on' => today()]);
-        factory(Champion::class)->create(['wrestler_id' => $wrestlerB->id, 'title_id' => $title->id, 'won_on' => today()->subMonth()]);
-        factory(Champion::class)->create(['wrestler_id' => $wrestlerA->id, 'title_id' => $title->id, 'won_on' => today()->subMonths(2)]);
-        factory(Champion::class)->create(['wrestler_id' => $wrestlerB->id, 'title_id' => $title->id, 'won_on' => today()->subMonths(3)]);
-        factory(Champion::class)->create(['wrestler_id' => $wrestlerA->id, 'title_id' => $title->id, 'won_on' => today()->subMonths(3)]);
-        factory(Champion::class)->create(['wrestler_id' => $wrestlerC->id, 'title_id' => $title->id, 'won_on' => today()->subMonths(4)]);
-        factory(Champion::class)->create(['wrestler_id' => $wrestlerA->id, 'title_id' => $title->id, 'won_on' => today()->subMonths(5)]);
+
+        ChampionFactory::forWrestler($wrestlerA)->forTitle($title)->create();
+        ChampionFactory::forWrestler($wrestlerB)->forTitle($title)->create();
+        ChampionFactory::forWrestler($wrestlerA)->forTitle($title)->create();
+        ChampionFactory::forWrestler($wrestlerC)->forTitle($title)->create();
+        ChampionFactory::forWrestler($wrestlerA)->forTitle($title)->create();
 
         $wrestlers = $this->repository->mostTitleReigns($title);
 
@@ -64,14 +62,14 @@ class TitleRecordsRepositoryTest extends TestCase
     /** @test */
     public function it_can_get_the_champion_with_the_longest_title_reign()
     {
-        $wrestlerA = factory(Wrestler::class)->create(['name' => 'Wrestler 1']);
-        $wrestlerB = factory(Wrestler::class)->create(['name' => 'Wrestler 2']);
-        $wrestlerC = factory(Wrestler::class)->create(['name' => 'Wrestler 3']);
+        $wrestlerA = factory(Wrestler::class)->create();
+        $wrestlerB = factory(Wrestler::class)->create();
+        $wrestlerC = factory(Wrestler::class)->create();
         $title = factory(Title::class)->create();
 
-        factory(Champion::class)->create(['wrestler_id' => $wrestlerA->id, 'title_id' => $title->id, 'won_on' => Carbon::parse('2018-01-03'), 'lost_on' => Carbon::parse('2018-01-05')]);
-        factory(Champion::class)->create(['wrestler_id' => $wrestlerB->id, 'title_id' => $title->id, 'won_on' => Carbon::parse('2017-10-16'), 'lost_on' => Carbon::parse('2018-01-10')]);
-        factory(Champion::class)->create(['wrestler_id' => $wrestlerC->id, 'title_id' => $title->id, 'won_on' => Carbon::parse('2018-01-10'), 'lost_on' => Carbon::parse('2018-04-06')]);
+        ChampionFactory::forWrestler($wrestlerA)->forTitle($title)->wonOn(Carbon::parse('2018-01-03'))->lostOn(Carbon::parse('2018-01-05'))->create();
+        ChampionFactory::forWrestler($wrestlerB)->forTitle($title)->wonOn(Carbon::parse('2017-10-16'))->lostOn(Carbon::parse('2018-01-10'))->create();
+        ChampionFactory::forWrestler($wrestlerA)->forTitle($title)->wonOn(Carbon::parse('2018-01-10'))->lostOn(Carbon::parse('2018-04-06'))->create();
 
         $champions = $this->repository->longestTitleReign($title);
 

@@ -15,6 +15,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class UpdateEventMatchesWithResultsTest extends TestCase
 {
     use RefreshDatabase;
+    use RefreshDatabase;
 
     private $event;
     private $match;
@@ -157,7 +158,7 @@ class UpdateEventMatchesWithResultsTest extends TestCase
 
         tap($event->matches->first()->fresh(), function ($match) use ($response) {
             $match->titles->each(function ($title, $key) use ($match) {
-                $this->assertEquals($match->winner_id, $title->currentChampion->wrestler_id);
+                $this->assertEquals($match->winner_id, $title->fresh()->currentChampion->wrestler_id);
             });
         });
     }
@@ -249,7 +250,7 @@ class UpdateEventMatchesWithResultsTest extends TestCase
 
         tap($event->matches->first()->fresh(), function ($match) use ($response) {
             $match->titles->each(function ($title, $key) use ($match) {
-                $this->assertEquals($match->winner_id, $title->currentChampion->wrestler_id);
+                $this->assertEquals($match->winner_id, $title->fresh()->currentChampion->wrestler_id);
             });
         });
     }
@@ -289,6 +290,8 @@ class UpdateEventMatchesWithResultsTest extends TestCase
     /** @test */
     public function matches_must_be_an_array()
     {
+        $this->createEventMatch();
+
         $this->response = $this->actingAs($this->authorizedUser)
                             ->from(route('results.edit', ['event' => $this->event->id]))
                             ->patch(route('results.update', ['event' => $this->event->id]), $this->validParams([

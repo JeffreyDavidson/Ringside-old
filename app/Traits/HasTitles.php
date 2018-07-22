@@ -4,7 +4,6 @@ namespace App\Traits;
 
 use App\Models\Title;
 use App\Exceptions\WrestlerAlreadyHasTitleException;
-use App\Exceptions\WrestlerNotTitleChampionException;
 
 trait HasTitles
 {
@@ -67,24 +66,6 @@ trait HasTitles
         }
 
         $this->championships()->create(['title_id' => $title->id, 'won_on' => $date]);
-    }
-
-    /**
-     * A wrestler can lose a title.
-     *
-     * @param \App\Models\Title $title
-     * @param datetime $date
-     * @return bool
-     */
-    public function loseTitle(Title $title, $date)
-    {
-        if (! $this->hasTitle($title)) {
-            throw new WrestlerNotTitleChampionException;
-        }
-
-        $titleHeld = $this->currentTitlesHeld()->firstWhere('id', $title->id);
-
-        return $titleHeld->currentChampion->update(['lost_on' => $date ?: $this->freshTimestamp()]);
     }
 
     /**

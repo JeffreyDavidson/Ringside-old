@@ -5,7 +5,7 @@ use App\Models\Match;
 use App\Models\Referee;
 use App\Models\Wrestler;
 use App\Models\Title;
-use App\Models\Champion;
+use App\Models\Championship;
 use App\Models\MatchType;
 
 class MatchFactory
@@ -104,7 +104,7 @@ class MatchFactory
 
     public function withChampion(Wrestler $wrestler, Title $title)
     {
-        factory(Champion::class)->create(['wrestler_id' => $wrestler->id, 'title_id' => $title->id, 'won_on' => $title->introduced_at->copy()->subMonths(4)]);
+        factory(Championship::class)->create(['wrestler_id' => $wrestler->id, 'title_id' => $title->id, 'won_on' => $title->introduced_at->copy()->subMonths(4)]);
 
         return $this;
     }

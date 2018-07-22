@@ -13,7 +13,6 @@ use App\Models\Stipulation;
 use App\Models\MatchType;
 use App\Models\Champion;
 use MatchFactory;
-use TitleFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class MatchTest extends TestCase
