@@ -4,15 +4,15 @@ namespace App\Repositories;
 
 use App\Models\Title;
 use App\Models\Wrestler;
-use App\Models\Champion;
+use App\Models\Championship;
 
 class TitleRecordsRepository
 {
     public function mostTitleDefenses(Title $title)
     {
-        $maxDefenses = Champion::selectRaw('MAX(successful_defenses) AS max')->value('max');
+        $maxDefenses = Championship::selectRaw('MAX(successful_defenses) AS max')->value('max');
 
-        return Champion::with('wrestler')
+        return Championship::with('wrestler')
             ->where('title_id', $title->id)
             ->where('successful_defenses', $maxDefenses)
             ->get();
@@ -21,25 +21,25 @@ class TitleRecordsRepository
     public function mostTitleReigns(Title $title)
     {
         $max = Wrestler::query()
-                ->groupBy('champions.wrestler_id')
-                ->join('champions', 'wrestlers.id', '=', 'champions.wrestler_id')
-                ->selectRaw('COUNT(champions.wrestler_id) AS reigns')
+                ->groupBy('championships.wrestler_id')
+                ->join('championships', 'wrestlers.id', '=', 'championships.wrestler_id')
+                ->selectRaw('COUNT(championships.wrestler_id) AS reigns')
                 ->value('reigns');
 
         return Wrestler::query()
-                ->selectRaw('wrestlers.*, COUNT(champions.wrestler_id) AS reigns')
-                ->groupBy('champions.wrestler_id')
-                ->join('champions', 'wrestlers.id', '=', 'champions.wrestler_id')
+                ->selectRaw('wrestlers.*, COUNT(championships.wrestler_id) AS reigns')
+                ->groupBy('championships.wrestler_id')
+                ->join('championships', 'wrestlers.id', '=', 'championships.wrestler_id')
                 ->havingRaw("reigns = ?", [$max])
                 ->get();
     }
 
     public function longestTitleReign(Title $title)
     {
-        $maxDateDiff = Champion::selectRaw('MAX(DATEDIFF(IFNULL(lost_on, NOW()), won_on)) AS diff')->value('diff');
+        $maxDateDiff = Championship::selectRaw('MAX(DATEDIFF(IFNULL(lost_on, NOW()), won_on)) AS diff')->value('diff');
 
-        return Champion::with('wrestler')
-            ->select('champions.lost_on', 'champions.won_on', 'wrestler_id')
+        return Championship::with('wrestler')
+            ->select('championships.lost_on', 'championships.won_on', 'wrestler_id')
             ->where('title_id', $title->id)
             ->whereRaw("DATEDIFF(IFNULL(lost_on, NOW()), won_on) = {$maxDateDiff}")
             ->get();

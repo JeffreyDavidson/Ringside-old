@@ -25,7 +25,7 @@ class TitleTest extends TestCase
     /** @test */
     public function a_title_has_many_championships()
     {
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->title->championships);
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->title->champions);
     }
 
     /** @test */

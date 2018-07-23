@@ -102,9 +102,19 @@ class MatchFactory
         return $this;
     }
 
-    public function withChampion(Wrestler $wrestler, Title $title)
+    public function withChampion(Wrestler $wrestler)
     {
-        factory(Championship::class)->create(['wrestler_id' => $wrestler->id, 'title_id' => $title->id, 'won_on' => $title->introduced_at->copy()->subMonths(4)]);
+        $this->titles->each(function ($title, $key) use ($wrestler) {
+            factory(Championship::class)->create([
+                'wrestler_id' => $wrestler->id,
+                'title_id' => $title->id,
+                'won_on' => $title->introduced_at->copy()->subMonths(4)
+            ]);
+        });
+
+        $concatenated = $this->wrestlers->concat([$wrestler]);
+
+        $this->wrestlers = $concatenated;
 
         return $this;
     }

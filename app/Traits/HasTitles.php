@@ -65,7 +65,7 @@ trait HasTitles
             throw new WrestlerAlreadyHasTitleException;
         }
 
-        $this->championships()->create(['title_id' => $title->id, 'won_on' => $date]);
+        $championship = $this->championships()->create(['title_id' => $title->id, 'won_on' => $date]);
     }
 
     /**

@@ -25,14 +25,16 @@ class ChampionshipFactory
             $this->wonOn = $this->title->introduced_at->copy()->addMonth();
         } elseif (!is_null($this->title) && is_null($this->wonOn)) {
             if ($this->title->champions()->exists()) {
-                $dateLastChampionWon = $this->title->currentChampion->won_on;
-                $this->title->currentChampion->loseTitle(Carbon::parse($dateLastChampionWon)->addMonth());
-                $this->wonOn = $dateLastChampionWon->copy()->addMonth();
+                $dateLastChampionWon = $this->title->fresh()->currentChampion->won_on;
+                $dateOfTitleChange = $dateLastChampionWon->copy()->addMonth();
+                $this->title->currentChampion->loseTitle($dateOfTitleChange);
+                $this->wonOn = $dateOfTitleChange;
+            } else {
+                $this->wonOn = $this->title->introduced_at->copy()->addMonth();
             }
-            $this->wonOn = $this->title->introduced_at->copy()->addMonth();
         }
 
-        $champion = factory(Champion::class)->create([
+        $champion = factory(Championship::class)->create([
             'wrestler_id' => $this->wrestler->id ?? factory(Wrestler::class)->create()->id,
             'title_id' => $this->title->id,
             'won_on' => $this->wonOn,
@@ -95,7 +97,7 @@ class ChampionshipFactory
         }
 
         if (! is_null($this->lostOn)) {
-            $this->wonOn = null;
+            $this->lostOn = null;
         }
 
         if ($this->titleDefenses != 0) {

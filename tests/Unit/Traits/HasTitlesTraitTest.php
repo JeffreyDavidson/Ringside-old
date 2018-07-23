@@ -6,7 +6,7 @@ use Tests\TestCase;
 use App\Models\Wrestler;
 use App\Models\Title;
 use Carbon\Carbon;
-use Facades\ChampionFactory;
+use Facades\ChampionshipFactory;
 use PHPUnit\Framework\Assert;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -59,9 +59,9 @@ class HasTitlesTraitTest extends TestCase
     public function current_titles_held_returns_a_collection_of_active_titles()
     {
         $wrestler = factory(Wrestler::class)->create();
-        $currentChampionshipA = ChampionFactory::forWrestler($wrestler)->wonOn(Carbon::today()->subMonths(2))->create();
-        $currentChampionshipB = ChampionFactory::forWrestler($wrestler)->wonOn(Carbon::yesterday())->create();
-        $pastChampionship = ChampionFactory::forWrestler($wrestler)->wonOn(Carbon::today()->subDays(4))->lostOn(Carbon::yesterday())->create();
+        $currentChampionshipA = ChampionshipFactory::forWrestler($wrestler)->wonOn(Carbon::today()->subMonths(2))->create();
+        $currentChampionshipB = ChampionshipFactory::forWrestler($wrestler)->wonOn(Carbon::yesterday())->create();
+        $pastChampionship = ChampionshipFactory::forWrestler($wrestler)->wonOn(Carbon::today()->subDays(4))->lostOn(Carbon::yesterday())->create();
 
         $currentTitlesHeld = $wrestler->currentTitlesHeld();
 
@@ -74,9 +74,9 @@ class HasTitlesTraitTest extends TestCase
     public function past_titles_held_returns_a_collection_of_past_titles()
     {
         $wrestler = factory(Wrestler::class)->create();
-        $pastChampionshipA = ChampionFactory::forWrestler($wrestler)->wonOn(Carbon::today()->subMonths(2))->lostOn(Carbon::today()->subMonths(1))->create();
-        $pastChampionshipB = ChampionFactory::forWrestler($wrestler)->wonOn(Carbon::today()->subWeeks(3))->lostOn(Carbon::today()->subWeeks(2))->create();
-        $currentChampionship = ChampionFactory::forWrestler($wrestler)->wonOn(Carbon::yesterday())->create();
+        $pastChampionshipA = ChampionshipFactory::forWrestler($wrestler)->wonOn(Carbon::today()->subMonths(2))->lostOn(Carbon::today()->subMonths(1))->create();
+        $pastChampionshipB = ChampionshipFactory::forWrestler($wrestler)->wonOn(Carbon::today()->subWeeks(3))->lostOn(Carbon::today()->subWeeks(2))->create();
+        $currentChampionship = ChampionshipFactory::forWrestler($wrestler)->wonOn(Carbon::yesterday())->create();
 
         $pastTitlesHeld = $wrestler->pastTitlesHeld();
 
