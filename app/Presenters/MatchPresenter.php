@@ -34,14 +34,14 @@ class MatchPresenter extends Presenter
     {
         $numberOfMatches = $this->model->event->matches->count(); // use ->matches->count() if relation already loaded to avoid an extra query
 
-        if($this->model->match_number === $numberOfMatches) {
+        if ($this->model->match_number === $numberOfMatches) {
             return 'Main Event';
         }
 
-        if($this->model->match_number === 1) {
+        if ($this->model->match_number === 1) {
             return 'Opening Match';
         }
 
-        return 'Match #' . $this->model->match_number;
+        return 'Match #'.$this->model->match_number;
     }
 }

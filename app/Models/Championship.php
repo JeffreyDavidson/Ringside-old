@@ -2,10 +2,8 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
-use App\Collections\ChampionshipCollection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
+use App\Collections\ChampionshipCollection;
 use Laracodes\Presenter\Traits\Presentable;
 
 class Championship extends Model

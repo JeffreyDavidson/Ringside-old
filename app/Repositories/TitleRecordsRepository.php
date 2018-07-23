@@ -30,7 +30,7 @@ class TitleRecordsRepository
                 ->selectRaw('wrestlers.*, COUNT(championships.wrestler_id) AS reigns')
                 ->groupBy('championships.wrestler_id')
                 ->join('championships', 'wrestlers.id', '=', 'championships.wrestler_id')
-                ->havingRaw("reigns = ?", [$max])
+                ->havingRaw('reigns = ?', [$max])
                 ->get();
     }
 

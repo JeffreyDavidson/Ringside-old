@@ -6,5 +6,4 @@ use Laracodes\Presenter\Presenter;
 
 class TitleRecordsPresenter extends Presenter
 {
-
 }
