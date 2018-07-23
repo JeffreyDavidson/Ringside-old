@@ -1,8 +1,8 @@
 <?php
 
+use Carbon\Carbon;
 use App\Models\Manager;
 use App\Models\Wrestler;
-use Carbon\Carbon;
 
 class ManagerFactory
 {
@@ -18,7 +18,7 @@ class ManagerFactory
     public function create()
     {
         $manager = factory(Manager::class)->create([
-            'hired_at' => $this->hiredOn->subWeeks(2)
+            'hired_at' => $this->hiredOn->subWeeks(2),
         ]);
 
         $this->wrestler->hireManager($manager, $this->hiredOn);

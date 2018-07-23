@@ -1,9 +1,9 @@
 <?php
 
-use App\Models\Championship;
-use App\Models\Wrestler;
-use App\Models\Title;
 use Carbon\Carbon;
+use App\Models\Title;
+use App\Models\Wrestler;
+use App\Models\Championship;
 
 class ChampionshipFactory
 {
@@ -23,7 +23,7 @@ class ChampionshipFactory
         if (is_null($this->title)) {
             $this->title = factory(Title::class)->create();
             $this->wonOn = $this->title->introduced_at->copy()->addMonth();
-        } elseif (!is_null($this->title) && is_null($this->wonOn)) {
+        } elseif (! is_null($this->title) && is_null($this->wonOn)) {
             if ($this->title->champions()->exists()) {
                 $dateLastChampionWon = $this->title->fresh()->currentChampion->won_on;
                 $dateOfTitleChange = $dateLastChampionWon->copy()->addMonth();

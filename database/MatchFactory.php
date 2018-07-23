@@ -4,9 +4,8 @@ use App\Models\Event;
 use App\Models\Match;
 use App\Models\Referee;
 use App\Models\Wrestler;
-use App\Models\Title;
-use App\Models\Championship;
 use App\Models\MatchType;
+use App\Models\Championship;
 
 class MatchFactory
 {
@@ -108,7 +107,7 @@ class MatchFactory
             factory(Championship::class)->create([
                 'wrestler_id' => $wrestler->id,
                 'title_id' => $title->id,
-                'won_on' => $title->introduced_at->copy()->subMonths(4)
+                'won_on' => $title->introduced_at->copy()->subMonths(4),
             ]);
         });
 
@@ -121,7 +120,6 @@ class MatchFactory
 
     public function addWrestlersForMatch($match)
     {
-
         if ($this->wrestlers->isEmpty()) {
             $numWrestlersToAddToMatch = $match->type->total_competitors;
             $wrestlersForMatch = factory(Wrestler::class, (int) $numWrestlersToAddToMatch)->create(['hired_at' => $match->date->copy()->subMonths(2)]);
