@@ -61,6 +61,13 @@ class UpdateEventMatchesWithResultsTest extends TestCase
         return $match;
     }
 
+    private function nonChampionWinner($match)
+    {
+        return $match->wrestlers->reject(function ($wrestler, $key) use ($match) {
+            return $wrestler->id == $match->titles->first()->currentChampion->wrestler->id;
+        })->random()->id;
+    }
+
     private function validParams($overrides = [])
     {
         return array_replace_recursive([
@@ -241,9 +248,6 @@ class UpdateEventMatchesWithResultsTest extends TestCase
     public function a_title_match_with_a_set_champion_that_loses_a_title_match_loses_title_if_the_title_can_change_hands()
     {
         $match = $this->createStandardTitleMatchWithChampion();
-        // dd($match->wrestlers->reject(function ($wrestler, $key) use ($match) {
-        //     return $wrestler->id == $match->titles->first()->currentChampion->wrestler->id;
-        // })->random()->id);
 
         $response = $this->actingAs($this->authorizedUser)
                         ->from(route('results.edit', ['event' => $match->event->id]))
@@ -251,9 +255,7 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                             'matches' => [
                                 [
                                     'match_decision_id' => MatchDecision::titleCanChangeHandsBySlug()->first()->id,
-                                    'winner_id' => $match->wrestlers->reject(function ($wrestler, $key) use ($match) {
-                                        return $wrestler->id == $match->titles->first()->currentChampion->wrestler->id;
-                                    })->random()->id,
+                                    'winner_id' => $this->nonChampionWinner($match),
                                 ]
                             ]
                         ]));
@@ -278,7 +280,7 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                             'matches' => [
                                 [
                                     'match_decision_id' => MatchDecision::titleCannotChangeHandsBySlug()->first()->id,
-                                    'winner_id' => $match->titles->first()->currentChampion->id,
+                                    'winner_id' => $this->nonChampionWinner($match),
                                 ]
                             ]
                         ]));
