@@ -207,35 +207,6 @@ class Match extends Model
     }
 
     /**
-     * Sets the winner of the match.
-     *
-     * @param \App\Models\Wrestler $wrestler
-     * @return
-     */
-    public function setWinner(Wrestler $wrestler, $matchDecisionSlug)
-    {
-        $matchDecision = MatchDecision::where('slug', $matchDecisionSlug)->first();
-
-        $this->update([
-            'match_decision_id' => $matchDecision->id,
-            'winner_id' => $wrestler->id,
-            'loser_id' => $this->wrestlers->except($wrestler->id)->first()->id,
-        ]);
-
-        if ($this->isTitleMatch()) {
-            $this->titles->each(function ($title) use ($wrestler) {
-                if (! $wrestler->hasTitle($title) && $this->decision->titleCanChangeHands()) {
-                    $title->setChampion($wrestler, $this->date);
-                } else {
-                    $title->currentChampion->increment('successful_defenses');
-                }
-            });
-        }
-
-        return $this;
-    }
-
-    /**
      * Retrieves the date of the event for the match.
      *
      * @return string

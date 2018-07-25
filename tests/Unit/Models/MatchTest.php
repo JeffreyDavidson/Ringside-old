@@ -138,19 +138,6 @@ class MatchTest extends TestCase
     }
 
     /** @test */
-    public function a_match_can_set_a_winner()
-    {
-        $wrestlerA = factory(Wrestler::class)->create();
-        $wrestlerB = factory(Wrestler::class)->create();
-        $this->match->addWrestlers([[$wrestlerA], [$wrestlerB]]);
-
-        $this->match->setWinner($wrestlerA, 'pinfall');
-
-        $this->assertEquals($wrestlerA->id, $this->match->winner_id);
-        $this->assertEquals($wrestlerB->id, $this->match->loser_id);
-    }
-
-    /** @test */
     public function a_match_can_return_its_event_date()
     {
         $event = factory(Event::class)->create(['date' => '2018-02-01']);

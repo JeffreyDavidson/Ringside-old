@@ -27,7 +27,7 @@ class ChampionshipFactory
             if ($this->title->champions()->exists()) {
                 $dateLastChampionWon = $this->title->fresh()->currentChampion->won_on;
                 $dateOfTitleChange = $dateLastChampionWon->copy()->addMonth();
-                $this->title->currentChampion->loseTitle($dateOfTitleChange);
+                $this->title->fresh()->currentChampion->loseTitle($dateOfTitleChange);
                 $this->wonOn = $dateOfTitleChange;
             } else {
                 $this->wonOn = $this->title->introduced_at->copy()->addMonth();

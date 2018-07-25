@@ -20,28 +20,37 @@ class TitleRecordsRepository
 
     public function mostTitleReigns(Title $title)
     {
-        $max = Wrestler::query()
-                ->groupBy('championships.wrestler_id')
-                ->join('championships', 'wrestlers.id', '=', 'championships.wrestler_id')
-                ->selectRaw('COUNT(championships.wrestler_id) AS reigns')
-                ->value('reigns');
+        // $maxReigns = Wrestler::query()
+        //         ->groupBy('championships.wrestler_id')
+        //         ->join('championships', 'wrestlers.id', '=', 'championships.wrestler_id')
+        //         ->selectRaw('COUNT(championships.wrestler_id) AS reigns')
+        //         ->value('reigns');
+        // $maxReigns = Championship::query()
+        //                     ->withCount('wrestler_id')
+        //                     ->orderBy('wrestler_id_count', 'desc')
+        //                     ->value('wrestler_id_count');
+        $maxReigns = Championship::query()
+        ->withCount('wrestlers')
+    ->orderBy('wrestler_count', 'desc')
+    ->select('wrestler_count');
 
         return Wrestler::query()
                 ->selectRaw('wrestlers.*, COUNT(championships.wrestler_id) AS reigns')
                 ->groupBy('championships.wrestler_id')
                 ->join('championships', 'wrestlers.id', '=', 'championships.wrestler_id')
-                ->havingRaw('reigns = ?', [$max])
+                ->havingRaw('reigns = ?', [$maxReigns])
                 ->get();
     }
 
     public function longestTitleReign(Title $title)
     {
-        $maxDateDiff = Championship::selectRaw('MAX(DATEDIFF(IFNULL(lost_on, NOW()), won_on)) AS diff')->value('diff');
+        $now = \Carbon\Carbon::now()->toDateTimeString();
+        $maxDateDiff = Championship::selectRaw('MAX(DATEDIFF(IFNULL(lost_on, ?), won_on)) AS diff', [$now])->value('diff');
 
         return Championship::with('wrestler')
             ->select('championships.lost_on', 'championships.won_on', 'wrestler_id')
             ->where('title_id', $title->id)
-            ->whereRaw("DATEDIFF(IFNULL(lost_on, NOW()), won_on) = {$maxDateDiff}")
+            ->whereRaw('DATEDIFF(IFNULL(lost_on, ?), won_on) = ?', [$now, $maxDateDiff])
             ->get();
     }
 }

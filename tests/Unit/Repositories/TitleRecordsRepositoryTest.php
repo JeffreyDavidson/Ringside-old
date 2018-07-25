@@ -54,9 +54,9 @@ class TitleRecordsRepositoryTest extends TestCase
         ChampionshipFactory::forWrestler($wrestlerC)->forTitle($title)->create();
         ChampionshipFactory::forWrestler($wrestlerA)->forTitle($title)->create();
 
-        $wrestlers = $this->repository->mostTitleReigns($title);
+        $champions = $this->repository->mostTitleReigns($title);
 
-        $this->assertTrue($wrestlers->contains($wrestlerA->id));
+        $this->assertTrue($champions->pluck('wrestler_id')->contains($wrestlerA->id));
     }
 
     /** @test */
