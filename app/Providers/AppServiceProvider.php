@@ -4,9 +4,7 @@ namespace App\Providers;
 
 use Laravel\Dusk\DuskServiceProvider;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Validator;
 use Barryvdh\Debugbar\ServiceProvider as Debugbar;
-use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -17,13 +15,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Validator::extend('alpha_spaces', function ($attribute, $value) {
-            return preg_match('/^[\pL\s]+$/u', $value);
-        });
-
-        Validator::extend('alpha_num_spaces', function ($attribute, $value) {
-            return preg_match('/^[a-z0-9\s]+$/i', $value);
-        });
     }
 
     /**
@@ -39,10 +30,6 @@ class AppServiceProvider extends ServiceProvider
 
         if ($this->app->environment('local', 'testing')) {
             $this->app->register(DuskServiceProvider::class);
-        }
-
-        if ($this->app->environment() !== 'production') {
-            $this->app->register(IdeHelperServiceProvider::class);
         }
     }
 }

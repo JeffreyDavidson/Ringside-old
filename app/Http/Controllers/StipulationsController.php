@@ -17,7 +17,7 @@ class StipulationsController extends Controller
     {
         $this->authorize('index', Stipulation::class);
 
-        $stipulations = Stipulation::all();
+        $stipulations = Stipulation::paginate(10);
 
         return response()->view('stipulations.index', ['stipulations' => $stipulations]);
     }

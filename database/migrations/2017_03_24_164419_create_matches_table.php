@@ -18,16 +18,19 @@ class CreateMatchesTable extends Migration
             $table->unsignedInteger('event_id')->index()->nullable();
             $table->unsignedInteger('match_number')->nullable();
             $table->unsignedInteger('match_type_id')->index();
+            $table->unsignedInteger('stipulation_id')->nullable()->index();
             $table->unsignedInteger('match_decision_id')->index()->nullable();
             $table->text('preview');
             $table->unsignedInteger('winner_id')->index()->nullable();
             $table->unsignedInteger('loser_id')->index()->nullable();
+            $table->text('result')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
             $table->unique(['event_id', 'match_number']);
             $table->foreign('event_id')->references('id')->on('events');
             $table->foreign('match_type_id')->references('id')->on('match_types');
+            $table->foreign('stipulation_id')->references('id')->on('stipulations');
             $table->foreign('match_decision_id')->references('id')->on('match_decisions');
             $table->foreign('winner_id')->references('id')->on('wrestlers');
             $table->foreign('loser_id')->references('id')->on('wrestlers');

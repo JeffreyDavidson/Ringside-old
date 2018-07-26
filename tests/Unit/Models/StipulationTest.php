@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Models;
 
 use Carbon\Carbon;
 use Tests\TestCase;
@@ -23,7 +23,7 @@ class StipulationTest extends TestCase
     }
 
     /** @test */
-    public function a_stipulation_belongs_to_matches()
+    public function a_stipulation_has_many_matches()
     {
         $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->stipulation->matches);
     }

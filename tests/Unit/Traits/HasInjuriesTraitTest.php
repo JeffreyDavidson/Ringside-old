@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Unit;
+namespace Tests\Unit\Traits;
 
 use Tests\TestCase;
 use App\Models\Wrestler;
@@ -18,7 +18,7 @@ class HasInjuriesTraitTest extends TestCase
         $wrestler->injure();
 
         $this->assertEquals(1, $wrestler->injuries->count());
-        $this->assertTrue($wrestler->isInactive());
+        $this->assertFalse($wrestler->is_active);
         $this->assertNull($wrestler->injuries()->first()->healed_at);
         $this->assertTrue($wrestler->isInjured());
     }
@@ -31,7 +31,7 @@ class HasInjuriesTraitTest extends TestCase
         $wrestler->recover();
 
         $this->assertNotNull($wrestler->injuries()->first()->healed_at);
-        $this->assertTrue($wrestler->isActive());
+        $this->assertTrue($wrestler->is_active);
         $this->assertFalse($wrestler->isInjured());
     }
 

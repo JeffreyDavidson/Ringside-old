@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Models;
 
 use Tests\TestCase;
 use App\Models\Venue;
@@ -34,11 +34,11 @@ class EventTest extends TestCase
     }
 
     /** @test */
-    public function an_event_can_get_the_main_event_match()
+    public function the_last_match_in_an_event_is_the_main_event()
     {
-        $matchA = factory(Match::class)->create(['event_id' => $this->event->id]);
-        $matchB = factory(Match::class)->create(['event_id' => $this->event->id]);
-        $matchC = factory(Match::class)->create(['event_id' => $this->event->id]);
+        $matchA = factory(Match::class)->create(['event_id' => $this->event->id, 'match_number' => 1]);
+        $matchB = factory(Match::class)->create(['event_id' => $this->event->id, 'match_number' => 2]);
+        $matchC = factory(Match::class)->create(['event_id' => $this->event->id, 'match_number' => 3]);
 
         $mainEvent = $this->event->mainEvent;
 
@@ -53,5 +53,13 @@ class EventTest extends TestCase
         $this->event->addMatch($match);
 
         $this->assertEquals($match->event_id, $this->event->id);
+    }
+
+    /** @test */
+    public function an_event_can_be_archived()
+    {
+        $this->event->archive();
+
+        $this->assertNotNull($this->event->archived_at);
     }
 }

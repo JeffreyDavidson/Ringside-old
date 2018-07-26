@@ -26,7 +26,7 @@ class StipulationEditFormRequest extends FormRequest
     {
         return [
             'name' => ['required', Rule::unique('stipulations', 'name')->ignore($this->stipulation->id)],
-            'slug' => ['required', Rule::unique('stipulations', 'slug')->ignore($this->stipulation->id)]
+            'slug' => ['required', Rule::unique('stipulations', 'slug')->ignore($this->stipulation->id)],
         ];
     }
 }

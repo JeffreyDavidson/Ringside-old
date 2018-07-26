@@ -23,25 +23,16 @@
     @if($wrestler->isCurrentlyAChampion())
         <h2>Current Titles</h2>
         <ul>
-            @foreach($wrestler->currentTitlesHeld as $champion)
-                <li>{{ $champion->title->name }}</li>
+            @foreach($wrestler->currentTitlesHeld() as $title)
+                <li>{{ $title->name }}</li>
             @endforeach
         </ul>
     @endif
 
-    @if($wrestler->hasCurrentManagers())
+    @if ($wrestler->hasCurrentManagers())
         <h2>Current Managers</h2>
         <ul>
-            @foreach($wrestler->currentManagers as $manager)
-                <li>{{ $manager->present()->fullName() }}</li>
-            @endforeach
-        </ul>
-    @endif
-
-    @if($wrestler->hasPastManagers())
-        <h2>Previous Managers</h2>
-        <ul>
-            @foreach($wrestler->pastManagers as $manager)
+            @foreach($wrestler->currentManagers() as $manager)
                 <li>{{ $manager->present()->fullName() }}</li>
             @endforeach
         </ul>
@@ -50,26 +41,8 @@
     @if ($wrestler->hasPastTitlesHeld())
         <h2>Previous Titles Held</h2>
         <ul>
-            @foreach($wrestler->pastTitlesHeld->groupByTitle() as $titles)
+            @foreach($wrestler->pastTitlesHeld->groupByTitle() as $title)
                 <li>{{ "{$titles->first()->title->name} ({$titles->count()}x)" }}</li>
-            @endforeach
-        </ul>
-    @endif
-
-    @if($wrestler->hasPastInjuries())
-        <h2>Previous Injuries</h2>
-        <ul>
-            @foreach($wrestler->pastInjuries as $injury)
-                <li>{{ $injury->injured_at->format('F jS, Y') }} to {{ $injury->healed_at->format('F jS, Y') }}</li>
-            @endforeach
-        </ul>
-    @endif
-
-    @if($wrestler->hasPastRetirements())
-        <h2>Previous Retirements</h2>
-        <ul>
-            @foreach($wrestler->pastRetirements as $retirement)
-                <li>{{ $retirement->retired_at->format('F jS, Y') }} to {{ $retirement->ended_at->format('F jS, Y') }}</li>
             @endforeach
         </ul>
     @endif
@@ -89,13 +62,13 @@
                     <th>Opponent(s)</th>
                 </thead>
                 <tbody>
-                @foreach($wrestler->matches as $match)
-                    <tr>
-                        <td>{{ $match->id }}</td>
-                        <td>{{ $match->event->name }}</td>
-                        <td>{{ $match->competitors }}</td>
-                    </tr>
-                @endforeach
+                    @foreach($wrestler->matches as $match)
+                        <tr>
+                            <td>{{ $match->id }}</td>
+                            <td>{{ $match->event->name }}</td>
+                            <td>{{ $match->competitors }}</td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>

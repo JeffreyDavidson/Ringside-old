@@ -21,7 +21,7 @@
         <div class="panel panel-bordered panel-primary">
             <div class="panel-heading">
                 <div class="panel-title">
-                    {{ $match->present()->match_number($loop) }}
+                    {{ $match->present()->match_number }}
                 </div>
             </div>
             <div class="panel-body">
@@ -33,8 +33,8 @@
                         @endforeach
                     @endif
                 </p>
-                @if ($match->stipulations->count() > 0)
-                    <p>{{ $match->present()->stipulations }} Match</p>
+                @if ($match->stipulation)
+                    <p>{{ $match->stipulation->name }}</p>
                 @endif
                 <p>
                     Referee(s): {{ $match->present()->referees }}

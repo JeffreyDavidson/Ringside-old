@@ -5,6 +5,8 @@ namespace Tests\Unit\Traits;
 use Tests\TestCase;
 use App\Models\Wrestler;
 use App\Models\Manager;
+use Facades\ManagerFactory;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class HasManagersTraitTest extends TestCase
@@ -17,7 +19,7 @@ class HasManagersTraitTest extends TestCase
         $wrestler = factory(Wrestler::class)->create();
         $manager = factory(Manager::class)->create();
 
-        $wrestler->hireManager($manager);
+        $wrestler->hireManager($manager, Carbon::yesterday());
 
         $this->assertEquals(1, $wrestler->currentManagers()->count());
     }
@@ -28,8 +30,8 @@ class HasManagersTraitTest extends TestCase
         $wrestler = factory(Wrestler::class)->create();
         $manager = factory(Manager::class)->create();
 
-        $wrestler->hireManager($manager);
-        $wrestler->fireManager($manager);
+        $wrestler->hireManager($manager, Carbon::yesterday());
+        $wrestler->fireManager($manager, Carbon::today());
 
         tap($wrestler->fresh(), function ($wrestler) {
             $this->assertTrue($wrestler->hasPastManagers());
@@ -44,8 +46,8 @@ class HasManagersTraitTest extends TestCase
         $managerA = factory(Manager::class)->create();
         $managerB = factory(Manager::class)->create();
 
-        $wrestler->hireManager($managerA);
-        $wrestler->hireManager($managerB);
+        $wrestler->hireManager($managerA, Carbon::yesterday());
+        $wrestler->hireManager($managerB, Carbon::yesterday());
 
         $this->assertEquals(2, $wrestler->currentManagers()->count());
     }
@@ -59,9 +61,9 @@ class HasManagersTraitTest extends TestCase
     {
         $wrestler = factory(Wrestler::class)->create();
         $manager = factory(Manager::class)->create();
-        $wrestler->hireManager($manager);
+        $wrestler->hireManager($manager, Carbon::yesterday());
 
-        $wrestler->hireManager($manager);
+        $wrestler->hireManager($manager, Carbon::today());
 
         $this->assertEquals(1, $wrestler->currentManagers()->count());
     }
@@ -76,8 +78,38 @@ class HasManagersTraitTest extends TestCase
         $wrestler = factory(Wrestler::class)->create();
         $manager = factory(Manager::class)->create();
 
-        $wrestler->fireManager($manager);
+        $wrestler->fireManager($manager, Carbon::today());
 
         $this->assertEquals(0, $wrestler->pastManagers()->count());
+    }
+
+    /** @test */
+    public function it_can_retrieve_a_wrestlers_current_managers()
+    {
+        $wrestler = factory(Wrestler::class)->create();
+        $currentManagerA = ManagerFactory::forWrestler($wrestler)->hiredOn(Carbon::today()->subMonths(5))->create();
+        $currentManagerB = ManagerFactory::forWrestler($wrestler)->hiredOn(Carbon::today()->subMonths(2))->create();
+        $pastManager = ManagerFactory::forWrestler($wrestler)->hiredOn(Carbon::today()->subWeeks(2))->firedOn(Carbon::yesterday())->create();
+
+        $currentManagers = $wrestler->currentManagers;
+
+        $this->assertTrue($currentManagers->contains($currentManagerA));
+        $this->assertTrue($currentManagers->contains($currentManagerB));
+        $this->assertFalse($currentManagers->contains($pastManager));
+    }
+
+    /** @test */
+    public function it_can_retrieve_a_wrestlers_past_managers()
+    {
+        $wrestler = factory(Wrestler::class)->create();
+        $pastManagerA = ManagerFactory::forWrestler($wrestler)->hiredOn(Carbon::today()->subMonths(5))->firedOn(Carbon::today()->subMonths(3))->create();
+        $pastManagerB = ManagerFactory::forWrestler($wrestler)->hiredOn(Carbon::today()->subMonths(2))->firedOn(Carbon::today()->subWeeks(3))->create();
+        $currentManager = ManagerFactory::forWrestler($wrestler)->hiredOn(Carbon::yesterday())->create();
+
+        $pastManagers = $wrestler->pastManagers;
+
+        $this->assertTrue($pastManagers->contains($pastManagerA));
+        $this->assertTrue($pastManagers->contains($pastManagerB));
+        $this->assertFalse($pastManagers->contains($currentManager));
     }
 }

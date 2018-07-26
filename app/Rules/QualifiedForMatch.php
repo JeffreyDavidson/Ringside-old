@@ -7,19 +7,20 @@ use Illuminate\Contracts\Validation\Rule;
 
 class QualifiedForMatch implements Rule
 {
-    /**
-     * @var \App\Models\Wrestler
-     */
     private $eventDate;
+    private $modelClass;
+    private $field;
 
     /**
      * Create a new rule instance.
      *
      * @param $eventDate
      */
-    public function __construct($eventDate)
+    public function __construct($eventDate, $modelClass, $field)
     {
         $this->eventDate = $eventDate;
+        $this->modelClass = $modelClass;
+        $this->field = $field;
     }
 
     /**
@@ -29,9 +30,12 @@ class QualifiedForMatch implements Rule
      * @param  mixed  $value
      * @return bool
      */
-    public function passes($attribute, $model)
+    public function passes($attribute, $modelId)
     {
-        return $model->$attribute->lte(Carbon::parse($this->eventDate));
+        return $this->modelClass::query()
+                    ->whereKey($modelId)
+                    ->where($this->field, '<=', Carbon::parse($this->eventDate))
+                    ->exists();
     }
 
     /**
@@ -41,6 +45,6 @@ class QualifiedForMatch implements Rule
      */
     public function message()
     {
-        return 'This '.strtolower(get_class($model)).' is not qualified for the match.';
+        return 'This '.strtolower(class_basename($this->modelClass)).' is not qualified for the match.';
     }
 }

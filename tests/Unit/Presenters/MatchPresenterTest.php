@@ -1,12 +1,13 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Presenters;
 
 use stdClass;
 use Tests\TestCase;
 use App\Models\Referee;
 use App\Models\Wrestler;
 use App\Models\Stipulation;
+use App\Models\Event;
 use App\Models\Match;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -20,9 +21,28 @@ class MatchPresenterTest extends TestCase
         $wrestlerA = factory(Wrestler::class)->create(['name' => 'Wrestler A']);
         $wrestlerB = factory(Wrestler::class)->create(['name' => 'Wrestler B']);
         $match = factory(Match::class)->create();
-        $match->addWrestlers([$wrestlerA, $wrestlerB]);
+        $match->addWrestlers([
+            0 => [$wrestlerA],
+            1 => [$wrestlerB]
+        ]);
 
         $this->assertEquals('Wrestler A vs. Wrestler B', $match->present()->wrestlers);
+    }
+
+    /** @test */
+    public function a_match_can_present_multiple_wrestlers_on_the_same_side()
+    {
+        $wrestlerA = factory(Wrestler::class)->create(['name' => 'Wrestler A']);
+        $wrestlerB = factory(Wrestler::class)->create(['name' => 'Wrestler B']);
+        $wrestlerC = factory(Wrestler::class)->create(['name' => 'Wrestler C']);
+        $wrestlerD = factory(Wrestler::class)->create(['name' => 'Wrestler D']);
+        $match = factory(Match::class)->create();
+        $match->addWrestlers([
+            0 => [$wrestlerA, $wrestlerC],
+            1 => [$wrestlerB, $wrestlerD]
+        ]);
+
+        $this->assertEquals('Wrestler A & Wrestler C vs. Wrestler B & Wrestler D', $match->present()->wrestlers);
     }
 
     /** @test */
@@ -43,60 +63,28 @@ class MatchPresenterTest extends TestCase
         $match = factory(Match::class)->create();
         $match->addReferees([$refereeA, $refereeB]);
 
-        $this->assertEquals('John Doe, Jane Scott', $match->present()->referees);
+        $this->assertEquals('John Doe & Jane Scott', $match->present()->referees);
     }
 
     /** @test */
-    public function a_match_can_present_a_single_stipulation_in_a_match()
+    public function a_single_match_for_an_event_is_presented_as_the_main_event()
     {
-        $stipulation = factory(Stipulation::class)->create(['name' => 'Cage Match']);
-        $match = factory(Match::class)->create();
-        $match->addStipulation($stipulation);
+        $event = factory(Event::class)->create();
+        $match = factory(Match::class)->create(['event_id' => $event->id]);
 
-        $this->assertEquals('Cage Match', $match->present()->stipulations);
+        $this->assertEquals('Main Event', $match->fresh()->present()->match_number());
     }
 
     /** @test */
-    public function a_match_can_present_multiple_stipulations_in_a_match()
+    public function match_numbers_in_an_event_should_be_presented_accordingly()
     {
-        $stipulationA = factory(Stipulation::class)->create(['name' => 'Cage Match']);
-        $stipulationB = factory(Stipulation::class)->create(['name' => 'Ladder Match']);
-        $match = factory(Match::class)->create();
-        $match->addStipulations([$stipulationA, $stipulationB]);
+        $event = factory(Event::class)->create();
+        $matchA = factory(Match::class)->create(['event_id' => $event->id]);
+        $matchB = factory(Match::class)->create(['event_id' => $event->id]);
+        $matchC = factory(Match::class)->create(['event_id' => $event->id]);
 
-        $this->assertEquals('Cage Match, Ladder Match', $match->present()->stipulations);
-    }
-
-    /** @test */
-    public function a_first_match_in_an_event_should_be_presented_as_the_opening_match()
-    {
-        $match = factory(Match::class)->create();
-        $loop = new stdClass;
-        $loop->first = true;
-        $loop->last = false;
-
-        $this->assertEquals('Opening Match', $match->present()->match_number($loop));
-    }
-
-    /** @test */
-    public function the_last_match_in_an_event_should_be_presented_as_the_opening_match()
-    {
-        $match = factory(Match::class)->create();
-        $loop = new stdClass;
-        $loop->first = false;
-        $loop->last = true;
-
-        $this->assertEquals('Main Event', $match->present()->match_number($loop));
-    }
-
-    /** @test */
-    public function a_match_in_an_event_that_isnt_the_first_or_last_should_be_presented_correctly()
-    {
-        $match = factory(Match::class)->create(['match_number' => 2]);
-        $loop = new stdClass;
-        $loop->first = false;
-        $loop->last = false;
-
-        $this->assertEquals('Match #2', $match->present()->match_number($loop));
+        $this->assertEquals('Opening Match', $matchA->fresh()->present()->match_number());
+        $this->assertEquals('Match #2', $matchB->fresh()->present()->match_number());
+        $this->assertEquals('Main Event', $matchC->fresh()->present()->match_number());
     }
 }

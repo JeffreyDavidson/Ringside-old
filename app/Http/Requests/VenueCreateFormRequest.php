@@ -28,7 +28,7 @@ class VenueCreateFormRequest extends FormRequest
             'address' => 'required|alpha_num_spaces',
             'city' => 'required|alpha_spaces',
             'state' => 'required|alpha|not_in:0',
-            'postcode' => 'required|numeric|digits:5'
+            'postcode' => 'required|numeric|digits:5',
         ];
     }
 }

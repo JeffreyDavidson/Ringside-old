@@ -39,7 +39,7 @@ class ApplicationPolicy
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    protected function getPermissions()
+    public function getPermissions()
     {
         return Permission::with('roles')->get();
     }
