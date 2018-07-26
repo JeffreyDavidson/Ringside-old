@@ -4,7 +4,8 @@ namespace Tests\Feature\Wrestler;
 
 use Tests\TestCase;
 use App\Models\Wrestler;
-use MatchFactory;
+use App\Models\Event;
+use Facades\MatchFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class EditWrestlerTest extends TestCase
@@ -99,7 +100,8 @@ class EditWrestlerTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_edit_a_wrestler_with_matches()
     {
-        $match  = MatchFactory::createForWrestlerOnDate($this->wrestler, '2017-10-11');
+        $event = factory(Event::class)->create(['date' => '2017-10-11']);
+        $match  = MatchFactory::forEvent($event)->withWrestler($this->wrestler)->create();
 
         $response = $this->actingAs($this->authorizedUser)
                         ->from(route('wrestlers.edit', $this->wrestler->id))
@@ -216,7 +218,8 @@ class EditWrestlerTest extends TestCase
     /** @test */
     public function wrestler_hired_at_date_must_be_before_first_competed_for_match()
     {
-        $match = MatchFactory::createForWrestlerOnDate($this->wrestler, '2017-11-09');
+        $event = factory(Event::class)->create(['date' => '2017-11-09']);
+        $match = MatchFactory::forEvent($event)->withWrestler($this->wrestler)->create();
 
         $this->response = $this->actingAs($this->authorizedUser)
                             ->from(route('wrestlers.edit', $this->wrestler->id))

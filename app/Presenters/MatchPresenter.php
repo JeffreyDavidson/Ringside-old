@@ -30,14 +30,18 @@ class MatchPresenter extends Presenter
         })->implode(' & ');
     }
 
-    public function match_number($loop)
+    public function match_number()
     {
-        if ($loop->first) {
-            return 'Opening Match';
-        } elseif ($loop->last) {
+        $numberOfMatches = $this->model->event->matches->count(); // use ->matches->count() if relation already loaded to avoid an extra query
+
+        if ($this->model->match_number == $numberOfMatches) {
             return 'Main Event';
-        } else {
-            return 'Match #'.$this->model->match_number;
         }
+
+        if ($this->model->match_number == 1) {
+            return 'Opening Match';
+        }
+
+        return 'Match #'.$this->model->match_number;
     }
 }

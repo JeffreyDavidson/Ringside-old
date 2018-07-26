@@ -4,7 +4,7 @@ namespace App\Collections;
 
 use Illuminate\Database\Eloquent\Collection;
 
-class ChampionCollection extends Collection
+class ChampionshipCollection extends Collection
 {
     public function groupByTitle()
     {

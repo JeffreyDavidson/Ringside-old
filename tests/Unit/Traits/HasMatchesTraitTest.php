@@ -7,7 +7,8 @@ use App\Models\Title;
 use App\Models\Wrestler;
 use App\Models\Event;
 use App\Models\Match;
-use MatchFactory;
+use Facades\MatchFactory;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class HasMatchesTraitTest extends TestCase
@@ -15,16 +16,21 @@ class HasMatchesTraitTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function a_wrestler_with_matches_before_the_current_date_has_past_matches()
+    public function it_can_retrieve_a_titles_scheduled_matches()
     {
-        $wrestler = factory(Wrestler::class)->create();
-        $event = factory(Event::class)->create(['date' => '2017-10-09']);
-        $match = factory(Match::class)->create(['event_id' => $event->id]);
-        $match->addWrestler($wrestler, 0);
+        $title = factory(Title::class)->create();
+        $eventA = factory(Event::class)->create(['date' => Carbon::tomorrow()]);
+        $eventB = factory(Event::class)->create(['date' => Carbon::today()]);
+        $eventC = factory(Event::class)->create(['date' => Carbon::today()->subWeeks(2)]);
+        $scheduledMatchA = MatchFactory::forEvent($eventA)->withTitle($title)->create();
+        $scheduledMatchB = MatchFactory::forEvent($eventB)->withTitle($title)->create();
+        $pastMatch = MatchFactory::forEvent($eventC)->withTitle($title)->create();
 
-        $this->assertTrue($wrestler->hasPastMatches());
-        $this->assertEquals(1, $wrestler->pastMatches->count());
-        $this->assertEquals('2017-10-09', $wrestler->firstMatchDate()->toDateString());
+        $scheduledMatches = $title->scheduledMatches;
+
+        $this->assertTrue($scheduledMatches->contains($scheduledMatchA));
+        $this->assertTrue($scheduledMatches->contains($scheduledMatchB));
+        $this->assertFalse($scheduledMatches->contains($pastMatch));
     }
 
     /** @test */
@@ -36,16 +42,23 @@ class HasMatchesTraitTest extends TestCase
     }
 
     /** @test */
-    public function a_title_with_matches_before_current_date_has_past_matches()
+    public function it_can_retrieve_a_titles_past_matches()
     {
         $title = factory(Title::class)->create();
         $event = factory(Event::class)->create(['date' => '2017-10-09']);
         $match = factory(Match::class)->create(['event_id' => $event->id]);
-        $match->addTitle($title);
+        $eventA = factory(Event::class)->create(['date' => Carbon::yesterday()]);
+        $eventB = factory(Event::class)->create(['date' => Carbon::today()->subWeeks(2)]);
+        $eventC = factory(Event::class)->create(['date' => Carbon::tomorrow()]);
+        $pastMatchA = MatchFactory::forEvent($eventA)->withTitle($title)->create();
+        $pastMatchB = MatchFactory::forEvent($eventB)->withTitle($title)->create();
+        $scheduledMatch = MatchFactory::forEvent($eventC)->withTitle($title)->create();
 
-        $this->assertTrue($title->hasPastMatches());
-        $this->assertEquals(1, $title->pastMatches->count());
-        $this->assertEquals('2017-10-09', $title->firstMatchDate()->toDateString());
+        $pastMatches = $title->pastMatches;
+
+        $this->assertTrue($pastMatches->contains($pastMatchA));
+        $this->assertTrue($pastMatches->contains($pastMatchB));
+        $this->assertFalse($pastMatches->contains($scheduledMatch));
     }
 
     /** @test */
@@ -56,33 +69,39 @@ class HasMatchesTraitTest extends TestCase
         $this->assertFalse($title->hasPastMatches());
     }
 
-        /** @test */
-        public function wrestlers_currently_scheduled_matches_can_be_viewed_on_wrestler_bio()
-        {
-            $scheduledMatchA = MatchFactory::createForWrestlerOnDate($this->wrestler, Carbon::tomorrow());
-            $scheduledMatchB = MatchFactory::createForWrestlerOnDate($this->wrestler, Carbon::today());
-            $pastMatch = MatchFactory::createForWrestlerOnDate($this->wrestler, Carbon::today()->subWeeks(2));
+    /** @test */
+    public function it_can_retrieve_a_wrestlers_scheduled_matches()
+    {
+        $wrestler = factory(Wrestler::class)->create();
+        $eventA = factory(Event::class)->create(['date' => Carbon::tomorrow()]);
+        $eventB = factory(Event::class)->create(['date' => Carbon::today()]);
+        $eventC = factory(Event::class)->create(['date' => Carbon::today()->subWeeks(2)]);
+        $scheduledMatchA = MatchFactory::forEvent($eventA)->withWrestler($wrestler)->create();
+        $scheduledMatchB = MatchFactory::forEvent($eventB)->withWrestler($wrestler)->create();
+        $pastMatch = MatchFactory::forEvent($eventC)->withWrestler($wrestler)->create();
 
-            $response = $this->actingAs($this->authorizedUser)
-                            ->get(route('wrestlers.show', $this->wrestler->id));
+        $scheduledMatches = $wrestler->scheduledMatches;
 
-            $response->data('wrestler')->scheduledMatches->assertContains($scheduledMatchA);
-            $response->data('wrestler')->scheduledMatches->assertContains($scheduledMatchB);
-            $response->data('wrestler')->scheduledMatches->assertNotContains($pastMatch);
-        }
+        $this->assertTrue($scheduledMatches->contains($scheduledMatchA));
+        $this->assertTrue($scheduledMatches->contains($scheduledMatchB));
+        $this->assertFalse($scheduledMatches->contains($pastMatch));
+    }
 
-        /** @test */
-        public function wrestlers_past_matches_can_be_viewed_on_wrestler_bio()
-        {
-            $pastMatchA = MatchFactory::createForWrestlerOnDate($this->wrestler, Carbon::yesterday());
-            $pastMatchB = MatchFactory::createForWrestlerOnDate($this->wrestler, Carbon::today()->subWeeks(2));
-            $scheduledMatch = MatchFactory::createForWrestlerOnDate($this->wrestler, Carbon::today());
+    /** @test */
+    public function it_can_retrieve_a_wrestlers_past_matches()
+    {
+        $wrestler = factory(Wrestler::class)->create();
+        $eventA = factory(Event::class)->create(['date' => Carbon::yesterday()]);
+        $eventB = factory(Event::class)->create(['date' => Carbon::today()->subWeeks(2)]);
+        $eventC = factory(Event::class)->create(['date' => Carbon::tomorrow()]);
+        $pastMatchA = MatchFactory::forEvent($eventA)->withWrestler($wrestler)->create();
+        $pastMatchB = MatchFactory::forEvent($eventB)->withWrestler($wrestler)->create();
+        $scheduledMatch = MatchFactory::forEvent($eventC)->withWrestler($wrestler)->create();
 
-            $response = $this->actingAs($this->authorizedUser)
-                            ->get(route('wrestlers.show', $this->wrestler->id));
+        $pastMatches = $wrestler->pastMatches;
 
-            $response->data('wrestler')->pastMatches->assertContains($pastMatchA);
-            $response->data('wrestler')->pastMatches->assertContains($pastMatchB);
-            $response->data('wrestler')->pastMatches->assertNotContains($scheduledMatch);
-        }
+        $this->assertTrue($pastMatches->contains($pastMatchA));
+        $this->assertTrue($pastMatches->contains($pastMatchB));
+        $this->assertFalse($pastMatches->contains($scheduledMatch));
+    }
 }

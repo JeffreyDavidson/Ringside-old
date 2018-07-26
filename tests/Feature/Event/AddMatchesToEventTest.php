@@ -71,7 +71,7 @@ class AddMatchesToEventTest extends TestCase
     public function users_who_have_permission_can_view_the_add_match_page()
     {
         $response = $this->actingAs($this->authorizedUser)
-                        ->get(route('matches.create', ['event' => 1]));
+                        ->get(route('matches.create', ['event' => $this->event->id]));
 
         $response->assertSuccessful();
     }
@@ -80,7 +80,7 @@ class AddMatchesToEventTest extends TestCase
     public function users_who_dont_have_permission_cannot_view_the_add_event_page()
     {
         $response = $this->actingAs($this->unauthorizedUser)
-                        ->get(route('matches.create', ['event' => 1]));
+                        ->get(route('matches.create', ['event' => $this->event->id]));
 
         $response->assertStatus(403);
     }
@@ -88,7 +88,7 @@ class AddMatchesToEventTest extends TestCase
     /** @test */
     public function guests_cannot_view_the_add_event_page()
     {
-        $response = $this->get(route('matches.create', ['event' => 1]));
+        $response = $this->get(route('matches.create', ['event' => $this->event->id]));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));
@@ -116,8 +116,8 @@ class AddMatchesToEventTest extends TestCase
                                     'titles' => [$this->title->id],
                                     'referees' => [$this->referee->id],
                                     'wrestlers' => [
-                                        0 => [$this->wrestlerA->id],
-                                        1 => [$this->wrestlerB->id],
+                                        [$this->wrestlerA->id],
+                                        [$this->wrestlerB->id],
                                     ],
                                     'preview' => 'Maecenas faucibus mollis interdum. Etiam porta sem malesuada magna mollis euismod. Cras mattis consectetur purus sit amet fermentum. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Curabitur blandit tempus porttitor. Vestibulum id ligula porta felis euismod semper.',
                                 ]

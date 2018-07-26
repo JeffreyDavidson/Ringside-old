@@ -4,9 +4,19 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Laracodes\Presenter\Traits\Presentable;
 
 class Retirement extends Model
 {
+    use Presentable;
+
+    /**
+     * Assign which presenter to be used for model.
+     *
+     * @var string
+     */
+    protected $presenter = 'App\Presenters\RetirementPresenter';
+
     /**
      * Don't auto-apply mass assignment protection.
      *

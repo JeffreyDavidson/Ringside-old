@@ -4,7 +4,6 @@ namespace App\Traits;
 
 use App\Models\Title;
 use App\Exceptions\WrestlerAlreadyHasTitleException;
-use App\Exceptions\WrestlerNotTitleChampionException;
 
 trait HasTitles
 {
@@ -27,10 +26,7 @@ trait HasTitles
      */
     public function pastTitlesHeld()
     {
-        // dd($this->championships()->whereNotNull('lost_on'));
-        // dd($this->championships()->whereNotNull('lost_on')->with('title')->get()->pluck('title'));
         return $this->championships()->whereNotNull('lost_on')->with('title')->get()->pluck('title');
-        // return new \Illuminate\Database\Eloquent\Collection($this->championships()->whereNotNull('lost_on')->with('title')->get()->pluck('title'));
     }
 
     /**
@@ -69,25 +65,7 @@ trait HasTitles
             throw new WrestlerAlreadyHasTitleException;
         }
 
-        $this->championships()->create(['title_id' => $title->id, 'won_on' => $date]);
-    }
-
-    /**
-     * A wrestler can lose a title.
-     *
-     * @param \App\Models\Title $title
-     * @param datetime $date
-     * @return bool
-     */
-    public function loseTitle(Title $title, $date)
-    {
-        if (! $this->hasTitle($title)) {
-            throw new WrestlerNotTitleChampionException;
-        }
-
-        $titleHeld = $this->currentTitlesHeld()->firstWhere('id', $title->id);
-
-        return $titleHeld->currentChampion->update(['lost_on' => $date ?: $this->freshTimestamp()]);
+        $championship = $this->championships()->create(['title_id' => $title->id, 'won_on' => $date]);
     }
 
     /**

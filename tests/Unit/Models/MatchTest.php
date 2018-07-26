@@ -13,7 +13,6 @@ use App\Models\Stipulation;
 use App\Models\MatchType;
 use App\Models\Champion;
 use MatchFactory;
-use TitleFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class MatchTest extends TestCase
@@ -136,19 +135,6 @@ class MatchTest extends TestCase
         $this->match->addReferees($referees);
 
         $this->assertCount(2, $this->match->referees);
-    }
-
-    /** @test */
-    public function a_match_can_set_a_winner()
-    {
-        $wrestlerA = factory(Wrestler::class)->create();
-        $wrestlerB = factory(Wrestler::class)->create();
-        $this->match->addWrestlers([[$wrestlerA], [$wrestlerB]]);
-
-        $this->match->setWinner($wrestlerA, 'pinfall');
-
-        $this->assertEquals($wrestlerA->id, $this->match->winner_id);
-        $this->assertEquals($wrestlerB->id, $this->match->loser_id);
     }
 
     /** @test */

@@ -9,14 +9,17 @@ class WrestlerInvolvedInMatch implements Rule
 {
     private $matchNumber;
 
+    private $event;
+
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct($matchNumber)
+    public function __construct($matchNumber, $event)
     {
         $this->matchNumber = $matchNumber;
+        $this->event = $event;
     }
 
     /**
@@ -28,9 +31,12 @@ class WrestlerInvolvedInMatch implements Rule
      */
     public function passes($attribute, $value)
     {
-        if ($match = Match::query()->where('match_number', $this->matchNumber)->where('event_id', request()->event->id)->first()) {
-            return $match->wrestlers->contains('id', $value);
-        }
+        return Match::withMatchNumber($this->matchNumber)
+            ->forEvent($this->event)
+            ->whereHas('wrestlers', function ($query) use ($value) {
+                $query->where('wrestlers.id', $value);
+            })
+            ->exists();
     }
 
     /**

@@ -29,20 +29,19 @@
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./app</directory>
-            <exclude>
-                <file>./app/Policies/ApplicationPolicy.php</file>
-                <file>./app/Http/Controllers/Controller.php</file>
-                <directory>./app/Http/Controllers/Auth</directory>
-                <directory>./app/Http/Middleware</directory>
-            </exclude>
         </whitelist>
     </filter>
+    <logging>
+        <log type="coverage-html" target="./report" charset="UTF-8"
+        yui="true" highlight="true"
+        lowUpperBound="50" highLowerBound="80" />
+    </logging>
     <php>
         <env name="APP_ENV" value="testing"/>
         <env name="CACHE_DRIVER" value="array"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="QUEUE_DRIVER" value="sync"/>
-        <env name="DB_CONNECTION" value="sqlite"/>
-        <env name="DB_DATABASE" value=":memory:"/>
+        <env name="DB_CONNECTION" value="mysql"/>
+        <env name="DB_DATABASE" value="ringside_testing"/>
     </php>
 </phpunit>

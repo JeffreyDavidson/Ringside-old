@@ -17,12 +17,4 @@ class TitlePresenterTest extends TestCase
 
         $this->assertEquals('September 17, 2017', $title->present()->introducedAt);
     }
-
-    /** @test */
-    public function a_title_can_have_their_retired_at_field_formatted()
-    {
-        $title = factory(Title::class)->make(['retired_at' => '2017-09-17']);
-
-        $this->assertEquals('September 17, 2017', $title->present()->retiredAt);
-    }
 }

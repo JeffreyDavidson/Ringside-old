@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -23,7 +24,7 @@ class Referee extends Model
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeHiredBefore($query, $date)
+    public function scopeHiredBefore(Builder $query, $date)
     {
         return $query->where('hired_at', '<', $date);
     }

@@ -30,12 +30,12 @@ class AddVenueTest extends TestCase
         ], $overrides);
     }
 
-    private function assertFormError($field, $expectedEventCount = 0)
+    private function assertFormError($field, $expectedVenueCount = 0)
     {
         $this->response->assertStatus(302);
         $this->response->assertRedirect(route('venues.create'));
         $this->response->assertSessionHasErrors($field);
-        $this->assertEquals($expectedEventCount, Venue::count());
+        $this->assertEquals($expectedVenueCount, Venue::count());
     }
 
     /** @test */

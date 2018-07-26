@@ -3,12 +3,12 @@
 namespace Tests\Unit\Collections;
 
 use Tests\TestCase;
-use App\Models\Champion;
+use App\Models\Championship;
 use App\Models\Title;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Collections\ChampionCollection;
+use App\Collections\ChampionshipCollection;
 
-class ChampionCollectionTest extends TestCase
+class ChampionshipCollectionTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -22,10 +22,10 @@ class ChampionCollectionTest extends TestCase
     {
         $titleA = factory(Title::class)->create();
         $titleB = factory(Title::class)->create();
-        factory(Champion::class, 2)->create(['title_id' => $titleA->id]);
-        factory(Champion::class, 4)->create(['title_id' => $titleB->id]);
+        factory(Championship::class, 2)->create(['title_id' => $titleA->id]);
+        factory(Championship::class, 4)->create(['title_id' => $titleB->id]);
 
-        $groups = Champion::all()->groupByTitle();
+        $groups = Championship::all()->groupByTitle();
 
         $this->assertCount(2, $groups[$titleA->id]);
         $this->assertCount(4, $groups[$titleB->id]);

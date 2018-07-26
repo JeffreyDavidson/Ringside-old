@@ -5,7 +5,6 @@ namespace App\Providers;
 use Laravel\Dusk\DuskServiceProvider;
 use Illuminate\Support\ServiceProvider;
 use Barryvdh\Debugbar\ServiceProvider as Debugbar;
-use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -31,10 +30,6 @@ class AppServiceProvider extends ServiceProvider
 
         if ($this->app->environment('local', 'testing')) {
             $this->app->register(DuskServiceProvider::class);
-        }
-
-        if ($this->app->environment() !== 'production') {
-            $this->app->register(IdeHelperServiceProvider::class);
         }
     }
 }

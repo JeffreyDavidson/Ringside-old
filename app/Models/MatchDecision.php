@@ -58,4 +58,19 @@ class MatchDecision extends Model
     {
         return $query->whereIn('slug', $this->decisionsATitleCanBeWon);
     }
+
+    public function scopeTitleCannotBeWonBySlug($query)
+    {
+        return $query->whereNotIn('slug', $this->decisionsATitleCanBeWon);
+    }
+
+    public function scopeTitleCanChangeHandsBySlug($query)
+    {
+        return $query->whereIn('slug', $this->decisionsTitlesChangeHands);
+    }
+
+    public function scopeTitleCannotChangeHandsBySlug($query)
+    {
+        return $query->whereNotIn('slug', $this->decisionsTitlesChangeHands);
+    }
 }

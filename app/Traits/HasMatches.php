@@ -9,7 +9,7 @@ trait HasMatches
     abstract public function matches();
 
     /**
-     * Retrieves the date of the wrestler's first match.
+     * Retrieves the date of the model's first match.
      *
      * @return string
      */
@@ -19,7 +19,7 @@ trait HasMatches
     }
 
     /**
-     * Returns the wrestler's past matches.
+     * Returns the model's past matches.
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
@@ -31,7 +31,7 @@ trait HasMatches
     }
 
     /**
-     * Checks to see if the wrestler has past matches.
+     * Checks to see if the model has past matches.
      *
      * @return bool
      */
@@ -41,7 +41,7 @@ trait HasMatches
     }
 
     /**
-     * Returns the wrestler's past matches.
+     * Returns the model's past matches.
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */

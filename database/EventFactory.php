@@ -1,18 +1,48 @@
 <?php
 
+use Carbon\Carbon;
 use App\Models\Event;
+use App\Models\Venue;
+use Facades\MatchFactory;
 use Illuminate\Support\Collection;
 
 class EventFactory
 {
-    public static function create($overrides = [], $totalNumberOfMatches = 8)
-    {
-        $event = factory(Event::class)->create($overrides);
+    public $date;
+    public $venue_id;
+    public $matchesCount = 0;
 
-        Collection::times($totalNumberOfMatches, function ($number) use ($event) {
-            return MatchFactory::create(['event_id' => $event->id, 'match_number' => $number]);
+    public function create()
+    {
+        $event = factory(Event::class)->create([
+            'date' => $this->date ?? null,
+        ]);
+
+        Collection::times($this->matchesCount, function ($number) use ($event) {
+            return MatchFactory::forEvent($event)->forMatchNumber($number)->create();
         });
 
         return $event;
+    }
+
+    public function atVenue(Venue $venue)
+    {
+        $this->venue_id = $venue->id;
+
+        return $this;
+    }
+
+    public function onDate(Carbon $date)
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    public function withMatches($count)
+    {
+        $this->matchesCount = $count;
+
+        return $this;
     }
 }

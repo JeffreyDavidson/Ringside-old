@@ -67,7 +67,7 @@ trait HasInjuries
             throw new WrestlerAlreadyInjuredException;
         }
 
-        $this->inactivate();
+        $this->deactivate();
 
         $this->injuries()->create(['injured_at' => Carbon::now()]);
 

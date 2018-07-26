@@ -74,7 +74,7 @@ class EditEventTest extends TestCase
                             'name' => 'New Name',
                             'slug' => 'new-slug',
                             'date' => '2017-09-27',
-                            'venue_id' => 1,
+                            'venue_id' => $this->venue->id,
                         ]);
 
         $response->assertRedirect(route('events.index'));

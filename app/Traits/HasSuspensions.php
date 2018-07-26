@@ -67,7 +67,7 @@ trait HasSuspensions
             throw new WrestlerAlreadySuspendedException;
         }
 
-        $this->inactivate();
+        $this->deactivate();
 
         $this->suspensions()->create(['suspended_at' => Carbon::now()]);
 

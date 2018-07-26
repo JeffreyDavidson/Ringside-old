@@ -26,7 +26,7 @@ trait HasManagers
      */
     public function pastManagers()
     {
-        return $this->managers()->whereNotNull('fired_on')->withPivot('fired_on');
+        return $this->managers()->wherePivot('fired_on', '!=', null);
     }
 
     /**
@@ -46,9 +46,7 @@ trait HasManagers
      */
     public function hasManager($manager)
     {
-        $this->load('currentManagers');
-
-        return $this->currentManagers->contains($manager);
+        return $this->currentManagers()->where('manager_id', $manager->id)->exists();
     }
 
     /**
@@ -58,7 +56,7 @@ trait HasManagers
      */
     public function currentManagers()
     {
-        return $this->managers()->wherePivot('fired_on', '=', null);
+        return $this->managers()->wherePivot('fired_on', null);
     }
 
     /**
@@ -67,13 +65,13 @@ trait HasManagers
      * @param \App\Models\Manager $manager
      * @return bool
      */
-    public function hireManager($manager)
+    public function hireManager($manager, $date)
     {
         if ($this->hasManager($manager)) {
             throw new WrestlerAlreadyHasManagerException;
         }
 
-        return $this->managers()->attach($manager->id, ['hired_on' => $this->freshTimestamp()]);
+        return $this->managers()->attach($manager->id, ['hired_on' => $date]);
     }
 
     /**
@@ -82,12 +80,12 @@ trait HasManagers
      * @param \App\Models\Manager $manager
      * @return bool
      */
-    public function fireManager($manager)
+    public function fireManager($manager, $date)
     {
         if (! $this->hasManager($manager)) {
             throw new WrestlerNotHaveHiredManagerException;
         }
 
-        return $this->managers()->updateExistingPivot($manager->id, ['fired_on' => $this->freshTimestamp()]);
+        return $this->managers()->updateExistingPivot($manager->id, ['fired_on' => $date]);
     }
 }

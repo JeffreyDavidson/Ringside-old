@@ -4,72 +4,137 @@ use App\Models\Event;
 use App\Models\Match;
 use App\Models\Referee;
 use App\Models\Wrestler;
+use App\Models\MatchType;
+use App\Models\Championship;
 
 class MatchFactory
 {
-    public static function create($overrides = [], $wrestlers = [], $referees = [], $titles = [])
+    public $event_id = null;
+    public $match_type_id = null;
+    public $stipulation_id = null;
+    public $champion = null;
+    public $wrestlers;
+    public $titles;
+    public $referees;
+
+    public function __construct()
     {
-        $match = factory(Match::class)->create($overrides);
+        $this->populateDefaults();
+    }
 
-        self::addWrestlersForMatch($wrestlers, $match);
+    public function create()
+    {
+        $match = factory(Match::class)->create([
+            'event_id' => $this->event_id ?? factory(Event::class)->create(),
+            'match_type_id' => $this->match_type_id ?? factory(MatchType::class)->create(),
+            'stipulation_id' => $this->stipulation_id ?? null,
+        ]);
 
-        self::addRefereesForMatch($referees, $match);
+        $this->addWrestlersForMatch($match);
 
-        self::addTitlesForMatch($titles, $match);
+        if ($this->titles->isNotEmpty()) {
+            $match->addTitles($this->titles);
+        }
+
+        $this->populateDefaults();
 
         return $match;
     }
 
-    public static function createForWrestlerOnDate($wrestler, $date)
+    public function forEvent(Event $event)
     {
-        $event = factory(Event::class)->create(['date' => $date]);
+        $this->event_id = $event->id;
 
-        return self::create(['event_id' => $event->id], [$wrestler]);
+        return $this;
     }
 
-    public function createOnDate($date, $overrides, $wrestlers, $referees, $titles)
+    public function forMatchNumber($matchNumber)
     {
-        $event = factory(Event::class)->create(['date' => $date]);
+        $this->match_number = $match_number;
 
-        return self::create(['event_id' => $event->id], [$wrestler], $referees, $titles);
+        return $this;
     }
 
-    public static function createTitleMatchWithNoChampion($overrides)
+    public function withMatchType(MatchType $matchtype)
     {
-        $title = factory(Title::class)->create(['introduced_at' => $event->date->subWeeks(2)]);
-        $wrestlers = factory(Wrestler::class, 2)->create(['hired_at' => $event->date->subWeeks(2)]);
+        $this->match_type_id = $matchtype->id;
 
-        return self::create($overrides, $wrestlers, [], $title);
+        return $this;
     }
 
-    public static function createTitleMatchWithChampion($overrides, $title, $wrestlers)
+    public function withStipulation(Stipulation $stipulation)
     {
-        return self::create($overrides, $wrestlers, [], $title);
+        $this->stipulation_id = $stipulation->id;
+
+        return $this;
     }
 
-    /**
-     * @param $wrestlers
-     * @param $match
-     */
-    public static function addWrestlersForMatch($wrestlers, $match)
+    public function withTitle($title)
     {
-        $wrestlersForMatch = collect($wrestlers);
+        $this->titles->push($title);
 
-        $numberOfCompetitorsForMatch = $match->type->total_competitors;
-        $wrestlersAlreadyInMatch = $wrestlersForMatch->count();
-        $numberOfWrestlersToAddToMatch = $numberOfCompetitorsForMatch - $wrestlersAlreadyInMatch;
+        return $this;
+    }
 
-        if ($wrestlersAlreadyInMatch > (int) $numberOfCompetitorsForMatch) {
-            throw new Exception('There are too many wrestlers trying to be added to this match.');
+    public function withTitles($titles)
+    {
+        $merged = $this->titles->merge($titles);
+
+        $this->titles = $merged;
+
+        return $this;
+    }
+
+    public function withWrestlers($wrestlers)
+    {
+        $merged = $this->wrestlers->merge($wrestlers);
+
+        $this->wrestlers = $merged;
+
+        return $this;
+    }
+
+    public function withWrestler(Wrestler $wrestler)
+    {
+        $this->wrestlers->push($wrestler);
+
+        return $this;
+    }
+
+    public function withChampion(Wrestler $wrestler)
+    {
+        $this->titles->each(function ($title, $key) use ($wrestler) {
+            factory(Championship::class)->create([
+                'wrestler_id' => $wrestler->id,
+                'title_id' => $title->id,
+                'won_on' => $title->introduced_at->copy()->subMonths(4),
+            ]);
+        });
+
+        $concatenated = $this->wrestlers->concat([$wrestler]);
+
+        $this->wrestlers = $concatenated;
+
+        return $this;
+    }
+
+    public function addWrestlersForMatch($match)
+    {
+        if ($this->wrestlers->isEmpty()) {
+            $numWrestlersToAddToMatch = $match->type->total_competitors;
+            $wrestlersForMatch = factory(Wrestler::class, (int) $numWrestlersToAddToMatch)->create(['hired_at' => $match->date->copy()->subMonths(2)]);
+            $concatenatedWrestlers = $this->wrestlers->merge($wrestlersForMatch);
+            $this->wrestlers = $concatenatedWrestlers;
+        } else {
+            $numWrestlersToAddToMatch = $match->type->total_competitors - $this->wrestlers->count();
+            $wrestlersForMatch = factory(Wrestler::class, (int) $numWrestlersToAddToMatch)->create(['hired_at' => $match->date->copy()->subMonths(2)]);
+            $concatenatedWrestlers = $this->wrestlers->merge($wrestlersForMatch);
+            $this->wrestlers = $concatenatedWrestlers;
         }
 
-        if ($numberOfWrestlersToAddToMatch > 0) {
-            $wrestlersForMatch = $wrestlersForMatch->concat(factory(Wrestler::class, $numberOfWrestlersToAddToMatch)->create());
-        }
+        $splitWrestlers = $this->wrestlers->split($match->type->number_of_sides);
 
-        $wrestlersForMatch = $wrestlersForMatch->split($match->type->number_of_sides);
-
-        $match->addWrestlers($wrestlersForMatch);
+        $match->addWrestlers($splitWrestlers);
     }
 
     /**
@@ -88,18 +153,16 @@ class MatchFactory
         }
 
         if ($refereesToCreate) {
-            $refereesForMatch = $refereesForMatch->concat(factory(Referee::class, $refereesToCreate)->create());
+            $refereesForMatch = $refereesForMatch->push(factory(Referee::class, $refereesToCreate)->create());
         }
 
         $match->addReferees($refereesForMatch);
     }
 
-    /**
-     * @param $titles
-     * @param $match
-     */
-    public static function addTitlesForMatch($titles, $match)
+    public function populateDefaults()
     {
-        $match->titles()->attach($titles);
+        $this->wrestlers = collect();
+        $this->titles = collect();
+        $this->referees = collect();
     }
 }

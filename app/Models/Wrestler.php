@@ -10,6 +10,7 @@ use App\Traits\HasManagers;
 use App\Traits\HasRetirements;
 use App\Traits\HasSuspensions;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -65,7 +66,7 @@ class Wrestler extends Model
      */
     public function championships()
     {
-        return $this->hasMany(Champion::class);
+        return $this->hasMany(Championship::class);
     }
 
     /**
