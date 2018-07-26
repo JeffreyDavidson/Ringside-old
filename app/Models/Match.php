@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -15,7 +16,7 @@ class Match extends Model
      *
      * @var array
      */
-    protected $with = ['wrestlers', 'stipulations', 'referees', 'titles'];
+    protected $with = ['wrestlers', 'stipulation', 'referees', 'titles'];
 
     /**
      * Assign which presenter to be used for model.
@@ -38,7 +39,7 @@ class Match extends Model
      */
     public function wrestlers()
     {
-        return $this->belongsToMany(Wrestler::class);
+        return $this->belongsToMany(Wrestler::class)->withPivot('side_number');
     }
 
     /**
@@ -82,13 +83,43 @@ class Match extends Model
     }
 
     /**
-     * A match can have many stipulations.
+     * A match can have a stipulation.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function stipulation()
+    {
+        return $this->belongsTo(Stipulation::class);
+    }
+
+    /**
+     * A match has a type.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function decision()
+    {
+        return $this->belongsTo(MatchDecision::class, 'match_decision_id');
+    }
+
+    /**
+     * A match can have many losers.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function winner()
+    {
+        return $this->belongsTo(Wrestler::class);
+    }
+
+    /**
+     * A match can have many losers.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function stipulations()
+    public function losers()
     {
-        return $this->belongsToMany(Stipulation::class);
+        return $this->belongsToMany(Wrestler::class, 'match_loser');
     }
 
     /**
@@ -96,9 +127,9 @@ class Match extends Model
      *
      * @param \App\Models\Wrestler $wrestler
      */
-    public function addWrestler(Wrestler $wrestler)
+    public function addWrestler(Wrestler $wrestler, $sideNumber)
     {
-        $this->wrestlers()->save($wrestler);
+        $this->wrestlers()->attach($wrestler->id, ['side_number' => $sideNumber]);
     }
 
     /**
@@ -108,7 +139,11 @@ class Match extends Model
      */
     public function addWrestlers($wrestlers)
     {
-        $this->wrestlers()->saveMany($wrestlers);
+        foreach ($wrestlers as $sideNumber => $wrestlersGroup) {
+            foreach ($wrestlersGroup as $wrestler) {
+                $this->addWrestler($wrestler, $sideNumber);
+            }
+        }
     }
 
     /**
@@ -138,17 +173,7 @@ class Match extends Model
      */
     public function addStipulation(Stipulation $stipulation)
     {
-        $this->stipulations()->save($stipulation);
-    }
-
-    /**
-     * Add a array of stipulations to a match.
-     *
-     * @param array $stipulations
-     */
-    public function addStipulations($stipulations)
-    {
-        $this->stipulations()->saveMany($stipulations);
+        $this->update(['stipulation_id' => $stipulation->id]);
     }
 
     /**
@@ -182,25 +207,6 @@ class Match extends Model
     }
 
     /**
-     * Sets the winner of the match.
-     *
-     * @param \App\Models\Wrestler $wrestler
-     */
-    public function setWinner(Wrestler $wrestler)
-    {
-        $this->update(['winner_id' => $wrestler->id, 'loser_id' => $this->wrestlers->except($wrestler->id)->first()->id]);
-
-        if ($this->isTitleMatch()) {
-            $this->titles->each(function ($title) use ($wrestler) {
-                if (! $wrestler->hasTitle($title)) {
-                    $title->setNewChampion($wrestler, $this->event->date);
-                }
-            });
-        }
-    }
-
-    /**
-     * TODO: Find out what I should do about type for date.
      * Retrieves the date of the event for the match.
      *
      * @return string
@@ -221,5 +227,15 @@ class Match extends Model
         $nextMatchNumber = $event->matches->max('match_number');
 
         return $this->update(['event_id' => $event->id, 'match_number' => $nextMatchNumber + 1]);
+    }
+
+    public function scopeForEvent(Builder $query, Event $event)
+    {
+        return $query->where('event_id', $event->id);
+    }
+
+    public function scopeWithMatchNumber(Builder $query, $matchNumber)
+    {
+        return $query->where('match_number', $matchNumber);
     }
 }

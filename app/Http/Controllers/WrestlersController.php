@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
 use App\Models\Wrestler;
 use App\Http\Requests\WrestlerEditFormRequest;
 use App\Http\Requests\WrestlerCreateFormRequest;
@@ -18,7 +17,7 @@ class WrestlersController extends Controller
     {
         $this->authorize('index', Wrestler::class);
 
-        $wrestlers = Wrestler::with('status')->get();
+        $wrestlers = Wrestler::paginate(10);
 
         return response()->view('wrestlers.index', ['wrestlers' => $wrestlers]);
     }
@@ -48,8 +47,7 @@ class WrestlersController extends Controller
         Wrestler::create([
             'name' => $request->input('name'),
             'slug' => $request->input('slug'),
-            'status_id' => $request->input('status_id'),
-            'hired_at' => Carbon::parse($request->input('hired_at')),
+            'hired_at' => $request->input('hired_at'),
             'hometown' => $request->input('hometown'),
             'height' => ($request->input('feet') * 12) + $request->input('inches'),
             'weight' => $request->input('weight'),
@@ -68,8 +66,6 @@ class WrestlersController extends Controller
     public function show(Wrestler $wrestler)
     {
         $this->authorize('show', Wrestler::class);
-
-        $wrestler->load('currentManagers', 'pastManagers', 'currentTitlesHeld', 'pastTitlesHeld');
 
         return response()->view('wrestlers.show', ['wrestler' => $wrestler]);
     }
@@ -101,7 +97,6 @@ class WrestlersController extends Controller
         $wrestler->update([
             'name' => $request->input('name'),
             'slug' => $request->input('slug'),
-            'status_id' => $request->input('status_id'),
             'hired_at' => $request->input('hired_at'),
             'hometown' => $request->input('hometown'),
             'height' => ($request->input('feet') * 12) + $request->input('inches'),

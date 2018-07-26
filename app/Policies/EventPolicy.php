@@ -33,4 +33,14 @@ class EventPolicy
     {
         return $user->hasPermission('delete-event');
     }
+
+    public function archive(User $user)
+    {
+        return $user->hasPermission('archive-event');
+    }
+
+    public function editResults(User $user)
+    {
+        return $user->hasPermission('edit-event-results');
+    }
 }

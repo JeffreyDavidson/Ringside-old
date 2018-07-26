@@ -4,11 +4,10 @@ namespace App\Traits;
 
 use App\Models\Title;
 use App\Exceptions\WrestlerAlreadyHasTitleException;
-use App\Exceptions\WrestlerNotTitleChampionException;
 
 trait HasTitles
 {
-    abstract public function titles();
+    abstract public function championships();
 
     /**
      * Checks to see if the wrestler has held any previous titles.
@@ -17,7 +16,7 @@ trait HasTitles
      */
     public function hasPastTitlesHeld()
     {
-        return $this->pastTitlesHeld->isNotEmpty();
+        return $this->pastTitlesHeld()->isNotEmpty();
     }
 
     /**
@@ -27,21 +26,30 @@ trait HasTitles
      */
     public function pastTitlesHeld()
     {
-        return $this->titles()->whereNotNull('lost_on');
+        return $this->championships()->whereNotNull('lost_on')->with('title')->get()->pluck('title');
     }
 
-    public function hasTitle($title)
+    /**
+     * Checks to see if the wrestler is the champion of a specific title.
+     *
+     * @param \App\Models\Title $title
+     * @return bool
+     */
+    public function hasTitle(Title $title)
     {
-        $this->load('currentTitlesHeld.title');
-
-        return $this->currentTitlesHeld->contains(function ($champion) use ($title) {
-            return $champion->title->is($title);
+        return $this->currentTitlesHeld()->contains(function ($currentTitle) use ($title) {
+            return $currentTitle->is($title);
         });
     }
 
+    /**
+     * Retrieves a collection of titles currently held by wrestler.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
     public function currentTitlesHeld()
     {
-        return $this->titles()->whereNull('lost_on');
+        return $this->championships()->whereNull('lost_on')->with('title')->get()->pluck('title');
     }
 
     /**
@@ -57,25 +65,7 @@ trait HasTitles
             throw new WrestlerAlreadyHasTitleException;
         }
 
-        $this->titles()->create(['title_id' => $title->id, 'won_on' => $date]);
-    }
-
-    /**
-     * A wrestler can lose a title.
-     *
-     * @param \App\Models\Title $title
-     * @param datetime $date
-     * @return bool
-     */
-    public function loseTitle(Title $title, $date)
-    {
-        if (! $this->hasTitle($title)) {
-            throw new WrestlerNotTitleChampionException;
-        }
-
-        $titleHeld = $this->currentTitlesHeld()->where('title_id', $title->id)->first();
-
-        return $titleHeld->update(['lost_on' => $date ?: $this->freshTimestamp()]);
+        $championship = $this->championships()->create(['title_id' => $title->id, 'won_on' => $date]);
     }
 
     /**

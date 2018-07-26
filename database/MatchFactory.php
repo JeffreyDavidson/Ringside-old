@@ -1,45 +1,140 @@
 <?php
 
+use App\Models\Event;
 use App\Models\Match;
 use App\Models\Referee;
 use App\Models\Wrestler;
+use App\Models\MatchType;
+use App\Models\Championship;
 
 class MatchFactory
 {
-    public static function create($overrides = [], $wrestlers = [], $referees = [], $titles = [], $stipulations = [])
+    public $event_id = null;
+    public $match_type_id = null;
+    public $stipulation_id = null;
+    public $champion = null;
+    public $wrestlers;
+    public $titles;
+    public $referees;
+
+    public function __construct()
     {
-        $match = factory(Match::class)->create($overrides);
+        $this->populateDefaults();
+    }
 
-        self::addWrestlersForMatch($wrestlers, $match);
+    public function create()
+    {
+        $match = factory(Match::class)->create([
+            'event_id' => $this->event_id ?? factory(Event::class)->create(),
+            'match_type_id' => $this->match_type_id ?? factory(MatchType::class)->create(),
+            'stipulation_id' => $this->stipulation_id ?? null,
+        ]);
 
-        self::addRefereesForMatch($referees, $match);
+        $this->addWrestlersForMatch($match);
 
-        self::addTitlesForMatch($titles, $match);
+        if ($this->titles->isNotEmpty()) {
+            $match->addTitles($this->titles);
+        }
 
-        self::addStipulationsForMatch($stipulations, $match);
+        $this->populateDefaults();
 
         return $match;
     }
 
-    /**
-     * @param $wrestlers
-     * @param $match
-     */
-    public static function addWrestlersForMatch($wrestlers, $match)
+    public function forEvent(Event $event)
     {
-        $numberOfCompetitorsForMatch = $match->type->number_of_competitors;
-        $numberOfWrestlersToAddToMatch = $numberOfCompetitorsForMatch - count($wrestlers);
+        $this->event_id = $event->id;
 
-        if (count($wrestlers) > (int) $numberOfCompetitorsForMatch) {
-            // Throw exception
+        return $this;
+    }
+
+    public function forMatchNumber($matchNumber)
+    {
+        $this->match_number = $match_number;
+
+        return $this;
+    }
+
+    public function withMatchType(MatchType $matchtype)
+    {
+        $this->match_type_id = $matchtype->id;
+
+        return $this;
+    }
+
+    public function withStipulation(Stipulation $stipulation)
+    {
+        $this->stipulation_id = $stipulation->id;
+
+        return $this;
+    }
+
+    public function withTitle($title)
+    {
+        $this->titles->push($title);
+
+        return $this;
+    }
+
+    public function withTitles($titles)
+    {
+        $merged = $this->titles->merge($titles);
+
+        $this->titles = $merged;
+
+        return $this;
+    }
+
+    public function withWrestlers($wrestlers)
+    {
+        $merged = $this->wrestlers->merge($wrestlers);
+
+        $this->wrestlers = $merged;
+
+        return $this;
+    }
+
+    public function withWrestler(Wrestler $wrestler)
+    {
+        $this->wrestlers->push($wrestler);
+
+        return $this;
+    }
+
+    public function withChampion(Wrestler $wrestler)
+    {
+        $this->titles->each(function ($title, $key) use ($wrestler) {
+            factory(Championship::class)->create([
+                'wrestler_id' => $wrestler->id,
+                'title_id' => $title->id,
+                'won_on' => $title->introduced_at->copy()->subMonths(4),
+            ]);
+        });
+
+        $concatenated = $this->wrestlers->concat([$wrestler]);
+
+        $this->wrestlers = $concatenated;
+
+        return $this;
+    }
+
+    public function addWrestlersForMatch($match)
+    {
+        if ($this->wrestlers->isEmpty()) {
+            $numWrestlersToAddToMatch = $match->type->total_competitors;
+            $wrestlersForMatch = factory(Wrestler::class, (int) $numWrestlersToAddToMatch)->create(['hired_at' => $match->date->copy()->subMonths(2)]);
+            $concatenatedWrestlers = $this->wrestlers->merge($wrestlersForMatch);
+            $this->wrestlers = $concatenatedWrestlers;
+        } else {
+            $numWrestlersToAddToMatch = $match->type->total_competitors - $this->wrestlers->count();
+            $wrestlersForMatch = factory(Wrestler::class, (int) $numWrestlersToAddToMatch)->create(['hired_at' => $match->date->copy()->subMonths(2)]);
+            $concatenatedWrestlers = $this->wrestlers->merge($wrestlersForMatch);
+            $this->wrestlers = $concatenatedWrestlers;
         }
 
-        $match->wrestlers()->saveMany($wrestlers);
+        $splitWrestlers = $this->wrestlers->split($match->type->number_of_sides);
 
-        if ($numberOfWrestlersToAddToMatch > 0) {
-            $wrestlersToAddToMatch = factory(Wrestler::class, $numberOfWrestlersToAddToMatch)->create();
-            $match->wrestlers()->saveMany($wrestlersToAddToMatch);
-        }
+        $match->addWrestlers($splitWrestlers);
     }
 
     /**
@@ -48,46 +143,26 @@ class MatchFactory
      */
     public static function addRefereesForMatch($referees, $match)
     {
-        if (count($referees) > 2) {
-            // Throw exception
+        $refereesForMatch = collect($referees);
+        // Check to see if we are trying to add multiple referees for a match that doesn't need multiple referees.
+
+        $requiredReferees = $match->type->needsMultipleReferees() ? 2 : 1;
+        $refereesToCreate = $requiredReferees - $refereesForMatch->count();
+        if ($refereesForMatch->count() >= $requiredReferees) {
+            throw new Exception('Too many referees trying to be adding to a match.');
         }
 
-        $match->referees()->saveMany($referees);
+        if ($refereesToCreate) {
+            $refereesForMatch = $refereesForMatch->push(factory(Referee::class, $refereesToCreate)->create());
+        }
 
-        // if ($match->needsTwoReferees()) {
-        //     $numberOfRefereesToAdd = 2 - count($referees);
-
-        //     if ($numberOfRefereesToAdd) {
-        //         $refereesToAdd = factory(Referee::class, $numberOfRefereesToAdd)->create();
-        //         array_push($refereesForMatch, $refereesToAdd);
-        //         array_push($refereesForMatch, $referees);
-        //     }
-        // }
-
-        // if (count($referees) == 0) {
-        //     array_push($refereesForMatch, factory(Referee::class)->create());
-        // } elseif (count($referees) == 1) {
-        //     array_push($refereesForMatch, $referees);
-        // }
-
-        // $match->addReferees($refereesForMatch);
+        $match->addReferees($refereesForMatch);
     }
 
-    /**
-     * @param $titles
-     * @param $match
-     */
-    public static function addTitlesForMatch($titles, $match)
+    public function populateDefaults()
     {
-        $match->titles()->saveMany($titles);
-    }
-
-    /**
-     * @param $referees
-     * @param $match
-     */
-    public static function addStipulationsForMatch($stipulations, $match)
-    {
-        $match->stipulations()->saveMany($stipulations);
+        $this->wrestlers = collect();
+        $this->titles = collect();
+        $this->referees = collect();
     }
 }

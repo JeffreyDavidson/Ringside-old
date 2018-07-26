@@ -15,12 +15,10 @@ class CreateRetirementsTable extends Migration
     {
         Schema::create('retirements', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('wrestler_id')->index();
-            $table->dateTime('retired_at');
-            $table->dateTime('ended_at')->nullable();
+            $table->morphs('retiree');
+            $table->datetime('retired_at');
+            $table->datetime('ended_at')->nullable();
             $table->timestamps();
-
-            $table->foreign('wrestler_id')->references('id')->on('wrestlers');
         });
     }
 

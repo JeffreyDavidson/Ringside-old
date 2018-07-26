@@ -15,19 +15,21 @@ class RefereesTableSeeder extends Seeder
      */
     public function run()
     {
-        $startingDate = Carbon::parse('First Monday of January 2000');
+        $startingDate = Carbon::parse('First Monday of January 1990');
         $now = Carbon::now();
 
+        // Create 10 initial referees.
         for ($this->refereeCount; $this->refereeCount <= 10; $this->refereeCount++) {
             factory(Referee::class)->create([
-                'hired_at' => $startingDate,
+                'hired_at' => $startingDate->hour(mt_rand(9, 18)),
             ]);
         }
 
+        // Create 5 referees every 3 years.
         while ($startingDate->addYears(3)->lte($now)) {
             for ($x = 1; $x <= 5; $x++) {
                 factory(Referee::class)->create([
-                    'hired_at' => $startingDate,
+                    'hired_at' => $startingDate->hour(mt_rand(9, 18)),
                 ]);
                 $this->refereeCount++;
             }

@@ -30,7 +30,7 @@ class Injury extends Model
     public function heal()
     {
         return tap($this)->update([
-            'healed_at' => Carbon::now()
+            'healed_at' => Carbon::now(),
         ]);
     }
 }

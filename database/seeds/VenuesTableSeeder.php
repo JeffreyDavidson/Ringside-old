@@ -12,7 +12,7 @@ class VenuesTableSeeder extends Seeder
      */
     public function run()
     {
-        for ($i = 1; $i <= 100; $i++) {
+        for ($i = 1; $i <= 300; $i++) {
             factory(Venue::class)->create(['name' => 'Venue '.$i]);
         }
     }

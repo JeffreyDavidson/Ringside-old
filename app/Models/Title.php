@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\HasStatus;
 use App\Traits\HasMatches;
+use App\Traits\HasRetirements;
 use Illuminate\Database\Eloquent\Model;
 use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Title extends Model
 {
-    use HasMatches, Presentable, SoftDeletes;
+    use HasMatches, HasRetirements, HasStatus, Presentable, SoftDeletes;
 
     /**
      * Assign which presenter to be used for model.
@@ -30,16 +32,25 @@ class Title extends Model
      *
      * @var array
      */
-    protected $dates = ['introduced_at', 'retired_at'];
+    protected $dates = ['introduced_at'];
 
     /**
-     * A title can have many champions.
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
+    /**
+     * A title can have many championships.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function champions()
     {
-        return $this->hasMany(Champion::class);
+        return $this->hasMany(Championship::class);
     }
 
     /**
@@ -53,28 +64,20 @@ class Title extends Model
     }
 
     /**
-     * Crowns the new champion for the title.
+     * A title can have many retirements.
      *
-     * @param \App\Models\Wrestler $wrestler
-     * @param datetime $date
-     * @return void
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
-    public function setNewChampion(Wrestler $wrestler, $date)
+    public function retirements()
     {
-        if ($champion = $this->currentChampion) {
-            $champion->loseTitle($this, $date);
-        }
-
-        $wrestler->winTitle($this, $date);
-
-        $this->setRelation('currentChampion', $wrestler);
+        return $this->morphMany(Retirement::class, 'retiree');
     }
 
     /**
-     * Scope a query to only return the current champion.
+     * Returns the current champion for the title.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return App\Models\Wrestler
      */
     public function currentChampion()
     {
@@ -82,24 +85,12 @@ class Title extends Model
     }
 
     /**
-     * Scope a query to only retired titles.
+     * Checks to see if the title has a champion.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return bool
      */
-    public function scopeRetired($query)
+    public function hasAChampion()
     {
-        return $query->whereNotNull('retired_at');
-    }
-
-    /**
-     * Scope a query to only include active titles.
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeActive($query, $date)
-    {
-        return $query->whereNull('retired_at')->where('introduced_at', '<=', $date);
+        return $this->champions()->whereNull('lost_on')->exists();
     }
 }

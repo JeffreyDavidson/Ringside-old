@@ -2,21 +2,22 @@
 
 namespace App\Models;
 
+use App\Traits\HasStatus;
 use App\Traits\HasTitles;
 use App\Traits\HasMatches;
 use App\Traits\HasInjuries;
 use App\Traits\HasManagers;
-use App\Traits\HasStatuses;
 use App\Traits\HasRetirements;
 use App\Traits\HasSuspensions;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Wrestler extends Model
 {
-    use HasStatuses, HasManagers, HasTitles, HasRetirements, HasSuspensions,
-        HasInjuries, HasMatches, SoftDeletes, Presentable;
+    use HasManagers, HasTitles, HasRetirements, HasSuspensions,
+        HasInjuries, HasMatches, HasStatus, SoftDeletes, Presentable;
 
     /**
      * Assign which presenter to be used for model.
@@ -40,14 +41,13 @@ class Wrestler extends Model
     protected $dates = ['hired_at'];
 
     /**
-     * A wrestler has a status.
+     * The attributes that should be cast to native types.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @var array
      */
-    public function status()
-    {
-        return $this->belongsTo(WrestlerStatus::class, 'status_id');
-    }
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
 
     /**
      * A wrestler can have many managers.
@@ -64,9 +64,9 @@ class Wrestler extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function titles()
+    public function championships()
     {
-        return $this->hasMany(Champion::class);
+        return $this->hasMany(Championship::class);
     }
 
     /**
@@ -102,10 +102,22 @@ class Wrestler extends Model
     /**
      * A wrestler can have many retirements.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
     public function retirements()
     {
-        return $this->hasMany(Retirement::class);
+        return $this->morphMany(Retirement::class, 'retiree');
+    }
+
+    /**
+     * Scope a query to only include wrestlers hired before a specific date.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Date $date
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeHiredBefore(Builder $query, $date)
+    {
+        return $query->where('hired_at', '<', $date);
     }
 }

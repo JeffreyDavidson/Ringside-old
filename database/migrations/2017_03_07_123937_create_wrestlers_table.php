@@ -17,16 +17,14 @@ class CreateWrestlersTable extends Migration
             $table->increments('id');
             $table->string('name')->unique();
             $table->string('slug')->unique();
-            $table->unsignedInteger('status_id')->index();
-            $table->dateTime('hired_at')->nullable();
+            $table->boolean('is_active');
+            $table->timestamp('hired_at')->nullable();
             $table->string('hometown');
             $table->integer('height');
             $table->integer('weight');
             $table->string('signature_move')->unique();
             $table->timestamps();
             $table->softDeletes();
-
-            $table->foreign('status_id')->references('id')->on('wrestler_statuses');
         });
     }
 

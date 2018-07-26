@@ -16,7 +16,7 @@ $factory->define(App\Models\User::class, function (Faker $faker) {
     ];
 });
 
-$factory->state(App\Models\User::class, 'basic', function (Faker $faker) {
+$factory->state(App\Models\User::class, 'user', function (Faker $faker) {
     return ['role_id' => 1];
 });
 

@@ -15,48 +15,8 @@
             @endcan
         </div>
         <div class="panel-body container-fluid">
-                <table class="table table-striped table-bordered datatable" cellspacing="0" width="100%">
-                    <thead>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Status</th>
-                        <th>Height</th>
-                        <th>Weight</th>
-                        <th>Actions</th>
-                    </thead>
-                    <tbody>
-                    @foreach($wrestlers as $wrestler)
-                        <tr>
-                            <td>{{ $wrestler->id }}</td>
-                            <td>{{ $wrestler->name }}</td>
-                            <td>{{ $wrestler->status->name }}</td>
-                            <td>{{ $wrestler->present()->height }}</td>
-                            <td>{{ $wrestler->weight }}</td>
-                            <td>
-                                @can('edit', $wrestler)
-                                    <a class="btn btn-sm btn-icon btn-flat btn-default" href="{{ route('wrestlers.edit', ['id' => $wrestler->id]) }}" data-toggle="tooltip" data-original-title="Edit">
-                                        <i class="icon wb-wrench" aria-hidden="true"></i>
-                                    </a>
-                                @endcan
-                                @can('show', $wrestler)
-                                    <a class="btn btn-sm btn-icon btn-flat btn-default" href="{{ route('wrestlers.show', ['id' => $wrestler->id]) }}" data-toggle="tooltip" data-original-title="Show">
-                                        <i class="icon wb-eye" aria-hidden="true"></i>
-                                    </a>
-                                @endcan
-                                @can('delete', $wrestler)
-                                    <form style="display: inline-block;" action="{{ route('wrestlers.destroy', $wrestler) }}" method="POST">
-                                        {{ csrf_field() }}
-                                        {{ method_field('DELETE') }}
-                                        <button style="cursor: pointer" class="btn btn-sm btn-icon btn-flat btn-default" type="submit" data-toggle="tooltip" data-original-title="Delete">
-                                            <i class="icon wb-close" aria-hidden="true"></i>
-                                        </button>
-                                    </form>
-                                @endcan
-                            </td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
+            @include('wrestlers.partials.table')
+            {{ $wrestlers->links() }}
         </div>
     </div>
 @endsection

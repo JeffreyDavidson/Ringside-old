@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Models;
 
 use Carbon\Carbon;
 use Tests\TestCase;
@@ -11,6 +11,8 @@ use App\Models\Referee;
 use App\Models\Wrestler;
 use App\Models\Stipulation;
 use App\Models\MatchType;
+use App\Models\Champion;
+use MatchFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class MatchTest extends TestCase
@@ -39,7 +41,7 @@ class MatchTest extends TestCase
     }
 
     /** @test */
-    public function a_match_has_has_a_type()
+    public function a_match_has_a_type()
     {
         $this->assertInstanceOf(MatchType::class, $this->match->type);
     }
@@ -57,17 +59,17 @@ class MatchTest extends TestCase
     }
 
     /** @test */
-    public function a_match_can_have_many_stipulations()
+    public function a_match_can_have_a_stipulation()
     {
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->match->stipulations);
+        $this->assertInstanceOf(Stipulation::class, $this->match->stipulation);
     }
 
     /** @test */
     public function a_match_can_add_a_wrestler()
     {
-        $wrestler = factory(Wrestler::class)->make();
+        $wrestler = factory(Wrestler::class)->create();
 
-        $this->match->addWrestler($wrestler);
+        $this->match->addWrestler($wrestler, 1);
 
         $this->assertCount(1, $this->match->wrestlers);
     }
@@ -75,9 +77,10 @@ class MatchTest extends TestCase
     /** @test */
     public function a_match_can_add_multiple_wrestlers()
     {
-        $wrestlers = factory(Wrestler::class, 2)->make();
+        $wrestlerA = factory(Wrestler::class)->create();
+        $wrestlerB = factory(Wrestler::class)->create();
 
-        $this->match->addWrestlers($wrestlers);
+        $this->match->addWrestlers([[$wrestlerA],[$wrestlerB]]);
 
         $this->assertCount(2, $this->match->wrestlers);
     }
@@ -105,23 +108,13 @@ class MatchTest extends TestCase
     }
 
     /** @test */
-    public function a_match_can_add_one_stipulation()
+    public function a_match_can_add_a_stipulation()
     {
-        $stipulation = factory(Stipulation::class)->make();
+        $stipulation = factory(Stipulation::class)->create();
 
         $this->match->addStipulation($stipulation);
 
-        $this->assertCount(1, $this->match->stipulations);
-    }
-
-    /** @test */
-    public function a_match_can_add_multiple_stipulations()
-    {
-        $stipulations = factory(Stipulation::class, 2)->make();
-
-        $this->match->addStipulations($stipulations);
-
-        $this->assertCount(2, $this->match->stipulations);
+        $this->assertTrue($this->match->stipulation->is($stipulation));
     }
 
     /** @test */
@@ -145,19 +138,6 @@ class MatchTest extends TestCase
     }
 
     /** @test */
-    public function a_match_can_set_a_winner()
-    {
-        $wrestlerA = factory(Wrestler::class)->create();
-        $wrestlerB = factory(Wrestler::class)->create();
-        $this->match->addWrestlers([$wrestlerA, $wrestlerB]);
-
-        $this->match->setWinner($wrestlerA);
-
-        $this->assertEquals($wrestlerA->id, $this->match->winner_id);
-        $this->assertEquals($wrestlerB->id, $this->match->loser_id);
-    }
-
-    /** @test */
     public function a_match_can_return_its_event_date()
     {
         $event = factory(Event::class)->create(['date' => '2018-02-01']);
@@ -170,12 +150,23 @@ class MatchTest extends TestCase
     public function a_match_can_be_added_to_an_event()
     {
         $event = factory(Event::class)->create();
-        $matchA = factory(Match::class)->create(['event_id' => $event->id, 'match_number' => 1]);
-        $matchB = factory(Match::class)->create(['event_id' => $event->id, 'match_number' => 2]);
-        $matchC = factory(Match::class)->create();
+        $match = factory(Match::class)->create();
 
-        $matchC->addToEvent($event);
+        $match->addToEvent($event);
 
-        $this->assertEquals($matchC->id, $event->mainEvent->id);
+        $this->assertEquals($match->id, $event->mainEvent->id);
+    }
+
+    /** @test */
+    public function match_type_is_incremented_by_1_on_create()
+    {
+        $event = factory(Event::class)->create();
+        $matchA = factory(Match::class)->create(['event_id' => $event->id]);
+        $matchB = factory(Match::class)->create(['event_id' => $event->id]);
+        $matchC = factory(Match::class)->create(['event_id' => $event->id]);
+
+        $this->assertEquals(1, $matchA->match_number);
+        $this->assertEquals(2, $matchB->match_number);
+        $this->assertEquals(3, $matchC->match_number);
     }
 }

@@ -47,7 +47,18 @@ trait HasInjuries
      */
     public function isInjured()
     {
-        return $this->injuries()->whereNull('healed_at')->count() > 0;
+        return $this->injuries()->whereNull('healed_at')->exists();
+    }
+
+    /**
+     * Scope a query to only include wrestlers that are currently injured.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeInjured($query)
+    {
+        return $query->isInjured();
     }
 
     public function injure()
@@ -56,7 +67,7 @@ trait HasInjuries
             throw new WrestlerAlreadyInjuredException;
         }
 
-        $this->setStatusToInactive();
+        $this->deactivate();
 
         $this->injuries()->create(['injured_at' => Carbon::now()]);
 
@@ -69,7 +80,7 @@ trait HasInjuries
             throw new WrestlerNotInjuredException;
         }
 
-        $this->setStatusToActive();
+        $this->activate();
 
         $this->currentInjury()->heal();
 

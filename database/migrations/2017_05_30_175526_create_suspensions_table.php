@@ -16,8 +16,8 @@ class CreateSuspensionsTable extends Migration
         Schema::create('suspensions', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('wrestler_id')->index();
-            $table->dateTime('suspended_at');
-            $table->dateTime('ended_at')->nullable();
+            $table->timestamp('suspended_at');
+            $table->timestamp('ended_at')->nullable();
             $table->timestamps();
 
             $table->foreign('wrestler_id')->references('id')->on('wrestlers');

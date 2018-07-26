@@ -27,10 +27,10 @@ class Stipulation extends Model
     /**
      * A stipulation can be assigned to many matches.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function matches()
     {
-        return $this->belongsToMany(Match::class);
+        return $this->hasMany(Match::class);
     }
 }

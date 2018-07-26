@@ -25,6 +25,7 @@ class RolesAndPermissionTableSeeder extends Seeder
         $updateWrestler = Permission::create(['name' => 'Update Wrestler',  'slug' => 'update-wrestler']);
         $showWrestler = Permission::create(['name' => 'Show Wrestler',  'slug' => 'show-wrestler']);
         $deleteWrestler = Permission::create(['name' => 'Delete Wrestler',  'slug' => 'delete-wrestler']);
+        $retireWrestler = Permission::create(['name' => 'Retire Wrestler',  'slug' => 'retire-wrestler']);
 
         $viewTitles = Permission::create(['name' => 'View Titles',  'slug' => 'view-titles']);
         $createTitle = Permission::create(['name' => 'Create Title',  'slug' => 'create-title']);
@@ -33,6 +34,7 @@ class RolesAndPermissionTableSeeder extends Seeder
         $updateTitle = Permission::create(['name' => 'Update Title',  'slug' => 'update-title']);
         $showTitle = Permission::create(['name' => 'Show Title',  'slug' => 'show-title']);
         $deleteTitle = Permission::create(['name' => 'Delete Title',  'slug' => 'delete-title']);
+        $retireTitle = Permission::create(['name' => 'Retire Title',  'slug' => 'retire-title']);
 
         $viewStipulations = Permission::create(['name' => 'View Stipulations',  'slug' => 'view-stipulations']);
         $createStipulation = Permission::create(['name' => 'Create Stipulation',  'slug' => 'create-stipulation']);
@@ -57,6 +59,9 @@ class RolesAndPermissionTableSeeder extends Seeder
         $updateEvent = Permission::create(['name' => 'Update Event',  'slug' => 'update-event']);
         $showEvent = Permission::create(['name' => 'Show Event',  'slug' => 'show-event']);
         $deleteEvent = Permission::create(['name' => 'Delete Event',  'slug' => 'delete-event']);
+        $archiveEvent = Permission::create(['name' => 'Archive Event',  'slug' => 'archive-event']);
+        $editEventResults = Permission::create(['name' => 'Edit Event Results',  'slug' => 'edit-event-results']);
+        $updateEventResults = Permission::create(['name' => 'Update Event Results',  'slug' => 'update-event-results']);
 
         $admin->givePermissionTo($viewWrestlers);
         $admin->givePermissionTo($createWrestler);
@@ -65,6 +70,7 @@ class RolesAndPermissionTableSeeder extends Seeder
         $admin->givePermissionTo($updateWrestler);
         $admin->givePermissionTo($showWrestler);
         $admin->givePermissionTo($deleteWrestler);
+        $admin->givePermissionTo($retireWrestler);
 
         $admin->givePermissionTo($viewTitles);
         $admin->givePermissionTo($createTitle);
@@ -73,6 +79,7 @@ class RolesAndPermissionTableSeeder extends Seeder
         $admin->givePermissionTo($updateTitle);
         $admin->givePermissionTo($showTitle);
         $admin->givePermissionTo($deleteTitle);
+        $admin->givePermissionTo($retireTitle);
 
         $admin->givePermissionTo($viewStipulations);
         $admin->givePermissionTo($createStipulation);
@@ -97,6 +104,9 @@ class RolesAndPermissionTableSeeder extends Seeder
         $admin->givePermissionTo($updateEvent);
         $admin->givePermissionTo($showEvent);
         $admin->givePermissionTo($deleteEvent);
+        $admin->givePermissionTo($archiveEvent);
+        $admin->givePermissionTo($editEventResults);
+        $admin->givePermissionTo($updateEventResults);
 
         $superAdmin->givePermissionTo($viewWrestlers);
         $superAdmin->givePermissionTo($createWrestler);
@@ -105,6 +115,7 @@ class RolesAndPermissionTableSeeder extends Seeder
         $superAdmin->givePermissionTo($updateWrestler);
         $superAdmin->givePermissionTo($showWrestler);
         $superAdmin->givePermissionTo($deleteWrestler);
+        $superAdmin->givePermissionTo($retireWrestler);
 
         $superAdmin->givePermissionTo($viewTitles);
         $superAdmin->givePermissionTo($createTitle);
@@ -113,6 +124,7 @@ class RolesAndPermissionTableSeeder extends Seeder
         $superAdmin->givePermissionTo($updateTitle);
         $superAdmin->givePermissionTo($showTitle);
         $superAdmin->givePermissionTo($deleteTitle);
+        $superAdmin->givePermissionTo($retireTitle);
 
         $superAdmin->givePermissionTo($viewStipulations);
         $superAdmin->givePermissionTo($createStipulation);
@@ -137,5 +149,8 @@ class RolesAndPermissionTableSeeder extends Seeder
         $superAdmin->givePermissionTo($updateEvent);
         $superAdmin->givePermissionTo($showEvent);
         $superAdmin->givePermissionTo($deleteEvent);
+        $superAdmin->givePermissionTo($archiveEvent);
+        $superAdmin->givePermissionTo($editEventResults);
+        $superAdmin->givePermissionTo($updateEventResults);
     }
 }

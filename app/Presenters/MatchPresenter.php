@@ -6,31 +6,42 @@ use Laracodes\Presenter\Presenter;
 
 class MatchPresenter extends Presenter
 {
+    /** TODO: Check to see if groupBy should be moved to another section of application. */
     public function wrestlers()
     {
-        return $this->model->wrestlers->implode('name', ' vs. ');
+        $groupedWrestlers = $this->model->wrestlers->groupBy(function ($item, $key) {
+            return $item->pivot->side_number;
+        });
+
+        // Find out what I should do for the grouped wrestlers
+        // return $this->model->wrestlers->groupBySide->map(function ($group) {
+        //     return $group->pluck('name')->implode(' & ');
+        // })->implode(' vs. ');
+
+        return $groupedWrestlers->map(function ($group) {
+            return $group->pluck('name')->implode(' & ');
+        })->implode(' vs. ');
     }
 
     public function referees()
     {
         return $this->model->referees->map(function ($item) {
             return $item->present()->fullName();
-        })->implode(', ');
+        })->implode(' & ');
     }
 
-    public function stipulations()
+    public function match_number()
     {
-        return $this->model->stipulations->implode('name', ', ');
-    }
+        $numberOfMatches = $this->model->event->matches->count(); // use ->matches->count() if relation already loaded to avoid an extra query
 
-    public function match_number($loop)
-    {
-        if ($loop->first) {
-            return 'Opening Match';
-        } elseif ($loop->last) {
+        if ($this->model->match_number == $numberOfMatches) {
             return 'Main Event';
-        } else {
-            return 'Match #'.$this->model->match_number;
         }
+
+        if ($this->model->match_number == 1) {
+            return 'Opening Match';
+        }
+
+        return 'Match #'.$this->model->match_number;
     }
 }

@@ -17,7 +17,7 @@ class VenuesController extends Controller
     {
         $this->authorize('index', Venue::class);
 
-        $venues = Venue::all();
+        $venues = Venue::paginate(10);
 
         return response()->view('venues.index', ['venues' => $venues]);
     }
@@ -58,6 +58,8 @@ class VenuesController extends Controller
     public function show(Venue $venue)
     {
         $this->authorize('show', Venue::class);
+
+        // $venue->load('pastEvents');
 
         return response()->view('venues.show', ['venue' => $venue]);
     }

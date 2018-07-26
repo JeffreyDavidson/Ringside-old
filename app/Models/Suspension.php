@@ -30,7 +30,7 @@ class Suspension extends Model
     public function lift()
     {
         return tap($this)->update([
-            'ended_at' => Carbon::now()
+            'ended_at' => Carbon::now(),
         ]);
     }
 }

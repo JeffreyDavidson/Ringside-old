@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -45,7 +47,7 @@ class Event extends Model
      */
     public function matches()
     {
-        return $this->hasMany(Match::class)->with('type', 'referees', 'stipulations', 'wrestlers', 'titles');
+        return $this->hasMany(Match::class)->with('type', 'referees', 'stipulation', 'wrestlers', 'titles');
     }
 
     /**
@@ -72,10 +74,53 @@ class Event extends Model
      * Adds a match to the event.
      *
      * @param \App\Models\Match $match
-     * @return bool
+     * @return void
      */
     public function addMatch(Match $match)
     {
         $this->matches()->save($match);
+    }
+
+    /**
+     * Archive an event.
+     *
+     * @return void
+     */
+    public function archive()
+    {
+        $this->update(['archived_at' => Carbon::now()]);
+    }
+
+    /**
+     * Scope a query to only include scheduled events.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeScheduled(Builder $query)
+    {
+        return $query->where('date', '>=', Carbon::today());
+    }
+
+    /**
+     * Scope a query to only include past events.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopePast(Builder $query)
+    {
+        return $query->where('date', '<', Carbon::today());
+    }
+
+    /**
+     * Scope a query to only include archived events.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeArchived(Builder $query)
+    {
+        return $query->whereNotNull('archived_at');
     }
 }

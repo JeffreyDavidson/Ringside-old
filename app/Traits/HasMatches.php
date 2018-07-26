@@ -9,7 +9,7 @@ trait HasMatches
     abstract public function matches();
 
     /**
-     * Retrieves the date of the wrestler's first match.
+     * Retrieves the date of the model's first match.
      *
      * @return string
      */
@@ -19,7 +19,7 @@ trait HasMatches
     }
 
     /**
-     * Returns the wrestler's past matches.
+     * Returns the model's past matches.
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
@@ -31,12 +31,24 @@ trait HasMatches
     }
 
     /**
-     * Checks to see if the wrestler has past matches.
+     * Checks to see if the model has past matches.
      *
      * @return bool
      */
     public function hasPastMatches()
     {
         return $this->pastMatches->isNotEmpty();
+    }
+
+    /**
+     * Returns the model's past matches.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function scheduledMatches()
+    {
+        return $this->matches()->whereHas('event', function ($query) {
+            $query->where('date', '>=', Carbon::today());
+        });
     }
 }

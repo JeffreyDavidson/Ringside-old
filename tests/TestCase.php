@@ -5,9 +5,9 @@ namespace Tests;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Permission;
-use App\Models\WrestlerStatus;
+use App\Models\MatchDecision;
 use PHPUnit\Framework\Assert;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Foundation\Testing\TestResponse;
 
 abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
@@ -32,15 +32,15 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
             return $this->original->getData()[$key];
         });
 
-        Collection::macro('assertContains', function ($value) {
+        EloquentCollection::macro('assertContains', function ($value) {
             Assert::assertTrue($this->contains($value), 'Failed asserting that the collection contains the specified value.');
         });
 
-        Collection::macro('assertNotContains', function ($value) {
+        EloquentCollection::macro('assertNotContains', function ($value) {
             Assert::assertFalse($this->contains($value), 'Failed asserting that the collection does not contain the specified value.');
         });
 
-        Collection::macro('assertEquals', function ($items) {
+        EloquentCollection::macro('assertEquals', function ($items) {
             Assert::assertEquals(count($this), count($items));
             $this->zip($items)->each(function ($pair) {
                 list($a, $b) = $pair;
@@ -49,7 +49,13 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
         });
 
         $this->setupUnauthorizedUser();
-        $this->setupWrestlerStatuses();
+        $this->setupMatchDecisions();
+        // $testName = str_replace(["test", "_"], ["", " "], $this->getName());
+    	// $testName = preg_replace_callback("/[a-zA-Z0-9]{3,}\b/", function($match){
+    	// 	return ucfirst($match[0]);
+    	// }, $testName);
+
+    	// dump(" ->" . $testName);
     }
 
     /**
@@ -83,12 +89,22 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
         $this->unauthorizedUser->assignRole($role);
     }
 
-    protected function setupWrestlerStatuses()
+    protected function setupMatchDecisions()
     {
-        factory(WrestlerStatus::class)->create(['id' => 1, 'name' => 'Active']);
-        factory(WrestlerStatus::class)->create(['id' => 2, 'name' => 'Inactive']);
-        factory(WrestlerStatus::class)->create(['id' => 3, 'name' => 'Injured']);
-        factory(WrestlerStatus::class)->create(['id' => 4, 'name' => 'Suspended']);
-        factory(WrestlerStatus::class)->create(['id' => 5, 'name' => 'Retired']);
+        factory(MatchDecision::class)->create(['id' => 1, 'name' => 'Pinfall', 'slug' => 'pinfall']);
+        factory(MatchDecision::class)->create(['id' => 2, 'name' => 'Submission', 'slug' => 'submission']);
+        factory(MatchDecision::class)->create(['id' => 3, 'name' => 'Disqualification', 'slug' => 'dq']);
+        factory(MatchDecision::class)->create(['id' => 4, 'name' => 'Countout', 'slug' => 'countout']);
+        factory(MatchDecision::class)->create(['id' => 5, 'name' => 'Knockout', 'slug' => 'knockout']);
+        factory(MatchDecision::class)->create(['id' => 6, 'name' => 'Stipulation', 'slug' => 'stipulation']);
+        factory(MatchDecision::class)->create(['id' => 7, 'name' => 'Forfeit', 'slug' => 'forfeit']);
+        factory(MatchDecision::class)->create(['id' => 8, 'name' => 'Time Limit Draw', 'slug' => 'draw']);
+        factory(MatchDecision::class)->create(['id' => 9, 'name' => 'No Decision', 'slug' => 'nodecision']);
+        factory(MatchDecision::class)->create(['id' => 10, 'name' => 'Reversed Decision', 'slug' => 'revdecision']);
+    }
+
+    protected function dumpSessionErrors()
+    {
+        dd(app('session.store')->get('errors')->getBag('default'));
     }
 }

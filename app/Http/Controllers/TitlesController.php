@@ -17,7 +17,7 @@ class TitlesController extends Controller
     {
         $this->authorize('index', Title::class);
 
-        $titles = Title::all();
+        $titles = Title::paginate(10);
 
         return response()->view('titles.index', ['titles' => $titles]);
     }
@@ -102,6 +102,21 @@ class TitlesController extends Controller
         $this->authorize('delete', Title::class);
 
         $title->delete();
+
+        return redirect()->route('titles.index');
+    }
+
+    /**
+     * Retires the specified title.
+     *
+     * @param  Title $title
+     * @return \Illuminate\Http\Response
+     */
+    public function retire(Title $title)
+    {
+        $this->authorize('retire', $title);
+
+        $title->retire();
 
         return redirect()->route('titles.index');
     }
