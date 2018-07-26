@@ -20,19 +20,11 @@ class TitleRecordsRepository
 
     public function mostTitleReigns(Title $title)
     {
-        // $maxReigns = Wrestler::query()
-        //         ->groupBy('championships.wrestler_id')
-        //         ->join('championships', 'wrestlers.id', '=', 'championships.wrestler_id')
-        //         ->selectRaw('COUNT(championships.wrestler_id) AS reigns')
-        //         ->value('reigns');
-        // $maxReigns = Championship::query()
-        //                     ->withCount('wrestler_id')
-        //                     ->orderBy('wrestler_id_count', 'desc')
-        //                     ->value('wrestler_id_count');
-        $maxReigns = Championship::query()
-        ->withCount('wrestlers')
-    ->orderBy('wrestler_count', 'desc')
-    ->select('wrestler_count');
+        $maxReigns = Wrestler::query()
+                ->groupBy('championships.wrestler_id')
+                ->join('championships', 'wrestlers.id', '=', 'championships.wrestler_id')
+                ->selectRaw('COUNT(championships.wrestler_id) AS reigns')
+                ->value('reigns');
 
         return Wrestler::query()
                 ->selectRaw('wrestlers.*, COUNT(championships.wrestler_id) AS reigns')

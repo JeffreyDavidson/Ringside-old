@@ -2,11 +2,11 @@
 
 namespace Tests\Unit\Repositories;
 
-use App\Models\Title;
-use Facades\ChampionshipFactory;
 use App\Models\Wrestler;
+use App\Models\Title;
 use Carbon\Carbon;
 use Tests\TestCase;
+use Facades\ChampionshipFactory;
 use App\Repositories\TitleRecordsRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -19,8 +19,8 @@ class TitleRecordsRepositoryTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        // $this->repository = app(TitleRecordsRepository::class);
-        $this->repository = new TitleRecordsRepository();
+
+        $this->repository = app(TitleRecordsRepository::class);
     }
 
     /** @test */
@@ -51,12 +51,10 @@ class TitleRecordsRepositoryTest extends TestCase
         ChampionshipFactory::forWrestler($wrestlerA)->forTitle($title)->create();
         ChampionshipFactory::forWrestler($wrestlerB)->forTitle($title)->create();
         ChampionshipFactory::forWrestler($wrestlerA)->forTitle($title)->create();
-        ChampionshipFactory::forWrestler($wrestlerC)->forTitle($title)->create();
-        ChampionshipFactory::forWrestler($wrestlerA)->forTitle($title)->create();
 
         $champions = $this->repository->mostTitleReigns($title);
 
-        $this->assertTrue($champions->pluck('wrestler_id')->contains($wrestlerA->id));
+        $this->assertTrue($champions->contains($wrestlerA->id));
     }
 
     /** @test */
