@@ -2,8 +2,8 @@
 
 namespace App\Rules;
 
-use App\Models\Match;
 use App\Models\Event;
+use App\Models\Match;
 use Illuminate\Contracts\Validation\Rule;
 
 class WrestlerInvolvedInMatch implements Rule
