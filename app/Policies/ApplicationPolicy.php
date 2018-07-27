@@ -10,9 +10,7 @@ class ApplicationPolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * @var GateContract
-     */
+    /** @var */
     private $gate;
 
     /**
@@ -25,6 +23,11 @@ class ApplicationPolicy
         $this->gate = $gate;
     }
 
+    /**
+     * Define all of the permissions assigned to the user.
+     *
+     * @return void
+     */
     public function init()
     {
         foreach ($this->getPermissions() as $permission) {
@@ -35,7 +38,7 @@ class ApplicationPolicy
     }
 
     /**
-     * Fetch the collection of site permissions.
+     * Fetch the collection of site permissions with role.
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */

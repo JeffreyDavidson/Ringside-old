@@ -7,16 +7,20 @@ use Illuminate\Contracts\Validation\Rule;
 
 class WrestlerInvolvedInMatch implements Rule
 {
+    /** @var */
     private $matchNumber;
 
+    /** @var */
     private $event;
 
     /**
      * Create a new rule instance.
      *
+     * @param  int  $matchNumber
+     * @param  \App\Models\Event  $event
      * @return void
      */
-    public function __construct($matchNumber, $event)
+    public function __construct($matchNumber, Event $event)
     {
         $this->matchNumber = $matchNumber;
         $this->event = $event;

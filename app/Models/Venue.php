@@ -18,7 +18,7 @@ class Venue extends Model
     protected $guarded = [];
 
     /**
-     * A venue may host many events.
+     * A venue can have many events.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -38,7 +38,7 @@ class Venue extends Model
     }
 
     /**
-     * Returns a collection of events before the current date.
+     * Determines if a venue has held a past event.
      *
      * @return bool
      */

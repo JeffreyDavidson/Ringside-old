@@ -7,10 +7,11 @@ use App\Exceptions\WrestlerAlreadyHasTitleException;
 
 trait HasTitles
 {
+    /** @abstract */
     abstract public function championships();
 
     /**
-     * Checks to see if the wrestler has held any previous titles.
+     * Checks to see if the wrestler has held any past titles.
      *
      * @return bool
      */
@@ -32,7 +33,7 @@ trait HasTitles
     /**
      * Checks to see if the wrestler is the champion of a specific title.
      *
-     * @param \App\Models\Title $title
+     * @param  \App\Models\Title  $title
      * @return bool
      */
     public function hasTitle(Title $title)
@@ -55,9 +56,9 @@ trait HasTitles
     /**
      * A wrestler can win a title.
      *
-     * @param \App\Models\Title $title
-     * @param datetime $date
-     * @return bool
+     * @param  \App\Models\Title  $title
+     * @param  string  $date
+     * @return $this;
      */
     public function winTitle(Title $title, $date)
     {
@@ -65,16 +66,18 @@ trait HasTitles
             throw new WrestlerAlreadyHasTitleException;
         }
 
-        $championship = $this->championships()->create(['title_id' => $title->id, 'won_on' => $date]);
+        $this->championships()->create(['title_id' => $title->id, 'won_on' => $date]);
+
+        return $this;
     }
 
     /**
-     * Determines if a wrestler is a champion.
+     * Determines if a wrestler is currently a champion.
      *
      * @return bool
      */
     public function isCurrentlyAChampion()
     {
-        return $this->currentTitlesHeld()->count() > 0;
+        return $this->currentTitlesHeld()->isNotEmpty()();
     }
 }

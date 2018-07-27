@@ -7,15 +7,13 @@ use Illuminate\Contracts\Validation\Rule;
 
 class BeforeFirstMatchDate implements Rule
 {
-    /**
-     * @var
-     */
+    /** @var */
     private $model;
 
     /**
      * Create a new rule instance.
      *
-     * @param $model
+     * @param  object  $model
      */
     public function __construct($model)
     {

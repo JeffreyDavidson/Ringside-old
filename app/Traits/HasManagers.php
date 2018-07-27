@@ -7,6 +7,7 @@ use App\Exceptions\WrestlerNotHaveHiredManagerException;
 
 trait HasManagers
 {
+    /** @abstract */
     abstract public function managers();
 
     /**
@@ -62,7 +63,7 @@ trait HasManagers
     /**
      * A wrestler hires a given manager.
      *
-     * @param \App\Models\Manager $manager
+     * @param  \App\Models\Manager  $manager
      * @return bool
      */
     public function hireManager($manager, $date)
@@ -77,7 +78,7 @@ trait HasManagers
     /**
      * A wrestler fires a given manager.
      *
-     * @param \App\Models\Manager $manager
+     * @param  \App\Models\Manager  $manager
      * @return bool
      */
     public function fireManager($manager, $date)

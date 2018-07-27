@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Laracodes\Presenter\Traits\Presentable;
 
@@ -34,13 +33,11 @@ class Retirement extends Model
     /**
      * Ends a retirement.
      *
-     * @param string $date Datetime that represents the date and time the retirement ended.
+     * @param  string|null  $date
      * @return bool
      */
-    public function end()
+    public function end($date = null)
     {
-        return tap($this)->update([
-            'ended_at' => Carbon::now(),
-        ]);
+        return tap($this)->update(['ended_at' => $date ?: $this->freshTimestamp()]);
     }
 }

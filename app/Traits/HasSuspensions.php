@@ -8,6 +8,7 @@ use App\Exceptions\WrestlerAlreadySuspendedException;
 
 trait HasSuspensions
 {
+    /** @abstract */
     abstract public function suspensions();
 
     /**
@@ -30,6 +31,11 @@ trait HasSuspensions
         return $this->suspensions()->whereNotNull('ended_at');
     }
 
+    /**
+     * Returns the wrestler's current suspensions.
+     *
+     * @return \App\Models\Suspension
+     */
     public function currentSuspension()
     {
         return $this->suspensions()->whereNull('ended_at')->first();
@@ -42,24 +48,24 @@ trait HasSuspensions
      */
     public function isSuspended()
     {
-        return $this->suspensions()->whereNull('ended_at')->count() > 0;
+        return $this->suspensions()->whereNull('ended_at')->exists();
     }
 
     /**
      * Scope a query to only include wrestlers that are currently suspended.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeSuspended($query)
+    public function scopeSuspended(Builder $query)
     {
         $query->isSuspended();
     }
 
     /**
-     * Suspends the wrestler.
+     * Suspend a wrestler.
      *
-     * @return ?
+     * @return $this
      */
     public function suspend()
     {
@@ -74,6 +80,11 @@ trait HasSuspensions
         return $this;
     }
 
+    /**
+     * Unsuspend a wrestler.
+     *
+     * @return $this
+     */
     public function unsuspend()
     {
         if (! $this->isSuspended()) {

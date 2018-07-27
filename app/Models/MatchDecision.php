@@ -45,7 +45,7 @@ class MatchDecision extends Model
     }
 
     /**
-     * Checks to see if the match decision can cause a title to be given to a non champion.
+     * Checks to see if the match decision can cause a title to be won.
      *
      * @return bool
      */
@@ -54,21 +54,45 @@ class MatchDecision extends Model
         return in_array($this->slug, $this->decisionsATitleCanBeWon);
     }
 
+    /**
+     * Scope a query to only include match decisions that titles can be won.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopeTitleCanBeWonBySlug($query)
     {
         return $query->whereIn('slug', $this->decisionsATitleCanBeWon);
     }
 
+    /**
+     * Scope a query to only include match decisions that titles cannot be won.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopeTitleCannotBeWonBySlug($query)
     {
         return $query->whereNotIn('slug', $this->decisionsATitleCanBeWon);
     }
 
+    /**
+     * Scope a query to only include match decisions that titles can change hands.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopeTitleCanChangeHandsBySlug($query)
     {
         return $query->whereIn('slug', $this->decisionsTitlesChangeHands);
     }
 
+    /**
+     * Scope a query to only include match decisions that titles cannot change hands.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopeTitleCannotChangeHandsBySlug($query)
     {
         return $query->whereNotIn('slug', $this->decisionsTitlesChangeHands);

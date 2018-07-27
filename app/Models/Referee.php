@@ -21,7 +21,7 @@ class Referee extends Model
     /**
      * Scope a query to only include referees hired before a specific date.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeHiredBefore(Builder $query, $date)

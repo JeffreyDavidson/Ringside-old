@@ -60,7 +60,7 @@ class Wrestler extends Model
     }
 
     /**
-     * A wrestler can hold many titles.
+     * A wrestler can hold many championships.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -112,8 +112,8 @@ class Wrestler extends Model
     /**
      * Scope a query to only include wrestlers hired before a specific date.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param Date $date
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  string  $date
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeHiredBefore(Builder $query, $date)

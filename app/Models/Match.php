@@ -93,7 +93,7 @@ class Match extends Model
     }
 
     /**
-     * A match has a type.
+     * A match has a decision.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -103,7 +103,7 @@ class Match extends Model
     }
 
     /**
-     * A match can have many losers.
+     * A match has a winner.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -125,7 +125,8 @@ class Match extends Model
     /**
      * Add a wrestler to a match.
      *
-     * @param \App\Models\Wrestler $wrestler
+     * @param  \App\Models\Wrestler  $wrestler
+     * @param  int  $sideNumber
      */
     public function addWrestler(Wrestler $wrestler, $sideNumber)
     {
@@ -133,9 +134,10 @@ class Match extends Model
     }
 
     /**
-     * Add a array of wrestlers to a match.
+     * Add wrestlers to a match.
      *
-     * @param array $wrestlers
+     * @param  array  $wrestlers
+     * @return void
      */
     public function addWrestlers($wrestlers)
     {
@@ -149,7 +151,8 @@ class Match extends Model
     /**
      * Add a title to a match.
      *
-     * @param \App\Models\Title $title
+     * @param  \App\Models\Title  $title
+     * @return void
      */
     public function addTitle(Title $title)
     {
@@ -157,9 +160,10 @@ class Match extends Model
     }
 
     /**
-     * Add a array of titles to a match.
+     * Add titles to a match.
      *
-     * @param array $titles
+     * @param  array  $titles
+     * @return void
      */
     public function addTitles($titles)
     {
@@ -169,17 +173,20 @@ class Match extends Model
     /**
      * Add a stipulation to a match.
      *
-     * @param \App\Models\Stipulation $stipulation
+     * @param  \App\Models\Stipulation  $stipulation
+     * @return void
      */
     public function addStipulation(Stipulation $stipulation)
     {
-        $this->update(['stipulation_id' => $stipulation->id]);
+        $this->stipulation()->associate($stipulation);
+        $this->save();
     }
 
     /**
      * Add a referee to a match.
      *
-     * @param \App\Models\Referee $referee
+     * @param  \App\Models\Referee  $referee
+     * @return void
      */
     public function addReferee(Referee $referee)
     {
@@ -187,9 +194,10 @@ class Match extends Model
     }
 
     /**
-     * Add an array of referees to a match.
+     * Add referees to a match.
      *
-     * @param array $referees
+     * @param  array  $referees
+     * @return void
      */
     public function addReferees($referees)
     {
@@ -219,21 +227,34 @@ class Match extends Model
     /**
      * Add a match to an event.
      *
-     * @param  \App\Models\Event $event
-     * @return bool
+     * @param  \App\Models\Event  $event
+     * @return void
      */
     public function addToEvent(Event $event)
     {
-        $nextMatchNumber = $event->matches->max('match_number');
-
-        return $this->update(['event_id' => $event->id, 'match_number' => $nextMatchNumber + 1]);
+        $this->event()->associate($event);
+        $this->save();
     }
 
+    /**
+     * Scope a query to only include matches for a specific event.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  \App\Models\Event  $event
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopeForEvent(Builder $query, Event $event)
     {
         return $query->where('event_id', $event->id);
     }
 
+    /**
+     * Scope a query to only include matches with a specific match number.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  int  $matchNumber
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopeWithMatchNumber(Builder $query, $matchNumber)
     {
         return $query->where('match_number', $matchNumber);

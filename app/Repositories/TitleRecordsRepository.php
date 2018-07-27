@@ -8,6 +8,12 @@ use App\Models\Championship;
 
 class TitleRecordsRepository
 {
+    /**
+     * Gets champions with the most title defenses.
+     *
+     * @param  \App\Models\Title  $title
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
     public function mostTitleDefenses(Title $title)
     {
         $maxDefenses = Championship::selectRaw('MAX(successful_defenses) AS max')->value('max');
@@ -18,6 +24,12 @@ class TitleRecordsRepository
             ->get();
     }
 
+    /**
+     * Gets the champions with the most title reigns.
+     *
+     * @param  \App\Models\Title  $title
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
     public function mostTitleReigns(Title $title)
     {
         $maxReigns = Wrestler::query()
@@ -34,6 +46,12 @@ class TitleRecordsRepository
                 ->get();
     }
 
+    /**
+     * Gets the champions with the longest title reign.
+     *
+     * @param  \App\Models\Title  $title
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
     public function longestTitleReign(Title $title)
     {
         $now = \Carbon\Carbon::now()->toDateTimeString();

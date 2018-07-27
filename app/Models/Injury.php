@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Injury extends Model
@@ -24,13 +23,11 @@ class Injury extends Model
     /**
      * Heals an injury.
      *
-     * @param string $date Datetime that represents the date and time the injury healed.
+     * @param  string|null  $date
      * @return bool
      */
-    public function heal()
+    public function heal($date = null)
     {
-        return tap($this)->update([
-            'healed_at' => Carbon::now(),
-        ]);
+        return tap($this)->update(['healed_at' => $date ?: $this->freshTimestamp()]);
     }
 }

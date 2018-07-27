@@ -9,7 +9,7 @@ trait HasStatus
     /**
      * Scope a query to only include models that are currently active.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeActive(Builder $query)
@@ -20,7 +20,7 @@ trait HasStatus
     /**
      * Scope a query to only include models that are currently inactive.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeInactive(Builder $query)
@@ -39,7 +39,7 @@ trait HasStatus
     }
 
     /**
-     * Inactives an active model.
+     * Deactivates an active model.
      *
      * @return bool
      */

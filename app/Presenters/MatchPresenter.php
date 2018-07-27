@@ -6,23 +6,27 @@ use Laracodes\Presenter\Presenter;
 
 class MatchPresenter extends Presenter
 {
-    /** TODO: Check to see if groupBy should be moved to another section of application. */
+    /**
+     * Formats collection of wrestlers for match.
+     *
+     * @return string
+     */
     public function wrestlers()
     {
         $groupedWrestlers = $this->model->wrestlers->groupBy(function ($item, $key) {
             return $item->pivot->side_number;
         });
 
-        // Find out what I should do for the grouped wrestlers
-        // return $this->model->wrestlers->groupBySide->map(function ($group) {
-        //     return $group->pluck('name')->implode(' & ');
-        // })->implode(' vs. ');
-
         return $groupedWrestlers->map(function ($group) {
             return $group->pluck('name')->implode(' & ');
         })->implode(' vs. ');
     }
 
+    /**
+     * Formats collection of referees for match.
+     *
+     * @return string
+     */
     public function referees()
     {
         return $this->model->referees->map(function ($item) {
@@ -30,6 +34,11 @@ class MatchPresenter extends Presenter
         })->implode(' & ');
     }
 
+    /**
+     * Formats match number for match.
+     *
+     * @return string
+     */
     public function match_number()
     {
         $numberOfMatches = $this->model->event->matches->count(); // use ->matches->count() if relation already loaded to avoid an extra query
