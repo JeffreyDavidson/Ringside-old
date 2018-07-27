@@ -63,7 +63,7 @@ class State
      * Gets all of the state names.
      *
      * @return array
-    */
+     */
     public static function all()
     {
         return array_values(static::$states);
@@ -73,7 +73,7 @@ class State
      * Transform states array into usuable form for dropdowns.
      *
      * @return array
-    */
+     */
     public static function options()
     {
         $output = [];
