@@ -4,6 +4,7 @@ namespace App\Http\Utilities;
 
 class State
 {
+    /** @var array $states */
     protected static $states = [
         'AL' => 'Alabama',
         'AK' => 'Alaska',
@@ -58,11 +59,21 @@ class State
         'WY' => 'Wyoming',
     ];
 
+    /**
+     * Gets all of the state names.
+     *
+     * @return array
+    */
     public static function all()
     {
         return array_values(static::$states);
     }
 
+    /**
+     * Transform states array into usuable form for dropdowns.
+     *
+     * @return array
+    */
     public static function options()
     {
         $output = [];

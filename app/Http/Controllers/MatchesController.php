@@ -11,7 +11,7 @@ class MatchesController extends Controller
     /**
      * Show the form for creating a match for an event.
      *
-     * @param  Event $event
+     * @param  \App\Models\Event  $event
      * @return \Illuminate\Http\Response
      */
     public function create(Event $event)
@@ -24,8 +24,8 @@ class MatchesController extends Controller
     /**
      * Store a newly created matches.
      *
-     * @param  Event $event
-     * @param  MatchCreateFormRequest $event
+     * @param  \App\Models\Event  $event
+     * @param  \App\Http\Requests\MatchCreateFormRequest  $event
      * @return \Illuminate\Http\Response
      */
     public function store(Event $event, MatchCreateFormRequest $request)

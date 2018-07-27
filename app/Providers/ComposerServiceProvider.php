@@ -14,7 +14,6 @@ class ComposerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Using class based composers...
         View::composer(
             'records', 'App\Http\ViewComposers\TitleRecordsViewComposer'
         );

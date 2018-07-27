@@ -6,6 +6,7 @@ use Carbon\Carbon;
 
 trait HasMatches
 {
+    /** @abstract */
     abstract public function matches();
 
     /**

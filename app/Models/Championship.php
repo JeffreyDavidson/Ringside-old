@@ -32,7 +32,7 @@ class Championship extends Model
     protected $guarded = [];
 
     /**
-     * A champion holds a title.
+     * A championship belongs to a title.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -42,7 +42,7 @@ class Championship extends Model
     }
 
     /**
-     * A champion is a wrestler.
+     * A championship belongs to a wrestler.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -52,13 +52,12 @@ class Championship extends Model
     }
 
     /**
-     * A champion can lose a title.
+     * A championship can be lost.
      *
-     * @param \App\Models\Title $title
-     * @param datetime $date
-     * @return bool
+     * @param  string|null  $date
+     * @return $this
      */
-    public function loseTitle($date)
+    public function loseTitle($date = null)
     {
         return $this->update(['lost_on' => $date ?: $this->freshTimestamp()]);
     }

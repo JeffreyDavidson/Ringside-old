@@ -37,7 +37,7 @@ class TitlesController extends Controller
     /**
      * Store a newly created title.
      *
-     * @param TitleCreateFormRequest $request
+     * @param  \App\Http\Requests\TitleCreateFormRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(TitleCreateFormRequest $request)
@@ -52,7 +52,7 @@ class TitlesController extends Controller
     /**
      * Display the specified title.
      *
-     * @param  Title $title
+     * @param  \App\Models\Title  $title
      * @return \Illuminate\Http\Response
      */
     public function show(Title $title)
@@ -65,7 +65,7 @@ class TitlesController extends Controller
     /**
      * Show the form for editing a title.
      *
-     * @param  Title $title
+     * @param  \App\Models\Title  $title
      * @return \Illuminate\Http\Response
      */
     public function edit(Title $title)
@@ -78,8 +78,8 @@ class TitlesController extends Controller
     /**
      * Update the specified title.
      *
-     * @param  TitleEditFormRequest  $request
-     * @param  Title $title
+     * @param  \App\Http\Requests\TitleEditFormRequest  $request
+     * @param  \App\Models\Title  $title
      * @return \Illuminate\Http\Response
      */
     public function update(TitleEditFormRequest $request, Title $title)
@@ -94,7 +94,7 @@ class TitlesController extends Controller
     /**
      * Delete the specified title.
      *
-     * @param  Title $title
+     * @param  \App\Models\Title  $title
      * @return \Illuminate\Http\Response
      */
     public function destroy(Title $title)
@@ -109,7 +109,7 @@ class TitlesController extends Controller
     /**
      * Retires the specified title.
      *
-     * @param  Title $title
+     * @param  \App\Models\Title  $title
      * @return \Illuminate\Http\Response
      */
     public function retire(Title $title)

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Suspension extends Model
@@ -24,13 +23,11 @@ class Suspension extends Model
     /**
      * Lifts a suspension.
      *
-     * @param string $date Datetime that represents the date and time the suspension was lifted.
+     * @param  string|null  $date
      * @return bool
      */
-    public function lift()
+    public function lift($date = null)
     {
-        return tap($this)->update([
-            'ended_at' => Carbon::now(),
-        ]);
+        return tap($this)->update(['ended_at' => $date ?: $this->freshTimestamp()]);
     }
 }

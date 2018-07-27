@@ -9,12 +9,13 @@ use App\Exceptions\ModelAlreadyRetiredException;
 
 trait HasRetirements
 {
+    /** @abstract */
     abstract public function retirements();
 
     /**
      * Checks to see if the most has been retired before.
      *
-     * @return App\Models\Retirement|null
+     * @return bool
      */
     public function hasPastRetirements()
     {
@@ -24,7 +25,7 @@ trait HasRetirements
     /**
      * Retrieves the model's past retirements.
      *
-     * @return App\Models\Retirement|null
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function pastRetirements()
     {
@@ -34,7 +35,7 @@ trait HasRetirements
     /**
      * Retrieves the model's current retirement.
      *
-     * @return App\Models\Retirement|null
+     * @return \App\Models\Retirement
      */
     public function currentRetirement()
     {
@@ -54,7 +55,7 @@ trait HasRetirements
     /**
      * Scope a query to only include models that are currently retired.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeRetired(Builder $query)
@@ -67,7 +68,7 @@ trait HasRetirements
     /**
      * Retires the model.
      *
-     * @return
+     * @return $this
      */
     public function retire()
     {
@@ -85,7 +86,7 @@ trait HasRetirements
     /**
      * Uretires the model.
      *
-     * @return App\Models\Retirement|null
+     * @return $this
      */
     public function unretire()
     {

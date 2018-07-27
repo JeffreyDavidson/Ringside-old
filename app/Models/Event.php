@@ -73,7 +73,7 @@ class Event extends Model
     /**
      * Adds a match to the event.
      *
-     * @param \App\Models\Match $match
+     * @param  \App\Models\Match  $match
      * @return void
      */
     public function addMatch(Match $match)
@@ -84,17 +84,18 @@ class Event extends Model
     /**
      * Archive an event.
      *
+     * @param  string|null  $date
      * @return void
      */
-    public function archive()
+    public function archive($date = null)
     {
-        $this->update(['archived_at' => Carbon::now()]);
+        $this->update(['archived_at' => $date ?: $this->freshTimestamp()]);
     }
 
     /**
      * Scope a query to only include scheduled events.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeScheduled(Builder $query)
@@ -105,7 +106,7 @@ class Event extends Model
     /**
      * Scope a query to only include past events.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopePast(Builder $query)
@@ -116,7 +117,7 @@ class Event extends Model
     /**
      * Scope a query to only include archived events.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeArchived(Builder $query)

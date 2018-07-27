@@ -7,9 +7,9 @@ use Laracodes\Presenter\Presenter;
 class WrestlerPresenter extends Presenter
 {
     /**
-     * Formats and presenters the height attribute.
+     * Formats the wrestler's height.
      *
-     * @return mixed string
+     * @return string
      */
     public function height()
     {
@@ -20,9 +20,9 @@ class WrestlerPresenter extends Presenter
     }
 
     /**
-     * Formats and presenters the height attribute.
+     * Formats wrestler's height in feet.
      *
-     * @return mixed string
+     * @return int
      */
     public function height_in_feet()
     {
@@ -32,9 +32,9 @@ class WrestlerPresenter extends Presenter
     }
 
     /**
-     * Formats and presenters the height attribute.
+     * Formats wrestler's height in inches.
      *
-     * @return mixed string
+     * @return int
      */
     public function height_in_inches()
     {

@@ -11,7 +11,7 @@ class ResultsController extends Controller
     /**
      * Show the form for editing an events results.
      *
-     * @param  Event  $event
+     * @param  \App\Models\Event  $event
      * @return \Illuminate\Http\Response
      */
     public function edit(Event $event)
@@ -24,8 +24,8 @@ class ResultsController extends Controller
     /**
      * Update the specified event with results from matches.
      *
-     * @param EventResultsFormRequest $request
-     * @param  Event $event
+     * @param  \App\Http\Requests\EventResultsFormRequest  $request
+     * @param  \App\Models\Event  $event
      * @return \Illuminate\Http\Response
      */
     public function update(EventResultsFormRequest $request, Event $event)

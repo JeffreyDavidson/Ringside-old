@@ -7,12 +7,13 @@ use App\Models\Permission;
 
 trait HasRoles
 {
+    /** @abstract */
     abstract public function role();
 
     /**
      * Assigns a role to a user.
      *
-     * @param  \App\Models\Role $role
+     * @param  \App\Models\Role  $role
      * @return \App\Models\User
      */
     public function assignRole(Role $role)
@@ -23,7 +24,7 @@ trait HasRoles
     /**
      * Checks to see if the user's role has the given permission.
      *
-     * @param  string $permissionSlug
+     * @param  string  $permissionSlug
      * @return bool
      */
     public function hasPermission($permissionSlug)
@@ -34,7 +35,7 @@ trait HasRoles
     /**
      * Check to see if the supplied role matches the user's role.
      *
-     * @param  \App\Models\Role $role
+     * @param  \App\Models\Role  $role
      * @return bool
      */
     public function hasRole(Role $role)

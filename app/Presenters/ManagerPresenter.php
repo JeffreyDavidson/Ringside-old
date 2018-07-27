@@ -7,7 +7,7 @@ use Laracodes\Presenter\Presenter;
 class ManagerPresenter extends Presenter
 {
     /**
-     * Get the referee's full name.
+     * Formats full name of manager.
      *
      * @return string
      */

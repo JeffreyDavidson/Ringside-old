@@ -37,7 +37,7 @@ class VenuesController extends Controller
     /**
      * Store a newly created venue.
      *
-     * @param VenueCreateFormRequest $request
+     * @param  \App\Http\Requets\VenueCreateFormRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(VenueCreateFormRequest $request)
@@ -52,14 +52,12 @@ class VenuesController extends Controller
     /**
      * Display the specified venue.
      *
-     * @param  Venue $venue
+     * @param  \App\Models\Venue  $venue
      * @return \Illuminate\Http\Response
      */
     public function show(Venue $venue)
     {
         $this->authorize('show', Venue::class);
-
-        // $venue->load('pastEvents');
 
         return response()->view('venues.show', ['venue' => $venue]);
     }
@@ -67,7 +65,7 @@ class VenuesController extends Controller
     /**
      * Show the form for editing an venue.
      *
-     * @param  Venue $venue
+     * @param  \App\Models\Venue  $venue
      * @return \Illuminate\Http\Response
      */
     public function edit(Venue $venue)
@@ -80,8 +78,8 @@ class VenuesController extends Controller
     /**
      * Update the specified venue.
      *
-     * @param VenueEditFormRequest $request
-     * @param  Venue $venue
+     * @param  \App\Http\Requests\VenueEditFormRequest  $request
+     * @param  \App\Models\Venue  $venue
      * @return \Illuminate\Http\Response
      */
     public function update(VenueEditFormRequest $request, Venue $venue)
@@ -96,7 +94,7 @@ class VenuesController extends Controller
     /**
      * Delete the specified venue.
      *
-     * @param  Venue $venue
+     * @param  \App\Models\Venue  $venue
      * @return \Illuminate\Http\Response
      */
     public function destroy(Venue $venue)

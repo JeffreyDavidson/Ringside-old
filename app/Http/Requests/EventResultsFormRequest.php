@@ -9,6 +9,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class EventResultsFormRequest extends FormRequest
 {
+    /** @var int */
     private $expectedMatchesCount = 0;
 
     /**

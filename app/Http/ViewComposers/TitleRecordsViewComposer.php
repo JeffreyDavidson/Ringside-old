@@ -22,7 +22,6 @@ class TitleRecordsViewComposer
      */
     public function __construct(TitleRecordsRepository $repository)
     {
-        // Dependencies automatically resolved by service container...
         $this->repository = $repository;
     }
 

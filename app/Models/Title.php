@@ -44,7 +44,7 @@ class Title extends Model
     ];
 
     /**
-     * A title can have many championships.
+     * A title can have many champions.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -76,8 +76,8 @@ class Title extends Model
     /**
      * Returns the current champion for the title.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @return App\Models\Wrestler
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \App\Models\Wrestler
      */
     public function currentChampion()
     {
@@ -85,7 +85,7 @@ class Title extends Model
     }
 
     /**
-     * Checks to see if the title has a champion.
+     * Checks to see if the title currently has a champion.
      *
      * @return bool
      */

@@ -7,14 +7,21 @@ use Illuminate\Contracts\Validation\Rule;
 
 class QualifiedForMatch implements Rule
 {
+    /** @var */
     private $eventDate;
+
+    /** @var */
     private $modelClass;
+
+    /** @var */
     private $field;
 
     /**
      * Create a new rule instance.
      *
-     * @param $eventDate
+     * @param  string  $eventDate
+     * @param  object  $modelClass
+     * @param  string  $field
      */
     public function __construct($eventDate, $modelClass, $field)
     {
