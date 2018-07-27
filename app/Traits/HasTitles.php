@@ -78,6 +78,6 @@ trait HasTitles
      */
     public function isCurrentlyAChampion()
     {
-        return $this->currentTitlesHeld()->isNotEmpty()();
+        return $this->currentTitlesHeld()->isNotEmpty();
     }
 }

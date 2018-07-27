@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\HasMatches;
 
 class Stipulation extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasMatches;
 
     /**
      * Don't auto-apply mass assignment protection.
