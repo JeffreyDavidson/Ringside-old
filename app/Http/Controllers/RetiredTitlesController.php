@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Title;
+use Illuminate\Http\Request;
 
 class RetiredTitlesController extends Controller
 {
