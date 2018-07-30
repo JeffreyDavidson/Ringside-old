@@ -29,12 +29,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('events/{event}/results', 'ResultsController@edit')->name('results.edit');
     Route::patch('events/{event}/results', 'ResultsController@update')->name('results.update');
     Route::resource('archived-events', 'ArchivedEventsController')->parameters([
-        'archived-events' => 'event'
+        'archived-events' => 'event',
     ]);
     Route::resource('event.matches', 'MatchesController');
     Route::resource('titles', 'TitlesController');
     Route::resource('retired-titles', 'RetiredTitlesController')->parameters([
-        'retired-titles' => 'title'
+        'retired-titles' => 'title',
     ]);
     Route::resource('stipulations', 'StipulationsController');
     Route::resource('venues', 'VenuesController');

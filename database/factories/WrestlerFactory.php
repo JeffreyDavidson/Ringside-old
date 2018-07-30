@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Wrestler;
 use Carbon\Carbon;
 use Faker\Generator as Faker;
 
