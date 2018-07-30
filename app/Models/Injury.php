@@ -28,6 +28,6 @@ class Injury extends Model
      */
     public function heal($date = null)
     {
-        return tap($this)->update(['healed_at' => $date ?: $this->freshTimestamp()]);
+        return $this->update(['healed_at' => $date ?: $this->freshTimestamp()]);
     }
 }

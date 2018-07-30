@@ -107,19 +107,4 @@ class EventsController extends Controller
 
         return redirect()->route('events.index');
     }
-
-    /**
-     * Archives the specified event.
-     *
-     * @param  \App\Models\Event  $event
-     * @return \Illuminate\Http\Response
-     */
-    public function archive(Event $event)
-    {
-        $this->authorize('archive', Event::class);
-
-        $event->archive();
-
-        return redirect()->route('events.index');
-    }
 }

@@ -38,6 +38,6 @@ class Retirement extends Model
      */
     public function end($date = null)
     {
-        return tap($this)->update(['ended_at' => $date ?: $this->freshTimestamp()]);
+        return $this->update(['ended_at' => $date ?: $this->freshTimestamp()]);
     }
 }

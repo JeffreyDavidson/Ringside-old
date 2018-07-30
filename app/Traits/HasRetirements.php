@@ -60,8 +60,8 @@ trait HasRetirements
      */
     public function scopeRetired(Builder $query)
     {
-        return $query->whereHas('retirements', function ($q) {
-            $q->whereNull('ended_at');
+        return $query->whereHas('retirements', function ($query) {
+            $query->whereNull('ended_at');
         });
     }
 

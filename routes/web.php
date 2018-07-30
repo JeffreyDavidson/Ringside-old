@@ -18,9 +18,7 @@ Route::get('login', function () {
 })->name('login');
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('/', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::view('/', 'dashboard')->name('dashboard');
 
     Route::group(['prefix' => 'roster'], function () {
         Route::resource('wrestlers', 'WrestlersController');
@@ -28,13 +26,16 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::resource('events', 'EventsController');
-    Route::patch('events/{event}/archive', 'EventsController@archive')->name('events.archive');
     Route::get('events/{event}/results', 'ResultsController@edit')->name('results.edit');
     Route::patch('events/{event}/results', 'ResultsController@update')->name('results.update');
-    Route::get('events/{event}/matches/create', 'MatchesController@create')->name('matches.create');
-    Route::post('events/{event}/matches', 'MatchesController@store')->name('matches.store');
+    Route::resource('archived-events', 'ArchivedEventsController')->parameters([
+        'archived-events' => 'event'
+    ]);
+    Route::resource('event.matches', 'MatchesController');
     Route::resource('titles', 'TitlesController');
-    Route::patch('titles/{title}/retire', 'TitlesController@retire')->name('titles.retire');
+    Route::resource('retired-titles', 'RetiredTitlesController')->parameters([
+        'retired-titles' => 'title'
+    ]);
     Route::resource('stipulations', 'StipulationsController');
     Route::resource('venues', 'VenuesController');
 });

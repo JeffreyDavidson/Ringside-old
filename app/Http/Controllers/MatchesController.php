@@ -8,6 +8,11 @@ use App\Http\Requests\MatchCreateFormRequest;
 
 class MatchesController extends Controller
 {
+    public function index(Event $event)
+    {
+
+    }
+
     /**
      * Show the form for creating a match for an event.
      *
@@ -59,5 +64,47 @@ class MatchesController extends Controller
         }
 
         return redirect()->route('events.show', ['event' => $event->id]);
+    }
+
+    /**
+     * Display the specified match.
+     *
+     * @param  \App\Models\Event  $event
+     * @param  \App\Models\Match  $match
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Event $event, Match $match)
+    {
+        $this->authorize('show', Match::class);
+
+        return response()->view('matches.show', ['match' => $match]);
+    }
+
+    /**
+     * Show the form for editing a match for an event.
+     *
+     * @param  \App\Models\Event  $event
+     * @param  \App\Models\Match  $match
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Event $event, Match $match)
+    {
+        $this->authorize('edit', Match::class);
+    }
+
+    /**
+     * Delete the specified match.
+     *
+     * @param  \App\Models\Event  $event
+     * @param  \App\Models\Match  $match
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Event $event, Match $match)
+    {
+        $this->authorize('delete', Match::class);
+
+        $match->delete();
+
+        return redirect()->route('event.matches.index', ['event' => $event->id]);
     }
 }

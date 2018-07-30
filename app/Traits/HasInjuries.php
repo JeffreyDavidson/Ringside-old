@@ -59,7 +59,9 @@ trait HasInjuries
      */
     public function scopeInjured($query)
     {
-        return $query->isInjured();
+        return $query->whereHas('injuries', function ($query) {
+            $query->whereNull('healed_at');
+        });
     }
 
     /**

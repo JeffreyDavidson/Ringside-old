@@ -49,6 +49,20 @@ class HasSuspensionsTraitTest extends TestCase
         $this->assertEquals(1, $wrestler->pastSuspensions->count());
     }
 
+    /** @test */
+    public function it_can_get_suspended_wrestlers()
+    {
+        $wrestlerA = factory(Wrestler::class)->states('suspended')->create();
+        $wrestlerB = factory(Wrestler::class)->states('suspended')->create();
+        $wrestlerC = factory(Wrestler::class)->states('active')->create();
+
+        $suspendedWrestlers = Wrestler::suspended()->get();
+
+        $this->assertTrue($suspendedWrestlers->contains($wrestlerA));
+        $this->assertTrue($suspendedWrestlers->contains($wrestlerB));
+        $this->assertFalse($suspendedWrestlers->contains($wrestlerC));
+    }
+
     /**
      * @expectedException \App\Exceptions\WrestlerAlreadySuspendedException
      *

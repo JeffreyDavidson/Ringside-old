@@ -32,10 +32,6 @@ $factory->define(App\Models\Role::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\Models\WrestlerStatus::class, function (Faker\Generator $faker) {
-    return ['name' => $faker->sentence(3)];
-});
-
 $factory->define(App\Models\Injury::class, function (Faker\Generator $faker) {
     return [
         'wrestler_id' => factory(App\Models\Wrestler::class)->lazy(),

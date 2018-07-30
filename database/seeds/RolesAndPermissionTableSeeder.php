@@ -13,55 +13,62 @@ class RolesAndPermissionTableSeeder extends Seeder
      */
     public function run()
     {
-        $user = Role::create(['name' => 'User',  'slug' => 'user']);
-        $editor = Role::create(['name' => 'Editor',  'slug' => 'editor']);
-        $admin = Role::create(['name' => 'Admin',  'slug' => 'admin']);
-        $superAdmin = Role::create(['name' => 'Super Administrator',  'slug' => 'super-admin']);
+        $user = Role::create(['name' => 'User', 'slug' => 'user']);
+        $editor = Role::create(['name' => 'Editor', 'slug' => 'editor']);
+        $admin = Role::create(['name' => 'Admin', 'slug' => 'admin']);
+        $superAdmin = Role::create(['name' => 'Super Administrator', 'slug' => 'super-admin']);
 
-        $viewWrestlers = Permission::create(['name' => 'View Wrestlers',  'slug' => 'view-wrestlers']);
-        $createWrestler = Permission::create(['name' => 'Create Wrestler',  'slug' => 'create-wrestler']);
-        $storeWrestler = Permission::create(['name' => 'Store Wrestler',  'slug' => 'store-wrestler']);
-        $editWrestler = Permission::create(['name' => 'Edit Wrestler',  'slug' => 'edit-wrestler']);
-        $updateWrestler = Permission::create(['name' => 'Update Wrestler',  'slug' => 'update-wrestler']);
-        $showWrestler = Permission::create(['name' => 'Show Wrestler',  'slug' => 'show-wrestler']);
-        $deleteWrestler = Permission::create(['name' => 'Delete Wrestler',  'slug' => 'delete-wrestler']);
-        $retireWrestler = Permission::create(['name' => 'Retire Wrestler',  'slug' => 'retire-wrestler']);
+        $viewWrestlers = Permission::create(['name' => 'View Wrestlers', 'slug' => 'view-wrestlers']);
+        $createWrestler = Permission::create(['name' => 'Create Wrestler', 'slug' => 'create-wrestler']);
+        $storeWrestler = Permission::create(['name' => 'Store Wrestler', 'slug' => 'store-wrestler']);
+        $editWrestler = Permission::create(['name' => 'Edit Wrestler', 'slug' => 'edit-wrestler']);
+        $updateWrestler = Permission::create(['name' => 'Update Wrestler', 'slug' => 'update-wrestler']);
+        $showWrestler = Permission::create(['name' => 'Show Wrestler', 'slug' => 'show-wrestler']);
+        $deleteWrestler = Permission::create(['name' => 'Delete Wrestler', 'slug' => 'delete-wrestler']);
+        $retireWrestler = Permission::create(['name' => 'Retire Wrestler', 'slug' => 'retire-wrestler']);
 
-        $viewTitles = Permission::create(['name' => 'View Titles',  'slug' => 'view-titles']);
-        $createTitle = Permission::create(['name' => 'Create Title',  'slug' => 'create-title']);
-        $storeTitle = Permission::create(['name' => 'Store Title',  'slug' => 'store-title']);
-        $editTitle = Permission::create(['name' => 'Edit Title',  'slug' => 'edit-title']);
-        $updateTitle = Permission::create(['name' => 'Update Title',  'slug' => 'update-title']);
-        $showTitle = Permission::create(['name' => 'Show Title',  'slug' => 'show-title']);
-        $deleteTitle = Permission::create(['name' => 'Delete Title',  'slug' => 'delete-title']);
-        $retireTitle = Permission::create(['name' => 'Retire Title',  'slug' => 'retire-title']);
+        $viewTitles = Permission::create(['name' => 'View Titles', 'slug' => 'view-titles']);
+        $createTitle = Permission::create(['name' => 'Create Title', 'slug' => 'create-title']);
+        $storeTitle = Permission::create(['name' => 'Store Title', 'slug' => 'store-title']);
+        $editTitle = Permission::create(['name' => 'Edit Title', 'slug' => 'edit-title']);
+        $updateTitle = Permission::create(['name' => 'Update Title', 'slug' => 'update-title']);
+        $showTitle = Permission::create(['name' => 'Show Title', 'slug' => 'show-title']);
+        $deleteTitle = Permission::create(['name' => 'Delete Title', 'slug' => 'delete-title']);
+        $retireTitle = Permission::create(['name' => 'Retire Title', 'slug' => 'retire-title']);
 
-        $viewStipulations = Permission::create(['name' => 'View Stipulations',  'slug' => 'view-stipulations']);
-        $createStipulation = Permission::create(['name' => 'Create Stipulation',  'slug' => 'create-stipulation']);
-        $storeStipulation = Permission::create(['name' => 'Store Stipulation',  'slug' => 'store-stipulation']);
-        $editStipulation = Permission::create(['name' => 'Edit Stipulation',  'slug' => 'edit-stipulation']);
-        $updateStipulation = Permission::create(['name' => 'Update Stipulation',  'slug' => 'update-stipulation']);
-        $showStipulation = Permission::create(['name' => 'Show Stipulation',  'slug' => 'show-stipulation']);
-        $deleteStipulation = Permission::create(['name' => 'Delete Stipulation',  'slug' => 'delete-stipulation']);
+        $viewStipulations = Permission::create(['name' => 'View Stipulations', 'slug' => 'view-stipulations']);
+        $createStipulation = Permission::create(['name' => 'Create Stipulation', 'slug' => 'create-stipulation']);
+        $storeStipulation = Permission::create(['name' => 'Store Stipulation', 'slug' => 'store-stipulation']);
+        $editStipulation = Permission::create(['name' => 'Edit Stipulation', 'slug' => 'edit-stipulation']);
+        $updateStipulation = Permission::create(['name' => 'Update Stipulation', 'slug' => 'update-stipulation']);
+        $showStipulation = Permission::create(['name' => 'Show Stipulation', 'slug' => 'show-stipulation']);
+        $deleteStipulation = Permission::create(['name' => 'Delete Stipulation', 'slug' => 'delete-stipulation']);
 
-        $viewVenues = Permission::create(['name' => 'View Venues',  'slug' => 'view-venues']);
-        $createVenue = Permission::create(['name' => 'Create Venue',  'slug' => 'create-venue']);
-        $storeVenue = Permission::create(['name' => 'Store Venue',  'slug' => 'store-venue']);
-        $editVenue = Permission::create(['name' => 'Edit Venue',  'slug' => 'edit-venue']);
-        $updateVenue = Permission::create(['name' => 'Update Venue',  'slug' => 'update-venue']);
-        $showVenue = Permission::create(['name' => 'Show Venue',  'slug' => 'show-venue']);
-        $deleteVenue = Permission::create(['name' => 'Delete Venue',  'slug' => 'delete-venue']);
+        $viewVenues = Permission::create(['name' => 'View Venues', 'slug' => 'view-venues']);
+        $createVenue = Permission::create(['name' => 'Create Venue', 'slug' => 'create-venue']);
+        $storeVenue = Permission::create(['name' => 'Store Venue', 'slug' => 'store-venue']);
+        $editVenue = Permission::create(['name' => 'Edit Venue', 'slug' => 'edit-venue']);
+        $updateVenue = Permission::create(['name' => 'Update Venue', 'slug' => 'update-venue']);
+        $showVenue = Permission::create(['name' => 'Show Venue', 'slug' => 'show-venue']);
+        $deleteVenue = Permission::create(['name' => 'Delete Venue', 'slug' => 'delete-venue']);
 
-        $viewEvent = Permission::create(['name' => 'View Events',  'slug' => 'view-events']);
-        $createEvent = Permission::create(['name' => 'Create Event',  'slug' => 'create-event']);
-        $storeEvent = Permission::create(['name' => 'Store Event',  'slug' => 'store-event']);
-        $editEvent = Permission::create(['name' => 'Edit Event',  'slug' => 'edit-event']);
-        $updateEvent = Permission::create(['name' => 'Update Event',  'slug' => 'update-event']);
-        $showEvent = Permission::create(['name' => 'Show Event',  'slug' => 'show-event']);
-        $deleteEvent = Permission::create(['name' => 'Delete Event',  'slug' => 'delete-event']);
-        $archiveEvent = Permission::create(['name' => 'Archive Event',  'slug' => 'archive-event']);
-        $editEventResults = Permission::create(['name' => 'Edit Event Results',  'slug' => 'edit-event-results']);
-        $updateEventResults = Permission::create(['name' => 'Update Event Results',  'slug' => 'update-event-results']);
+        $viewEvent = Permission::create(['name' => 'View Events', 'slug' => 'view-events']);
+        $createEvent = Permission::create(['name' => 'Create Event', 'slug' => 'create-event']);
+        $storeEvent = Permission::create(['name' => 'Store Event', 'slug' => 'store-event']);
+        $editEvent = Permission::create(['name' => 'Edit Event', 'slug' => 'edit-event']);
+        $updateEvent = Permission::create(['name' => 'Update Event', 'slug' => 'update-event']);
+        $showEvent = Permission::create(['name' => 'Show Event', 'slug' => 'show-event']);
+        $deleteEvent = Permission::create(['name' => 'Delete Event', 'slug' => 'delete-event']);
+        $archiveEvent = Permission::create(['name' => 'Archive Event', 'slug' => 'archive-event']);
+        $editEventResults = Permission::create(['name' => 'Edit Event Results', 'slug' => 'edit-event-results']);
+        $updateEventResults = Permission::create(['name' => 'Update Event Results', 'slug' => 'update-event-results']);
+
+        $createMatch = Permission::create(['name' => 'Create Match', 'slug' => 'create-match']);
+        $createMatch = Permission::create(['name' => 'Store Match', 'slug' => 'store-match']);
+        $createMatch = Permission::create(['name' => 'Show Match', 'slug' => 'show-match']);
+        $createMatch = Permission::create(['name' => 'Edit Match', 'slug' => 'edit-match']);
+        $createMatch = Permission::create(['name' => 'Update Match', 'slug' => 'update-match']);
+        $createMatch = Permission::create(['name' => 'Delete Match', 'slug' => 'delete-match']);
 
         $admin->givePermissionTo($viewWrestlers);
         $admin->givePermissionTo($createWrestler);
@@ -108,6 +115,13 @@ class RolesAndPermissionTableSeeder extends Seeder
         $admin->givePermissionTo($editEventResults);
         $admin->givePermissionTo($updateEventResults);
 
+        $admin->givePermissionTo($createMatch);
+        $admin->givePermissionTo($storeMatch);
+        $admin->givePermissionTo($editMatch);
+        $admin->givePermissionTo($updateMatch);
+        $admin->givePermissionTo($showMatch);
+        $admin->givePermissionTo($deleteMatch);
+
         $superAdmin->givePermissionTo($viewWrestlers);
         $superAdmin->givePermissionTo($createWrestler);
         $superAdmin->givePermissionTo($storeWrestler);
@@ -152,5 +166,12 @@ class RolesAndPermissionTableSeeder extends Seeder
         $superAdmin->givePermissionTo($archiveEvent);
         $superAdmin->givePermissionTo($editEventResults);
         $superAdmin->givePermissionTo($updateEventResults);
+
+        $superAdmin->givePermissionTo($createMatch);
+        $superAdmin->givePermissionTo($storeMatch);
+        $superAdmin->givePermissionTo($editMatch);
+        $superAdmin->givePermissionTo($updateMatch);
+        $superAdmin->givePermissionTo($showMatch);
+        $superAdmin->givePermissionTo($deleteMatch);
     }
 }

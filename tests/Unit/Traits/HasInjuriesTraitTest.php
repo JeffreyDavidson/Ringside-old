@@ -48,6 +48,20 @@ class HasInjuriesTraitTest extends TestCase
         $this->assertEquals(1, $wrestler->pastInjuries->count());
     }
 
+    /** @test */
+    public function it_can_get_injured_wrestlers()
+    {
+        $wrestlerA = factory(Wrestler::class)->states('injured')->create();
+        $wrestlerB = factory(Wrestler::class)->states('injured')->create();
+        $wrestlerC = factory(Wrestler::class)->states('active')->create();
+
+        $suspendedWrestlers = Wrestler::injured()->get();
+
+        $this->assertTrue($suspendedWrestlers->contains($wrestlerA));
+        $this->assertTrue($suspendedWrestlers->contains($wrestlerB));
+        $this->assertFalse($suspendedWrestlers->contains($wrestlerC));
+    }
+
     /**
      * @expectedException \App\Exceptions\WrestlerAlreadyInjuredException
      *

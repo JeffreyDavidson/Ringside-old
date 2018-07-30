@@ -1,9 +1,10 @@
 <?php
 
 use App\Models\Wrestler;
+use Carbon\Carbon;
 use Faker\Generator as Faker;
 
-$factory->define(Wrestler::class, function (Faker $faker) {
+$factory->define(App\Models\Wrestler::class, function (Faker $faker) {
     $name = $faker->sentence;
 
     return [
@@ -18,10 +19,14 @@ $factory->define(Wrestler::class, function (Faker $faker) {
     ];
 });
 
-$factory->state(App\Models\Wrestler::class, 'active', function () {
-    return ['is_active' => true];
+$factory->state(App\Models\Wrestler::class, 'active', ['is_active' => 1, 'hired_at' => Carbon::today()]);
+$factory->state(App\Models\Wrestler::class, 'inactive', ['is_active' => 0, 'hired_at' => Carbon::tomorrow()]);
+$factory->afterCreatingState(App\Models\Wrestler::class, 'suspended', function ($wrestler) {
+    $wrestler->suspend();
 });
-
-$factory->state(App\Models\Wrestler::class, 'inactive', function () {
-    return ['is_active' => false];
+$factory->afterCreatingState(App\Models\Wrestler::class, 'retired', function ($wrestler) {
+    $wrestler->retire();
+});
+$factory->afterCreatingState(App\Models\Wrestler::class, 'injured', function ($wrestler) {
+    $wrestler->injure();
 });

@@ -27,9 +27,9 @@
         </testsuite>
     </testsuites>
     <filter>
-        <!-- <whitelist processUncoveredFilesFromWhitelist="true">
+        <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./app</directory>
-        </whitelist> -->
+        </whitelist>
     </filter>
     <!-- <logging>
         <log type="coverage-html" target="./report" charset="UTF-8"
@@ -41,7 +41,5 @@
         <env name="CACHE_DRIVER" value="array"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="QUEUE_DRIVER" value="sync"/>
-        <env name="DB_CONNECTION" value="mysql"/>
-        <env name="DB_DATABASE" value="ringside_testing"/>
     </php>
 </phpunit>

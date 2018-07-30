@@ -30,6 +30,7 @@ class DeleteEventTest extends TestCase
 
         $response->assertStatus(302);
         $this->assertSoftDeleted('events', ['id' => $this->event->id, 'name' => $this->event->name]);
+        $this->assertNotNull($this->event->fresh()->deleted_at);
         $response->assertRedirect(route('events.index'));
     }
 

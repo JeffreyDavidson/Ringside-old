@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use App\Exceptions\WrestlerNotSuspendedException;
 use App\Exceptions\WrestlerAlreadySuspendedException;
 
@@ -59,7 +60,9 @@ trait HasSuspensions
      */
     public function scopeSuspended(Builder $query)
     {
-        $query->isSuspended();
+        $query->whereHas('suspensions', function ($query) {
+            $query->whereNull('ended_at');
+        });
     }
 
     /**
