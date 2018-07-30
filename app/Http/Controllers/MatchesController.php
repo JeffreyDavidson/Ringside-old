@@ -8,11 +8,6 @@ use App\Http\Requests\MatchCreateFormRequest;
 
 class MatchesController extends Controller
 {
-    public function index(Event $event)
-    {
-
-    }
-
     /**
      * Show the form for creating a match for an event.
      *
