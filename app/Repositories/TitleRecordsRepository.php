@@ -52,7 +52,7 @@ class TitleRecordsRepository
      * @param  \App\Models\Title  $title
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function longestTitleReign(Title $title)
+    public function longestTitleReigns(Title $title)
     {
         $now = \Carbon\Carbon::now()->toDateTimeString();
         $maxDateDiff = Championship::selectRaw('MAX(DATEDIFF(IFNULL(lost_on, ?), won_on)) AS diff', [$now])->value('diff');

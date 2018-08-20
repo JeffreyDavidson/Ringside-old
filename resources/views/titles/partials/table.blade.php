@@ -7,16 +7,18 @@
         <th>Actions</th>
     </thead>
     <tbody>
-        @foreach($titles as $title)
+        @forelse($titles as $title)
             <tr>
                 <td>{{ $title->id }}</td>
                 <td>{{ $title->name }}</td>
                 <td>{{ $title->slug }}</td>
                 <td>{{ $title->present()->introduced_at }}</td>
                 <td>
-                    @include('partials.actions', ['resource' => 'titles', 'model' => $title, 'actions' => collect(['edit', 'show', 'delete', 'retire'])])
+                    @include('partials.actions', ['resource' => 'titles', 'model' => $title, 'actions' => $actions, 'field' => 'title_id'])
                 </td>
             </tr>
-        @endforeach
+        @empty
+            <tr><td colspan="5">No Titles Of This Type</td></tr>
+        @endforelse
     </tbody>
 </table>

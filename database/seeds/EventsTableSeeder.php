@@ -11,6 +11,7 @@ use App\Models\MatchType;
 use App\Models\Stipulation;
 use App\Models\MatchDecision;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Eloquent\Collection;
 
 class EventsTableSeeder extends Seeder
 {
@@ -21,7 +22,7 @@ class EventsTableSeeder extends Seeder
      */
     public function run()
     {
-        $start = Carbon::parse('First Monday of January 1990');
+        $start = Carbon::parse('First Monday of January 2010');
         $nextMonth = Carbon::now()->addMonth();
 
         // Gather dates for Mondays, Thursdays, and Sundays from the given start date
@@ -64,14 +65,14 @@ class EventsTableSeeder extends Seeder
                 'match_type_id' => MatchType::inRandomOrder()->first()->id,
                 'event_id' => $event->id,
                 'match_number' => $matchNumber,
+                'match_decision_id' => MatchDecision::inRandomOrder()->first()->id
             ]));
 
             $this->addReferees($match);
             $this->addStipulation($match);
             $this->addTitles($match);
             $this->addWrestlers($match);
-            $this->setDecision($match);
-            $this->setWinner($match);
+            $this->setWinnersAndLosers($match);
         }
     }
 
@@ -102,65 +103,80 @@ class EventsTableSeeder extends Seeder
 
     public function addWrestlers($match)
     {
-        // If Match is a title match then get all champions for the associated titles.
+        $champions = collect();
+
         if ($match->isTitleMatch()) {
             $champions = $match->titles->map(function ($title) {
                 return optional($title->currentChampion)->wrestler;
             })->filter();
         }
 
-        // Retrieve wrestlers that are not the champions and were hired before event.
         $availableWrestlers = Wrestler::inRandomOrder()
                                     ->hiredBefore($match->date)
-                                    // ->when($champions->isNotEmpty(), function ($collection) use ($champions) {
-                                    //     return $collection->whereNotIn('id', $champions->pluck('id')->all());
-                                    // })
+                                    ->whereNotIn('id', $champions->pluck('id')->all())
                                     ->get();
 
-        // Only get enough wrestlers needed for match.
-        if (! is_null($match->type->total_competitors)) {
-            if ($champions->isNotEmpty()) {
-                // There are champions so make sure not to include that count in how many to get.
-                $wrestlersForMatch = $nonChampions->take($match->type->total_competitors - $champions->count());
-            } else {
-                // There are not any champions so just get enough wrestlers to add to match.
-                $wrestlersForMatch = $nonChampions->take($match->type->total_competitors);
-            }
-        } else {
-            // There is no set maximum amount for how many wrestlers can be in a match.
-            $wrestlersForMatch = $nonChampions->take(rand(5, $nonChampions->count() - $champions->count()));
-        }
+        $expectedWrestlersCount = ($match->type->total_competitors ??  rand(5, max(5, $availableWrestlers->count())) - $champions->count());
+
+        $wrestlersForMatch = $availableWrestlers->take($expectedWrestlersCount);
 
         $wrestlersForMatch = $wrestlersForMatch->concat($champions);
 
-        $wrestlersForMatch = $wrestlersForMatch->split($match->type->number_of_sides);
+        if (is_null($match->type->number_of_sides)) {
+            $wrestlersForMatch = $wrestlersForMatch->split($wrestlersForMatch->count());
+        } else {
+            $wrestlersForMatch = $wrestlersForMatch->split($match->type->number_of_sides);
+        }
 
         return $match->addWrestlers($wrestlersForMatch);
     }
 
-    public function setDecision($match)
+    public function setWinnersAndLosers($match)
     {
-    }
+        // If this is a title match give the champion a 10% chance to retain their title.
+        if ($match->isTitleMatch()) {
+            $champions = $match->titles->pluck('currentChampion.wrestler')->filter();
+            if ($champions->isEmpty()) {
+                // No current Champion
+                $groupedWrestlersBySides = $match->wrestlers->groupBy('pivot.side_number');
+                $winningSideKey = $groupedWrestlersBySides->keys()->random();
+                $winners = $groupedWrestlersBySides->get($winningSideKey);
+                $groupedWrestlersBySides->forget($winningSideKey);
 
-    public function setWinner($match)
-    {
-        $match->load('wrestlers');
-
-        // If this is a title match give the champion a 3% chance to retain their title.
-        if ($match->isTitleMatch() && $this->chance(10)) {
-            $champions = $match->titles->map(function ($title) {
-                return optional($title->currentChampion)->wrestler;
-            })->filter();
-
-            $match->setWinner($champions->random());
+                $match->setWinners($winners);
+                $match->setLosers($groupedWrestlersBySides);
+                return;
+            } elseif ($this->chance(10)) {
+                // Champion retained their title
+                $match->setWinners($champions);
+                $groupedWrestlersBySides = $match->wrestlers->groupBy('pivot.side_number');
+                $losingSides = $groupedWrestlersBySides->reject(function(Collection $side) use ($champions) {
+                    return $side->has($champions->first()->id);
+                });
+                $match->setLosers($losingSides);
+                return;
+            } else {
+                // Champion lost the title
+                $groupedWrestlersBySides = $match->wrestlers->groupBy('pivot.side_number');
+                $winningSideKey = $groupedWrestlersBySides->reject(function(Collection $side) use ($champions) {
+                    return $side->has($champions->first()->id);
+                })->keys()->random();
+                $match->setWinners($groupedWrestlersBySides->pull($winningSideKey)); // pull = remove the item from the collection, and return it
+                $match->setLosers($groupedWrestlersBySides);
+                return;
+            }
         }
 
-        // Otherwise just choose a random winner.
-        $decisionSlug = MatchDecision::inRandomOrder()->first()->slug;
-        $match->setWinner($match->wrestlers->random(), $decisionSlug);
+        $groupedWrestlersBySides = $match->wrestlers->groupBy('pivot.side_number');
+        $winningSideKey = $groupedWrestlersBySides->keys()->random();
+        $winners = $groupedWrestlersBySides->get($winningSideKey);
+        $groupedWrestlersBySides->forget($winningSideKey);
+
+        $match->setWinners($winners);
+        $match->setLosers($groupedWrestlersBySides);
     }
 
-    protected function dates(Carbon $from, Carbon $to, $day, $last = false)
+    private function dates(Carbon $from, Carbon $to, $day, $last = false)
     {
         $step = $from->copy()->startOfMonth();
         $modification = sprintf($last ? 'last %s of next month' : 'next %s', $day);
@@ -173,7 +189,7 @@ class EventsTableSeeder extends Seeder
         return $dates;
     }
 
-    protected function chance(int $percent)
+    private function chance(int $percent)
     {
         return rand(0, 100) < $percent;
     }

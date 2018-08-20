@@ -63,7 +63,7 @@ class AddMatchTest extends TestCase
         $this->response->assertStatus(302);
         $this->response->assertRedirect(route('event.matches.create', ['event' => $this->event->id]));
         $this->response->assertSessionHasErrors($field);
-        $this->assertEquals($expectedEventCount, $this->event->matches->count());
+        $this->assertEquals($expectedEventCount, $this->event->matches()->count());
     }
 
     /** @test */

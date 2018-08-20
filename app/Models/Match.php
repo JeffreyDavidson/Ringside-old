@@ -103,13 +103,13 @@ class Match extends Model
     }
 
     /**
-     * A match has a winner.
+     * A match can have many winners.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function winner()
+    public function winners()
     {
-        return $this->belongsTo(Wrestler::class);
+        return $this->belongsToMany(Wrestler::class, 'match_winner');
     }
 
     /**
@@ -258,5 +258,30 @@ class Match extends Model
     public function scopeWithMatchNumber(Builder $query, $matchNumber)
     {
         return $query->where('match_number', $matchNumber);
+    }
+
+    public function setWinners($winners)
+    {
+        $this->winners()->sync($winners->modelKeys());
+
+        if ($this->isTitleMatch()) {
+            $this->titles->each(function ($title) use ($winners) {
+                if ($title->hasAChampion()) {
+
+                } else {
+                    $title->setChampion($winners, $this->date);
+                }
+                // if (! $winners->first()->hasTitle($title) && $this->decision->titleCanChangeHands()) {
+                //     $title->setChampion($winners, $this->date);
+                // } else {
+                //     $title->currentChampion->increment('successful_defenses');
+                // }
+            });
+        }
+    }
+
+    public function setLosers($losers)
+    {
+        $this->losers()->sync($losers->flatten()->pluck('id'));
     }
 }

@@ -5,7 +5,6 @@ namespace Tests;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Permission;
-use App\Models\MatchDecision;
 use PHPUnit\Framework\Assert;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Foundation\Testing\TestResponse;
@@ -49,7 +48,6 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
         });
 
         $this->setupUnauthorizedUser();
-        $this->setupMatchDecisions();
         // $testName = str_replace(["test", "_"], ["", " "], $this->getName());
     	// $testName = preg_replace_callback("/[a-zA-Z0-9]{3,}\b/", function($match){
     	// 	return ucfirst($match[0]);
@@ -87,20 +85,6 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
         $this->unauthorizedUser = factory(User::class)->create();
         $role = factory(Role::class)->create();
         $this->unauthorizedUser->assignRole($role);
-    }
-
-    protected function setupMatchDecisions()
-    {
-        factory(MatchDecision::class)->create(['id' => 1, 'name' => 'Pinfall', 'slug' => 'pinfall']);
-        factory(MatchDecision::class)->create(['id' => 2, 'name' => 'Submission', 'slug' => 'submission']);
-        factory(MatchDecision::class)->create(['id' => 3, 'name' => 'Disqualification', 'slug' => 'dq']);
-        factory(MatchDecision::class)->create(['id' => 4, 'name' => 'Countout', 'slug' => 'countout']);
-        factory(MatchDecision::class)->create(['id' => 5, 'name' => 'Knockout', 'slug' => 'knockout']);
-        factory(MatchDecision::class)->create(['id' => 6, 'name' => 'Stipulation', 'slug' => 'stipulation']);
-        factory(MatchDecision::class)->create(['id' => 7, 'name' => 'Forfeit', 'slug' => 'forfeit']);
-        factory(MatchDecision::class)->create(['id' => 8, 'name' => 'Time Limit Draw', 'slug' => 'draw']);
-        factory(MatchDecision::class)->create(['id' => 9, 'name' => 'No Decision', 'slug' => 'nodecision']);
-        factory(MatchDecision::class)->create(['id' => 10, 'name' => 'Reversed Decision', 'slug' => 'revdecision']);
     }
 
     protected function dumpSessionErrors()

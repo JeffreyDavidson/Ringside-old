@@ -17,9 +17,10 @@ class TitlesController extends Controller
     {
         $this->authorize('index', Title::class);
 
-        $titles = Title::paginate(10);
+        $activeTitles = Title::active()->paginate(10);
+        $retiredTitles = Title::retired()->paginate(10);
 
-        return response()->view('titles.index', ['titles' => $titles]);
+        return response()->view('titles.index', compact('activeTitles', 'retiredTitles'));
     }
 
     /**

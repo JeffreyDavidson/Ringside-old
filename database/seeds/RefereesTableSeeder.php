@@ -15,7 +15,7 @@ class RefereesTableSeeder extends Seeder
      */
     public function run()
     {
-        $startingDate = Carbon::parse('First Monday of January 1990');
+        $startingDate = Carbon::parse('First Monday of January 2010');
         $now = Carbon::now();
 
         // Create 10 initial referees.

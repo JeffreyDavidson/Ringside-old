@@ -7,6 +7,7 @@ use App\Models\Title;
 use App\Models\Championship;
 use App\Models\Wrestler;
 use Carbon\Carbon;
+use App\Collections\ChampionshipCollection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ChampionshipTest extends TestCase
@@ -42,5 +43,11 @@ class ChampionshipTest extends TestCase
         $championship->loseTitle(Carbon::now());
 
         $this->assertNotNull($championship->fresh()->lost_on);
+    }
+
+    /** @test */
+    public function it_returns_a_new_custom_championship_collection()
+    {
+        $this->assertInstanceOf(ChampionshipCollection::class, Championship::all());
     }
 }

@@ -5,11 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Models\Match;
 use App\Http\Requests\EventResultsFormRequest;
+use App\Services\UpdateMatchResults;
 
 class ResultsController extends Controller
 {
     /**
-     * Show the form for editing an events results.
+     * Show the form for editing results for an event.
      *
      * @param  \App\Models\Event  $event
      * @return \Illuminate\Http\Response
@@ -22,7 +23,7 @@ class ResultsController extends Controller
     }
 
     /**
-     * Update the specified event with results from matches.
+     * Update the results of matches for an event.
      *
      * @param  \App\Http\Requests\EventResultsFormRequest  $request
      * @param  \App\Models\Event  $event
@@ -30,33 +31,7 @@ class ResultsController extends Controller
      */
     public function update(EventResultsFormRequest $request, Event $event)
     {
-        foreach ($request->matches as $index => $match) {
-            $retrievedMatch = Match::withMatchNumber($index + 1)->forEvent($event)->first();
-            $retrievedMatch->update([
-                'match_decision_id' => $match['match_decision_id'],
-                'winner_id' => $match['winner_id'],
-                'result' => $match['result'],
-            ]);
-
-            $losers = $retrievedMatch->wrestlers->except($match['winner_id']);
-
-            $retrievedMatch->losers()->saveMany($losers);
-
-            if ($retrievedMatch->isTitleMatch()) {
-                foreach ($retrievedMatch->titles as $title) {
-                    if ($title->hasAChampion()) {
-                        if (! $retrievedMatch->winner->hasTitle($title) && $retrievedMatch->decision->titleCanChangeHands()) {
-                            $title->currentChampion->loseTitle($retrievedMatch->date);
-                            $retrievedMatch->winner->winTitle($title, $retrievedMatch->date);
-                        } else {
-                            $title->currentChampion->increment('successful_defenses');
-                        }
-                    } elseif ($retrievedMatch->decision->titleCanBeWon()) {
-                        $retrievedMatch->winner->winTitle($title, $retrievedMatch->date);
-                    }
-                }
-            }
-        }
+        (new UpdateMatchResults($request->matches, $event))->save();
 
         return redirect()->route('events.index');
     }

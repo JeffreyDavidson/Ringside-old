@@ -22,7 +22,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::group(['prefix' => 'roster'], function () {
         Route::resource('wrestlers', 'WrestlersController');
-        Route::get('wrestlers/{wrestler}/retire', 'WrestlersController@retire')->name('wrestlers.retire');
+        Route::resource('retired-wrestlers', 'RetiredWrestlersController')->parameters([
+            'retired-wrestlers' => 'wrestler',
+        ]);
     });
 
     Route::resource('events', 'EventsController');

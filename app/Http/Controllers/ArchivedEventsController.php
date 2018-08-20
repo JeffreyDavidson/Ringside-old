@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class ArchivedEventsController extends Controller
 {
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created archived event.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response

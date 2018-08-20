@@ -34,23 +34,25 @@ class TitleRecordsViewComposer
     public function compose(View $view)
     {
         /** @var \App\Models\Title $title */
-        $title = $view->get('title');
+        $title = $view->title;
 
-        $longestTitleReigns = $this->repository()->longestTitleReigns()->map(function (Champion $reign) {
+        $longestTitleReigns = $this->repository->longestTitleReigns($title)->map(function (Champion $reign) {
             return [
                 'wrestler' => $reign->wrestler->name,
                 'length' => number_format($reign->length).' '.str_plural('day', $reign->length),
             ];
         });
 
-        $mostTitleDefenses = $this->repository()->mostTitleDefenses()->map(function (Champion $reign) {
+        dd($longestTitleReigns);
+
+        $mostTitleDefenses = $this->repository->mostTitleDefenses($title)->map(function (Champion $reign) {
             return [
                 'wrestler' => $reign->wrestler->name,
                 'count' => $reign->successful_defenses,
             ];
         });
 
-        $mostTitleReigns = $this->repository()->mostTitleReigns()->map(function (Champion $reign) {
+        $mostTitleReigns = $this->repository->mostTitleReigns($title)->map(function (Champion $reign) {
             return [
                 'wrestler' => $reign->wrestler->name,
                 'count' => $reign->count,

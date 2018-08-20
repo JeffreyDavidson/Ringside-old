@@ -32,7 +32,7 @@ class EventResultsFormRequest extends FormRequest
         $this->expectedMatchesCount = Event::find(request()->event->id)->matches()->count();
 
         $rules = [
-            'matches'                  => ['array', 'size:'.$this->expectedMatchesCount],
+            'matches' => ['array', 'size:'.$this->expectedMatchesCount],
             'matches.*.match_decision_id' => ['required', 'integer', 'min:1', Rule::exists('match_decisions', 'id')],
             'matches.*.winner_id' => [
                 'required',

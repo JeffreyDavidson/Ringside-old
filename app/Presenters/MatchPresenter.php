@@ -13,6 +13,10 @@ class MatchPresenter extends Presenter
      */
     public function wrestlers()
     {
+        if (in_array($this->model->type->slug, ['royalrumble', 'battleroyal'])) {
+            return $this->model->type->name;
+        }
+
         $groupedWrestlers = $this->model->wrestlers->groupBy(function ($item, $key) {
             return $item->pivot->side_number;
         });
@@ -41,7 +45,7 @@ class MatchPresenter extends Presenter
      */
     public function match_number()
     {
-        $numberOfMatches = $this->model->event->matches->count(); // use ->matches->count() if relation already loaded to avoid an extra query
+        $numberOfMatches = $this->model->event->matches()->count(); // use ->matches->count() if relation already loaded to avoid an extra query
 
         if ($this->model->match_number == $numberOfMatches) {
             return 'Main Event';

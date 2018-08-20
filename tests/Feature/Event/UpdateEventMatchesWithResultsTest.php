@@ -73,7 +73,7 @@ class UpdateEventMatchesWithResultsTest extends TestCase
         return array_replace_recursive([
             'matches' => [
                 [
-                    'match_decision_id' => 1,
+                    'match_decision_id' => factory(MatchDecision::class)->create()->id,
                     'winner_id' => 1,
                     'result' => 'Donec sed odio dui. Cras mattis consectetur purus sit amet fermentum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.'
                 ]
@@ -135,7 +135,7 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                         ->patch(route('results.update', ['event' => $match->event->id]), $this->validParams([
                             'matches' => [
                                 [
-                                    'match_decision_id' => 1,
+                                    'match_decision_id' => factory(MatchDecision::class)->create()->id,
                                     'winner_id' => $match->wrestlers->first()->id,
                                     'result' => 'Maecenas faucibus mollis interdum. Etiam porta sem malesuada magna mollis euismod.',
                                 ]

@@ -74,4 +74,15 @@ class TitlePolicy
     {
         return $user->hasPermission('retire-title');
     }
+
+    /**
+     * Checks to see if the user has permission to unretire a title.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function unretire(User $user)
+    {
+        return $user->hasPermission('unretire-title');
+    }
 }

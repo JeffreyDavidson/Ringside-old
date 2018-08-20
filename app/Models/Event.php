@@ -47,7 +47,7 @@ class Event extends Model
      */
     public function matches()
     {
-        return $this->hasMany(Match::class)->with('type', 'referees', 'stipulation', 'wrestlers', 'titles');
+        return $this->hasMany(Match::class);
     }
 
     /**

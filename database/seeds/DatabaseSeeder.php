@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
         'retirements',
         'suspensions',
         'titles',
-        'champions',
+        'championships',
         'managers',
         'events',
         'matches',
@@ -23,6 +23,8 @@ class DatabaseSeeder extends Seeder
         'match_decisions',
         'match_wrestler',
         'match_title',
+        'match_winner',
+        'match_loser',
         'venues',
         'referees',
         'match_referee',
@@ -45,8 +47,8 @@ class DatabaseSeeder extends Seeder
         $this->call(UsersTableSeeder::class);
         $this->call(WrestlersTableSeeder::class);
         $this->call(RefereesTableSeeder::class);
-        $this->call(WrestlersInjuriesTableSeeder::class);
-        $this->call(WrestlersRetirementsTableSeeder::class);
+        // $this->call(WrestlersInjuriesTableSeeder::class);
+        // $this->call(WrestlersRetirementsTableSeeder::class);
         $this->call(MatchTypesTableSeeder::class);
         $this->call(StipulationsTableSeeder::class);
         $this->call(MatchDecisionsTableSeeder::class);
