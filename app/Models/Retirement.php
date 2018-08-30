@@ -17,18 +17,21 @@ class Retirement extends Model
     protected $presenter = 'App\Presenters\RetirementPresenter';
 
     /**
-     * Don't auto-apply mass assignment protection.
+     * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $guarded = [];
+    protected $fillable = [];
 
     /**
-     * The attributes that should be mutated to dates.
+     * The attributes that should be cast to native types.
      *
      * @var array
      */
-    protected $dates = ['retired_at', 'ended_at'];
+    protected $casts = [
+        'retired_at' => 'datetime',
+        'ended_at' => 'datetime',
+    ];
 
     /**
      * Ends a retirement.

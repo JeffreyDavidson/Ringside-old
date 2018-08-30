@@ -19,7 +19,7 @@ class ResultsController extends Controller
     {
         $this->authorize('editResults', Event::class);
 
-        return view('events.results', ['event' => $event]);
+        return view('events.results', compact('event'));
     }
 
     /**

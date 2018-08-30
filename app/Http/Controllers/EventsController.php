@@ -8,6 +8,8 @@ use App\Http\Requests\EventCreateFormRequest;
 
 class EventsController extends Controller
 {
+    protected $authorizeResource = Event::class;
+
     /**
      * Display a listing of all events.
      *
@@ -15,13 +17,11 @@ class EventsController extends Controller
      */
     public function index()
     {
-        $this->authorize('index', Event::class);
-
         $scheduledEvents = Event::scheduled()->with('venue')->paginate(10);
         $previousEvents = Event::past()->with('venue')->paginate(10);
         $archivedEvents = Event::past()->archived()->with('venue')->paginate(10);
 
-        return response()->view('events.index', compact('scheduledEvents', 'previousEvents', 'archivedEvents'));
+        return view('events.index', compact('scheduledEvents', 'previousEvents', 'archivedEvents'));
     }
 
     /**
@@ -29,11 +29,9 @@ class EventsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Event $event)
     {
-        $this->authorize('create', Event::class);
-
-        return response()->view('events.create', ['event' => new Event]);
+        return view('events.create', compact('event'));
     }
 
     /**
@@ -44,9 +42,7 @@ class EventsController extends Controller
      */
     public function store(EventCreateFormRequest $request)
     {
-        $this->authorize('create', Event::class);
-
-        Event::create($request->only('name', 'slug', 'date', 'venue_id'));
+        Event::create($request->all());
 
         return redirect()->route('events.index');
     }
@@ -59,9 +55,7 @@ class EventsController extends Controller
      */
     public function show(Event $event)
     {
-        $this->authorize('show', Event::class);
-
-        return response()->view('events.show', ['event' => $event]);
+        return view('events.show', compact('event'));
     }
 
     /**
@@ -72,9 +66,7 @@ class EventsController extends Controller
      */
     public function edit(Event $event)
     {
-        $this->authorize('edit', Event::class);
-
-        return response()->view('events.edit', ['event' => $event]);
+        return view('events.edit', compact('event'));
     }
 
     /**
@@ -86,9 +78,7 @@ class EventsController extends Controller
      */
     public function update(EventEditFormRequest $request, Event $event)
     {
-        $this->authorize('edit', Event::class);
-
-        $event->update($request->only('name', 'slug', 'date', 'venue_id'));
+        $event->update($request->all());
 
         return redirect()->route('events.index');
     }
@@ -101,8 +91,6 @@ class EventsController extends Controller
      */
     public function destroy(Event $event)
     {
-        $this->authorize('delete', Event::class);
-
         $event->delete();
 
         return redirect()->route('events.index');

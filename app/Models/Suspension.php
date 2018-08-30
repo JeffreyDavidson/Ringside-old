@@ -7,18 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 class Suspension extends Model
 {
     /**
-     * Don't auto-apply mass assignment protection.
+     * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $guarded = [];
+    protected $fillable = [];
 
     /**
-     * The attributes that should be mutated to dates.
+     * The attributes that should be cast to native types.
      *
      * @var array
      */
-    protected $dates = ['suspended_at', 'ended_at'];
+    protected $casts = [
+        'suspended_at' => 'datetime',
+        'ended_at' => 'datetime',
+    ];
 
     /**
      * Lifts a suspension.

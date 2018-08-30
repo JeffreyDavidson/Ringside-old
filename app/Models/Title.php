@@ -22,18 +22,11 @@ class Title extends Model
     protected $presenter = 'App\Presenters\TitlePresenter';
 
     /**
-     * Don't auto-apply mass assignment protection.
+     * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $guarded = [];
-
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = ['introduced_at'];
+    protected $fillable = ['name', 'slug', 'introduced_at'];
 
     /**
      * The attributes that should be cast to native types.
@@ -41,6 +34,7 @@ class Title extends Model
      * @var array
      */
     protected $casts = [
+        'introduced_at' => 'datetime',
         'is_active' => 'boolean',
     ];
 

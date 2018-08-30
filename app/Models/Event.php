@@ -34,11 +34,13 @@ class Event extends Model
     protected $guarded = [];
 
     /**
-     * The attributes that should be mutated to dates.
+     * The attributes that should be cast to native types.
      *
      * @var array
      */
-    protected $dates = ['date'];
+    protected $casts = [
+        'date' => 'datetime',
+    ];
 
     /**
      * An event has many matches.

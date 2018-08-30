@@ -12,6 +12,22 @@ class Referee extends Model
     use Presentable, SoftDeletes;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['first_name', 'last_name', 'hired_at'];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'hired_at' => 'datetime',
+    ];
+
+    /**
      * Assign which presenter to be used for model.
      *
      * @var string

@@ -14,11 +14,14 @@ class Injury extends Model
     protected $guarded = [];
 
     /**
-     * The attributes that should be mutated to dates.
+     * The attributes that should be cast to native types.
      *
      * @var array
      */
-    protected $dates = ['injured_at', 'healed_at'];
+    protected $casts = [
+        'injured_at' => 'datetime',
+        'healed_at' => 'datetime',
+    ];
 
     /**
      * Heals an injury.

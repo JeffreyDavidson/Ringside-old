@@ -8,6 +8,8 @@ use App\Http\Requests\VenueCreateFormRequest;
 
 class VenuesController extends Controller
 {
+    protected $authorizeResource = Venue::class;
+
     /**
      * Display a listing of all the venues.
      *
@@ -15,11 +17,9 @@ class VenuesController extends Controller
      */
     public function index()
     {
-        $this->authorize('index', Venue::class);
-
         $venues = Venue::paginate(10);
 
-        return response()->view('venues.index', ['venues' => $venues]);
+        return view('venues.index', compact('venues'));
     }
 
     /**
@@ -27,11 +27,9 @@ class VenuesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Venue $venue)
     {
-        $this->authorize('create', Venue::class);
-
-        return response()->view('venues.create', ['venue' => new Venue]);
+        return view('venues.create', compact('venue'));
     }
 
     /**
@@ -42,9 +40,7 @@ class VenuesController extends Controller
      */
     public function store(VenueCreateFormRequest $request)
     {
-        $this->authorize('create', Venue::class);
-
-        Venue::create($request->only('name', 'address', 'city', 'state', 'postcode'));
+        Venue::create($request->all());
 
         return redirect()->route('venues.index');
     }
@@ -57,9 +53,7 @@ class VenuesController extends Controller
      */
     public function show(Venue $venue)
     {
-        $this->authorize('show', Venue::class);
-
-        return response()->view('venues.show', ['venue' => $venue]);
+        return view('venues.show', compct('venue'));
     }
 
     /**
@@ -70,9 +64,7 @@ class VenuesController extends Controller
      */
     public function edit(Venue $venue)
     {
-        $this->authorize('edit', Venue::class);
-
-        return response()->view('venues.edit', ['venue' => $venue]);
+        return view('venues.edit', compact('venue'));
     }
 
     /**
@@ -84,9 +76,7 @@ class VenuesController extends Controller
      */
     public function update(VenueEditFormRequest $request, Venue $venue)
     {
-        $this->authorize('edit', Venue::class);
-
-        $venue->update($request->only('name', 'address', 'city', 'state', 'postcode'));
+        $venue->update($request->all());
 
         return redirect()->route('venues.index');
     }
@@ -99,8 +89,6 @@ class VenuesController extends Controller
      */
     public function destroy(Venue $venue)
     {
-        $this->authorize('delete', Venue::class);
-
         $venue->delete();
 
         return redirect()->route('venues.index');

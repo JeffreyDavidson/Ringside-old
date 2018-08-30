@@ -18,11 +18,14 @@ class Championship extends Model
     protected $presenter = 'App\Presenters\ChampionshipPresenter';
 
     /**
-     * The attributes that should be mutated to dates.
+     * The attributes that should be cast to native types.
      *
      * @var array
      */
-    protected $dates = ['won_on', 'lost_on'];
+    protected $casts = [
+        'won_on' => 'datetime',
+        'lost_on' => 'datetime',
+    ];
 
     /**
      * Don't auto-apply mass assignment protection.

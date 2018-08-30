@@ -11,11 +11,11 @@ class Venue extends Model
     use SoftDeletes;
 
     /**
-     * Don't auto-apply mass assignment protection.
+     * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $guarded = [];
+    protected $fillable = ['name', 'address', 'city', 'state', 'postcode'];
 
     /**
      * A venue can have many events.

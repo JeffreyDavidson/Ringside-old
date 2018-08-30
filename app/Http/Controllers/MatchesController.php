@@ -15,11 +15,11 @@ class MatchesController extends Controller
      * @param  \App\Models\Event  $event
      * @return \Illuminate\Http\Response
      */
-    public function create(Event $event)
+    public function create(Event $event, Match $match)
     {
         $this->authorize('create', Match::class);
 
-        return response()->view('matches.create', ['match' => new Match]);
+        return view('matches.create', compact('match'));
     }
 
     /**
@@ -47,7 +47,7 @@ class MatchesController extends Controller
     {
         $this->authorize('show', Match::class);
 
-        return response()->view('matches.show', ['match' => $match]);
+        return view('matches.show', compact('match'));
     }
 
     /**

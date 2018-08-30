@@ -7,6 +7,16 @@ use Illuminate\Http\Request;
 
 class ArchivedEventsController extends Controller
 {
+    protected $authorizeResource = Event::class;
+
+    protected function resourceAbilityMap()
+    {
+        return [
+            'store' => 'archive',
+            'destroy' => 'restore'
+        ];
+    }
+
     /**
      * Store a newly created archived event.
      *
@@ -15,11 +25,14 @@ class ArchivedEventsController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('archive', Event::class);
-
-        $event = Event::findOrFail($request->input('event_id'));
-
         $event->archive();
+
+        return redirect()->route('events.index');
+    }
+
+    public function destroy(Event $event)
+    {
+        $event->restore();
 
         return redirect()->route('events.index');
     }

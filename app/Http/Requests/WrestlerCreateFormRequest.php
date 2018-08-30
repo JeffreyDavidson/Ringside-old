@@ -35,4 +35,8 @@ class WrestlerCreateFormRequest extends FormRequest
             'hired_at' => 'required|date',
         ];
     }
+
+    public function prepareForValidation() {
+        $this->offsetSet('height', ($this->input('feet') * 12) + $this->input('inches'));
+    }
 }

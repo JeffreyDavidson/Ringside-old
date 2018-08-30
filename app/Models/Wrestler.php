@@ -27,18 +27,11 @@ class Wrestler extends Model
     protected $presenter = 'App\Presenters\WrestlerPresenter';
 
     /**
-     * Don't auto-apply mass assignment protection.
+     * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $guarded = [];
-
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = ['hired_at'];
+    protected $fillable = ['name', 'slug', 'hired_at', 'hometown', 'height', 'weight', 'signature_move'];
 
     /**
      * The attributes that should be cast to native types.
@@ -46,6 +39,7 @@ class Wrestler extends Model
      * @var array
      */
     protected $casts = [
+        'hired_at' => 'datetime',
         'is_active' => 'boolean',
     ];
 

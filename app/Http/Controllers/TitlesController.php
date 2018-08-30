@@ -8,6 +8,8 @@ use App\Http\Requests\TitleCreateFormRequest;
 
 class TitlesController extends Controller
 {
+    protected $authorizeResource = Title::class;
+
     /**
      * Display a listing of all the titles.
      *
@@ -15,12 +17,10 @@ class TitlesController extends Controller
      */
     public function index()
     {
-        $this->authorize('index', Title::class);
-
         $activeTitles = Title::active()->paginate(10);
         $retiredTitles = Title::retired()->paginate(10);
 
-        return response()->view('titles.index', compact('activeTitles', 'retiredTitles'));
+        return view('titles.index', compact('activeTitles', 'retiredTitles'));
     }
 
     /**
@@ -28,11 +28,9 @@ class TitlesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Title $title)
     {
-        $this->authorize('create', Title::class);
-
-        return response()->view('titles.create', ['title' => new Title]);
+        return view('titles.create', compact('title'));
     }
 
     /**
@@ -43,9 +41,7 @@ class TitlesController extends Controller
      */
     public function store(TitleCreateFormRequest $request)
     {
-        $this->authorize('create', Title::class);
-
-        Title::create($request->only('name', 'slug', 'introduced_at'));
+        Title::create($request->all());
 
         return redirect()->route('titles.index');
     }
@@ -58,9 +54,7 @@ class TitlesController extends Controller
      */
     public function show(Title $title)
     {
-        $this->authorize('show', Title::class);
-
-        return response()->view('titles.show', ['title' => $title]);
+        return view('titles.show', compact('title'));
     }
 
     /**
@@ -71,9 +65,7 @@ class TitlesController extends Controller
      */
     public function edit(Title $title)
     {
-        $this->authorize('edit', Title::class);
-
-        return response()->view('titles.edit', ['title' => $title]);
+        return view('titles.edit', compact('title'));
     }
 
     /**
@@ -85,9 +77,7 @@ class TitlesController extends Controller
      */
     public function update(TitleEditFormRequest $request, Title $title)
     {
-        $this->authorize('edit', Title::class);
-
-        $title->update($request->only('name', 'slug', 'introduced_at'));
+        $title->update($request->all());
 
         return redirect()->route('titles.index');
     }
@@ -100,8 +90,6 @@ class TitlesController extends Controller
      */
     public function destroy(Title $title)
     {
-        $this->authorize('delete', Title::class);
-
         $title->delete();
 
         return redirect()->route('titles.index');
