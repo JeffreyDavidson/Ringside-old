@@ -8,12 +8,13 @@ use App\Http\Requests\TitleCreateFormRequest;
 
 class TitlesController extends Controller
 {
+    /** @var string */
     protected $authorizeResource = Title::class;
 
     /**
      * Display a listing of all the titles.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function index()
     {
@@ -26,7 +27,8 @@ class TitlesController extends Controller
     /**
      * Show the form for creating a new title.
      *
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Title  $title
+     * @return \Illuminate\View\View
      */
     public function create(Title $title)
     {
@@ -37,7 +39,7 @@ class TitlesController extends Controller
      * Store a newly created title.
      *
      * @param  \App\Http\Requests\TitleCreateFormRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(TitleCreateFormRequest $request)
     {
@@ -50,7 +52,7 @@ class TitlesController extends Controller
      * Display the specified title.
      *
      * @param  \App\Models\Title  $title
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function show(Title $title)
     {
@@ -61,7 +63,7 @@ class TitlesController extends Controller
      * Show the form for editing a title.
      *
      * @param  \App\Models\Title  $title
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function edit(Title $title)
     {
@@ -73,7 +75,7 @@ class TitlesController extends Controller
      *
      * @param  \App\Http\Requests\TitleEditFormRequest  $request
      * @param  \App\Models\Title  $title
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(TitleEditFormRequest $request, Title $title)
     {
@@ -86,7 +88,7 @@ class TitlesController extends Controller
      * Delete the specified title.
      *
      * @param  \App\Models\Title  $title
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Title $title)
     {

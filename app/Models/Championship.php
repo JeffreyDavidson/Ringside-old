@@ -28,11 +28,11 @@ class Championship extends Model
     ];
 
     /**
-     * Don't auto-apply mass assignment protection.
+     * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $guarded = [];
+    protected $fillable = [];
 
     /**
      * A championship belongs to a title.

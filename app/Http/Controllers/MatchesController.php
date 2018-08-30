@@ -13,23 +13,22 @@ class MatchesController extends Controller
      * Show the form for creating a match for an event.
      *
      * @param  \App\Models\Event  $event
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Match  $match
+     * @return \Illuminate\View\View
      */
     public function create(Event $event, Match $match)
     {
-        $this->authorize('create', Match::class);
-
         return view('matches.create', compact('match'));
     }
 
     /**
      * Store newly created matches for an event.
      *
-     * @param  \App\Models\Event  $event
      * @param  \App\Http\Requests\MatchCreateFormRequest  $event
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Event  $event
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Event $event, MatchCreateFormRequest $request)
+    public function store(MatchCreateFormRequest $request, Event $event)
     {
         (new AddMatchesToEvent($request->matches, $event))->schedule();
 
@@ -41,12 +40,10 @@ class MatchesController extends Controller
      *
      * @param  \App\Models\Event  $event
      * @param  \App\Models\Match  $match
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function show(Event $event, Match $match)
     {
-        $this->authorize('show', Match::class);
-
         return view('matches.show', compact('match'));
     }
 
@@ -55,11 +52,11 @@ class MatchesController extends Controller
      *
      * @param  \App\Models\Event  $event
      * @param  \App\Models\Match  $match
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function edit(Event $event, Match $match)
     {
-        $this->authorize('edit', Match::class);
+        return view('matches.edit', compact('match'));
     }
 
     /**
@@ -67,12 +64,10 @@ class MatchesController extends Controller
      *
      * @param  \App\Models\Event  $event
      * @param  \App\Models\Match  $match
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Event $event, Match $match)
     {
-        $this->authorize('delete', Match::class);
-
         $match->delete();
 
         return redirect()->route('event.matches.index', ['event' => $event->id]);

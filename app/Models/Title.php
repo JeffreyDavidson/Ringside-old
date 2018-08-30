@@ -15,11 +15,14 @@ class Title extends Model
     use HasMatches, HasRetirements, HasStatus, Presentable, SoftDeletes;
 
     /**
-     * Assign which presenter to be used for model.
+     * The attributes that should be cast to native types.
      *
-     * @var string
+     * @var array
      */
-    protected $presenter = 'App\Presenters\TitlePresenter';
+    protected $casts = [
+        'introduced_at' => 'datetime',
+        'is_active' => 'boolean',
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -29,14 +32,11 @@ class Title extends Model
     protected $fillable = ['name', 'slug', 'introduced_at'];
 
     /**
-     * The attributes that should be cast to native types.
+     * Assign which presenter to be used for model.
      *
-     * @var array
+     * @var string
      */
-    protected $casts = [
-        'introduced_at' => 'datetime',
-        'is_active' => 'boolean',
-    ];
+    protected $presenter = 'App\Presenters\TitlePresenter';
 
     /**
      * A title can have many champions.

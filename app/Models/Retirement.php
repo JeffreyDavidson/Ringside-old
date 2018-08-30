@@ -10,11 +10,14 @@ class Retirement extends Model
     use Presentable;
 
     /**
-     * Assign which presenter to be used for model.
+     * The attributes that should be cast to native types.
      *
-     * @var string
+     * @var array
      */
-    protected $presenter = 'App\Presenters\RetirementPresenter';
+    protected $casts = [
+        'retired_at' => 'datetime',
+        'ended_at' => 'datetime',
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -24,14 +27,11 @@ class Retirement extends Model
     protected $fillable = [];
 
     /**
-     * The attributes that should be cast to native types.
+     * Assign which presenter to be used for model.
      *
-     * @var array
+     * @var string
      */
-    protected $casts = [
-        'retired_at' => 'datetime',
-        'ended_at' => 'datetime',
-    ];
+    protected $presenter = 'App\Presenters\RetirementPresenter';
 
     /**
      * Ends a retirement.

@@ -8,12 +8,13 @@ use App\Http\Requests\VenueCreateFormRequest;
 
 class VenuesController extends Controller
 {
+    /** @var string */
     protected $authorizeResource = Venue::class;
 
     /**
      * Display a listing of all the venues.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function index()
     {
@@ -25,7 +26,8 @@ class VenuesController extends Controller
     /**
      * Show the form for creating a new venue.
      *
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Venue  $venue
+     * @return \Illuminate\View\View
      */
     public function create(Venue $venue)
     {
@@ -49,7 +51,7 @@ class VenuesController extends Controller
      * Display the specified venue.
      *
      * @param  \App\Models\Venue  $venue
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function show(Venue $venue)
     {
@@ -60,7 +62,7 @@ class VenuesController extends Controller
      * Show the form for editing an venue.
      *
      * @param  \App\Models\Venue  $venue
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function edit(Venue $venue)
     {
@@ -72,7 +74,7 @@ class VenuesController extends Controller
      *
      * @param  \App\Http\Requests\VenueEditFormRequest  $request
      * @param  \App\Models\Venue  $venue
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(VenueEditFormRequest $request, Venue $venue)
     {
@@ -85,7 +87,7 @@ class VenuesController extends Controller
      * Delete the specified venue.
      *
      * @param  \App\Models\Venue  $venue
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Venue $venue)
     {

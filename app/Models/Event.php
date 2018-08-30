@@ -27,11 +27,12 @@ class Event extends Model
     protected $presenter = 'App\Presenters\EventPresenter';
 
     /**
-     * Don't auto-apply mass assignment protection.
+     * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $guarded = [];
+    protected $fillable = [];
+
 
     /**
      * The attributes that should be cast to native types.

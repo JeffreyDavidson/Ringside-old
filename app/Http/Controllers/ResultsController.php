@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
-use App\Models\Match;
 use App\Http\Requests\EventResultsFormRequest;
 use App\Services\UpdateMatchResults;
 
@@ -13,7 +12,7 @@ class ResultsController extends Controller
      * Show the form for editing results for an event.
      *
      * @param  \App\Models\Event  $event
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function edit(Event $event)
     {
@@ -27,7 +26,7 @@ class ResultsController extends Controller
      *
      * @param  \App\Http\Requests\EventResultsFormRequest  $request
      * @param  \App\Models\Event  $event
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(EventResultsFormRequest $request, Event $event)
     {

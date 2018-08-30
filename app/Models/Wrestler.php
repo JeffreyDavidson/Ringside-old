@@ -16,22 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Wrestler extends Model
 {
-    use HasManagers, HasTitles, HasRetirements, HasSuspensions,
-        HasInjuries, HasMatches, HasStatus, SoftDeletes, Presentable;
-
-    /**
-     * Assign which presenter to be used for model.
-     *
-     * @var string
-     */
-    protected $presenter = 'App\Presenters\WrestlerPresenter';
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = ['name', 'slug', 'hired_at', 'hometown', 'height', 'weight', 'signature_move'];
+    use HasInjuries, HasManagers, HasMatches, HasRetirements, HasStatus, HasSuspensions, HasTitles, Presentable, SoftDeletes;
 
     /**
      * The attributes that should be cast to native types.
@@ -44,14 +29,18 @@ class Wrestler extends Model
     ];
 
     /**
-     * A wrestler can have many managers.
+     * The attributes that are mass assignable.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @var array
      */
-    public function managers()
-    {
-        return $this->belongsToMany(Manager::class);
-    }
+    protected $fillable = ['name', 'slug', 'hired_at', 'hometown', 'height', 'weight', 'signature_move'];
+
+    /**
+     * Assign which presenter to be used for model.
+     *
+     * @var string
+     */
+    protected $presenter = 'App\Presenters\WrestlerPresenter';
 
     /**
      * A wrestler can hold many championships.
@@ -61,6 +50,26 @@ class Wrestler extends Model
     public function championships()
     {
         return $this->hasMany(Championship::class);
+    }
+
+    /**
+     * A wrestler can have many injuries.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function injuries()
+    {
+        return $this->hasMany(Injury::class);
+    }
+    
+    /**
+     * A wrestler can have many managers.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function managers()
+    {
+        return $this->belongsToMany(Manager::class);
     }
 
     /**
@@ -74,13 +83,13 @@ class Wrestler extends Model
     }
 
     /**
-     * A wrestler can have many injuries.
+     * A wrestler can have many retirements.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
-    public function injuries()
+    public function retirements()
     {
-        return $this->hasMany(Injury::class);
+        return $this->morphMany(Retirement::class, 'retiree');
     }
 
     /**
@@ -91,16 +100,6 @@ class Wrestler extends Model
     public function suspensions()
     {
         return $this->hasMany(Suspension::class);
-    }
-
-    /**
-     * A wrestler can have many retirements.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
-     */
-    public function retirements()
-    {
-        return $this->morphMany(Retirement::class, 'retiree');
     }
 
     /**

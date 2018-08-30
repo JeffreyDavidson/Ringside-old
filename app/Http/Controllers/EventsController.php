@@ -8,12 +8,13 @@ use App\Http\Requests\EventCreateFormRequest;
 
 class EventsController extends Controller
 {
+    /** @var string */
     protected $authorizeResource = Event::class;
 
     /**
      * Display a listing of all events.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function index()
     {
@@ -27,7 +28,8 @@ class EventsController extends Controller
     /**
      * Show the form for creating an event.
      *
-     * @return \Illuminate\Http\Response
+     * @return \App\Models\Event  $event
+     * @return \Illuminate\View\View
      */
     public function create(Event $event)
     {
@@ -38,7 +40,7 @@ class EventsController extends Controller
      * Store a newly created event.
      *
      * @param  \App\Http\Requests\EventCreateFormRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(EventCreateFormRequest $request)
     {
@@ -51,7 +53,7 @@ class EventsController extends Controller
      * Display the specified event.
      *
      * @param  \App\Models\Event  $event
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function show(Event $event)
     {
@@ -62,7 +64,7 @@ class EventsController extends Controller
      * Show the form for editing an event.
      *
      * @param  \App\Models\Event  $event
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function edit(Event $event)
     {
@@ -74,7 +76,7 @@ class EventsController extends Controller
      *
      * @param  \App\Http\Requests\EventEditFormRequest  $request
      * @param  \App\Models\Event  $event
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(EventEditFormRequest $request, Event $event)
     {
@@ -87,7 +89,7 @@ class EventsController extends Controller
      * Delete the specified event.
      *
      * @param  \App\Models\Event  $event
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Event $event)
     {

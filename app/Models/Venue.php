@@ -28,16 +28,6 @@ class Venue extends Model
     }
 
     /**
-     * Returns a collection of events before the current date.
-     *
-     * @return \App\Models\Venue|\Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function pastEvents()
-    {
-        return $this->events()->where('date', '<', Carbon::today());
-    }
-
-    /**
      * Determines if a venue has held a past event.
      *
      * @return bool
@@ -45,5 +35,15 @@ class Venue extends Model
     public function hasPastEvents()
     {
         return $this->pastEvents->isNotEmpty();
+    }
+
+    /**
+     * Returns a collection of events before the current date.
+     *
+     * @return \App\Models\Venue|\Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function pastEvents()
+    {
+        return $this->events()->where('date', '<', Carbon::today());
     }
 }

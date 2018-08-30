@@ -15,4 +15,12 @@ class Manager extends Model
      * @var string
      */
     protected $presenter = 'App\Presenters\ManagerPresenter';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [];
+
 }

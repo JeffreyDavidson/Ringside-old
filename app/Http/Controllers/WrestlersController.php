@@ -8,12 +8,13 @@ use App\Http\Requests\WrestlerCreateFormRequest;
 
 class WrestlersController extends Controller
 {
+    /** @var string */
     protected $authorizeResource = Wrestler::class;
 
     /**
      * Display a listing of all the wrestlers.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function index()
     {
@@ -25,9 +26,10 @@ class WrestlersController extends Controller
     /**
      * Show the form for creating a new wrestler.
      *
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Wrestler  $wrestler
+     * @return \Illuminate\View\View
      */
-    public function create(Wreslter $wrstler)
+    public function create(Wreslter $wrestler)
     {
         return view('wrestlers.create', compact('wrestler'));
     }
@@ -36,7 +38,7 @@ class WrestlersController extends Controller
      * Store a newly created wrestler.
      *
      * @param  \App\Http\Requests\WrestlerCreateFormRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(WrestlerCreateFormRequest $request)
     {
@@ -49,7 +51,7 @@ class WrestlersController extends Controller
      * Display the specified wrestler.
      *
      * @param  \App\Models\Wrestler  $wrestler
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function show(Wrestler $wrestler)
     {
@@ -60,7 +62,7 @@ class WrestlersController extends Controller
      * Show the form for editing a wrestler.
      *
      * @param  \App\Models\Wrestler  $wrestler
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function edit(Wrestler $wrestler)
     {
@@ -72,7 +74,7 @@ class WrestlersController extends Controller
      *
      * @param  \App\Http\Requests\WrestlerEditFormRequest  $request
      * @param  \App\Models\Wrestler  $wrestler
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(WrestlerEditFormRequest $request, Wrestler $wrestler)
     {
@@ -85,7 +87,7 @@ class WrestlersController extends Controller
      * Delete the specified wrestler.
      *
      * @param  \App\Models\Wrestler  $wrestler
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Wrestler $wrestler)
     {

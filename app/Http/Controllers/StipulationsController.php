@@ -8,12 +8,13 @@ use App\Http\Requests\StipulationCreateFormRequest;
 
 class StipulationsController extends Controller
 {
+    /** @var string */
     protected $authorizeResource = Stipulation::class;
 
     /**
      * Display a listing of all the stipulations.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function index()
     {
@@ -25,7 +26,8 @@ class StipulationsController extends Controller
     /**
      * Show the form for creating a new stipulation.
      *
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Stipulation  $stipulation
+     * @return \Illuminate\View\View
      */
     public function create(Stipulation $stipulation)
     {
@@ -36,7 +38,7 @@ class StipulationsController extends Controller
      * Store a newly created stipulation.
      *
      * @param  App\Http\Requests\StipulationCreateFormRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(StipulationCreateFormRequest $request)
     {
@@ -49,7 +51,7 @@ class StipulationsController extends Controller
      * Display the specified stipulation.
      *
      * @param  \App\Models\Stipulation  $stipulation
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function show(Stipulation $stipulation)
     {
@@ -60,7 +62,7 @@ class StipulationsController extends Controller
      * Show the form for editing a stipulation.
      *
      * @param  \App\Models\Stipulation  $stipulation
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function edit(Stipulation $stipulation)
     {
@@ -72,7 +74,7 @@ class StipulationsController extends Controller
      *
      * @param  \App\Http\Requests\StipulationEditFormRequest  $request
      * @param  \App\Models\Stipulation  $stipulation
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(StipulationEditFormRequest $request, Stipulation $stipulation)
     {
@@ -85,7 +87,7 @@ class StipulationsController extends Controller
      * Delete the specified stipulation.
      *
      * @param  \App\Models\Stipulation  $stipulation
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Stipulation $stipulation)
     {

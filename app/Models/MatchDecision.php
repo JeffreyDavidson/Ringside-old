@@ -35,6 +35,13 @@ class MatchDecision extends Model
     ];
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [];
+
+    /**
      * Checks to see if the match decision can cause a title to change hands.
      *
      * @return bool
