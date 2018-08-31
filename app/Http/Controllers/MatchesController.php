@@ -9,6 +9,8 @@ use App\Services\AddMatchesToEvent;
 
 class MatchesController extends Controller
 {
+    protected $authorizeResource = Match::class;
+
     /**
      * Show the form for creating a match for an event.
      *

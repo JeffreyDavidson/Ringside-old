@@ -8,6 +8,16 @@ use App\Services\UpdateMatchResults;
 
 class ResultsController extends Controller
 {
+    protected $authorizeResource = Event::class;
+
+    protected function resourceAbilityMap()
+    {
+        return [
+            'edit' => 'update-results',
+            'update' => 'update-results',
+        ];
+    }
+
     /**
      * Show the form for editing results for an event.
      *
@@ -16,7 +26,7 @@ class ResultsController extends Controller
      */
     public function edit(Event $event)
     {
-        $this->authorize('editResults', Event::class);
+        $this->authorize('updateResults', Event::class);
 
         return view('events.results', compact('event'));
     }

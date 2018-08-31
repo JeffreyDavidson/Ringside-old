@@ -79,6 +79,7 @@ $factory->define(App\Models\Match::class, function (Faker\Generator $faker) {
     return [
         'event_id' => factory(App\Models\Event::class)->lazy(),
         'match_type_id' => factory(App\Models\MatchType::class)->lazy(),
+        'stipulation_id' => factory(App\Models\Stipulation::class)->lazy(),
         'preview' => $faker->paragraphs(3, true),
         'result' => $faker->paragraphs(3, true),
     ];

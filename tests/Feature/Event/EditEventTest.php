@@ -57,6 +57,7 @@ class EditEventTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_view_the_edit_event_page()
     {
+        $this->withoutExceptionHandling();
         $response = $this->actingAs($this->authorizedUser)
                          ->get(route('events.edit', $this->event->id));
 

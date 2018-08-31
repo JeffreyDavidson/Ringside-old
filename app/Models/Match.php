@@ -230,8 +230,7 @@ class Match extends Model
 
         if ($this->isTitleMatch()) {
             $this->titles->each(function ($title) use ($winners) {
-                if ($title->hasAChampion()) {
-
+                if (!$title->isVacant()) {
                 } else {
                     $title->setChampion($winners, $this->date);
                 }

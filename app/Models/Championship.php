@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use App\Collections\ChampionshipCollection;
 use Laracodes\Presenter\Traits\Presentable;
 
@@ -32,7 +33,7 @@ class Championship extends Model
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = ['wrestler_id', 'title_id', 'won_on', 'lost_on'];
 
     /**
      * A championship belongs to a title.
@@ -63,6 +64,17 @@ class Championship extends Model
     public function loseTitle($date = null)
     {
         return $this->update(['lost_on' => $date ?: $this->freshTimestamp()]);
+    }
+
+    /**
+     * Scope to only include champions have haven't lost the title.
+     *
+     * @param  string|null  $date
+     * @return $this
+     */
+    public function scopeCurrent(Builder $query)
+    {
+        return $query->whereNull('lost_on');
     }
 
     /**

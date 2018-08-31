@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Models\Suspension;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use App\Exceptions\WrestlerNotSuspendedException;
@@ -9,8 +10,15 @@ use App\Exceptions\WrestlerAlreadySuspendedException;
 
 trait HasSuspensions
 {
-    /** @abstract */
-    abstract public function suspensions();
+    /**
+     * A wrestler can have many suspensions.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function suspensions()
+    {
+        return $this->hasMany(Suspension::class);
+    }
 
     /**
      * Checks to see if the wrestler has past suspensions.
@@ -90,7 +98,7 @@ trait HasSuspensions
      */
     public function unsuspend()
     {
-        if (! $this->isSuspended()) {
+        if (!$this->isSuspended()) {
             throw new WrestlerNotSuspendedException;
         }
 

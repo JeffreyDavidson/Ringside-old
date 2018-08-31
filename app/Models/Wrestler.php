@@ -43,66 +43,6 @@ class Wrestler extends Model
     protected $presenter = 'App\Presenters\WrestlerPresenter';
 
     /**
-     * A wrestler can hold many championships.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function championships()
-    {
-        return $this->hasMany(Championship::class);
-    }
-
-    /**
-     * A wrestler can have many injuries.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function injuries()
-    {
-        return $this->hasMany(Injury::class);
-    }
-    
-    /**
-     * A wrestler can have many managers.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function managers()
-    {
-        return $this->belongsToMany(Manager::class);
-    }
-
-    /**
-     * A wrestler can have many matches.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function matches()
-    {
-        return $this->belongsToMany(Match::class);
-    }
-
-    /**
-     * A wrestler can have many retirements.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
-     */
-    public function retirements()
-    {
-        return $this->morphMany(Retirement::class, 'retiree');
-    }
-
-    /**
-     * A wrestler can have many suspensions.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function suspensions()
-    {
-        return $this->hasMany(Suspension::class);
-    }
-
-    /**
      * Scope a query to only include wrestlers hired before a specific date.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query

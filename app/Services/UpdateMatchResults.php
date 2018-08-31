@@ -29,8 +29,8 @@ class UpdateMatchResults
 
             if ($retrievedMatch->isTitleMatch()) {
                 foreach ($retrievedMatch->titles as $title) {
-                    if ($title->hasAChampion()) {
-                        if (! $retrievedMatch->winner->hasTitle($title) && $retrievedMatch->decision->titleCanChangeHands()) {
+                    if (!$title->isVacant()) {
+                        if (!$retrievedMatch->winner->hasTitle($title) && $retrievedMatch->decision->titleCanChangeHands()) {
                             $title->currentChampion->loseTitle($retrievedMatch->date);
                             $retrievedMatch->winner->winTitle($title, $retrievedMatch->date);
                         } else {

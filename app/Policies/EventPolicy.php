@@ -81,7 +81,7 @@ class EventPolicy
      * @param  \App\Models\User  $user
      * @return bool
      */
-    public function editResults(User $user)
+    public function updateResults(User $user)
     {
         return $user->hasPermission('edit-event-results');
     }

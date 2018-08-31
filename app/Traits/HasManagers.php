@@ -2,13 +2,21 @@
 
 namespace App\Traits;
 
+use App\Models\Manager;
 use App\Exceptions\WrestlerAlreadyHasManagerException;
 use App\Exceptions\WrestlerNotHaveHiredManagerException;
 
 trait HasManagers
 {
-    /** @abstract */
-    abstract public function managers();
+    /**
+     * A wrestler can have many managers.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function managers()
+    {
+        return $this->belongsToMany(Manager::class);
+    }
 
     /**
      * Checks to see if the wrestler has past managers.
@@ -83,7 +91,7 @@ trait HasManagers
      */
     public function fireManager($manager, $date)
     {
-        if (! $this->hasManager($manager)) {
+        if (!$this->hasManager($manager)) {
             throw new WrestlerNotHaveHiredManagerException;
         }
 

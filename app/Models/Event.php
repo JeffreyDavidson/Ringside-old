@@ -31,8 +31,7 @@ class Event extends Model
      *
      * @var array
      */
-    protected $fillable = [];
-
+    protected $fillable = ['name', 'slug', 'date', 'venue_id', 'archived_at'];
 
     /**
      * The attributes that should be cast to native types.
@@ -70,7 +69,7 @@ class Event extends Model
      */
     public function mainEvent()
     {
-        return $this->matches()->orderBy('match_number', 'DESC')->toHasOne();
+        return $this->matches()->latest('match_number')->toHasOne();
     }
 
     /**

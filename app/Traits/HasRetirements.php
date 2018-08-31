@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Models\Retirement;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use App\Exceptions\ModelNotRetiredException;
@@ -9,8 +10,15 @@ use App\Exceptions\ModelAlreadyRetiredException;
 
 trait HasRetirements
 {
-    /** @abstract */
-    abstract public function retirements();
+    /**
+     * A wrestler can have many retirements.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function retirements()
+    {
+        return $this->morphMany(Retirement::class, 'retiree');
+    }
 
     /**
      * Checks to see if the most has been retired before.
@@ -90,7 +98,7 @@ trait HasRetirements
      */
     public function unretire()
     {
-        if (! $this->isRetired()) {
+        if (!$this->isRetired()) {
             throw new ModelNotRetiredException;
         }
 

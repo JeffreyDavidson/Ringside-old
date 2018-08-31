@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Models;
 
-use Carbon\Carbon;
 use Tests\TestCase;
 use App\Models\Event;
 use App\Models\Match;
@@ -11,8 +10,6 @@ use App\Models\Referee;
 use App\Models\Wrestler;
 use App\Models\Stipulation;
 use App\Models\MatchType;
-use App\Models\Champion;
-use MatchFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class MatchTest extends TestCase
@@ -80,7 +77,7 @@ class MatchTest extends TestCase
         $wrestlerA = factory(Wrestler::class)->create();
         $wrestlerB = factory(Wrestler::class)->create();
 
-        $this->match->addWrestlers([[$wrestlerA],[$wrestlerB]]);
+        $this->match->addWrestlers([[$wrestlerA], [$wrestlerB]]);
 
         $this->assertCount(2, $this->match->wrestlers);
     }

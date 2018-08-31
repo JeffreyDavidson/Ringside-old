@@ -3,12 +3,20 @@
 namespace App\Traits;
 
 use App\Models\Title;
+use App\Models\Championship;
 use App\Exceptions\WrestlerAlreadyHasTitleException;
 
 trait HasTitles
 {
-    /** @abstract */
-    abstract public function championships();
+    /**
+     * A wrestler can hold many championships.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function championships()
+    {
+        return $this->hasMany(Championship::class);
+    }
 
     /**
      * Checks to see if the wrestler has held any past titles.

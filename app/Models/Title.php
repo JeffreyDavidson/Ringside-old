@@ -8,7 +8,6 @@ use App\Traits\HasRetirements;
 use Illuminate\Database\Eloquent\Model;
 use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Builder;
 
 class Title extends Model
 {
@@ -49,43 +48,22 @@ class Title extends Model
     }
 
     /**
-     * A title can be added to many matches.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function matches()
-    {
-        return $this->belongsToMany(Match::class);
-    }
-
-    /**
-     * A title can have many retirements.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
-     */
-    public function retirements()
-    {
-        return $this->morphMany(Retirement::class, 'retiree');
-    }
-
-    /**
      * Returns the current champion for the title.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \App\Models\Wrestler
+     * @return \App\Models\Champion
      */
     public function currentChampion()
     {
-        return $this->champions()->whereNull('lost_on')->toHasOne();
+        return $this->champions()->current()->toHasOne();
     }
 
     /**
-     * Checks to see if the title currently has a champion.
+     * Checks to see if the title is currently vacant.
      *
      * @return bool
      */
-    public function hasAChampion()
+    public function isVacant()
     {
-        return $this->champions()->whereNull('lost_on')->exists();
+        return $this->champions()->current()->doesntExist();
     }
 }

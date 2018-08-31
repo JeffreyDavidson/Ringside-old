@@ -11,7 +11,7 @@ class Injury extends Model
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = ['injured_at'];
 
     /**
      * The attributes that should be cast to native types.

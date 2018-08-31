@@ -2,14 +2,22 @@
 
 namespace App\Traits;
 
+use App\Models\Injury;
 use Carbon\Carbon;
 use App\Exceptions\WrestlerNotInjuredException;
 use App\Exceptions\WrestlerAlreadyInjuredException;
 
 trait HasInjuries
 {
-    /** @abstract */
-    abstract public function injuries();
+    /**
+     * A wrestler can have many injuries.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function injuries()
+    {
+        return $this->hasMany(Injury::class);
+    }
 
     /**
      * Checks to see if the wrestler has past injuries.
@@ -91,7 +99,7 @@ trait HasInjuries
      */
     public function recover()
     {
-        if (! $this->isInjured()) {
+        if (!$this->isInjured()) {
             throw new WrestlerNotInjuredException;
         }
 
