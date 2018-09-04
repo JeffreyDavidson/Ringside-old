@@ -155,7 +155,7 @@ class MatchTest extends TestCase
     }
 
     /** @test */
-    public function match_type_is_incremented_by_1_on_create()
+    public function match_number_is_incremented_by_1_on_create()
     {
         $event = factory(Event::class)->create();
         $matchA = factory(Match::class)->create(['event_id' => $event->id]);
