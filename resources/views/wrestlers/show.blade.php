@@ -11,7 +11,7 @@
         </div>
         <div class="panel-body container-fluid">
             <p>Hometown: {{ $wrestler->hometown }}</p>
-            {{-- <p>Height: {!!  $wrestler->present()->height !!}</p> --}}
+            <p>Height: {{  $wrestler->present()->height }}</p>
             <p>Weight: {{ $wrestler->weight }} lbs.</p>
 
             @if($wrestler->signature_move)
@@ -20,34 +20,34 @@
         </div>
     </div>
 
-    {{-- @if($wrestler->isCurrentlyAChampion())
+    @if($wrestler->isCurrentlyAChampion())
         <h2>Current Titles</h2>
         <ul>
             @foreach($wrestler->currentTitlesHeld() as $title)
                 <li>{{ $title->name }}</li>
             @endforeach
         </ul>
-    @endif --}}
+    @endif
 
-    {{-- @if ($wrestler->hasCurrentManagers())
+    @if ($wrestler->hasCurrentManagers())
         <h2>Current Managers</h2>
         <ul>
             @foreach($wrestler->currentManagers() as $manager)
                 <li>{{ $manager->present()->fullName() }}</li>
             @endforeach
         </ul>
-    @endif --}}
+    @endif
 
-    {{-- @if ($wrestler->hasPastTitlesHeld())
+    @if ($wrestler->hasPastTitlesHeld())
         <h2>Previous Titles Held</h2>
         <ul>
             @foreach($wrestler->pastTitlesHeld->groupByTitle() as $title)
                 <li>{{ "{$titles->first()->title->name} ({$titles->count()}x)" }}</li>
             @endforeach
         </ul>
-    @endif --}}
+    @endif
 
-    {{-- <div class="panel panel-bordered panel-primary">
+    <div class="panel panel-bordered panel-primary">
         <div class="panel-heading clearfix">
             <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-trophy"></i>List of Matches</h3>
             <div class="panel-actions">
@@ -72,5 +72,5 @@
                 </tbody>
             </table>
         </div>
-    </div> --}}
+    </div>
 @endsection

@@ -27,9 +27,7 @@ class RetireTitleTest extends TestCase
         $this->withoutExceptionHandling();
         $response = $this->actingAs($this->authorizedUser)
                         ->from(route('titles.index'))
-                        ->post(route('retired-titles.store'), [
-                            'title_id' => $this->title->id,
-                        ]);
+                        ->post(route('retired-titles.store', $this->title));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('titles.index'));
@@ -41,9 +39,7 @@ class RetireTitleTest extends TestCase
     {
         $response = $this->actingAs($this->unauthorizedUser)
                         ->from(route('titles.index'))
-                        ->post(route('retired-titles.store'), [
-                            'title_id' => $this->title->id,
-                        ]);
+                        ->post(route('retired-titles.store', $this->title));
 
         $response->assertStatus(403);
         $this->assertTrue($this->title->retirements->isEmpty());
@@ -53,9 +49,7 @@ class RetireTitleTest extends TestCase
     public function guests_cannot_retire_a_title()
     {
         $response = $this->from(route('titles.index'))
-                        ->post(route('retired-titles.store'), [
-                            'title_id' => $this->title->id,
-                        ]);
+                        ->post(route('retired-titles.store', $this->title));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));

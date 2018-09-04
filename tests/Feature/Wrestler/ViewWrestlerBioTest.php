@@ -52,7 +52,7 @@ class ViewWrestlerBioTest extends TestCase
 
         $response->assertSee('Wrestler 1');
         $response->assertSee('Kansas City, Missouri');
-        $response->assertSee(e($this->wrestler->height));
+        $response->assertSee(e('6\'1"'));
         $response->assertSee('251 lbs.');
         $response->assertSee('Powerbomb');
     }
