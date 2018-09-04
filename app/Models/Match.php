@@ -110,9 +110,9 @@ class Match extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function wrestlers()
+    public function competitors()
     {
-        return $this->belongsToMany(Wrestler::class)->withPivot('side_number');
+        return $this->belongsToMany(RosterMember::class)->withPivot('side_number');
     }
 
     /**

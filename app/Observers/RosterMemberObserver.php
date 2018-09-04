@@ -3,9 +3,9 @@
 namespace App\Observers;
 
 use Carbon\Carbon;
-use App\Models\Wrestler;
+use App\Models\RosterMember;
 
-class WrestlerObserver
+class RosterMemberObserver
 {
     /**
      * If the wrestler is hired before today make the wrestler active.
@@ -13,8 +13,8 @@ class WrestlerObserver
      * @param  \App\Models\Wrestler  $wrestler
      * @return void
      */
-    public function creating(Wrestler $wrestler)
+    public function creating(RosterMember $member)
     {
-        $wrestler->is_active = $wrestler->hired_at->lte(Carbon::today());
+        $member->is_active = $member->hired_at->lte(Carbon::today());
     }
 }

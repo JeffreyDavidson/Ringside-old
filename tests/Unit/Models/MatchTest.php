@@ -26,9 +26,9 @@ class MatchTest extends TestCase
     }
 
     /** @test */
-    public function a_match_has_many_wrestlers()
+    public function a_match_has_many_competitors()
     {
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->match->wrestlers);
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->match->competitors);
     }
 
     /** @test */

@@ -112,4 +112,12 @@ class HasManagersTraitTest extends TestCase
         $this->assertTrue($pastManagers->contains($pastManagerB));
         $this->assertFalse($pastManagers->contains($currentManager));
     }
+
+    /** @test */
+    public function a_wrestler_can_have_many_managers()
+    {
+        $wrestler = factory(Wrestler::class)->create();
+
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $wrestler->managers);
+    }
 }

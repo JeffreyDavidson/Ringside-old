@@ -5,84 +5,84 @@ namespace App\Policies;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class WrestlerPolicy
+class RosterMemberPolicy
 {
     use HandlesAuthorization;
 
     /**
-     * Checks to see if the user has permission to view list of wrestlers.
+     * Checks to see if the user has permission to view list of roster members.
      *
      * @param  \App\Models\User  $user
      * @return bool
      */
     public function index(User $user)
     {
-        return $user->hasPermission('view-wrestlers');
+        return $user->hasPermission('view-roster-members');
     }
 
     /**
-     * Checks to see if the user has permission to create a wrestler.
+     * Checks to see if the user has permission to create a roster member.
      *
      * @param  \App\Models\User  $user
      * @return bool
      */
     public function create(User $user)
     {
-        return $user->hasPermission('create-wrestler');
+        return $user->hasPermission('create-roster-member');
     }
 
     /**
-     * Checks to see if the user has permission to view a wrestler.
+     * Checks to see if the user has permission to view a roster-= member.
      *
      * @param  \App\Models\User  $user
      * @return bool
      */
     public function view(User $user)
     {
-        return $user->hasPermission('view-wrestler');
+        return $user->hasPermission('view-roster-member');
     }
 
     /**
-     * Checks to see if the user has permission to edit a wrestler.
+     * Checks to see if the user has permission to edit a roster member.
      *
      * @param  \App\Models\User  $user
      * @return bool
      */
     public function edit(User $user)
     {
-        return $user->hasPermission('edit-wrestler');
+        return $user->hasPermission('edit-roster-member');
     }
 
     /**
-     * Checks to see if the user has permission to update a wrestler.
+     * Checks to see if the user has permission to update a roster member.
      *
      * @param  \App\Models\User  $user
      * @return bool
      */
     public function update(User $user)
     {
-        return $user->hasPermission('update-wrestler');
+        return $user->hasPermission('update-roster-member');
     }
 
     /**
-     * Checks to see if the user has permission to delete a wrestler.
+     * Checks to see if the user has permission to delete a roster member.
      *
      * @param  \App\Models\User  $user
      * @return bool
      */
     public function delete(User $user)
     {
-        return $user->hasPermission('delete-wrestler');
+        return $user->hasPermission('delete-roster-member');
     }
 
     /**
-     * Checks to see if the user has permission to retire a wrestler.
+     * Checks to see if the user has permission to retire a roster member.
      *
      * @param  \App\Models\User  $user
      * @return bool
      */
     public function retire(User $user)
     {
-        return $user->hasPermission('retire-wrestler');
+        return $user->hasPermission('retire-roster-member');
     }
 }

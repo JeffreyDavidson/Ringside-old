@@ -104,4 +104,12 @@ class HasMatchesTraitTest extends TestCase
         $this->assertTrue($pastMatches->contains($pastMatchB));
         $this->assertFalse($pastMatches->contains($scheduledMatch));
     }
+
+    /** @test */
+    public function a_wrestler_can_have_many_matches()
+    {
+        $wrestler = factory(Wrestler::class)->create();
+
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $wrestler->matches);
+    }
 }

@@ -7,7 +7,6 @@ use App\Models\Wrestler;
 use App\Models\Title;
 use Carbon\Carbon;
 use Facades\ChampionshipFactory;
-use PHPUnit\Framework\Assert;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class HasTitlesTraitTest extends TestCase
@@ -81,5 +80,13 @@ class HasTitlesTraitTest extends TestCase
         $this->assertTrue($pastTitlesHeld->contains('id', $pastChampionshipA->title_id));
         $this->assertTrue($pastTitlesHeld->contains('id', $pastChampionshipB->title_id));
         $this->assertFalse($pastTitlesHeld->contains('id', $currentChampionship->title_id));
+    }
+
+    /** @test */
+    public function a_wrestler_can_hold_many_titles()
+    {
+        $wrestler = factory(Wrestler::class)->create();
+
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $wrestler->championships);
     }
 }
