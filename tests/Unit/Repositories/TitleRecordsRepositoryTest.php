@@ -69,7 +69,7 @@ class TitleRecordsRepositoryTest extends TestCase
         ChampionshipFactory::forWrestler($wrestlerB)->forTitle($title)->wonOn(Carbon::parse('2018-01-10'))->lostOn(Carbon::parse('2018-01-19'))->create();
         ChampionshipFactory::forWrestler($wrestlerC)->forTitle($title)->wonOn(Carbon::parse('2018-01-19'))->lostOn(Carbon::parse('2018-01-20'))->create();
 
-        $champions = $this->repository->longestTitleReign($title);
+        $champions = $this->repository->longestTitleReigns($title);
 
         $this->assertTrue($champions->pluck('wrestler_id')->contains($wrestlerA->id));
         $this->assertTrue($champions->pluck('wrestler_id')->contains($wrestlerB->id));

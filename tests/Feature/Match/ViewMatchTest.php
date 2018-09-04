@@ -19,7 +19,7 @@ class ViewMatchTest extends TestCase
     {
         parent::setUp();
 
-        $this->setupAuthorizedUser(['show-match']);
+        $this->setupAuthorizedUser(['view-match']);
 
         $this->event = factory(Event::class)->create(['date' => Carbon::now()]);
         $this->match = MatchFactory::forEvent($this->event)->create();

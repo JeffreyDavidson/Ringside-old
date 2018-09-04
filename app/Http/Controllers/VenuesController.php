@@ -55,7 +55,7 @@ class VenuesController extends Controller
      */
     public function show(Venue $venue)
     {
-        return view('venues.show', compct('venue'));
+        return view('venues.show', compact('venue'));
     }
 
     /**

@@ -16,7 +16,7 @@ class ViewEventTest extends TestCase
     {
         parent::setUp();
 
-        $this->setupAuthorizedUser('show-event');
+        $this->setupAuthorizedUser('view-event');
 
         $this->event = factory(Event::class)->create([
             'name' => 'Event Name',

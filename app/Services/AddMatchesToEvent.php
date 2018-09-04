@@ -22,19 +22,19 @@ class AddMatchesToEvent
                 'preview' => $match['preview'],
             ]);
 
-            if (! empty($match['titles'])) {
+            if (!empty($match['titles'])) {
                 foreach ($match['titles'] as $titleId) {
                     $matchObj->titles()->attach($titleId);
                 }
             }
 
-            if (! empty($match['referees'])) {
+            if (!empty($match['referees'])) {
                 foreach ($match['referees'] as $refereeId) {
                     $matchObj->referees()->attach($refereeId);
                 }
             }
 
-            if (! empty($match['wrestlers'])) {
+            if (!empty($match['wrestlers'])) {
                 foreach ($match['wrestlers'] as $groupingId => $wrestlersArray) {
                     foreach ($wrestlersArray as $wrestlerId) {
                         $matchObj->wrestlers()->attach($wrestlerId, ['side_number' => $groupingId]);

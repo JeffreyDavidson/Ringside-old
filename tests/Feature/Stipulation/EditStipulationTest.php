@@ -85,7 +85,7 @@ class EditStipulationTest extends TestCase
     }
 
     /** @test */
-    public function users_who_dont_have_permission_cannot_edit_a_stipulation ()
+    public function users_who_dont_have_permission_cannot_edit_a_stipulation()
     {
         $response = $this->actingAs($this->unauthorizedUser)
                         ->patch(route('stipulations.update', $this->stipulation->id), $this->validParams());

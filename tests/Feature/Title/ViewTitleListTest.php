@@ -3,7 +3,6 @@
 namespace Tests\Feature\Title;
 
 use Tests\TestCase;
-use App\Models\Title;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ViewTitleListTest extends TestCase
@@ -18,20 +17,15 @@ class ViewTitleListTest extends TestCase
     }
 
     /** @test */
-    public function users_who_have_permission_can_view_the_list_of_titles()
+    public function users_who_have_permission_can_view_the_index_page()
     {
-        $titleA = factory(Title::class)->create();
-        $titleB = factory(Title::class)->create();
-        $titleC = factory(Title::class)->create();
-
         $response = $this->actingAs($this->authorizedUser)
                         ->get(route('titles.index'));
 
         $response->assertSuccessful();
         $response->assertViewIs('titles.index');
-        $response->data('titles')->assertContains($titleA);
-        $response->data('titles')->assertContains($titleB);
-        $response->data('titles')->assertContains($titleC);
+        $response->assertViewHas('activeTitles');
+        $response->assertViewHas('retiredTitles');
     }
 
     /** @test */

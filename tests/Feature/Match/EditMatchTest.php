@@ -56,7 +56,7 @@ class EditMatchTest extends TestCase
     public function returns_404_on_invalid_event_id()
     {
         $response = $this->actingAs($this->authorizedUser)
-                        ->get(route('event.matches.edit', ['event' => NULL, 'match' => $this->match->id]));
+                        ->get(route('event.matches.edit', ['event' => null, 'match' => $this->match->id]));
 
         $response->assertStatus(404);
     }
@@ -65,7 +65,7 @@ class EditMatchTest extends TestCase
     public function returns_404_on_invalid_match_id()
     {
         $response = $this->actingAs($this->authorizedUser)
-                        ->get(route('event.matches.edit', ['event' => $this->event->id, 'match' => NULL]));
+                        ->get(route('event.matches.edit', ['event' => $this->event->id, 'match' => null]));
 
         $response->assertStatus(404);
     }

@@ -37,9 +37,9 @@ class TitlePolicy
      * @param  \App\Models\User  $user
      * @return bool
      */
-    public function show(User $user)
+    public function view(User $user)
     {
-        return $user->hasPermission('show-title');
+        return $user->hasPermission('view-title');
     }
 
     /**

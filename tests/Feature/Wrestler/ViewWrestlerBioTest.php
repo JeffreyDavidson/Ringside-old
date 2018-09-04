@@ -16,7 +16,7 @@ class ViewWrestlerBioTest extends TestCase
     {
         parent::setUp();
 
-        $this->setupAuthorizedUser('show-wrestler');
+        $this->setupAuthorizedUser('view-wrestler');
 
         $this->wrestler = factory(Wrestler::class)->create([
             'name' => 'Wrestler 1',

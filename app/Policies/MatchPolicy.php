@@ -32,14 +32,25 @@ class MatchPolicy
     }
 
     /**
+     * Checks to see if the user has permission to update a match.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function update(User $user)
+    {
+        return $user->hasPermission('update-match');
+    }
+
+    /**
      * Checks to see if the user has permission to show a match.
      *
      * @param  \App\Models\User  $user
      * @return bool
      */
-    public function show(User $user)
+    public function view(User $user)
     {
-        return $user->hasPermission('show-match');
+        return $user->hasPermission('view-match');
     }
 
     /**

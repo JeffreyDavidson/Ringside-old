@@ -16,18 +16,19 @@ class ViewTitleTest extends TestCase
     {
         parent::setUp();
 
-        $this->setupAuthorizedUser('show-title');
+        $this->setupAuthorizedUser('view-title');
 
         $this->title = factory(Title::class)->create([
             'name' => 'Title Name',
             'slug' => 'title-slug',
-            'introduced_at' => '2017-09-17'
+            'introduced_at' => '2017-09-17',
         ]);
     }
 
     /** @test */
     public function users_who_have_permission_can_view_a_title()
     {
+        $this->withoutExceptionHandling();
         $response = $this->actingAs($this->authorizedUser)
                         ->get(route('titles.show', $this->title->id));
 

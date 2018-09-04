@@ -37,9 +37,9 @@ class VenuePolicy
      * @param  \App\Models\User  $user
      * @return bool
      */
-    public function show(User $user)
+    public function view(User $user)
     {
-        return $user->hasPermission('show-venue');
+        return $user->hasPermission('view-venue');
     }
 
     /**

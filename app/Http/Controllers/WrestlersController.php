@@ -55,7 +55,6 @@ class WrestlersController extends Controller
      */
     public function show(Wrestler $wrestler)
     {
-        dd('testing');
         return view('wrestlers.show', compact('wrestler'));
     }
 
