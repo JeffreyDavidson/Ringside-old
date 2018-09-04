@@ -45,7 +45,6 @@ class AddWrestlerTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_view_the_add_wrestler_page()
     {
-        $this->withoutExceptionHandling();
         $response = $this->actingAs($this->authorizedUser)
                         ->get(route('wrestlers.create'));
 
@@ -88,7 +87,7 @@ class AddWrestlerTest extends TestCase
         $response = $this->actingAs($this->authorizedUser)
                         ->from(route('wrestlers.create'))
                         ->post(route('wrestlers.index'), $this->validParams([
-                            'hired_at' => Carbon::today()
+                            'hired_at' => Carbon::today(),
                         ]));
 
         tap(Wrestler::first(), function ($wrestler) use ($response) {
@@ -102,7 +101,7 @@ class AddWrestlerTest extends TestCase
         $response = $this->actingAs($this->authorizedUser)
                         ->from(route('wrestlers.create'))
                         ->post(route('wrestlers.index'), $this->validParams([
-                            'hired_at' => Carbon::tomorrow()
+                            'hired_at' => Carbon::tomorrow(),
                         ]));
 
         tap(Wrestler::first(), function ($wrestler) use ($response) {

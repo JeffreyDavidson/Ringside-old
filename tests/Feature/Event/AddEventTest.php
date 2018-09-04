@@ -172,7 +172,6 @@ class AddEventTest extends TestCase
     /** @test */
     public function adding_a_valid_event()
     {
-        $this->withoutExceptionHandling();
         $this->response = $this->actingAs($this->authorizedUser)
                         ->from(route('events.create'))
                         ->post(route('events.index'), $this->validParams([

@@ -57,7 +57,6 @@ class EditEventTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_view_the_edit_event_page()
     {
-        $this->withoutExceptionHandling();
         $response = $this->actingAs($this->authorizedUser)
                          ->get(route('events.edit', $this->event->id));
 
@@ -178,7 +177,6 @@ class EditEventTest extends TestCase
     /** @test */
     public function event_date_is_required()
     {
-        // $this->withoutExceptionHandling();
         $this->response = $this->actingAs($this->authorizedUser)
                         ->from(route('events.edit', $this->event->id))
                         ->patch(route('events.update', $this->event->id), $this->validParams([

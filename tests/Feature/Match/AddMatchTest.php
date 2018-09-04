@@ -104,7 +104,6 @@ class AddMatchTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_add_valid_matches_to_an_event()
     {
-        $this->withoutExceptionHandling();
         $response = $this->actingAs($this->authorizedUser)
                         ->from(route('event.matches.create', ['event' => $this->event->id]))
                         ->post(route('event.matches.store', ['event' => $this->event->id]), [

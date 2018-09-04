@@ -30,7 +30,6 @@ class ViewVenueTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_view_a_venue()
     {
-        $this->withoutExceptionHandling();
         $response = $this->actingAs($this->authorizedUser)
                         ->get(route('venues.show', $this->venue->id));
 

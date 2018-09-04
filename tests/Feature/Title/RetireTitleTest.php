@@ -24,7 +24,6 @@ class RetireTitleTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_retire_a_title()
     {
-        $this->withoutExceptionHandling();
         $response = $this->actingAs($this->authorizedUser)
                         ->from(route('titles.index'))
                         ->post(route('retired-titles.store', $this->title));
