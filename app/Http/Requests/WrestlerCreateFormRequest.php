@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Wrestler;
+use Illuminate\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class WrestlerCreateFormRequest extends FormRequest
@@ -36,7 +37,12 @@ class WrestlerCreateFormRequest extends FormRequest
         ];
     }
 
-    public function prepareForValidation() {
-        $this->offsetSet('height', ($this->input('feet') * 12) + $this->input('inches'));
+    public function withValidator(Validator $validator)
+    {
+        $validator->after(function(Validator $validator) {
+            if ($validator->errors()->isEmpty()) {
+                $this->offsetSet('height', ($this->input('feet') * 12) + $this->input('inches'));
+            }
+        });
     }
 }

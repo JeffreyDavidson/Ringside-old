@@ -24,7 +24,7 @@ class Retirement extends Model
      *
      * @var array
      */
-    protected $fillable = ['retired_at'];
+    protected $fillable = ['retired_at', 'ended_at'];
 
     /**
      * Assign which presenter to be used for model.

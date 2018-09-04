@@ -18,14 +18,18 @@ $factory->define(App\Models\Wrestler::class, function (Faker $faker) {
     ];
 });
 
-$factory->state(App\Models\Wrestler::class, 'active', ['is_active' => 1, 'hired_at' => Carbon::today()]);
-$factory->state(App\Models\Wrestler::class, 'inactive', ['is_active' => 0, 'hired_at' => Carbon::tomorrow()]);
+$factory->state(App\Models\Wrestler::class, 'active', ['is_active' => true, 'hired_at' => Carbon::today()]);
+$factory->state(App\Models\Wrestler::class, 'inactive', ['is_active' => false, 'hired_at' => Carbon::tomorrow()]);
+
 $factory->afterCreatingState(App\Models\Wrestler::class, 'suspended', function ($wrestler) {
     $wrestler->suspend();
 });
+
 $factory->afterCreatingState(App\Models\Wrestler::class, 'retired', function ($wrestler) {
     $wrestler->retire();
+    $wrestler->deactivate();
 });
+
 $factory->afterCreatingState(App\Models\Wrestler::class, 'injured', function ($wrestler) {
     $wrestler->injure();
 });

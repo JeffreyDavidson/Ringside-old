@@ -128,6 +128,7 @@ class UpdateEventMatchesWithResultsTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_update_a_regular_match_with_a_result()
     {
+        // $this->withoutExceptionHandling();
         $match = $this->createStandardMatch();
 
         $response = $this->actingAs($this->authorizedUser)

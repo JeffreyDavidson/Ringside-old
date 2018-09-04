@@ -54,6 +54,17 @@ class TitlePolicy
     }
 
     /**
+     * Checks to see if the user has permission to update a title.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function update(User $user)
+    {
+        return $user->hasPermission('update-title');
+    }
+
+    /**
      * Checks to see if the user has permission to delete a title.
      *
      * @param  \App\Models\User  $user

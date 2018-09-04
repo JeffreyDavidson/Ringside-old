@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\Match;
+
 class UpdateMatchResults
 {
     protected $matches;
@@ -15,8 +17,8 @@ class UpdateMatchResults
 
     public function save()
     {
-        foreach ($matches as $index => $match) {
-            $retrievedMatch = Match::withMatchNumber($index + 1)->forEvent($event)->first();
+        foreach ($this->matches as $index => $match) {
+            $retrievedMatch = Match::withMatchNumber($index + 1)->forEvent($this->event)->first();
             $retrievedMatch->update([
                 'match_decision_id' => $match['match_decision_id'],
                 'winner_id' => $match['winner_id'],

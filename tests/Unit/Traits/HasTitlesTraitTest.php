@@ -51,8 +51,6 @@ class HasTitlesTraitTest extends TestCase
         $wrestler->winTitle($title, Carbon::yesterday());
 
         $wrestler->winTitle($title, Carbon::now());
-
-        $this->assertEquals(1, $wrestler->currentTitlesHeld()->count());
     }
 
     /** @test */

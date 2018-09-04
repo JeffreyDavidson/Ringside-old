@@ -54,6 +54,17 @@ class VenuePolicy
     }
 
     /**
+     * Checks to see if the user has permission to update a venue.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function update(User $user)
+    {
+        return $user->hasPermission('update-venue');
+    }
+
+    /**
      * Checks to see if the user has permission to delete a venue.
      *
      * @param  \App\Models\User  $user

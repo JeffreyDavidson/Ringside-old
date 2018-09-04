@@ -30,9 +30,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('events', 'EventsController');
     Route::get('events/{event}/results', 'ResultsController@edit')->name('results.edit');
     Route::patch('events/{event}/results', 'ResultsController@update')->name('results.update');
-    Route::resource('archived-events', 'ArchivedEventsController')->parameters([
-        'archived-events' => 'event',
-    ]);
+    Route::get('archived-events', 'ArchivedEventsController@index')->name('archived-events.index');
+    Route::post('archived-events/{event}', 'ArchivedEventsController@store')->name('archived-events.store');
+    Route::delete('archived-events/{event}', 'ArchivedEventsController@destroy')->name('archived-events.destroy');
     Route::resource('event.matches', 'MatchesController');
     Route::resource('titles', 'TitlesController');
     Route::resource('retired-titles', 'RetiredTitlesController')->parameters([

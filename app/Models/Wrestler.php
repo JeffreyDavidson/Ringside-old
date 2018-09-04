@@ -16,7 +16,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Wrestler extends Model
 {
-    use HasInjuries, HasManagers, HasMatches, HasRetirements, HasStatus, HasSuspensions, HasTitles, Presentable, SoftDeletes;
+    use HasInjuries,
+    HasManagers,
+    HasMatches,
+    HasRetirements,
+    HasStatus,
+    HasSuspensions,
+    HasTitles,
+    Presentable,
+    SoftDeletes;
+
 
     /**
      * The attributes that should be cast to native types.
@@ -33,7 +42,7 @@ class Wrestler extends Model
      *
      * @var array
      */
-    protected $fillable = ['name', 'slug', 'hired_at', 'hometown', 'height', 'weight', 'signature_move'];
+    protected $fillable = ['name', 'slug', 'is_active', 'hired_at', 'hometown', 'height', 'weight', 'signature_move'];
 
     /**
      * Assign which presenter to be used for model.

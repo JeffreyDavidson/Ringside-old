@@ -32,6 +32,7 @@ class ViewWrestlerBioTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_view_a_wrestler_bio()
     {
+        $this->withoutExceptionHandling();
         $wrestler = $this->wrestler;
         $response = $this->actingAs($this->authorizedUser)
                         ->get(route('wrestlers.show', $this->wrestler->id));
@@ -51,7 +52,7 @@ class ViewWrestlerBioTest extends TestCase
 
         $response->assertSee('Wrestler 1');
         $response->assertSee('Kansas City, Missouri');
-        $response->assertSee('6\'1"');
+        $response->assertSee(e($this->wrestler->height));
         $response->assertSee('251 lbs.');
         $response->assertSee('Powerbomb');
     }

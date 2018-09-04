@@ -11,9 +11,9 @@ class HasInjuriesTraitTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function an_wrestler_can_be_injured()
+    public function an_active_wrestler_can_be_injured()
     {
-        $wrestler = factory(Wrestler::class)->create();
+        $wrestler = factory(Wrestler::class)->states('active')->create();
 
         $wrestler->injure();
 
@@ -24,9 +24,9 @@ class HasInjuriesTraitTest extends TestCase
     }
 
     /** @test */
-    public function an_injured_wrestler_can_be_recovered()
+    public function an_injured_wrestler_can_recover_from_an_injury()
     {
-        $wrestler = factory(Wrestler::class)->create()->injure();
+        $wrestler = factory(Wrestler::class)->states('injured')->create();
 
         $wrestler->recover();
 
@@ -36,16 +36,11 @@ class HasInjuriesTraitTest extends TestCase
     }
 
     /** @test */
-    public function a_wrestler_can_have_multiple_injuries()
+    public function a_wrestler_can_have_many_injuries()
     {
         $wrestler = factory(Wrestler::class)->create();
 
-        $wrestler->injure();
-        $wrestler->recover();
-        $wrestler->injure();
-
-        $this->assertTrue($wrestler->hasPastInjuries());
-        $this->assertEquals(1, $wrestler->pastInjuries->count());
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $wrestler->injuries);
     }
 
     /** @test */
@@ -55,11 +50,11 @@ class HasInjuriesTraitTest extends TestCase
         $wrestlerB = factory(Wrestler::class)->states('injured')->create();
         $wrestlerC = factory(Wrestler::class)->states('active')->create();
 
-        $suspendedWrestlers = Wrestler::injured()->get();
+        $injuredWrestlers = Wrestler::injured()->get();
 
-        $this->assertTrue($suspendedWrestlers->contains($wrestlerA));
-        $this->assertTrue($suspendedWrestlers->contains($wrestlerB));
-        $this->assertFalse($suspendedWrestlers->contains($wrestlerC));
+        $this->assertTrue($injuredWrestlers->contains($wrestlerA));
+        $this->assertTrue($injuredWrestlers->contains($wrestlerB));
+        $this->assertFalse($injuredWrestlers->contains($wrestlerC));
     }
 
     /**
@@ -67,13 +62,11 @@ class HasInjuriesTraitTest extends TestCase
      *
      * @test
      */
-    public function an_injured_wrestler_cannot_be_injured()
+    public function an_injured_wrestler_cannot_be_injured_without_being_healed_first()
     {
-        $wrestler = factory(Wrestler::class)->create()->injure();
+        $wrestler = factory(Wrestler::class)->states('injured')->create();
 
         $wrestler->injure();
-
-        $this->assertEquals(1, $wrestler->injuries->count());
     }
 
     /**
@@ -81,12 +74,10 @@ class HasInjuriesTraitTest extends TestCase
      *
      * @test
      */
-    public function a_wrestler_who_is_not_injured_cannot_be_recovered()
+    public function a_active_wrestler_cannot_recover_from_an_injury_without_being_injured()
     {
-        $wrestler = factory(Wrestler::class)->create();
+        $wrestler = factory(Wrestler::class)->states('active')->create();
 
         $wrestler->recover();
-
-        $this->assertEquals(0, $wrestler->injuries->count());
     }
 }

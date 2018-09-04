@@ -29,7 +29,7 @@ class WrestlersController extends Controller
      * @param  \App\Models\Wrestler  $wrestler
      * @return \Illuminate\View\View
      */
-    public function create(Wreslter $wrestler)
+    public function create(Wrestler $wrestler)
     {
         return view('wrestlers.create', compact('wrestler'));
     }
@@ -55,6 +55,7 @@ class WrestlersController extends Controller
      */
     public function show(Wrestler $wrestler)
     {
+        dd('testing');
         return view('wrestlers.show', compact('wrestler'));
     }
 

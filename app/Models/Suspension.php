@@ -21,7 +21,7 @@ class Suspension extends Model
      *
      * @var array
      */
-    protected $fillable = ['suspended_at'];
+    protected $fillable = ['suspended_at', 'ended_at'];
 
     /**
      * Lifts a suspension.

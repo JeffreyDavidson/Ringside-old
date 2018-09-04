@@ -54,6 +54,17 @@ class WrestlerPolicy
     }
 
     /**
+     * Checks to see if the user has permission to update a wrestler.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function update(User $user)
+    {
+        return $user->hasPermission('update-wrestler');
+    }
+
+    /**
      * Checks to see if the user has permission to delete a wrestler.
      *
      * @param  \App\Models\User  $user

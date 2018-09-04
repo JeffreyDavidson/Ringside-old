@@ -39,24 +39,6 @@ class WrestlerTest extends TestCase
     }
 
     /** @test */
-    public function a_wrestler_can_have_many_injuries()
-    {
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->wrestler->injuries);
-    }
-
-    /** @test */
-    public function a_wrestler_can_have_many_suspensions()
-    {
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->wrestler->suspensions);
-    }
-
-    /** @test */
-    public function a_wrestler_can_have_many_retirements()
-    {
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->wrestler->retirements);
-    }
-
-    /** @test */
     public function it_can_get_wrestlers_hired_before_a_certain_date()
     {
         $wrestlerA = factory(Wrestler::class)->create(['hired_at' => Carbon::parse('2016-12-31')]);

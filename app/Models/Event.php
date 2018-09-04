@@ -40,6 +40,7 @@ class Event extends Model
      */
     protected $casts = [
         'date' => 'datetime',
+        'archived_at' => 'datetime'
     ];
 
     /**
@@ -91,7 +92,7 @@ class Event extends Model
      */
     public function archive($date = null)
     {
-        $this->update(['archived_at' => $date ?: $this->freshTimestamp()]);
+        return $this->update(['archived_at' => $date ?: $this->freshTimestamp()]);
     }
 
     /**

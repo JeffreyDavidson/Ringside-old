@@ -154,6 +154,7 @@ class EditWrestlerTest extends TestCase
     /** @test */
     public function wrestler_name_is_required()
     {
+        // $this->withoutExceptionHandling();
         $this->response = $this->actingAs($this->authorizedUser)
                             ->from(route('wrestlers.edit', $this->wrestler->id))
                             ->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams([

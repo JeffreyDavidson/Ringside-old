@@ -13,9 +13,9 @@ class HasRetirementsTraitTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function a_wrestler_can_retire()
+    public function an_active_wrestler_can_retire()
     {
-        $wrestler = factory(Wrestler::class)->create();
+        $wrestler = factory(Wrestler::class)->states('active')->create();
 
         $wrestler->retire();
 
@@ -28,7 +28,7 @@ class HasRetirementsTraitTest extends TestCase
     /** @test */
     public function a_retired_wrestler_can_unretire()
     {
-        $wrestler = factory(Wrestler::class)->create()->retire();
+        $wrestler = factory(Wrestler::class)->states('retired')->create();
 
         $wrestler->unretire();
 
@@ -38,16 +38,11 @@ class HasRetirementsTraitTest extends TestCase
     }
 
     /** @test */
-    public function a_wrestler_can_have_multiple_retirements()
+    public function a_wrestler_can_have_many_retirements()
     {
         $wrestler = factory(Wrestler::class)->create();
 
-        $wrestler->retire();
-        $wrestler->unretire();
-        $wrestler->retire();
-
-        $this->assertTrue($wrestler->hasPastRetirements());
-        $this->assertEquals(1, $wrestler->pastRetirements->count());
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $wrestler->retirements);
     }
 
     /** @test */
@@ -57,11 +52,11 @@ class HasRetirementsTraitTest extends TestCase
         $wrestlerB = factory(Wrestler::class)->states('retired')->create();
         $wrestlerC = factory(Wrestler::class)->states('active')->create();
 
-        $suspendedWrestlers = Wrestler::retired()->get();
+        $retiredWrestlers = Wrestler::retired()->get();
 
-        $this->assertTrue($suspendedWrestlers->contains($wrestlerA));
-        $this->assertTrue($suspendedWrestlers->contains($wrestlerB));
-        $this->assertFalse($suspendedWrestlers->contains($wrestlerC));
+        $this->assertTrue($retiredWrestlers->contains($wrestlerA));
+        $this->assertTrue($retiredWrestlers->contains($wrestlerB));
+        $this->assertFalse($retiredWrestlers->contains($wrestlerC));
     }
 
     /**
@@ -71,12 +66,9 @@ class HasRetirementsTraitTest extends TestCase
      */
     public function a_retired_wrestler_cannot_retire()
     {
-        $wrestler = factory(Wrestler::class)->create()->retire();
+        $wrestler = factory(Wrestler::class)->states('retired')->create();
 
         $wrestler->retire();
-
-        $this->assertEquals(1, $wrestler->retirements->count());
-
     }
 
     /**
@@ -84,19 +76,17 @@ class HasRetirementsTraitTest extends TestCase
      *
      * @test
      */
-    public function a_wrestler_who_is_not_retired_cannot_unretire()
+    public function an_active_wrestler_cannot_unretire()
     {
-        $wrestler = factory(Wrestler::class)->create();
+        $wrestler = factory(Wrestler::class)->states('active')->create();
 
         $wrestler->unretire();
-
-        $this->assertEquals(0, $wrestler->retirements->count());
     }
 
     /** @test */
-    public function a_title_can_be_retired()
+    public function an_active_title_can_be_retired()
     {
-        $title = factory(Title::class)->create();
+        $title = factory(Title::class)->states('active')->create();
 
         $title->retire();
 
@@ -104,5 +94,63 @@ class HasRetirementsTraitTest extends TestCase
         $this->assertFalse($title->is_active);
         $this->assertTrue($title->isRetired());
         $this->assertNull($title->retirements()->first()->ended_at);
+    }
+
+    /** @test */
+    public function a_retired_title_can_be_unretired()
+    {
+        $title = factory(Title::class)->states('retired')->create();
+
+        $title->unretire();
+
+        $this->assertNotNull($title->retirements()->first()->ended_at);
+        $this->assertTrue($title->is_active);
+        $this->assertFalse($title->isRetired());
+    }
+
+    /** @test */
+    public function a_title_can_have_many_retirements()
+    {
+        $title = factory(Title::class)->create();
+
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $title->retirements);
+    }
+
+    /** @test */
+    public function it_can_get_retired_titles()
+    {
+        $titleA = factory(Title::class)->states('retired')->create();
+        $titleB = factory(Title::class)->states('retired')->create();
+        $titleC = factory(Title::class)->states('active')->create();
+
+        $retiredTitles = Title::retired()->get();
+
+        $this->assertTrue($retiredTitles->contains($titleA));
+        $this->assertTrue($retiredTitles->contains($titleB));
+        $this->assertFalse($retiredTitles->contains($titleC));
+    }
+
+    /**
+     * @expectedException \App\Exceptions\ModelAlreadyRetiredException
+     *
+     * @test
+     */
+    public function a_retired_title_cannot_retire()
+    {
+        $title = factory(Title::class)->states('retired')->create();
+
+        $title->retire();
+    }
+
+    /**
+     * @expectedException \App\Exceptions\ModelNotRetiredException
+     *
+     * @test
+     */
+    public function an_active_title_cannot_unretire()
+    {
+        $title = factory(Title::class)->states('active')->create();
+
+        $title->unretire();
     }
 }

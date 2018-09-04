@@ -28,7 +28,7 @@ class Title extends Model
      *
      * @var array
      */
-    protected $fillable = ['name', 'slug', 'introduced_at'];
+    protected $fillable = ['name', 'slug', 'is_active', 'introduced_at'];
 
     /**
      * Assign which presenter to be used for model.

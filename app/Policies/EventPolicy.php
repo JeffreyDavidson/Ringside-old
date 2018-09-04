@@ -64,6 +64,11 @@ class EventPolicy
         return $user->hasPermission('delete-event');
     }
 
+    public function update(User $user)
+    {
+        return $user->hasPermission('update-event');
+    }
+
     /**
      * Checks to see if the user has permission to archive an event.
      *

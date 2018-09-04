@@ -178,6 +178,7 @@ class EditEventTest extends TestCase
     /** @test */
     public function event_date_is_required()
     {
+        // $this->withoutExceptionHandling();
         $this->response = $this->actingAs($this->authorizedUser)
                         ->from(route('events.edit', $this->event->id))
                         ->patch(route('events.update', $this->event->id), $this->validParams([
