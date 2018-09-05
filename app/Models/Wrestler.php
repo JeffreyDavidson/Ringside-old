@@ -10,8 +10,11 @@ use App\Traits\HasManagers;
 use App\Traits\HasSuspensions;
 use Illuminate\Database\Eloquent\Model;
 use Laracodes\Presenter\Traits\Presentable;
+use App\Traits\HasRetirements;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\Hireable;
 
-class Wrestler extends RosterMember
+class Wrestler extends Model
 {
     use HasInjuries,
     HasManagers,
@@ -19,21 +22,22 @@ class Wrestler extends RosterMember
     HasStatus,
     HasSuspensions,
     HasTitles,
-    Presentable;
+    HasRetirements,
+    Hireable,
+    Presentable,
+    SoftDeletes;
+
+    protected $casts = [
+        'is_active' => 'boolean',
+        'hired_at' => 'datetime',
+    ];
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['name', 'slug', 'hometown', 'height', 'weight', 'signature_move'];
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
+    protected $fillable = ['name', 'slug', 'hometown', 'height', 'weight', 'signature_move', 'is_active', 'hired_at'];
 
     /**
      * Assign which presenter to be used for model.

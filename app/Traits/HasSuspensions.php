@@ -3,10 +3,10 @@
 namespace App\Traits;
 
 use App\Models\Suspension;
+use App\Exceptions\ModelAlreadySuspendedException;
+use App\Exceptions\ModelNotSuspendedException;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use App\Exceptions\WrestlerNotSuspendedException;
-use App\Exceptions\WrestlerAlreadySuspendedException;
 
 trait HasSuspensions
 {
@@ -17,7 +17,7 @@ trait HasSuspensions
      */
     public function suspensions()
     {
-        return $this->hasMany(Suspension::class);
+        return $this->morphMany(Suspension::class, 'suspendee');
     }
 
     /**
@@ -81,7 +81,7 @@ trait HasSuspensions
     public function suspend()
     {
         if ($this->isSuspended()) {
-            throw new WrestlerAlreadySuspendedException;
+            throw new ModelAlreadySuspendedException;
         }
 
         $this->deactivate();
@@ -99,7 +99,7 @@ trait HasSuspensions
     public function unsuspend()
     {
         if (!$this->isSuspended()) {
-            throw new WrestlerNotSuspendedException;
+            throw new ModelNotSuspendedException;
         }
 
         $this->activate();

@@ -110,9 +110,9 @@ class Match extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function competitors()
+    public function wrestlers()
     {
-        return $this->belongsToMany(RosterMember::class)->withPivot('side_number');
+        return $this->belongsToMany(Wrestler::class)->withPivot('side_number');
     }
 
     /**
@@ -234,7 +234,7 @@ class Match extends Model
                 } else {
                     $title->setChampion($winners, $this->date);
                 }
-                // if (! $winners->first()->hasTitle($title) && $this->decision->titleCanChangeHands()) {
+                // if (!$winners->first()->hasTitle($title) && $this->decision->titleCanChangeHands()) {
                 //     $title->setChampion($winners, $this->date);
                 // } else {
                 //     $title->currentChampion->increment('successful_defenses');

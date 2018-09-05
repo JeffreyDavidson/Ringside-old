@@ -8,7 +8,6 @@ use App\Models\Event;
 use App\Models\MatchType;
 use App\Models\MatchDecision;
 use App\Models\Title;
-use App\Models\Champion;
 use Facades\MatchFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -75,9 +74,9 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                 [
                     'match_decision_id' => factory(MatchDecision::class)->create()->id,
                     'winner_id' => 1,
-                    'result' => 'Donec sed odio dui. Cras mattis consectetur purus sit amet fermentum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.'
-                ]
-            ]
+                    'result' => 'Donec sed odio dui. Cras mattis consectetur purus sit amet fermentum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.',
+                ],
+            ],
         ], $overrides);
     }
 
@@ -138,8 +137,8 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                                     'match_decision_id' => factory(MatchDecision::class)->create()->id,
                                     'winner_id' => $match->wrestlers->first()->id,
                                     'result' => 'Maecenas faucibus mollis interdum. Etiam porta sem malesuada magna mollis euismod.',
-                                ]
-                            ]
+                                ],
+                            ],
                         ]));
 
         $response->assertRedirect(route('events.index'));
@@ -158,11 +157,12 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                                     'match_decision_id' => 1,
                                     'winner_id' => $match->wrestlers->first()->id,
                                     'result' => 'Maecenas faucibus mollis interdum. Etiam porta sem malesuada magna mollis euismod.',
-                                ]
-                            ]
+                                ],
+                            ],
                         ]));
 
         tap($match->fresh(), function ($match) use ($response) {
+            dd($match->winner);
             $this->assertTrue($match->winner->is($match->wrestlers->first()));
             $this->assertFalse($match->losers->contains('id', $match->wrestlers->first()->id));
             $this->assertTrue(
@@ -185,9 +185,9 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                             'matches' => [
                                 [
                                     'match_decision_id' => MatchDecision::titleCanBeWonBySlug()->first()->id,
-                                    'winner_id' => $match->wrestlers->first()->id
-                                ]
-                            ]
+                                    'winner_id' => $match->wrestlers->first()->id,
+                                ],
+                            ],
                         ]));
 
         tap($match->fresh(), function ($match) use ($response) {
@@ -208,11 +208,10 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                             'matches' => [
                                 [
                                     'match_decision_id' => MatchDecision::titleCannotBeWonBySlug()->first()->id,
-                                    'winner_id' => $match->wrestlers->first()->id
-                                ]
-                            ]
+                                    'winner_id' => $match->wrestlers->first()->id,
+                                ],
+                            ],
                         ]));
-
 
         tap($match->fresh(), function ($match) use ($response) {
             $match->titles->each(function ($title, $key) use ($match) {
@@ -233,8 +232,8 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                                 [
                                     'match_decision_id' => MatchDecision::titleCanBeWonBySlug()->first()->id,
                                     'winner_id' => $match->titles->first()->currentChampion->wrestler->id,
-                                ]
-                            ]
+                                ],
+                            ],
                         ]));
 
         tap($match->fresh(), function ($match) use ($response) {
@@ -256,8 +255,8 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                                 [
                                     'match_decision_id' => MatchDecision::titleCanChangeHandsBySlug()->first()->id,
                                     'winner_id' => $this->nonChampionWinner($match),
-                                ]
-                            ]
+                                ],
+                            ],
                         ]));
 
         tap($match->fresh(), function ($match) use ($response) {
@@ -281,8 +280,8 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                                 [
                                     'match_decision_id' => MatchDecision::titleCannotChangeHandsBySlug()->first()->id,
                                     'winner_id' => $this->nonChampionWinner($match),
-                                ]
-                            ]
+                                ],
+                            ],
                         ]));
 
         tap($match->fresh(), function ($match) use ($response) {
@@ -300,7 +299,7 @@ class UpdateEventMatchesWithResultsTest extends TestCase
         $this->response = $this->actingAs($this->authorizedUser)
                             ->from(route('results.edit', ['event' => $match->event->id]))
                             ->patch(route('results.update', ['event' => $match->event->id]), $this->validParams([
-                                'matches' => 'a-string-not-an-array'
+                                'matches' => 'a-string-not-an-array',
                             ]));
 
         $this->assertFormError('matches', $match);
@@ -331,8 +330,8 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                                 'matches' => [
                                     [
                                         'match_decision_id' => '',
-                                    ]
-                                ]
+                                    ],
+                                ],
                             ]));
 
         $this->assertFormError('matches.*.match_decision_id', $match);
@@ -349,8 +348,8 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                                 'matches' => [
                                     [
                                         'match_decision_id' => 'abc',
-                                    ]
-                                ]
+                                    ],
+                                ],
                             ]));
 
         $this->assertFormError('matches.*.match_decision_id', $match);
@@ -367,8 +366,8 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                                 'matches' => [
                                     [
                                         'match_decision_id' => 0,
-                                    ]
-                                ]
+                                    ],
+                                ],
                             ]));
 
         $this->assertFormError('matches.*.match_decision_id', $match);
@@ -385,8 +384,8 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                                 'matches' => [
                                     [
                                         'match_decision_id' => 99,
-                                    ]
-                                ]
+                                    ],
+                                ],
                             ]));
 
         $this->assertFormError('matches.*.match_decision_id', $match);
@@ -403,8 +402,8 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                                 'matches' => [
                                     [
                                         'winner_id' => '',
-                                    ]
-                                ]
+                                    ],
+                                ],
                             ]));
 
         $this->assertFormError('matches.*.winner_id', $match);
@@ -421,8 +420,8 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                                 'matches' => [
                                     [
                                         'winner_id' => 'abc',
-                                    ]
-                                ]
+                                    ],
+                                ],
                             ]));
 
         $this->assertFormError('matches.*.winner_id', $match);
@@ -439,8 +438,8 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                                 'matches' => [
                                     [
                                         'winner_id' => 0,
-                                    ]
-                                ]
+                                    ],
+                                ],
                             ]));
 
         $this->assertFormError('matches.*.winner_id', $match);
@@ -457,8 +456,8 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                                 'matches' => [
                                     [
                                         'winner_id' => 99,
-                                    ]
-                                ]
+                                    ],
+                                ],
                             ]));
 
         $this->assertFormError('matches.*.winner_id', $match);
@@ -476,8 +475,8 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                                 'matches' => [
                                     [
                                         'winner_id' => 3,
-                                    ]
-                                ]
+                                    ],
+                                ],
                             ]));
 
         $this->assertFormError('matches.*.winner_id', $match);
@@ -494,8 +493,8 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                                 'matches' => [
                                     [
                                         'result' => '',
-                                    ]
-                                ]
+                                    ],
+                                ],
                             ]));
 
         $this->assertFormError('matches.*.result', $match);
@@ -512,8 +511,8 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                                 'matches' => [
                                     [
                                         'result' => [],
-                                    ]
-                                ]
+                                    ],
+                                ],
                             ]));
 
         $this->assertFormError('matches.*.result', $match);

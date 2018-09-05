@@ -5,7 +5,7 @@ namespace App\Policies;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class RosterMemberPolicy
+class WrestlerPolicy
 {
     use HandlesAuthorization;
 
@@ -17,7 +17,7 @@ class RosterMemberPolicy
      */
     public function index(User $user)
     {
-        return $user->hasPermission('view-roster-members');
+        return $user->hasPermission('view-wrestlers');
     }
 
     /**
@@ -28,7 +28,7 @@ class RosterMemberPolicy
      */
     public function create(User $user)
     {
-        return $user->hasPermission('create-roster-member');
+        return $user->hasPermission('create-wrestler');
     }
 
     /**
@@ -39,7 +39,7 @@ class RosterMemberPolicy
      */
     public function view(User $user)
     {
-        return $user->hasPermission('view-roster-member');
+        return $user->hasPermission('view-wrestler');
     }
 
     /**
@@ -50,7 +50,7 @@ class RosterMemberPolicy
      */
     public function edit(User $user)
     {
-        return $user->hasPermission('edit-roster-member');
+        return $user->hasPermission('edit-wrestler');
     }
 
     /**
@@ -61,7 +61,7 @@ class RosterMemberPolicy
      */
     public function update(User $user)
     {
-        return $user->hasPermission('update-roster-member');
+        return $user->hasPermission('update-wrestler');
     }
 
     /**
@@ -72,7 +72,7 @@ class RosterMemberPolicy
      */
     public function delete(User $user)
     {
-        return $user->hasPermission('delete-roster-member');
+        return $user->hasPermission('delete-wrestler');
     }
 
     /**
@@ -83,6 +83,6 @@ class RosterMemberPolicy
      */
     public function retire(User $user)
     {
-        return $user->hasPermission('retire-roster-member');
+        return $user->hasPermission('retire-wrestler');
     }
 }

@@ -49,13 +49,6 @@ $factory->define(App\Models\Retirement::class, function (Faker\Generator $faker)
     ];
 });
 
-$factory->define(App\Models\Manager::class, function (Faker\Generator $faker) {
-    return [
-        'first_name' => $faker->firstName,
-        'last_name' => $faker->lastName,
-    ];
-});
-
 $factory->define(App\Models\Match::class, function (Faker\Generator $faker) {
     return [
         'event_id' => factory(App\Models\Event::class)->lazy(),

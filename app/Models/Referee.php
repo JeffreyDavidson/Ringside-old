@@ -2,26 +2,34 @@
 
 namespace App\Models;
 
+use App\Traits\HasRetirements;
 use Illuminate\Database\Eloquent\Model;
 use Laracodes\Presenter\Traits\Presentable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\Hireable;
+use App\Traits\HasStatus;
+use App\Traits\HasSuspensions;
 
-class Referee extends RosterMember
+class Referee extends Model
 {
-    use Presentable;
+    use Hireable,
+    HasStatus,
+    Presentable,
+    HasRetirements,
+    HasSuspensions,
+    SoftDeletes;
+
+    protected $casts = [
+        'is_active' => 'boolean',
+        'hired_at' => 'datetime',
+    ];
 
     /**
     * The attributes that are mass assignable.
     *
     * @var array
     */
-    protected $fillable = ['first_name', 'last_name'];
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
+    protected $fillable = ['first_name', 'last_name', 'is_active', 'hired_at'];
 
     /**
      * Assign which presenter to be used for model.
