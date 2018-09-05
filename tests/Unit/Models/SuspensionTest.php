@@ -11,20 +11,13 @@ class SuspensionTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected $suspension;
-
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->suspension = factory(Suspension::class)->create();
-    }
-
     /** @test */
     public function a_suspension_can_be_lifted()
     {
-        $this->suspension->lift();
+        $suspension = factory(Suspension::class)->create();
 
-        $this->assertEquals(Carbon::now()->toDateString(), $this->suspension->ended_at->toDateString());
+        $suspension->lift();
+
+        $this->assertEquals(Carbon::now()->toDateString(), $suspension->ended_at->toDateString());
     }
 }

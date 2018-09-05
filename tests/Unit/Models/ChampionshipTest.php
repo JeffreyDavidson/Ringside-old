@@ -14,25 +14,20 @@ class ChampionshipTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected $championship;
-
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->championship = factory(Championship::class)->create(['won_on' => Carbon::yesterday(), 'lost_on' => Carbon::today()]);
-    }
-
     /** @test */
     public function a_champion_is_a_wrestler()
     {
-        $this->assertInstanceOf(Wrestler::class, $this->championship->wrestler);
+        $championship = factory(Championship::class)->create(['won_on' => Carbon::yesterday(), 'lost_on' => Carbon::today()]);
+
+        $this->assertInstanceOf(Wrestler::class, $championship->wrestler);
     }
 
     /** @test */
     public function a_champion_holds_a_title()
     {
-        $this->assertInstanceOf(Title::class, $this->championship->title);
+        $championship = factory(Championship::class)->create(['won_on' => Carbon::yesterday(), 'lost_on' => Carbon::today()]);
+
+        $this->assertInstanceOf(Title::class, $championship->title);
     }
 
     /** @test */

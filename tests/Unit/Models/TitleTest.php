@@ -10,25 +10,20 @@ class TitleTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected $title;
-
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->title = factory(Title::class)->create();
-    }
-
     /** @test */
     public function a_title_has_many_championships()
     {
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->title->champions);
+        $title = factory(Title::class)->create();
+
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $title->champions);
     }
 
     /** @test */
     public function a_title_belongs_to_many_matches()
     {
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->title->matches);
+        $title = factory(Title::class)->create();
+
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $title->matches);
     }
 
     /** @test */

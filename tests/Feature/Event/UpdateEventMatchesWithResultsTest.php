@@ -162,7 +162,6 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                         ]));
 
         tap($match->fresh(), function ($match) use ($response) {
-            dd($match->winner);
             $this->assertTrue($match->winner->is($match->wrestlers->first()));
             $this->assertFalse($match->losers->contains('id', $match->wrestlers->first()->id));
             $this->assertTrue(

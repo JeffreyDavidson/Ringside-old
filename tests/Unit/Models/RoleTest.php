@@ -11,28 +11,22 @@ class RoleTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected $role;
-
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->role = factory(Role::class)->create();
-    }
-
     /** @test */
     public function a_role_has_many_permissions()
     {
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->role->permissions);
+        $role = factory(Role::class)->create();
+
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $role->permissions);
     }
 
     /** @test */
     public function a_role_can_be_given_permissions()
     {
+        $role = factory(Role::class)->create();
         $permission = factory(Permission::class)->make();
 
-        $this->role->givePermissionTo($permission);
+        $role->givePermissionTo($permission);
 
-        $this->assertContains($permission->id, $this->role->permissions->pluck('id'));
+        $this->assertContains($permission->id, $role->permissions->pluck('id'));
     }
 }

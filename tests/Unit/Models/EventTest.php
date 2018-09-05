@@ -12,35 +12,31 @@ class EventTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected $event;
-
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->event = factory(Event::class)->create();
-    }
-
     /** @test */
     public function an_event_can_have_many_matches()
     {
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->event->matches);
+        $event = factory(Event::class)->create();
+
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $event->matches);
     }
 
     /** @test */
     public function an_event_belongs_to_a_venue()
     {
-        $this->assertInstanceOf(Venue::class, $this->event->venue);
+        $event = factory(Event::class)->create();
+
+        $this->assertInstanceOf(Venue::class, $event->venue);
     }
 
     /** @test */
     public function the_last_match_in_an_event_is_the_main_event()
     {
-        $matchA = factory(Match::class)->create(['event_id' => $this->event->id, 'match_number' => 1]);
-        $matchB = factory(Match::class)->create(['event_id' => $this->event->id, 'match_number' => 2]);
-        $matchC = factory(Match::class)->create(['event_id' => $this->event->id, 'match_number' => 3]);
+        $event = factory(Event::class)->create();
+        $matchA = factory(Match::class)->create(['event_id' => $event->id, 'match_number' => 1]);
+        $matchB = factory(Match::class)->create(['event_id' => $event->id, 'match_number' => 2]);
+        $matchC = factory(Match::class)->create(['event_id' => $event->id, 'match_number' => 3]);
 
-        $mainEvent = $this->event->mainEvent;
+        $mainEvent = $event->mainEvent;
 
         $this->assertEquals($matchC->id, $mainEvent->id);
     }
@@ -48,18 +44,21 @@ class EventTest extends TestCase
     /** @test */
     public function an_event_can_add_a_match()
     {
+        $event = factory(Event::class)->create();
         $match = factory(Match::class)->create();
 
-        $this->event->addMatch($match);
+        $event->addMatch($match);
 
-        $this->assertEquals($match->event_id, $this->event->id);
+        $this->assertEquals($match->event_id, $event->id);
     }
 
     /** @test */
     public function an_event_can_be_archived()
     {
-        $this->event->archive();
+        $event = factory(Event::class)->create();
 
-        $this->assertNotNull($this->event->archived_at);
+        $event->archive();
+
+        $this->assertNotNull($event->archived_at);
     }
 }
