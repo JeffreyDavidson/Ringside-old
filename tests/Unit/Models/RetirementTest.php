@@ -18,6 +18,6 @@ class RetirementTest extends TestCase
 
         $retirement->end();
 
-        $this->assertEquals(Carbon::now()->toDateString(), $this->retirement->ended_at->toDateString());
+        $this->assertEquals(Carbon::now()->toDateString(), $retirement->ended_at->toDateString());
     }
 }

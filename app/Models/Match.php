@@ -16,7 +16,7 @@ class Match extends Model
      *
      * @var array
      */
-    protected $fillable = ['match_type_id', 'stipulation_id', 'match_decision_id', 'preview'];
+    protected $fillable = ['match_number', 'match_type_id', 'stipulation_id', 'match_decision_id', 'preview'];
 
     /**
      * Assign which presenter to be used for model.

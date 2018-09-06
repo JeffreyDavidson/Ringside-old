@@ -11,7 +11,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Title extends Model
 {
-    use HasMatches, HasRetirements, HasStatus, Presentable, SoftDeletes;
+    use HasStatus,
+    HasMatches,
+    HasRetirements,
+    Presentable,
+    SoftDeletes;
 
     /**
      * The attributes that should be cast to native types.

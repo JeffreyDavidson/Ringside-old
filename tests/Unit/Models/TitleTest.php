@@ -29,7 +29,9 @@ class TitleTest extends TestCase
     /** @test */
     public function a_title_has_many_retirements()
     {
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->title->retirements);
+        $title = factory(Title::class)->create();
+
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $title->retirements);
     }
 
     /** @test */

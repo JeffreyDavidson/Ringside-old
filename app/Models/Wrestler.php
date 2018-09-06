@@ -2,28 +2,28 @@
 
 namespace App\Models;
 
+use App\Traits\Hireable;
 use App\Traits\HasStatus;
 use App\Traits\HasTitles;
 use App\Traits\HasMatches;
 use App\Traits\HasInjuries;
 use App\Traits\HasManagers;
 use App\Traits\HasSuspensions;
+use App\Traits\HasRetirements;
 use Illuminate\Database\Eloquent\Model;
 use Laracodes\Presenter\Traits\Presentable;
-use App\Traits\HasRetirements;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Traits\Hireable;
 
 class Wrestler extends Model
 {
-    use HasInjuries,
-    HasManagers,
-    HasMatches,
+    use Hireable,
     HasStatus,
-    HasSuspensions,
     HasTitles,
+    HasMatches,
+    HasInjuries,
+    HasManagers,
+    HasSuspensions,
     HasRetirements,
-    Hireable,
     Presentable,
     SoftDeletes;
 

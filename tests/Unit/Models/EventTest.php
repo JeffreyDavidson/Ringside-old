@@ -32,13 +32,14 @@ class EventTest extends TestCase
     public function the_last_match_in_an_event_is_the_main_event()
     {
         $event = factory(Event::class)->create();
-        $matchA = factory(Match::class)->create(['event_id' => $event->id, 'match_number' => 1]);
-        $matchB = factory(Match::class)->create(['event_id' => $event->id, 'match_number' => 2]);
-        $matchC = factory(Match::class)->create(['event_id' => $event->id, 'match_number' => 3]);
+        $matchA = factory(Match::class)->create(['event_id' => $event->id]);
+        $matchB = factory(Match::class)->create(['event_id' => $event->id]);
+        $matchC = factory(Match::class)->create(['event_id' => $event->id]);
+        $matchB->update(['match_number' => 999]);
 
         $mainEvent = $event->mainEvent;
 
-        $this->assertEquals($matchC->id, $mainEvent->id);
+        $this->assertEquals($matchB->id, $mainEvent->id);
     }
 
     /** @test */
