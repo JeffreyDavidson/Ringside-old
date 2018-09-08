@@ -7,9 +7,9 @@ use App\Models\Title;
 use App\Models\Manager;
 use App\Models\Event;
 use App\Models\Match;
-use ChampionshipFactory;
-use MatchFactory;
-use ManagerFactory;
+use Facades\ChampionshipFactory;
+use Facades\MatchFactory;
+use Facades\ManagerFactory;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -92,6 +92,30 @@ class WrestlerTest extends TestCase
         $this->assertFalse($wrestler->is_active);
     }
 
+    /**
+     * @expectedException \App\Exceptions\ModelIsActiveException
+     *
+     * @test
+     */
+    public function an_active_wrestler_cannot_be_activated()
+    {
+        $wrestler = factory(Wrestler::class)->states('active')->create();
+
+        $wrestler->activate();
+    }
+
+    /**
+     * @expectedException \App\Exceptions\ModelIsInactiveException
+     *
+     * @test
+     */
+    public function an_inactive_wrestler_cannot_be_deactivated()
+    {
+        $wrestler = factory(Wrestler::class)->states('inactive')->create();
+
+        $wrestler->deactivate();
+    }
+
     /** @test */
     public function an_active_wrestler_can_retire()
     {
@@ -118,14 +142,6 @@ class WrestlerTest extends TestCase
     }
 
     /** @test */
-    public function a_wrestler_can_have_many_retirements()
-    {
-        $wrestler = factory(Wrestler::class)->create();
-
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $wrestler->retirements);
-    }
-
-    /** @test */
     public function it_can_get_retired_wrestlers()
     {
         $wrestlerA = factory(Wrestler::class)->states('retired')->create();
@@ -140,7 +156,7 @@ class WrestlerTest extends TestCase
     }
 
     /**
-     * @expectedException \App\Exceptions\ModelAlreadyRetiredException
+     * @expectedException \App\Exceptions\ModelIsRetiredException
      *
      * @test
      */
@@ -152,7 +168,7 @@ class WrestlerTest extends TestCase
     }
 
     /**
-     * @expectedException \App\Exceptions\ModelNotRetiredException
+     * @expectedException \App\Exceptions\ModelIsActiveException
      *
      * @test
      */
@@ -161,139 +177,6 @@ class WrestlerTest extends TestCase
         $wrestler = factory(Wrestler::class)->states('active')->create();
 
         $wrestler->unretire();
-    }
-
-    /** @test */
-    public function a_wrestler_can_be_suspended()
-    {
-        $wrestler = factory(Wrestler::class)->create();
-
-        $wrestler->suspend();
-
-        $this->assertEquals(1, $wrestler->suspensions->count());
-        $this->assertFalse($wrestler->is_active);
-        $this->assertNull($wrestler->suspensions()->first()->ended_at);
-        $this->assertTrue($wrestler->isSuspended());
-    }
-
-    /** @test */
-    public function a_suspended_wrestler_can_be_unsuspened()
-    {
-        $wrestler = factory(Wrestler::class)->states('suspended')->create();
-
-        $wrestler->unsuspend();
-
-        $this->assertNotNull($wrestler->suspensions->last()->ended_at);
-        $this->assertTrue($wrestler->is_active);
-        $this->assertFalse($wrestler->isSuspended());
-        $this->assertTrue($wrestler->hasPastSuspensions());
-        $this->assertEquals(1, $wrestler->pastSuspensions->count());
-    }
-
-    /** @test */
-    public function a_wrestler_can_have_many_suspensions()
-    {
-        $wrestler = factory(Wrestler::class)->create();
-
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $wrestler->suspensions);
-    }
-
-    /** @test */
-    public function it_can_retrieve_a_titles_scheduled_matches()
-    {
-        $title = factory(Title::class)->create();
-        $eventA = factory(Event::class)->create(['date' => Carbon::tomorrow()]);
-        $eventB = factory(Event::class)->create(['date' => Carbon::today()]);
-        $eventC = factory(Event::class)->create(['date' => Carbon::today()->subWeeks(2)]);
-        $scheduledMatchA = app(MatchFactory::class)->forEvent($eventA)->withTitle($title)->create();
-        $scheduledMatchB = app(MatchFactory::class)->forEvent($eventB)->withTitle($title)->create();
-        $pastMatch = app(MatchFactory::class)->forEvent($eventC)->withTitle($title)->create();
-
-        $scheduledMatches = $title->scheduledMatches;
-
-        $this->assertTrue($scheduledMatches->contains($scheduledMatchA));
-        $this->assertTrue($scheduledMatches->contains($scheduledMatchB));
-        $this->assertFalse($scheduledMatches->contains($pastMatch));
-    }
-
-    /** @test */
-    public function a_wrestler_without_matches_before_current_date_has_no_past_matches()
-    {
-        $wrestler = factory(Wrestler::class)->create();
-
-        $this->assertFalse($wrestler->hasPastMatches());
-    }
-
-    /** @test */
-    public function it_can_retrieve_a_titles_past_matches()
-    {
-        $title = factory(Title::class)->create();
-        $event = factory(Event::class)->create(['date' => '2017-10-09']);
-        $match = factory(Match::class)->create(['event_id' => $event->id]);
-        $eventA = factory(Event::class)->create(['date' => Carbon::yesterday()]);
-        $eventB = factory(Event::class)->create(['date' => Carbon::today()->subWeeks(2)]);
-        $eventC = factory(Event::class)->create(['date' => Carbon::tomorrow()]);
-        $pastMatchA = app(MatchFactory::class)->forEvent($eventA)->withTitle($title)->create();
-        $pastMatchB = app(MatchFactory::class)->forEvent($eventB)->withTitle($title)->create();
-        $scheduledMatch = app(MatchFactory::class)->forEvent($eventC)->withTitle($title)->create();
-
-        $pastMatches = $title->pastMatches;
-
-        $this->assertTrue($pastMatches->contains($pastMatchA));
-        $this->assertTrue($pastMatches->contains($pastMatchB));
-        $this->assertFalse($pastMatches->contains($scheduledMatch));
-    }
-
-    /** @test */
-    public function a_title_without_matches_before_current_date_has_no_past_matches()
-    {
-        $title = factory(Title::class)->create();
-
-        $this->assertFalse($title->hasPastMatches());
-    }
-
-    /** @test */
-    public function it_can_retrieve_a_wrestlers_scheduled_matches()
-    {
-        $wrestler = factory(Wrestler::class)->create();
-        $eventA = factory(Event::class)->create(['date' => Carbon::tomorrow()]);
-        $eventB = factory(Event::class)->create(['date' => Carbon::today()]);
-        $eventC = factory(Event::class)->create(['date' => Carbon::today()->subWeeks(2)]);
-        $scheduledMatchA = app(MatchFactory::class)->forEvent($eventA)->withWrestler($wrestler)->create();
-        $scheduledMatchB = app(MatchFactory::class)->forEvent($eventB)->withWrestler($wrestler)->create();
-        $pastMatch = app(MatchFactory::class)->forEvent($eventC)->withWrestler($wrestler)->create();
-
-        $scheduledMatches = $wrestler->scheduledMatches;
-
-        $this->assertTrue($scheduledMatches->contains($scheduledMatchA));
-        $this->assertTrue($scheduledMatches->contains($scheduledMatchB));
-        $this->assertFalse($scheduledMatches->contains($pastMatch));
-    }
-
-    /** @test */
-    public function it_can_retrieve_a_wrestlers_past_matches()
-    {
-        $wrestler = factory(Wrestler::class)->create();
-        $eventA = factory(Event::class)->create(['date' => Carbon::yesterday()]);
-        $eventB = factory(Event::class)->create(['date' => Carbon::today()->subWeeks(2)]);
-        $eventC = factory(Event::class)->create(['date' => Carbon::tomorrow()]);
-        $pastMatchA = app(MatchFactory::class)->forEvent($eventA)->withWrestler($wrestler)->create();
-        $pastMatchB = app(MatchFactory::class)->forEvent($eventB)->withWrestler($wrestler)->create();
-        $scheduledMatch = app(MatchFactory::class)->forEvent($eventC)->withWrestler($wrestler)->create();
-
-        $pastMatches = $wrestler->pastMatches;
-
-        $this->assertTrue($pastMatches->contains($pastMatchA));
-        $this->assertTrue($pastMatches->contains($pastMatchB));
-        $this->assertFalse($pastMatches->contains($scheduledMatch));
-    }
-
-    /** @test */
-    public function a_wrestler_can_have_many_matches()
-    {
-        $wrestler = factory(Wrestler::class)->create();
-
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $wrestler->matches);
     }
 
     /** @test */
@@ -310,8 +193,47 @@ class WrestlerTest extends TestCase
         $this->assertFalse($suspendedWrestlers->contains($wrestlerC));
     }
 
+    /** @test */
+    public function an_active_wrestler_can_be_suspended()
+    {
+        $wrestler = factory(Wrestler::class)->states('active')->create();
+
+        $wrestler->suspend();
+
+        $this->assertEquals(1, $wrestler->suspensions->count());
+        $this->assertFalse($wrestler->is_active);
+        $this->assertNull($wrestler->suspensions()->first()->ended_at);
+        $this->assertTrue($wrestler->isSuspended());
+    }
+
+    /** @test */
+    public function a_suspended_wrestler_can_be_reinstated()
+    {
+        $wrestler = factory(Wrestler::class)->states('suspended')->create();
+
+        $wrestler->reinstate();
+
+        $this->assertNotNull($wrestler->suspensions->last()->ended_at);
+        $this->assertTrue($wrestler->is_active);
+        $this->assertFalse($wrestler->isSuspended());
+        $this->assertTrue($wrestler->hasPastSuspensions());
+        $this->assertEquals(1, $wrestler->pastSuspensions->count());
+    }
+
     /**
-     * @expectedException \App\Exceptions\ModelAlreadySuspendedException
+     * @expectedException \App\Exceptions\ModelIsActiveException
+     *
+     * @test
+     */
+    public function an_active_wrestler_cannot_be_reinstated()
+    {
+        $wrestler = factory(Wrestler::class)->states('active')->create();
+
+        $wrestler->reinstate();
+    }
+
+    /**
+     * @expectedException \App\Exceptions\ModelIsSuspendedException
      *
      * @test
      */
@@ -322,16 +244,50 @@ class WrestlerTest extends TestCase
         $wrestler->suspend();
     }
 
-    /**
-     * @expectedException \App\Exceptions\ModelNotSuspendedException
-     *
-     * @test
-     */
-    public function an_active_wrestler_cannot_be_unsuspended()
+    /** @test */
+    public function it_can_retrieve_a_wrestlers_scheduled_matches()
     {
-        $wrestler = factory(Wrestler::class)->states('active')->create();
+        $wrestler = factory(Wrestler::class)->create();
+        $eventA = factory(Event::class)->create(['date' => Carbon::tomorrow()]);
+        $eventB = factory(Event::class)->create(['date' => Carbon::today()]);
+        $eventC = factory(Event::class)->create(['date' => Carbon::today()->subWeeks(2)]);
+        $scheduledMatchA = MatchFactory::forEvent($eventA)->withWrestler($wrestler)->create();
+        $scheduledMatchB = MatchFactory::forEvent($eventB)->withWrestler($wrestler)->create();
+        $pastMatch = MatchFactory::forEvent($eventC)->withWrestler($wrestler)->create();
 
-        $wrestler->unsuspend();
+        $scheduledMatches = $wrestler->scheduledMatches;
+
+        $this->assertTrue($scheduledMatches->contains($scheduledMatchA));
+        $this->assertTrue($scheduledMatches->contains($scheduledMatchB));
+        $this->assertFalse($scheduledMatches->contains($pastMatch));
+    }
+
+    /** @test */
+    public function a_wrestler_without_matches_before_current_date_has_no_past_matches()
+    {
+        $wrestler = factory(Wrestler::class)->create();
+
+        $this->assertFalse($wrestler->hasPastMatches());
+    }
+
+    /** @test */
+    public function it_can_retrieve_a_wrestlers_past_matches()
+    {
+        $wrestler = factory(Wrestler::class)->create();
+        $event = factory(Event::class)->create(['date' => '2017-10-09']);
+        $match = factory(Match::class)->create(['event_id' => $event->id]);
+        $eventA = factory(Event::class)->create(['date' => Carbon::yesterday()]);
+        $eventB = factory(Event::class)->create(['date' => Carbon::today()->subWeeks(2)]);
+        $eventC = factory(Event::class)->create(['date' => Carbon::tomorrow()]);
+        $pastMatchA = MatchFactory::forEvent($eventA)->withWrestler($wrestler)->create();
+        $pastMatchB = MatchFactory::forEvent($eventB)->withWrestler($wrestler)->create();
+        $scheduledMatch = MatchFactory::forEvent($eventC)->withWrestler($wrestler)->create();
+
+        $pastMatches = $wrestler->pastMatches;
+
+        $this->assertTrue($pastMatches->contains($pastMatchA));
+        $this->assertTrue($pastMatches->contains($pastMatchB));
+        $this->assertFalse($pastMatches->contains($scheduledMatch));
     }
 
     /** @test */
@@ -344,19 +300,6 @@ class WrestlerTest extends TestCase
 
         $this->assertTrue($wrestler->isCurrentlyAChampion());
         $this->assertTrue($wrestler->hasTitle($title));
-    }
-
-    /** @test */
-    public function a_wrestler_can_have_multiple_titles_at_the_same_time()
-    {
-        $wrestler = factory(Wrestler::class)->create();
-        $titleA = factory(Title::class)->create();
-        $titleB = factory(Title::class)->create();
-
-        $wrestler->winTitle($titleA, Carbon::now());
-        $wrestler->winTitle($titleB, Carbon::now());
-
-        $this->assertEquals(2, $wrestler->currentTitlesHeld()->count());
     }
 
     /**
@@ -373,15 +316,28 @@ class WrestlerTest extends TestCase
         $wrestler->winTitle($title, Carbon::now());
     }
 
+    /**
+     * @expectedException \App\Exceptions\WrestlerNotTitleChampionException
+     *
+     * @test
+     */
+    public function a_wrestler_who_does_not_have_a_current_title_cannot_lose_a_title()
+    {
+        $wrestler = factory(Wrestler::class)->create();
+        $title = factory(Title::class)->create();
+
+        $wrestler->loseTitle($title, Carbon::now());
+    }
+
     /** @test */
     public function current_titles_held_returns_a_collection_of_active_titles()
     {
         $wrestler = factory(Wrestler::class)->create();
-        $currentChampionshipA = app(ChampionshipFactory::class)->forWrestler($wrestler)->wonOn(Carbon::today()->subMonths(2))->create();
-        $currentChampionshipB = app(ChampionshipFactory::class)->forWrestler($wrestler)->wonOn(Carbon::yesterday())->create();
-        $pastChampionship = app(ChampionshipFactory::class)->forWrestler($wrestler)->wonOn(Carbon::today()->subDays(4))->lostOn(Carbon::yesterday())->create();
+        $currentChampionshipA = ChampionshipFactory::forWrestler($wrestler)->wonOn(Carbon::today()->subMonths(2))->create();
+        $currentChampionshipB = ChampionshipFactory::forWrestler($wrestler)->wonOn(Carbon::yesterday())->create();
+        $pastChampionship = ChampionshipFactory::forWrestler($wrestler)->wonOn(Carbon::today()->subDays(4))->lostOn(Carbon::yesterday())->create();
 
-        $currentTitlesHeld = $wrestler->currentTitlesHeld();
+        $currentTitlesHeld = $wrestler->currentTitlesHeld;
 
         $this->assertTrue($currentTitlesHeld->contains('id', $currentChampionshipA->title_id));
         $this->assertTrue($currentTitlesHeld->contains('id', $currentChampionshipB->title_id));
@@ -392,23 +348,15 @@ class WrestlerTest extends TestCase
     public function past_titles_held_returns_a_collection_of_past_titles()
     {
         $wrestler = factory(Wrestler::class)->create();
-        $pastChampionshipA = app(ChampionshipFactory::class)->forWrestler($wrestler)->wonOn(Carbon::today()->subMonths(2))->lostOn(Carbon::today()->subMonths(1))->create();
-        $pastChampionshipB = app(ChampionshipFactory::class)->forWrestler($wrestler)->wonOn(Carbon::today()->subWeeks(3))->lostOn(Carbon::today()->subWeeks(2))->create();
-        $currentChampionship = app(ChampionshipFactory::class)->forWrestler($wrestler)->wonOn(Carbon::yesterday())->create();
+        $pastChampionshipA = ChampionshipFactory::forWrestler($wrestler)->wonOn(Carbon::today()->subMonths(2))->lostOn(Carbon::today()->subMonths(1))->create();
+        $pastChampionshipB = ChampionshipFactory::forWrestler($wrestler)->wonOn(Carbon::today()->subWeeks(3))->lostOn(Carbon::today()->subWeeks(2))->create();
+        $currentChampionship = ChampionshipFactory::forWrestler($wrestler)->wonOn(Carbon::yesterday())->create();
 
-        $pastTitlesHeld = $wrestler->pastTitlesHeld();
+        $pastTitlesHeld = $wrestler->pastTitlesHeld;
 
         $this->assertTrue($pastTitlesHeld->contains('id', $pastChampionshipA->title_id));
         $this->assertTrue($pastTitlesHeld->contains('id', $pastChampionshipB->title_id));
         $this->assertFalse($pastTitlesHeld->contains('id', $currentChampionship->title_id));
-    }
-
-    /** @test */
-    public function a_wrestler_can_hold_many_titles()
-    {
-        $wrestler = factory(Wrestler::class)->create();
-
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $wrestler->championships);
     }
 
     /** @test */
@@ -424,6 +372,18 @@ class WrestlerTest extends TestCase
         $this->assertTrue($wrestler->isInjured());
     }
 
+    /**
+     * @expectedException \App\Exceptions\ModelIsActiveException
+     *
+     * @test
+     */
+    public function an_active_wrestler_cannot_recover_from_an_injury_without_being_injured()
+    {
+        $wrestler = factory(Wrestler::class)->states('active')->create();
+
+        $wrestler->recover();
+    }
+
     /** @test */
     public function an_injured_wrestler_can_recover_from_an_injury()
     {
@@ -431,17 +391,21 @@ class WrestlerTest extends TestCase
 
         $wrestler->recover();
 
-        $this->assertNotNull($wrestler->injuries()->first()->healed_at);
+        $this->assertEquals(1, $wrestler->pastInjuries->count());
         $this->assertTrue($wrestler->is_active);
         $this->assertFalse($wrestler->isInjured());
     }
 
-    /** @test */
-    public function a_wrestler_can_have_many_injuries()
+    /**
+     * @expectedException \App\Exceptions\ModelIsInjuredException
+     *
+     * @test
+     */
+    public function an_injured_wrestler_cannot_be_injured_without_being_healed_first()
     {
-        $wrestler = factory(Wrestler::class)->create();
+        $wrestler = factory(Wrestler::class)->states('injured')->create();
 
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $wrestler->injuries);
+        $wrestler->injure();
     }
 
     /** @test */
@@ -458,39 +422,43 @@ class WrestlerTest extends TestCase
         $this->assertFalse($injuredWrestlers->contains($wrestlerC));
     }
 
-    /**
-     * @expectedException \App\Exceptions\WrestlerAlreadyInjuredException
-     *
-     * @test
-     */
-    public function an_injured_wrestler_cannot_be_injured_without_being_healed_first()
-    {
-        $wrestler = factory(Wrestler::class)->states('injured')->create();
-
-        $wrestler->injure();
-    }
-
-    /**
-     * @expectedException \App\Exceptions\WrestlerNotInjuredException
-     *
-     * @test
-     */
-    public function a_active_wrestler_cannot_recover_from_an_injury_without_being_injured()
-    {
-        $wrestler = factory(Wrestler::class)->states('active')->create();
-
-        $wrestler->recover();
-    }
-
     /** @test */
-    public function a_wrestler_can_hire_a_manager()
+    public function a_wrestler_can_hire_an_active_manager()
     {
         $wrestler = factory(Wrestler::class)->create();
-        $manager = factory(Manager::class)->create();
+        $manager = factory(Manager::class)->states('active')->create();
 
         $wrestler->hireManager($manager, Carbon::yesterday());
 
-        $this->assertEquals(1, $wrestler->currentManagers()->count());
+        $this->assertEquals(1, $wrestler->currentManagers->count());
+        $this->assertTrue($wrestler->currentManagers->contains($manager));
+    }
+
+    /**
+     * @expectedException \App\Exceptions\ModelIsInactiveException
+     *
+     * @test
+     */
+    public function a_wrestler_cannot_hire_an_inactive_manager()
+    {
+        $wrestler = factory(Wrestler::class)->create();
+        $manager = factory(Manager::class)->states('inactive')->create();
+
+        $wrestler->hireManager($manager, Carbon::yesterday());
+    }
+
+    /**
+     * @expectedException \App\Exceptions\ModelHasManagerException
+     *
+     * @test
+     */
+    public function a_wrestler_cannot_hire_a_manager_they_already_have()
+    {
+        $wrestler = factory(Wrestler::class)->create();
+        $manager = factory(Manager::class)->create();
+        $wrestler->hireManager($manager, Carbon::yesterday());
+
+        $wrestler->hireManager($manager, Carbon::today());
     }
 
     /** @test */
@@ -502,43 +470,12 @@ class WrestlerTest extends TestCase
         $wrestler->hireManager($manager, Carbon::yesterday());
         $wrestler->fireManager($manager, Carbon::today());
 
-        tap($wrestler->fresh(), function ($wrestler) {
-            $this->assertTrue($wrestler->hasPastManagers());
-            $this->assertEquals(1, $wrestler->pastManagers->count());
-        });
-    }
-
-    /** @test */
-    public function a_wrestler_can_have_multiple_managers()
-    {
-        $wrestler = factory(Wrestler::class)->create();
-        $managerA = factory(Manager::class)->create();
-        $managerB = factory(Manager::class)->create();
-
-        $wrestler->hireManager($managerA, Carbon::yesterday());
-        $wrestler->hireManager($managerB, Carbon::yesterday());
-
-        $this->assertEquals(2, $wrestler->currentManagers()->count());
+        $this->assertFalse($wrestler->currentManagers->contains($manager));
+        $this->assertTrue($wrestler->pastManagers->contains($manager));
     }
 
     /**
-     * @expectedException \App\Exceptions\WrestlerAlreadyHasManagerException
-     *
-     * @test
-     */
-    public function a_wrestler_cannot_hire_a_manager_they_already_have()
-    {
-        $wrestler = factory(Wrestler::class)->create();
-        $manager = factory(Manager::class)->create();
-        $wrestler->hireManager($manager, Carbon::yesterday());
-
-        $wrestler->hireManager($manager, Carbon::today());
-
-        $this->assertEquals(1, $wrestler->currentManagers()->count());
-    }
-
-    /**
-     * @expectedException \App\Exceptions\WrestlerNotHaveHiredManagerException
+     * @expectedException \App\Exceptions\ManagerNotHiredException
      *
      * @test
      */
@@ -548,17 +485,15 @@ class WrestlerTest extends TestCase
         $manager = factory(Manager::class)->create();
 
         $wrestler->fireManager($manager, Carbon::today());
-
-        $this->assertEquals(0, $wrestler->pastManagers()->count());
     }
 
     /** @test */
     public function it_can_retrieve_a_wrestlers_current_managers()
     {
         $wrestler = factory(Wrestler::class)->create();
-        $currentManagerA = app(ManagerFactory::class)->forWrestler($wrestler)->hiredOn(Carbon::today()->subMonths(5))->create();
-        $currentManagerB = app(ManagerFactory::class)->forWrestler($wrestler)->hiredOn(Carbon::today()->subMonths(2))->create();
-        $pastManager = app(ManagerFactory::class)->forWrestler($wrestler)->hiredOn(Carbon::today()->subWeeks(2))->firedOn(Carbon::yesterday())->create();
+        $currentManagerA = ManagerFactory::forWrestler($wrestler)->hiredOn(Carbon::today()->subMonths(5))->create();
+        $currentManagerB = ManagerFactory::forWrestler($wrestler)->hiredOn(Carbon::today()->subMonths(2))->create();
+        $pastManager = ManagerFactory::forWrestler($wrestler)->hiredOn(Carbon::today()->subWeeks(2))->firedOn(Carbon::yesterday())->create();
 
         $currentManagers = $wrestler->currentManagers;
 
@@ -572,22 +507,14 @@ class WrestlerTest extends TestCase
     {
         $wrestler = factory(Wrestler::class)->create();
 
-        $pastManagerA = app(ManagerFactory::class)->forWrestler($wrestler)->hiredOn(Carbon::today()->subMonths(5))->firedOn(Carbon::today()->subMonths(3))->create();
-        $pastManagerB = app(ManagerFactory::class)->forWrestler($wrestler)->hiredOn(Carbon::today()->subMonths(2))->firedOn(Carbon::today()->subWeeks(3))->create();
-        $currentManager = app(ManagerFactory::class)->forWrestler($wrestler)->hiredOn(Carbon::yesterday())->create();
+        $pastManagerA = ManagerFactory::forWrestler($wrestler)->hiredOn(Carbon::today()->subMonths(5))->firedOn(Carbon::today()->subMonths(3))->create();
+        $pastManagerB = ManagerFactory::forWrestler($wrestler)->hiredOn(Carbon::today()->subMonths(2))->firedOn(Carbon::today()->subWeeks(3))->create();
+        $currentManager = ManagerFactory::forWrestler($wrestler)->hiredOn(Carbon::yesterday())->create();
 
         $pastManagers = $wrestler->pastManagers;
 
         $this->assertTrue($pastManagers->contains($pastManagerA));
         $this->assertTrue($pastManagers->contains($pastManagerB));
         $this->assertFalse($pastManagers->contains($currentManager));
-    }
-
-    /** @test */
-    public function a_wrestler_can_have_many_managers()
-    {
-        $wrestler = factory(Wrestler::class)->create();
-
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $wrestler->managers);
     }
 }

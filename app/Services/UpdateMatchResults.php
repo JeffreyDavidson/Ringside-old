@@ -19,15 +19,17 @@ class UpdateMatchResults
     {
         foreach ($this->matches as $index => $match) {
             $retrievedMatch = Match::withMatchNumber($index + 1)->forEvent($this->event)->first();
+
             $retrievedMatch->update([
                 'match_decision_id' => $match['match_decision_id'],
-                'winner_id' => $match['winner_id'],
                 'result' => $match['result'],
             ]);
 
-            $losers = $retrievedMatch->wrestlers->except($match['winner_id']);
+            $winners = collect($match['winners']);
+            $losers = $retrievedMatch->wrestlers->diff($winners);
 
             $retrievedMatch->losers()->saveMany($losers);
+            $retrievedMatch->winners()->saveMany($winners);
 
             if ($retrievedMatch->isTitleMatch()) {
                 foreach ($retrievedMatch->titles as $title) {

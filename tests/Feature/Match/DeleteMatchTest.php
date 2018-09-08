@@ -28,6 +28,7 @@ class DeleteMatchTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_delete_a_match()
     {
+        $this->withoutExceptionHandling();
         $response = $this->actingAs($this->authorizedUser)
                         ->from(route('event.matches.index', ['event' => $this->event->id]))
                         ->delete(route('event.matches.destroy', ['event' => $this->event->id, 'match' => $this->match->id]));
@@ -64,7 +65,7 @@ class DeleteMatchTest extends TestCase
     {
         $response = $this->actingAs($this->authorizedUser)
                         ->from(route('event.matches.index', ['event' => $this->event->id]))
-                        ->delete(route('event.matches.destroy', ['event' => NULL, 'match' => $this->match->id]));
+                        ->delete(route('event.matches.destroy', ['event' => null, 'match' => $this->match->id]));
 
         $response->assertStatus(404);
     }

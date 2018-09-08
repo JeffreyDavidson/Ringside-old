@@ -1,9 +1,9 @@
 <?php
 
-use Carbon\Carbon;
 use Faker\Generator as Faker;
+use App\Models\Event;
 
-$factory->define(App\Models\Event::class, function (Faker $faker) {
+$factory->define(Event::class, function (Faker $faker) {
     $name = $faker->sentence;
 
     return [
@@ -14,9 +14,9 @@ $factory->define(App\Models\Event::class, function (Faker $faker) {
     ];
 });
 
-$factory->state(App\Models\Event::class, 'scheduled', ['date' => Carbon::today()->addMonths(2)]);
-$factory->state(App\Models\Event::class, 'past', ['date' => Carbon::today()->subMonths(2)]);
+$factory->state(Event::class, 'scheduled', ['date' => today()->addMonths(2)]);
+$factory->state(Event::class, 'past', ['date' => today()->subMonths(2)]);
 
-$factory->afterCreatingState(App\Models\Wrestler::class, 'archived', function ($wrestler) {
-    $wrestler->archive();
+$factory->afterCreatingState(Event::class, 'archived', function ($event) {
+    $event->archive();
 });

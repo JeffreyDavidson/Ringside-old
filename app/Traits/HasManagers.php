@@ -3,8 +3,9 @@
 namespace App\Traits;
 
 use App\Models\Manager;
-use App\Exceptions\WrestlerAlreadyHasManagerException;
-use App\Exceptions\WrestlerNotHaveHiredManagerException;
+use App\Exceptions\ManagerNotHiredException;
+use App\Exceptions\ModelHasManagerException;
+use App\Exceptions\ModelIsInactiveException;
 
 trait HasManagers
 {
@@ -76,8 +77,12 @@ trait HasManagers
      */
     public function hireManager($manager, $date)
     {
+        if (!$manager->is_active) {
+            throw new ModelIsInactiveException;
+        }
+
         if ($this->hasManager($manager)) {
-            throw new WrestlerAlreadyHasManagerException;
+            throw new ModelHasManagerException;
         }
 
         return $this->managers()->attach($manager->id, ['hired_on' => $date]);
@@ -92,7 +97,7 @@ trait HasManagers
     public function fireManager($manager, $date)
     {
         if (!$this->hasManager($manager)) {
-            throw new WrestlerNotHaveHiredManagerException;
+            throw new ManagerNotHiredException;
         }
 
         return $this->managers()->updateExistingPivot($manager->id, ['fired_on' => $date]);

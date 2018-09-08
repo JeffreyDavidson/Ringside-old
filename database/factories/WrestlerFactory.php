@@ -28,7 +28,6 @@ $factory->afterCreatingState(Wrestler::class, 'suspended', function ($wrestler) 
 
 $factory->afterCreatingState(Wrestler::class, 'retired', function ($wrestler) {
     $wrestler->retire();
-    $wrestler->deactivate();
 });
 
 $factory->afterCreatingState(Wrestler::class, 'injured', function ($wrestler) {

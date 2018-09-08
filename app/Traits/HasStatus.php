@@ -3,6 +3,8 @@
 namespace App\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
+use App\Exceptions\ModelIsActiveException;
+use App\Exceptions\ModelIsInactiveException;
 
 trait HasStatus
 {
@@ -32,9 +34,15 @@ trait HasStatus
      * Activates an inactive model.
      *
      * @return bool
+     *
+     * @throws App\Exceptions\ModelIsActiveExcepton
      */
     public function activate()
     {
+        if ($this->is_active) {
+            throw new ModelIsActiveException;
+        }
+
         return $this->update(['is_active' => true]);
     }
 
@@ -42,9 +50,15 @@ trait HasStatus
      * Deactivates an active model.
      *
      * @return bool
+     *
+     * @throws App\Exceptions\ModelIsInactiveExcepton
      */
     public function deactivate()
     {
+        if (!$this->is_active) {
+            throw new ModelIsInactiveException;
+        }
+
         return $this->update(['is_active' => false]);
     }
 }

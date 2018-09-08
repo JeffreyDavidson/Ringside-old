@@ -22,5 +22,4 @@ $factory->afterCreatingState(Manager::class, 'suspended', function ($manager) {
 
 $factory->afterCreatingState(Manager::class, 'retired', function ($manager) {
     $manager->retire();
-    $manager->deactivate();
 });

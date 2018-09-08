@@ -22,5 +22,4 @@ $factory->afterCreatingState(Referee::class, 'suspended', function ($referee) {
 
 $factory->afterCreatingState(Referee::class, 'retired', function ($referee) {
     $referee->retire();
-    $referee->deactivate();
 });

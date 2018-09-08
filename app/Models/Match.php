@@ -16,7 +16,7 @@ class Match extends Model
      *
      * @var array
      */
-    protected $fillable = ['match_number', 'match_type_id', 'stipulation_id', 'match_decision_id', 'preview'];
+    protected $fillable = ['match_number', 'match_type_id', 'stipulation_id', 'match_decision_id', 'preview', 'result'];
 
     /**
      * Assign which presenter to be used for model.
@@ -113,6 +113,16 @@ class Match extends Model
     public function wrestlers()
     {
         return $this->belongsToMany(Wrestler::class)->withPivot('side_number');
+    }
+
+    /**
+     * A collection of wrestlers grouped by side.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function groupedWrestlersBySide()
+    {
+        return $this->wrestlers->groupBy('pivot.side_number');
     }
 
     /**

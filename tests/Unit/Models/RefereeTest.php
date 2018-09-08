@@ -66,7 +66,7 @@ class RefereeTest extends TestCase
     }
 
     /** @test */
-    public function it_can_activate_an_inactive_referee()
+    public function an_inactive_referee_can_be_activated()
     {
         $referee = factory(Referee::class)->states('inactive')->create();
 
@@ -76,13 +76,37 @@ class RefereeTest extends TestCase
     }
 
     /** @test */
-    public function it_can_deactivate_an_active_referee()
+    public function an_active_referee_can_be_deactivated()
     {
         $referee = factory(Referee::class)->states('active')->create();
 
         $referee->deactivate();
 
         $this->assertFalse($referee->is_active);
+    }
+
+    /**
+     * @expectedException \App\Exceptions\ModelIsActiveException
+     *
+     * @test
+     */
+    public function an_active_referee_cannot_be_activated()
+    {
+        $referee = factory(Referee::class)->states('active')->create();
+
+        $referee->activate();
+    }
+
+    /**
+     * @expectedException \App\Exceptions\ModelIsInactiveException
+     *
+     * @test
+     */
+    public function an_inactive_referee_cannot_be_deactivated()
+    {
+        $referee = factory(Referee::class)->states('inactive')->create();
+
+        $referee->deactivate();
     }
 
     /** @test */
@@ -111,14 +135,6 @@ class RefereeTest extends TestCase
     }
 
     /** @test */
-    public function a_referee_can_have_many_retirements()
-    {
-        $referee = factory(Referee::class)->create();
-
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $referee->retirements);
-    }
-
-    /** @test */
     public function it_can_get_retired_referees()
     {
         $refereeA = factory(Referee::class)->states('retired')->create();
@@ -133,7 +149,7 @@ class RefereeTest extends TestCase
     }
 
     /**
-     * @expectedException \App\Exceptions\ModelAlreadyRetiredException
+     * @expectedException \App\Exceptions\ModelIsRetiredException
      *
      * @test
      */
@@ -145,7 +161,7 @@ class RefereeTest extends TestCase
     }
 
     /**
-     * @expectedException \App\Exceptions\ModelNotRetiredException
+     * @expectedException \App\Exceptions\ModelIsActiveException
      *
      * @test
      */
@@ -170,25 +186,17 @@ class RefereeTest extends TestCase
     }
 
     /** @test */
-    public function a_suspended_referee_can_be_unsuspened()
+    public function a_suspended_referee_can_be_reinstated()
     {
         $referee = factory(Referee::class)->states('suspended')->create();
 
-        $referee->unsuspend();
+        $referee->reinstate();
 
         $this->assertNotNull($referee->suspensions->last()->ended_at);
         $this->assertTrue($referee->is_active);
         $this->assertFalse($referee->isSuspended());
         $this->assertTrue($referee->hasPastSuspensions());
         $this->assertEquals(1, $referee->pastSuspensions->count());
-    }
-
-    /** @test */
-    public function a_referee_can_have_many_suspensions()
-    {
-        $referee = factory(Referee::class)->create();
-
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $referee->suspensions);
     }
 
     /** @test */
@@ -206,7 +214,7 @@ class RefereeTest extends TestCase
     }
 
     /**
-     * @expectedException \App\Exceptions\ModelAlreadySuspendedException
+     * @expectedException \App\Exceptions\ModelIsSuspendedException
      *
      * @test
      */
@@ -218,14 +226,14 @@ class RefereeTest extends TestCase
     }
 
     /**
-     * @expectedException \App\Exceptions\ModelNotSuspendedException
+     * @expectedException \App\Exceptions\ModelIsActiveException
      *
      * @test
      */
-    public function an_active_referee_cannot_be_unsuspended()
+    public function an_active_referee_cannot_be_reinstated()
     {
         $referee = factory(Referee::class)->states('active')->create();
 
-        $referee->unsuspend();
+        $referee->reinstate();
     }
 }

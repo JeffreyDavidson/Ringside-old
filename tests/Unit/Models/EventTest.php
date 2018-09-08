@@ -3,30 +3,14 @@
 namespace Tests\Unit\Models;
 
 use Tests\TestCase;
-use App\Models\Venue;
 use App\Models\Event;
 use App\Models\Match;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class EventTest extends TestCase
 {
     use RefreshDatabase;
-
-    /** @test */
-    public function an_event_can_have_many_matches()
-    {
-        $event = factory(Event::class)->create();
-
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $event->matches);
-    }
-
-    /** @test */
-    public function an_event_belongs_to_a_venue()
-    {
-        $event = factory(Event::class)->create();
-
-        $this->assertInstanceOf(Venue::class, $event->venue);
-    }
 
     /** @test */
     public function the_last_match_in_an_event_is_the_main_event()
@@ -43,9 +27,25 @@ class EventTest extends TestCase
     }
 
     /** @test */
-    public function an_event_can_add_a_match()
+    public function an_event_that_has_a_date_before_todays_date_is_a_past_event()
     {
-        $event = factory(Event::class)->create();
+        $event = factory(Event::class)->create(['date' => Carbon::yesterday()]);
+
+        $this->assertTrue($event->isPast());
+    }
+
+    /** @test */
+    public function an_event_that_has_an_archived_date_is_archived()
+    {
+        $event = factory(Event::class)->states('archived')->create();
+
+        $this->assertTrue($event->isArchived());
+    }
+
+    /** @test */
+    public function a_scheduled_event_can_add_a_match()
+    {
+        $event = factory(Event::class)->states('scheduled')->create();
         $match = factory(Match::class)->create();
 
         $event->addMatch($match);
@@ -54,12 +54,36 @@ class EventTest extends TestCase
     }
 
     /** @test */
-    public function an_event_can_be_archived()
+    public function a_past_event_can_be_archived()
     {
-        $event = factory(Event::class)->create();
+        $event = factory(Event::class)->states('past')->create();
 
         $event->archive();
 
         $this->assertNotNull($event->archived_at);
+    }
+
+    /**
+     * @expectedException \App\Exceptions\EventIsScheduledException
+     *
+     * @test
+     */
+    public function a_scheduled_event_cannot_be_archived()
+    {
+        $event = factory(Event::class)->states('scheduled')->create();
+
+        $event->archive();
+    }
+
+    /**
+     * @expectedException \App\Exceptions\EventIsArchivedException
+     *
+     * @test
+     */
+    public function an_archived_event_cannot_be_archived()
+    {
+        $event = factory(Event::class)->states('archived')->create();
+
+        $event->archive();
     }
 }

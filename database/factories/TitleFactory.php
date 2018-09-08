@@ -1,9 +1,10 @@
 <?php
 
 use Carbon\Carbon;
+use App\Models\Title;
 use Faker\Generator as Faker;
 
-$factory->define(App\Models\Title::class, function (Faker $faker) {
+$factory->define(Title::class, function (Faker $faker) {
     $name = $faker->sentence;
 
     return [
@@ -14,11 +15,9 @@ $factory->define(App\Models\Title::class, function (Faker $faker) {
     ];
 });
 
-$factory->state(App\Models\Title::class, 'active', ['is_active' => true]);
-$factory->state(App\Models\Title::class, 'inactive', ['is_active' => false]);
+$factory->state(Title::class, 'active', ['is_active' => true, 'introduced_at' => Carbon::today()]);
+$factory->state(Title::class, 'inactive', ['is_active' => false, 'introduced_at' => Carbon::tomorrow()]);
 
-$factory->afterCreatingState(App\Models\Title::class, 'retired', function ($title) {
+$factory->afterCreatingState(Title::class, 'retired', function ($title) {
     $title->retire();
-    $title->deactivate();
 });
-

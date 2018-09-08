@@ -5,6 +5,7 @@ namespace Tests\Feature\Event;
 use Tests\TestCase;
 use App\Models\Wrestler;
 use App\Models\Event;
+use App\Models\Match;
 use App\Models\MatchType;
 use App\Models\MatchDecision;
 use App\Models\Title;
@@ -69,11 +70,13 @@ class UpdateEventMatchesWithResultsTest extends TestCase
 
     private function validParams($overrides = [])
     {
+        // dd(Match::first()->groupedWrestlersBySide()->first());
+
         return array_replace_recursive([
             'matches' => [
                 [
                     'match_decision_id' => factory(MatchDecision::class)->create()->id,
-                    'winner_id' => 1,
+                    'winners' => Match::first()->groupedWrestlersBySide()->first(),
                     'result' => 'Donec sed odio dui. Cras mattis consectetur purus sit amet fermentum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.',
                 ],
             ],
@@ -131,45 +134,51 @@ class UpdateEventMatchesWithResultsTest extends TestCase
 
         $response = $this->actingAs($this->authorizedUser)
                         ->from(route('results.edit', ['event' => $match->event->id]))
-                        ->patch(route('results.update', ['event' => $match->event->id]), $this->validParams([
-                            'matches' => [
-                                [
-                                    'match_decision_id' => factory(MatchDecision::class)->create()->id,
-                                    'winner_id' => $match->wrestlers->first()->id,
-                                    'result' => 'Maecenas faucibus mollis interdum. Etiam porta sem malesuada magna mollis euismod.',
-                                ],
-                            ],
-                        ]));
+                        ->patch(route('results.update', ['event' => $match->event->id]), $this->validParams([]));
 
         $response->assertRedirect(route('events.index'));
+    }
+
+    /** @test */
+    public function result_description_of_match_can_be_updated_for_matches()
+    {
+        $match = $this->createStandardMatch();
+
+        $response = $this->actingAs($this->authorizedUser)
+            ->from(route('results.edit', ['event' => $match->event->id]))
+            ->patch(route('results.update', ['event' => $match->event->id]), $this->validParams([
+                'matches' => [
+                    [
+                        'result' => 'Maecenas faucibus mollis interdum. Etiam porta sem malesuada magna mollis euismod.',
+                    ],
+                ],
+            ]));
+
+        tap($match->fresh(), function ($match) {
+            $this->assertEquals('Maecenas faucibus mollis interdum. Etiam porta sem malesuada magna mollis euismod.', $match->result);
+        });
     }
 
     /** @test */
     public function winners_and_losers_can_be_separated_based_off_decision_of_match()
     {
         $match = $this->createStandardMatch();
+        $winners = $match->groupedWrestlersBySide()->first();
+        $losers = $match->wrestlers->diff($winners);
 
         $response = $this->actingAs($this->authorizedUser)
                         ->from(route('results.edit', ['event' => $match->event->id]))
                         ->patch(route('results.update', ['event' => $match->event->id]), $this->validParams([
                             'matches' => [
                                 [
-                                    'match_decision_id' => 1,
-                                    'winner_id' => $match->wrestlers->first()->id,
-                                    'result' => 'Maecenas faucibus mollis interdum. Etiam porta sem malesuada magna mollis euismod.',
+                                    'winners' => $winners,
                                 ],
                             ],
                         ]));
 
-        tap($match->fresh(), function ($match) use ($response) {
-            $this->assertTrue($match->winner->is($match->wrestlers->first()));
-            $this->assertFalse($match->losers->contains('id', $match->wrestlers->first()->id));
-            $this->assertTrue(
-                $match->losers->keyBy('id')->has(
-                    $match->wrestlers->except($match->winner_id)->modelKeys()
-                )
-            );
-            $this->assertEquals('Maecenas faucibus mollis interdum. Etiam porta sem malesuada magna mollis euismod.', $match->result);
+        tap($match->fresh(), function ($match) use ($response, $winners, $losers) {
+            $this->assertEquals($match->losers->modelKeys(), $losers->modelKeys());
+            $this->assertEquals($match->winners->modelKeys(), $winners->modelKeys());
         });
     }
 
@@ -184,14 +193,15 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                             'matches' => [
                                 [
                                     'match_decision_id' => MatchDecision::titleCanBeWonBySlug()->first()->id,
-                                    'winner_id' => $match->wrestlers->first()->id,
+                                    'winners' => $match->wrestlers->first()->id,
                                 ],
                             ],
                         ]));
 
         tap($match->fresh(), function ($match) use ($response) {
             $match->titles->each(function ($title, $key) use ($match) {
-                $this->assertEquals($match->winner_id, $title->fresh()->currentChampion->wrestler_id);
+                $this->assertTrue($match->winners->contains($this->fresh()->currentChampion->wrestler_id));
+                // $this->assertEquals($match->winners->, $title->fresh()->currentChampion->wrestler_id);
             });
         });
     }
@@ -207,7 +217,7 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                             'matches' => [
                                 [
                                     'match_decision_id' => MatchDecision::titleCannotBeWonBySlug()->first()->id,
-                                    'winner_id' => $match->wrestlers->first()->id,
+                                    'winners' => $match->wrestlers->first()->id,
                                 ],
                             ],
                         ]));
@@ -230,7 +240,7 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                             'matches' => [
                                 [
                                     'match_decision_id' => MatchDecision::titleCanBeWonBySlug()->first()->id,
-                                    'winner_id' => $match->titles->first()->currentChampion->wrestler->id,
+                                    'winners' => $match->titles->first()->currentChampion->wrestler->id,
                                 ],
                             ],
                         ]));
@@ -253,7 +263,7 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                             'matches' => [
                                 [
                                     'match_decision_id' => MatchDecision::titleCanChangeHandsBySlug()->first()->id,
-                                    'winner_id' => $this->nonChampionWinner($match),
+                                    'winners' => $this->nonChampionWinner($match),
                                 ],
                             ],
                         ]));
@@ -278,7 +288,7 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                             'matches' => [
                                 [
                                     'match_decision_id' => MatchDecision::titleCannotChangeHandsBySlug()->first()->id,
-                                    'winner_id' => $this->nonChampionWinner($match),
+                                    'winners' => $this->nonChampionWinner($match),
                                 ],
                             ],
                         ]));
@@ -391,7 +401,7 @@ class UpdateEventMatchesWithResultsTest extends TestCase
     }
 
     /** @test */
-    public function each_match_winner_is_required()
+    public function each_match_winners_is_required()
     {
         $match = $this->createStandardMatch();
 
@@ -400,16 +410,16 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                             ->patch(route('results.update', ['event' => $match->event->id]), $this->validParams([
                                 'matches' => [
                                     [
-                                        'winner_id' => '',
+                                        'winners' => '',
                                     ],
                                 ],
                             ]));
 
-        $this->assertFormError('matches.*.winner_id', $match);
+        $this->assertFormError('matches.*.winners', $match);
     }
 
     /** @test */
-    public function each_match_winner_must_be_an_integer()
+    public function each_match_winners_must_be_an_integer()
     {
         $match = $this->createStandardMatch();
 
@@ -418,16 +428,16 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                             ->patch(route('results.update', ['event' => $match->event->id]), $this->validParams([
                                 'matches' => [
                                     [
-                                        'winner_id' => 'abc',
+                                        'winners' => 'abc',
                                     ],
                                 ],
                             ]));
 
-        $this->assertFormError('matches.*.winner_id', $match);
+        $this->assertFormError('matches.*.winners', $match);
     }
 
     /** @test */
-    public function each_match_winner_must_have_a_value_more_than_one()
+    public function each_match_winners_must_have_a_value_more_than_one()
     {
         $match = $this->createStandardMatch();
 
@@ -436,16 +446,16 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                             ->patch(route('results.update', ['event' => $match->event->id]), $this->validParams([
                                 'matches' => [
                                     [
-                                        'winner_id' => 0,
+                                        'winners' => 0,
                                     ],
                                 ],
                             ]));
 
-        $this->assertFormError('matches.*.winner_id', $match);
+        $this->assertFormError('matches.*.winners', $match);
     }
 
     /** @test */
-    public function each_match_winner_must_exist_in_the_database()
+    public function each_match_winners_must_exist_in_the_database()
     {
         $match = $this->createStandardMatch();
 
@@ -454,16 +464,16 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                             ->patch(route('results.update', ['event' => $match->event->id]), $this->validParams([
                                 'matches' => [
                                     [
-                                        'winner_id' => 99,
+                                        'winners' => 99,
                                     ],
                                 ],
                             ]));
 
-        $this->assertFormError('matches.*.winner_id', $match);
+        $this->assertFormError('matches.*.winners', $match);
     }
 
     /** @test */
-    public function each_match_winner_must_exist_in_the_match()
+    public function each_match_winners_must_exist_in_the_match()
     {
         $match = $this->createStandardMatch();
         factory(Wrestler::class)->create(['id' => 3]);
@@ -473,12 +483,12 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                             ->patch(route('results.update', ['event' => $match->event->id]), $this->validParams([
                                 'matches' => [
                                     [
-                                        'winner_id' => 3,
+                                        'winners' => 3,
                                     ],
                                 ],
                             ]));
 
-        $this->assertFormError('matches.*.winner_id', $match);
+        $this->assertFormError('matches.*.winners', $match);
     }
 
     /** @test */

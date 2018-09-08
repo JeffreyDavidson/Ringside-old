@@ -37,7 +37,7 @@ class TitleRecordsRepositoryTest extends TestCase
 
         $champions = $this->repository->mostTitleDefenses($title);
 
-        $this->assertTrue($champions->pluck('wrestler_id')->contains($wrestlerB->id));
+        $this->assertTrue($champions->contains($wrestlerB));
     }
 
     /** @test */
@@ -54,7 +54,7 @@ class TitleRecordsRepositoryTest extends TestCase
 
         $champions = $this->repository->mostTitleReigns($title);
 
-        $this->assertTrue($champions->contains($wrestlerA->id));
+        $this->assertTrue($champions->contains($wrestlerA));
     }
 
     /** @test */
@@ -71,7 +71,7 @@ class TitleRecordsRepositoryTest extends TestCase
 
         $champions = $this->repository->longestTitleReigns($title);
 
-        $this->assertTrue($champions->pluck('wrestler_id')->contains($wrestlerA->id));
-        $this->assertTrue($champions->pluck('wrestler_id')->contains($wrestlerB->id));
+        $this->assertTrue($champions->contains($wrestlerA));
+        $this->assertTrue($champions->contains($wrestlerB));
     }
 }

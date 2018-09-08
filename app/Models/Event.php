@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Exceptions\EventIsScheduledException;
+use App\Exceptions\EventIsArchivedException;
 
 class Event extends Model
 {
@@ -40,7 +41,7 @@ class Event extends Model
      */
     protected $casts = [
         'date' => 'datetime',
-        'archived_at' => 'datetime'
+        'archived_at' => 'datetime',
     ];
 
     /**
@@ -90,9 +91,17 @@ class Event extends Model
      * @param  string|null  $date
      * @return void
      */
-    public function archive($date = null)
+    public function archive()
     {
-        return $this->update(['archived_at' => $date ?: $this->freshTimestamp()]);
+        if ($this->isArchived()) {
+            throw new EventIsArchivedException;
+        }
+
+        if ($this->isScheduled()) {
+            throw new EventIsScheduledException;
+        }
+
+        return $this->update(['archived_at' => now()]);
     }
 
     /**
@@ -103,7 +112,7 @@ class Event extends Model
      */
     public function scopeScheduled(Builder $query)
     {
-        return $query->where('date', '>=', Carbon::today());
+        return $query->where('date', '>=', today());
     }
 
     /**
@@ -114,7 +123,7 @@ class Event extends Model
      */
     public function scopePast(Builder $query)
     {
-        return $query->where('date', '<', Carbon::today());
+        return $query->where('date', '<', today());
     }
 
     /**
@@ -126,5 +135,35 @@ class Event extends Model
     public function scopeArchived(Builder $query)
     {
         return $query->whereNotNull('archived_at');
+    }
+
+    /**
+     * Checks to see if the event is scheduled for a future date.
+     *
+     * @return boolean
+     */
+    public function isScheduled()
+    {
+        return $this->date->gte(today());
+    }
+
+    /**
+     * Checks to see if the event's date has past.
+     *
+     * @return boolean
+     */
+    public function isPast()
+    {
+        return $this->date->lt(today());
+    }
+
+    /**
+     * Checks to see if the event is archived.
+     *
+     * @return boolean
+     */
+    public function isArchived()
+    {
+        return !is_null($this->archived_at);
     }
 }

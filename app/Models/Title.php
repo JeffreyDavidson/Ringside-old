@@ -12,10 +12,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Title extends Model
 {
     use HasStatus,
-    HasMatches,
-    HasRetirements,
-    Presentable,
-    SoftDeletes;
+        HasMatches,
+        HasRetirements,
+        Presentable,
+        SoftDeletes;
 
     /**
      * The attributes that should be cast to native types.
@@ -44,30 +44,30 @@ class Title extends Model
     /**
      * A title can have many champions.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function champions()
     {
-        return $this->hasMany(Championship::class);
+        return $this->belongsToMany(Wrestler::class, 'championships')->using(Championship::class)->withPivot('won_on', 'lost_on');
     }
 
     /**
-     * Returns the current champion for the title.
+     * Defines the relationship between a title and its current champion.
      *
-     * @return \App\Models\Champion
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function currentChampion()
     {
-        return $this->champions()->current()->toHasOne();
+        return $this->champions()->wherePivot('lost_on', null)->limit(1);
     }
 
     /**
-     * Checks to see if the title is currently vacant.
+     * Retrieves the current champion for the title.
      *
-     * @return bool
+     * @return \App\Models\Wrestler|null
      */
-    public function isVacant()
+    public function getCurrentChampionAttribute()
     {
-        return $this->champions()->current()->doesntExist();
+        return $this->currentChampion()->first();
     }
 }

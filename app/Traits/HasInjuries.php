@@ -4,8 +4,8 @@ namespace App\Traits;
 
 use App\Models\Injury;
 use Carbon\Carbon;
-use App\Exceptions\WrestlerNotInjuredException;
-use App\Exceptions\WrestlerAlreadyInjuredException;
+use App\Exceptions\ModelIsActiveException;
+use App\Exceptions\ModelIsInjuredException;
 
 trait HasInjuries
 {
@@ -77,11 +77,13 @@ trait HasInjuries
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
+     *
+     * @throws App\Exceptions\ModelIsInjuredException
      */
     public function injure()
     {
         if ($this->isInjured()) {
-            throw new WrestlerAlreadyInjuredException;
+            throw new ModelIsInjuredException;
         }
 
         $this->deactivate();
@@ -96,11 +98,13 @@ trait HasInjuries
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
+     *
+     * @throws App\Exceptions\ModelIsActiveException
      */
     public function recover()
     {
-        if (!$this->isInjured()) {
-            throw new WrestlerNotInjuredException;
+        if ($this->is_active) {
+            throw new ModelIsActiveException;
         }
 
         $this->activate();

@@ -25,6 +25,6 @@ class MatchObserver
      */
     public function deleted(Match $match)
     {
-        Match::forEvent($match->event_id)->where('match_number', '>', $match->match_number)->decrement('match_number');
+        Match::forEvent($match->event)->where('match_number', '>', $match->match_number)->decrement('match_number');
     }
 }

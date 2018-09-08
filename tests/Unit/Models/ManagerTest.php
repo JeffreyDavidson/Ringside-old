@@ -66,7 +66,7 @@ class ManagerTest extends TestCase
     }
 
     /** @test */
-    public function it_can_activate_an_inactive_manager()
+    public function an_inactive_manager_can_be_activated()
     {
         $manager = factory(Manager::class)->states('inactive')->create();
 
@@ -76,13 +76,37 @@ class ManagerTest extends TestCase
     }
 
     /** @test */
-    public function it_can_deactivate_an_active_manager()
+    public function an_active_manager_can_be_deactivated()
     {
         $manager = factory(Manager::class)->states('active')->create();
 
         $manager->deactivate();
 
         $this->assertFalse($manager->is_active);
+    }
+
+    /**
+     * @expectedException \App\Exceptions\ModelIsActiveException
+     *
+     * @test
+     */
+    public function an_active_manager_cannot_be_activated()
+    {
+        $manager = factory(Manager::class)->states('active')->create();
+
+        $manager->activate();
+    }
+
+    /**
+     * @expectedException \App\Exceptions\ModelIsInactiveException
+     *
+     * @test
+     */
+    public function an_inactive_manager_cannot_be_deactivated()
+    {
+        $manager = factory(Manager::class)->states('inactive')->create();
+
+        $manager->deactivate();
     }
 
     /** @test */
@@ -111,14 +135,6 @@ class ManagerTest extends TestCase
     }
 
     /** @test */
-    public function a_manager_can_have_many_retirements()
-    {
-        $manager = factory(Manager::class)->create();
-
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $manager->retirements);
-    }
-
-    /** @test */
     public function it_can_get_retired_managers()
     {
         $managerA = factory(Manager::class)->states('retired')->create();
@@ -133,7 +149,7 @@ class ManagerTest extends TestCase
     }
 
     /**
-     * @expectedException \App\Exceptions\ModelAlreadyRetiredException
+     * @expectedException \App\Exceptions\ModelIsRetiredException
      *
      * @test
      */
@@ -145,7 +161,7 @@ class ManagerTest extends TestCase
     }
 
     /**
-     * @expectedException \App\Exceptions\ModelNotRetiredException
+     * @expectedException \App\Exceptions\ModelIsActiveException
      *
      * @test
      */
@@ -170,25 +186,17 @@ class ManagerTest extends TestCase
     }
 
     /** @test */
-    public function a_suspended_manager_can_be_unsuspened()
+    public function a_suspended_manager_can_be_reinstated()
     {
         $manager = factory(Manager::class)->states('suspended')->create();
 
-        $manager->unsuspend();
+        $manager->reinstate();
 
         $this->assertNotNull($manager->suspensions->last()->ended_at);
         $this->assertTrue($manager->is_active);
         $this->assertFalse($manager->isSuspended());
         $this->assertTrue($manager->hasPastSuspensions());
         $this->assertEquals(1, $manager->pastSuspensions->count());
-    }
-
-    /** @test */
-    public function a_manager_can_have_many_suspensions()
-    {
-        $manager = factory(Manager::class)->create();
-
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $manager->suspensions);
     }
 
     /** @test */
@@ -206,7 +214,7 @@ class ManagerTest extends TestCase
     }
 
     /**
-     * @expectedException \App\Exceptions\ModelAlreadySuspendedException
+     * @expectedException \App\Exceptions\ModelIsSuspendedException
      *
      * @test
      */
@@ -218,14 +226,14 @@ class ManagerTest extends TestCase
     }
 
     /**
-     * @expectedException \App\Exceptions\ModelNotSuspendedException
+     * @expectedException \App\Exceptions\ModelIsActiveException
      *
      * @test
      */
-    public function an_active_manager_cannot_be_unsuspended()
+    public function an_active_manager_cannot_be_reinstated()
     {
         $manager = factory(Manager::class)->states('active')->create();
 
-        $manager->unsuspend();
+        $manager->reinstate();
     }
 }
