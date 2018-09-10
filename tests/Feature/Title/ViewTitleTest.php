@@ -16,12 +16,12 @@ class ViewTitleTest extends TestCase
     {
         parent::setUp();
 
-        $this->setupAuthorizedUser('show-title');
+        $this->setupAuthorizedUser('view-title');
 
         $this->title = factory(Title::class)->create([
             'name' => 'Title Name',
             'slug' => 'title-slug',
-            'introduced_at' => '2017-09-17'
+            'introduced_at' => '2017-09-17',
         ]);
     }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator;
 use App\Rules\BeforeFirstMatchDate;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -15,7 +16,8 @@ class WrestlerEditFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->hasPermission('update-wrestler');
+        $wrestler = $this->route('wrestler');
+        return $this->user()->can('update', $wrestler);
     }
 
     /**
@@ -35,5 +37,14 @@ class WrestlerEditFormRequest extends FormRequest
             'signature_move' => 'required',
             'hired_at' => ['required', 'date', new BeforeFirstMatchDate($this->wrestler)],
         ];
+    }
+
+    public function withValidator(Validator $validator)
+    {
+        $validator->after(function(Validator $validator) {
+            if ($validator->errors()->isEmpty()) {
+                $this->offsetSet('height', ($this->input('feet') * 12) + $this->input('inches'));
+            }
+        });
     }
 }

@@ -7,6 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Role extends Model
 {
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['name', 'slug'];
+
+    /**
      * A role can have many permissions.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

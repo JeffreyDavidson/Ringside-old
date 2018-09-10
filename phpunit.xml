@@ -31,15 +31,17 @@
             <directory suffix=".php">./app</directory>
         </whitelist>
     </filter>
-    <logging>
+    <!-- <logging>
         <log type="coverage-html" target="./report" charset="UTF-8"
         yui="true" highlight="true"
         lowUpperBound="50" highLowerBound="80" />
-    </logging>
+    </logging> -->
     <php>
         <env name="APP_ENV" value="testing"/>
         <env name="CACHE_DRIVER" value="array"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="QUEUE_DRIVER" value="sync"/>
+        <env name="DB_CONNECTION" value="mysql"/>
+        <env name="DB_DATABASE" value="ringside_testing"/>
     </php>
 </phpunit>

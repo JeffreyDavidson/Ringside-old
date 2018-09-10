@@ -14,9 +14,14 @@ class Controller extends BaseController
 
     public $request;
 
+    protected $authorizeResource = null;
+
     public function __construct(Request $request)
     {
         $this->request = $request;
+        if ($this->authorizeResource) {
+            $this->authorizeResource($this->authorizeResource);
+        }
     }
 
     public function ajax()
@@ -27,5 +32,18 @@ class Controller extends BaseController
     public function wantsJson()
     {
         return $this->request->wantsJson();
+    }
+
+    protected function resourceAbilityMap()
+    {
+        return [
+            'index' => 'index',
+            'show' => 'view',
+            'create' => 'create',
+            'store' => 'create',
+            'edit' => 'update',
+            'update' => 'update',
+            'destroy' => 'delete',
+        ];
     }
 }

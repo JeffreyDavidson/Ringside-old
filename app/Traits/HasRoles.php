@@ -7,8 +7,15 @@ use App\Models\Permission;
 
 trait HasRoles
 {
-    /** @abstract */
-    abstract public function role();
+    /**
+     * A user can have many roles.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
 
     /**
      * Assigns a role to a user.

@@ -3,8 +3,6 @@
 namespace Tests\Feature\Venue;
 
 use App\Models\Venue;
-use Facades\EventFactory;
-use Carbon\Carbon;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -18,14 +16,14 @@ class ViewVenueTest extends TestCase
     {
         parent::setUp();
 
-        $this->setupAuthorizedUser('show-venue');
+        $this->setupAuthorizedUser('view-venue');
 
         $this->venue = factory(Venue::class)->create([
             'name' => 'Venue Name',
             'address' => '123 Main Street',
             'city' => 'Laraville',
             'state' => 'FL',
-            'postcode' => '90210'
+            'postcode' => '90210',
         ]);
     }
 

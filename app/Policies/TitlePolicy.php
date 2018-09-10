@@ -37,9 +37,9 @@ class TitlePolicy
      * @param  \App\Models\User  $user
      * @return bool
      */
-    public function show(User $user)
+    public function view(User $user)
     {
-        return $user->hasPermission('show-title');
+        return $user->hasPermission('view-title');
     }
 
     /**
@@ -51,6 +51,17 @@ class TitlePolicy
     public function edit(User $user)
     {
         return $user->hasPermission('edit-title');
+    }
+
+    /**
+     * Checks to see if the user has permission to update a title.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function update(User $user)
+    {
+        return $user->hasPermission('update-title');
     }
 
     /**

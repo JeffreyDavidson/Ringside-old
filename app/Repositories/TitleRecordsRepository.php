@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use DB;
 use App\Models\Title;
 use App\Models\Wrestler;
 use App\Models\Championship;
@@ -18,10 +19,7 @@ class TitleRecordsRepository
     {
         $maxDefenses = Championship::selectRaw('MAX(successful_defenses) AS max')->value('max');
 
-        return Championship::with('wrestler')
-            ->where('title_id', $title->id)
-            ->where('successful_defenses', $maxDefenses)
-            ->get();
+        return $title->champions()->wherePivot('successful_defenses', $maxDefenses)->get();
     }
 
     /**
@@ -55,12 +53,15 @@ class TitleRecordsRepository
     public function longestTitleReigns(Title $title)
     {
         $now = \Carbon\Carbon::now()->toDateTimeString();
-        $maxDateDiff = Championship::selectRaw('MAX(DATEDIFF(IFNULL(lost_on, ?), won_on)) AS diff', [$now])->value('diff');
 
-        return Championship::with('wrestler')
-            ->select('championships.lost_on', 'championships.won_on', 'wrestler_id')
-            ->where('title_id', $title->id)
-            ->whereRaw('DATEDIFF(IFNULL(lost_on, ?), won_on) = ?', [$now, $maxDateDiff])
-            ->get();
+        $reign = DB::table('championships')
+            ->selectRaw('MAX(DATEDIFF(IFNULL(lost_on, ?), won_on)) AS diff', [$now])
+            ->value('diff');
+
+        return Wrestler::whereHas('titles', function ($query) use ($now, $reign) {
+            $query->whereRaw('DATEDIFF(IFNULL(championships.lost_on, ?), championships.won_on) = ?', [
+                $now, $reign,
+            ]);
+        })->get();
     }
 }

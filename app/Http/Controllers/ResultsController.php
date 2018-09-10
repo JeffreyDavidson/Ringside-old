@@ -3,23 +3,30 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
-use App\Models\Match;
 use App\Http\Requests\EventResultsFormRequest;
 use App\Services\UpdateMatchResults;
 
 class ResultsController extends Controller
 {
+    protected $authorizeResource = Event::class;
+
+    protected function resourceAbilityMap()
+    {
+        return [
+            'edit' => 'update-results',
+            'update' => 'update-results',
+        ];
+    }
+
     /**
      * Show the form for editing results for an event.
      *
      * @param  \App\Models\Event  $event
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function edit(Event $event)
     {
-        $this->authorize('editResults', Event::class);
-
-        return view('events.results', ['event' => $event]);
+        return view('events.results', compact('event'));
     }
 
     /**
@@ -27,7 +34,7 @@ class ResultsController extends Controller
      *
      * @param  \App\Http\Requests\EventResultsFormRequest  $request
      * @param  \App\Models\Event  $event
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(EventResultsFormRequest $request, Event $event)
     {

@@ -16,7 +16,7 @@ class ViewWrestlerBioTest extends TestCase
     {
         parent::setUp();
 
-        $this->setupAuthorizedUser('show-wrestler');
+        $this->setupAuthorizedUser('view-wrestler');
 
         $this->wrestler = factory(Wrestler::class)->create([
             'name' => 'Wrestler 1',
@@ -51,7 +51,7 @@ class ViewWrestlerBioTest extends TestCase
 
         $response->assertSee('Wrestler 1');
         $response->assertSee('Kansas City, Missouri');
-        $response->assertSee('6\'1"');
+        $response->assertSee(e('6\'1"'));
         $response->assertSee('251 lbs.');
         $response->assertSee('Powerbomb');
     }

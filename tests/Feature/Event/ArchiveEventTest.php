@@ -27,12 +27,10 @@ class ArchiveEventTest extends TestCase
     {
         $response = $this->actingAs($this->authorizedUser)
                         ->from(route('events.index'))
-                        ->post(route('archived-events.store'), [
-                            'event_id' => $this->event->id,
-                        ]);
+                        ->post(route('archived-events.store', $this->event));
 
         $response->assertStatus(302);
-        $this->assertDatabaseHas('events', ['id' => $this->event->id, 'name' => $this->event->name, 'archived_at' => Carbon::now()]);
+        $this->assertDatabaseHas('events', ['id' => $this->event->id, 'name' => $this->event->name, 'archived_at' => now()->format('Y-m-d H:i:s')]);
         $response->assertRedirect(route('events.index'));
     }
 
@@ -41,9 +39,7 @@ class ArchiveEventTest extends TestCase
     {
         $response = $this->actingAs($this->unauthorizedUser)
                         ->from(route('events.index'))
-                        ->post(route('archived-events.store'), [
-                            'event_id' => $this->event->id,
-                        ]);
+                        ->post(route('archived-events.store', $this->event));
 
         $response->assertStatus(403);
     }
@@ -52,9 +48,7 @@ class ArchiveEventTest extends TestCase
     public function guests_cannot_archive_an_event()
     {
         $response = $this->from(route('events.index'))
-                        ->post(route('archived-events.store'), [
-                            'event_id' => $this->event->id,
-                        ]);
+                        ->post(route('archived-events.store', $this->event));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));

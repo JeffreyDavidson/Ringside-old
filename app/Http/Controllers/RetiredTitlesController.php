@@ -3,38 +3,47 @@
 namespace App\Http\Controllers;
 
 use App\Models\Title;
-use Illuminate\Http\Request;
 
 class RetiredTitlesController extends Controller
 {
+    /** @var string */
+    protected $authorizeResource = Title::class;
+
+    /**
+     * Get the map of resource methods to ability names.
+     *
+     * @return array
+     */
+    protected function resourceAbilityMap()
+    {
+        return [
+            'store' => 'retire',
+            'destroy' => 'activate',
+        ];
+    }
+
     /**
      * Store a newly created retired title.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Title  $title
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Title $title)
     {
-        $this->authorize('retire', Title::class);
-
-        $title = Title::findOrFail($request->input('title_id'));
-
         $title->retire();
 
         return redirect()->route('titles.index');
     }
 
     /**
-     * Store a newly created retired title.
+     * Activate a retired title.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Title  $title
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Request $request, Title $title)
+    public function destroy(Title $title)
     {
-        $this->authorize('unretire', Title::class);
-
-        $title->unretire();
+        $title->activate();
 
         return redirect()->route('titles.index');
     }

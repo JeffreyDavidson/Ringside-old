@@ -8,43 +8,41 @@ use App\Http\Requests\StipulationCreateFormRequest;
 
 class StipulationsController extends Controller
 {
+    /** @var string */
+    protected $authorizeResource = Stipulation::class;
+
     /**
      * Display a listing of all the stipulations.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function index()
     {
-        $this->authorize('index', Stipulation::class);
-
         $stipulations = Stipulation::paginate(10);
 
-        return response()->view('stipulations.index', ['stipulations' => $stipulations]);
+        return view('stipulations.index', compact('stipulations'));
     }
 
     /**
      * Show the form for creating a new stipulation.
      *
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Stipulation  $stipulation
+     * @return \Illuminate\View\View
      */
-    public function create()
+    public function create(Stipulation $stipulation)
     {
-        $this->authorize('create', Stipulation::class);
-
-        return response()->view('stipulations.create', ['stipulation' => new Stipulation]);
+        return view('stipulations.create', compact('stipulation'));
     }
 
     /**
      * Store a newly created stipulation.
      *
      * @param  App\Http\Requests\StipulationCreateFormRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(StipulationCreateFormRequest $request)
     {
-        $this->authorize('create', Stipulation::class);
-
-        Stipulation::create($request->only('name', 'slug'));
+        Stipulation::create($request->all());
 
         return redirect()->route('stipulations.index');
     }
@@ -53,26 +51,22 @@ class StipulationsController extends Controller
      * Display the specified stipulation.
      *
      * @param  \App\Models\Stipulation  $stipulation
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function show(Stipulation $stipulation)
     {
-        $this->authorize('show', Stipulation::class);
-
-        return response()->view('stipulations.show', ['stipulation' => $stipulation]);
+        return view('stipulations.show', compact('stipulation'));
     }
 
     /**
      * Show the form for editing a stipulation.
      *
      * @param  \App\Models\Stipulation  $stipulation
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function edit(Stipulation $stipulation)
     {
-        $this->authorize('edit', Stipulation::class);
-
-        return response()->view('stipulations.edit', ['stipulation' => $stipulation]);
+        return view('stipulations.edit', compact('stipulation'));
     }
 
     /**
@@ -80,13 +74,11 @@ class StipulationsController extends Controller
      *
      * @param  \App\Http\Requests\StipulationEditFormRequest  $request
      * @param  \App\Models\Stipulation  $stipulation
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(StipulationEditFormRequest $request, Stipulation $stipulation)
     {
-        $this->authorize('edit', Stipulation::class);
-
-        $stipulation->update($request->only('name', 'slug'));
+        $stipulation->update($request->all());
 
         return redirect()->route('stipulations.index');
     }
@@ -95,12 +87,10 @@ class StipulationsController extends Controller
      * Delete the specified stipulation.
      *
      * @param  \App\Models\Stipulation  $stipulation
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Stipulation $stipulation)
     {
-        $this->authorize('delete', Stipulation::class);
-
         $stipulation->delete();
 
         return redirect()->route('stipulations.index');

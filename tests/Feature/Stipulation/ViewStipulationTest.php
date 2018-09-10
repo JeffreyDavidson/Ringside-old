@@ -16,7 +16,7 @@ class ViewStipulationTest extends TestCase
     {
         parent::setUp();
 
-        $this->setupAuthorizedUser('show-stipulation');
+        $this->setupAuthorizedUser('view-stipulation');
 
         $this->stipulation = factory(Stipulation::class)->create([
             'name' => 'Stipulation Name',

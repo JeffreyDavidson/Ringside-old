@@ -8,51 +8,41 @@ use App\Http\Requests\WrestlerCreateFormRequest;
 
 class WrestlersController extends Controller
 {
+    /** @var string */
+    protected $authorizeResource = Wrestler::class;
+
     /**
      * Display a listing of all the wrestlers.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function index()
     {
-        $this->authorize('index', Wrestler::class);
-
         $wrestlers = Wrestler::paginate(10);
 
-        return response()->view('wrestlers.index', ['wrestlers' => $wrestlers]);
+        return view('wrestlers.index', compact('wrestlers'));
     }
 
     /**
      * Show the form for creating a new wrestler.
      *
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Wrestler  $wrestler
+     * @return \Illuminate\View\View
      */
-    public function create()
+    public function create(Wrestler $wrestler)
     {
-        $this->authorize('create', Wrestler::class);
-
-        return response()->view('wrestlers.create', ['wrestler' => new Wrestler]);
+        return view('wrestlers.create', compact('wrestler'));
     }
 
     /**
      * Store a newly created wrestler.
      *
      * @param  \App\Http\Requests\WrestlerCreateFormRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(WrestlerCreateFormRequest $request)
     {
-        $this->authorize('create', Wrestler::class);
-
-        Wrestler::create([
-            'name' => $request->input('name'),
-            'slug' => $request->input('slug'),
-            'hired_at' => $request->input('hired_at'),
-            'hometown' => $request->input('hometown'),
-            'height' => ($request->input('feet') * 12) + $request->input('inches'),
-            'weight' => $request->input('weight'),
-            'signature_move' => $request->input('signature_move'),
-        ]);
+        Wrestler::create($request->all());
 
         return redirect()->route('wrestlers.index');
     }
@@ -61,26 +51,22 @@ class WrestlersController extends Controller
      * Display the specified wrestler.
      *
      * @param  \App\Models\Wrestler  $wrestler
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function show(Wrestler $wrestler)
     {
-        $this->authorize('show', Wrestler::class);
-
-        return response()->view('wrestlers.show', ['wrestler' => $wrestler]);
+        return view('wrestlers.show', compact('wrestler'));
     }
 
     /**
      * Show the form for editing a wrestler.
      *
      * @param  \App\Models\Wrestler  $wrestler
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function edit(Wrestler $wrestler)
     {
-        $this->authorize('edit', Wrestler::class);
-
-        return response()->view('wrestlers.edit', ['wrestler' => $wrestler]);
+        return view('wrestlers.edit', compact('wrestler'));
     }
 
     /**
@@ -88,21 +74,11 @@ class WrestlersController extends Controller
      *
      * @param  \App\Http\Requests\WrestlerEditFormRequest  $request
      * @param  \App\Models\Wrestler  $wrestler
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(WrestlerEditFormRequest $request, Wrestler $wrestler)
     {
-        $this->authorize('edit', Wrestler::class);
-
-        $wrestler->update([
-            'name' => $request->input('name'),
-            'slug' => $request->input('slug'),
-            'hired_at' => $request->input('hired_at'),
-            'hometown' => $request->input('hometown'),
-            'height' => ($request->input('feet') * 12) + $request->input('inches'),
-            'weight' => $request->input('weight'),
-            'signature_move' => $request->input('signature_move'),
-        ]);
+        $wrestler->update($request->all());
 
         return redirect()->route('wrestlers.index');
     }
@@ -111,12 +87,10 @@ class WrestlersController extends Controller
      * Delete the specified wrestler.
      *
      * @param  \App\Models\Wrestler  $wrestler
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Wrestler $wrestler)
     {
-        $this->authorize('delete', Wrestler::class);
-
         $wrestler->delete();
 
         return redirect()->route('wrestlers.index');

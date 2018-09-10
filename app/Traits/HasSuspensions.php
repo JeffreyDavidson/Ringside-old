@@ -2,15 +2,23 @@
 
 namespace App\Traits;
 
+use App\Models\Suspension;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use App\Exceptions\WrestlerNotSuspendedException;
-use App\Exceptions\WrestlerAlreadySuspendedException;
+use App\Exceptions\ModelIsActiveException;
+use App\Exceptions\ModelIsSuspendedException;
 
 trait HasSuspensions
 {
-    /** @abstract */
-    abstract public function suspensions();
+    /**
+     * A wrestler can have many suspensions.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function suspensions()
+    {
+        return $this->morphMany(Suspension::class, 'suspendee');
+    }
 
     /**
      * Checks to see if the wrestler has past suspensions.
@@ -19,7 +27,7 @@ trait HasSuspensions
      */
     public function hasPastSuspensions()
     {
-        return $this->pastSuspensions->isNotEmpty();
+        return $this->pastSuspensions()->exists();
     }
 
     /**
@@ -66,14 +74,16 @@ trait HasSuspensions
     }
 
     /**
-     * Suspend a wrestler.
+     * Suspends a wrestler.
      *
      * @return $this
+     *
+     * @throws App\Exceptions\ModelIsSuspendedException
      */
     public function suspend()
     {
         if ($this->isSuspended()) {
-            throw new WrestlerAlreadySuspendedException;
+            throw new ModelIsSuspendedException;
         }
 
         $this->deactivate();
@@ -84,14 +94,16 @@ trait HasSuspensions
     }
 
     /**
-     * Unsuspend a wrestler.
+     * Reinstate a suspended wrestler.
      *
      * @return $this
+     *
+     * @throws App\Exceptions\ModelIsActiveException
      */
-    public function unsuspend()
+    public function reinstate()
     {
-        if (! $this->isSuspended()) {
-            throw new WrestlerNotSuspendedException;
+        if ($this->is_active) {
+            throw new ModelIsActiveException;
         }
 
         $this->activate();

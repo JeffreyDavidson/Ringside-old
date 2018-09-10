@@ -48,9 +48,9 @@ class EventPolicy
      * @param  \App\Models\User  $user
      * @return bool
      */
-    public function show(User $user)
+    public function view(User $user)
     {
-        return $user->hasPermission('show-event');
+        return $user->hasPermission('view-event');
     }
 
     /**
@@ -62,6 +62,11 @@ class EventPolicy
     public function delete(User $user)
     {
         return $user->hasPermission('delete-event');
+    }
+
+    public function update(User $user)
+    {
+        return $user->hasPermission('update-event');
     }
 
     /**
@@ -81,8 +86,8 @@ class EventPolicy
      * @param  \App\Models\User  $user
      * @return bool
      */
-    public function editResults(User $user)
+    public function updateResults(User $user)
     {
-        return $user->hasPermission('edit-event-results');
+        return $user->hasPermission('update-event-results');
     }
 }

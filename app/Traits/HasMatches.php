@@ -2,12 +2,20 @@
 
 namespace App\Traits;
 
+use App\Models\Match;
 use Carbon\Carbon;
 
 trait HasMatches
 {
-    /** @abstract */
-    abstract public function matches();
+    /**
+     * A wrestler can have many matches.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function matches()
+    {
+        return $this->belongsToMany(Match::class);
+    }
 
     /**
      * Retrieves the date of the model's first match.

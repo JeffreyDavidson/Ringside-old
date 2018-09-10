@@ -50,7 +50,6 @@ class AddTitleTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_create_a_title()
     {
-        $this->withoutExceptionHandling();
         $response = $this->actingAs($this->authorizedUser)
                         ->post(route('titles.index'), $this->validParams());
 
@@ -70,7 +69,7 @@ class AddTitleTest extends TestCase
         $response = $this->actingAs($this->authorizedUser)
                         ->from(route('titles.create'))
                         ->post(route('titles.index'), $this->validParams([
-                            'introduced_at' => Carbon::today()
+                            'introduced_at' => Carbon::today(),
                         ]));
 
         tap(Title::first(), function ($title) use ($response) {
@@ -84,7 +83,7 @@ class AddTitleTest extends TestCase
         $response = $this->actingAs($this->authorizedUser)
                         ->from(route('titles.create'))
                         ->post(route('titles.index'), $this->validParams([
-                            'introduced_at' => Carbon::tomorrow()
+                            'introduced_at' => Carbon::tomorrow(),
                         ]));
 
         tap(Title::first(), function ($title) use ($response) {
@@ -119,14 +118,14 @@ class AddTitleTest extends TestCase
         $response->assertRedirect(route('login'));
     }
 
-     /** @test */
-     public function guests_cannot_create_a_title()
-     {
+    /** @test */
+    public function guests_cannot_create_a_title()
+    {
         $response = $this->post(route('titles.index'), $this->validParams());
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));
-     }
+    }
 
     /** @test */
     public function title_name_is_required()

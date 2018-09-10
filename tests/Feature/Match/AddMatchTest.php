@@ -5,7 +5,6 @@ namespace Tests\Feature\Match;
 use Carbon\Carbon;
 use Tests\TestCase;
 use App\Models\Event;
-use MatchFactory;
 use App\Models\Match;
 use App\Models\MatchType;
 use App\Models\Wrestler;
@@ -54,7 +53,7 @@ class AddMatchTest extends TestCase
                     ],
                     'preview' => 'Maecenas faucibus mollis interdum. Etiam porta sem malesuada magna mollis euismod. Cras mattis consectetur purus sit amet fermentum. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Curabitur blandit tempus porttitor. Vestibulum id ligula porta felis euismod semper.',
                 ],
-            ]
+            ],
         ], $overrides);
     }
 
@@ -97,7 +96,7 @@ class AddMatchTest extends TestCase
     public function returns_404_on_invalid_event_id()
     {
         $response = $this->actingAs($this->authorizedUser)
-                        ->get(route('event.matches.create', ['event' => NULL]));
+                        ->get(route('event.matches.create', ['event' => null]));
 
         $response->assertStatus(404);
     }
@@ -119,8 +118,8 @@ class AddMatchTest extends TestCase
                                         [$this->wrestlerB->id],
                                     ],
                                     'preview' => 'Maecenas faucibus mollis interdum. Etiam porta sem malesuada magna mollis euismod. Cras mattis consectetur purus sit amet fermentum. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Curabitur blandit tempus porttitor. Vestibulum id ligula porta felis euismod semper.',
-                                ]
-                            ]
+                                ],
+                            ],
                         ]);
 
         tap(Match::first(), function ($match) use ($response) {
@@ -144,7 +143,7 @@ class AddMatchTest extends TestCase
         $this->response = $this->actingAs($this->authorizedUser)
                         ->from(route('event.matches.create', ['event' => $this->event->id]))
                         ->post(route('event.matches.store', ['event' => $this->event->id]), $this->validParams([
-                            'matches' => 'a-string-not-an-array'
+                            'matches' => 'a-string-not-an-array',
                         ]));
 
         $this->assertFormError('matches');
@@ -158,9 +157,9 @@ class AddMatchTest extends TestCase
                         ->post(route('event.matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
                                 [
-                                    'match_type_id' => ''
-                                ]
-                            ]
+                                    'match_type_id' => '',
+                                ],
+                            ],
                         ]));
 
         $this->assertFormError('matches.*.match_type_id');
@@ -174,9 +173,9 @@ class AddMatchTest extends TestCase
                         ->post(route('event.matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
                                 [
-                                    'match_type_id' => 'a-string-not-an-integer'
-                                ]
-                            ]
+                                    'match_type_id' => 'a-string-not-an-integer',
+                                ],
+                            ],
                         ]));
 
         $this->assertFormError('matches.*.match_type_id');
@@ -190,9 +189,9 @@ class AddMatchTest extends TestCase
                         ->post(route('event.matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
                                 [
-                                    'match_type_id' => 99
-                                ]
-                            ]
+                                    'match_type_id' => 99,
+                                ],
+                            ],
                         ]));
 
         $this->assertFormError('matches.*.match_type_id');
@@ -206,9 +205,9 @@ class AddMatchTest extends TestCase
                         ->post(route('event.matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
                                 [
-                                    'stipulation_id' => ''
-                                ]
-                            ]
+                                    'stipulation_id' => '',
+                                ],
+                            ],
                         ]));
 
         tap(Event::first()->matches->first(), function ($match) use ($response) {
@@ -226,9 +225,9 @@ class AddMatchTest extends TestCase
                         ->post(route('event.matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
                                 [
-                                    'stipulation_id' => 'a-string-not-an-integer'
-                                ]
-                            ]
+                                    'stipulation_id' => 'a-string-not-an-integer',
+                                ],
+                            ],
                         ]));
 
         $this->assertFormError('matches.*.stipulation_id');
@@ -242,9 +241,9 @@ class AddMatchTest extends TestCase
                         ->post(route('event.matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
                                 [
-                                    'stipulation_id' => 99
-                                ]
-                            ]
+                                    'stipulation_id' => 99,
+                                ],
+                            ],
                         ]));
 
         $this->assertFormError('matches.*.stipulation_id');
@@ -258,9 +257,9 @@ class AddMatchTest extends TestCase
                         ->post(route('event.matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
                                 [
-                                    'titles' => 'a-string-not-an-array'
-                                ]
-                            ]
+                                    'titles' => 'a-string-not-an-array',
+                                ],
+                            ],
                         ]));
 
         $this->assertFormError('matches.*.titles');
@@ -274,9 +273,9 @@ class AddMatchTest extends TestCase
                         ->post(route('event.matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
                                 [
-                                    'titles' => [1,2,3,1]
-                                ]
-                            ]
+                                    'titles' => [1, 2, 3, 1],
+                                ],
+                            ],
                         ]));
 
         $this->assertFormError('matches.*.titles.*');
@@ -290,9 +289,9 @@ class AddMatchTest extends TestCase
                         ->post(route('event.matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
                                 [
-                                    'titles' => ['a-string-not-an-integer']
-                                ]
-                            ]
+                                    'titles' => ['a-string-not-an-integer'],
+                                ],
+                            ],
                         ]));
 
         $this->assertFormError('matches.*.titles.*');
@@ -306,9 +305,9 @@ class AddMatchTest extends TestCase
                         ->post(route('event.matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
                                 [
-                                    'titles' => [99]
-                                ]
-                            ]
+                                    'titles' => [99],
+                                ],
+                            ],
                         ]));
 
         $this->assertFormError('matches.*.titles.*');
@@ -322,9 +321,9 @@ class AddMatchTest extends TestCase
                         ->post(route('event.matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
                                 [
-                                    'referees' => ''
-                                ]
-                            ]
+                                    'referees' => '',
+                                ],
+                            ],
                         ]));
 
         $this->assertFormError('matches.*.referees');
@@ -338,9 +337,9 @@ class AddMatchTest extends TestCase
                         ->post(route('event.matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
                                 [
-                                    'referees' => 'a-string-not-an-array'
-                                ]
-                            ]
+                                    'referees' => 'a-string-not-an-array',
+                                ],
+                            ],
                         ]));
 
         $this->assertFormError('matches.*.referees');
@@ -354,9 +353,9 @@ class AddMatchTest extends TestCase
                         ->post(route('event.matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
                                 [
-                                    'referees' => [1,2,3,1]
-                                ]
-                            ]
+                                    'referees' => [1, 2, 3, 1],
+                                ],
+                            ],
                         ]));
 
         $this->assertFormError('matches.*.referees.*');
@@ -370,9 +369,9 @@ class AddMatchTest extends TestCase
                         ->post(route('event.matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
                                 [
-                                    'referees' => ['a-string-not-an-integer']
-                                ]
-                            ]
+                                    'referees' => ['a-string-not-an-integer'],
+                                ],
+                            ],
                         ]));
 
         $this->assertFormError('matches.*.referees.*');
@@ -386,9 +385,9 @@ class AddMatchTest extends TestCase
                         ->post(route('event.matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
                                 [
-                                    'referees' => [99]
-                                ]
-                            ]
+                                    'referees' => [99],
+                                ],
+                            ],
                         ]));
 
         $this->assertFormError('matches.*.referees.*');
@@ -402,9 +401,9 @@ class AddMatchTest extends TestCase
                         ->post(route('event.matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
                                 [
-                                    'wrestlers' => ''
-                                ]
-                            ]
+                                    'wrestlers' => '',
+                                ],
+                            ],
                         ]));
 
         $this->assertFormError('matches.*.wrestlers');
@@ -418,9 +417,9 @@ class AddMatchTest extends TestCase
                         ->post(route('event.matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
                                 [
-                                    'wrestlers' => 'a-string-not-an-array'
-                                ]
-                            ]
+                                    'wrestlers' => 'a-string-not-an-array',
+                                ],
+                            ],
                         ]));
 
         $this->assertFormError('matches.*.wrestlers');
@@ -435,11 +434,11 @@ class AddMatchTest extends TestCase
                             'matches' => [
                                 [
                                     'wrestlers' => [
-                                        [1,2],
-                                        [3,1]
-                                    ]
-                                ]
-                            ]
+                                        [1, 2],
+                                        [3, 1],
+                                    ],
+                                ],
+                            ],
                         ]));
 
         $this->assertFormError('matches.*.wrestlers');
@@ -455,9 +454,9 @@ class AddMatchTest extends TestCase
                                 [
                                     'wrestlers' => [
                                         ['a-string-not-an-integer'],
-                                    ]
-                                ]
-                            ]
+                                    ],
+                                ],
+                            ],
                         ]));
 
         $this->assertFormError('matches.*.wrestlers.*');
@@ -473,9 +472,9 @@ class AddMatchTest extends TestCase
                                 [
                                     'wrestlers' => [
                                         [99],
-                                    ]
-                                ]
-                            ]
+                                    ],
+                                ],
+                            ],
                         ]));
 
         $this->assertFormError('matches.*.wrestlers.*');
@@ -492,8 +491,8 @@ class AddMatchTest extends TestCase
                             'matches' => [
                                 [
                                     'match_type_id' => $matchType->id,
-                                ]
-                            ]
+                                ],
+                            ],
                         ]));
 
         $this->assertFormError('matches.*');
@@ -511,10 +510,10 @@ class AddMatchTest extends TestCase
                             'matches' => [
                                 [
                                     'wrestlers' => [
-                                        [$wrestler->id]
-                                    ]
-                                ]
-                            ]
+                                        [$wrestler->id],
+                                    ],
+                                ],
+                            ],
                         ]));
 
         $this->assertFormError('matches.*.wrestlers.*.*');
@@ -528,9 +527,9 @@ class AddMatchTest extends TestCase
                         ->post(route('event.matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
                                 [
-                                    'preview' => ''
-                                ]
-                            ]
+                                    'preview' => '',
+                                ],
+                            ],
                         ]));
 
         $this->assertFormError('matches.*.preview');
@@ -544,9 +543,9 @@ class AddMatchTest extends TestCase
                         ->post(route('event.matches.store', ['event' => $this->event->id]), $this->validParams([
                             'matches' => [
                                 [
-                                    'preview' => []
-                                ]
-                            ]
+                                    'preview' => [],
+                                ],
+                            ],
                         ]));
 
         $this->assertFormError('matches.*.preview');

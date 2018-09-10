@@ -17,10 +17,10 @@ class CreateRefereesTable extends Migration
             $table->increments('id');
             $table->string('first_name');
             $table->string('last_name');
+            $table->boolean('is_active');
             $table->timestamp('hired_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
             $table->unique(['first_name', 'last_name']);
         });
     }

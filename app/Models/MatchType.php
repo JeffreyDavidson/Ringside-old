@@ -17,6 +17,13 @@ class MatchType extends Model
     ];
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [];
+
+    /**
      * Checks to see if the match type needs additional referees.
      *
      * @return bool

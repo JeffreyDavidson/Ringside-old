@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Event;
 
-use Carbon\Carbon;
 use Tests\TestCase;
 use App\Models\Event;
 use App\Models\Venue;
@@ -30,7 +29,7 @@ class AddEventTest extends TestCase
             'name' => 'Event Name',
             'slug' => 'event-slug',
             'date' => '2017-09-17',
-            'venue_id' => $this->venue->id
+            'venue_id' => $this->venue->id,
         ], $overrides);
     }
 
@@ -179,7 +178,7 @@ class AddEventTest extends TestCase
                             'name' => 'Event Name',
                             'slug' => 'event-slug',
                             'date' => '2017-09-17',
-                            'venue_id' => $this->venue->id
+                            'venue_id' => $this->venue->id,
                         ]));
 
         tap(Event::first(), function ($event) {

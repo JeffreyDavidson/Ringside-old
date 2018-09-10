@@ -43,8 +43,6 @@ class TitleRecordsViewComposer
             ];
         });
 
-        dd($longestTitleReigns);
-
         $mostTitleDefenses = $this->repository->mostTitleDefenses($title)->map(function (Champion $reign) {
             return [
                 'wrestler' => $reign->wrestler->name,

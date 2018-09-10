@@ -10,25 +10,28 @@ class Retirement extends Model
     use Presentable;
 
     /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'retired_at' => 'datetime',
+        'ended_at' => 'datetime',
+    ];
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['retiree_type', 'retiree_id', 'retired_at', 'ended_at'];
+
+    /**
      * Assign which presenter to be used for model.
      *
      * @var string
      */
     protected $presenter = 'App\Presenters\RetirementPresenter';
-
-    /**
-     * Don't auto-apply mass assignment protection.
-     *
-     * @var array
-     */
-    protected $guarded = [];
-
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = ['retired_at', 'ended_at'];
 
     /**
      * Ends a retirement.

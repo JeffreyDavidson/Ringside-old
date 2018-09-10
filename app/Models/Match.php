@@ -12,11 +12,11 @@ class Match extends Model
     use Presentable, SoftDeletes;
 
     /**
-     * The relations to eager load on every query.
+     * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $with = ['wrestlers', 'stipulation', 'referees', 'titles'];
+    protected $fillable = ['match_number', 'match_type_id', 'stipulation_id', 'match_decision_id', 'preview', 'result'];
 
     /**
      * Assign which presenter to be used for model.
@@ -26,20 +26,13 @@ class Match extends Model
     protected $presenter = 'App\Presenters\MatchPresenter';
 
     /**
-     * Don't auto-apply mass assignment protection.
+     * A match has a decision.
      *
-     * @var array
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    protected $guarded = [];
-
-    /**
-     * A match can have many wrestlers.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function wrestlers()
+    public function decision()
     {
-        return $this->belongsToMany(Wrestler::class)->withPivot('side_number');
+        return $this->belongsTo(MatchDecision::class, 'match_decision_id');
     }
 
     /**
@@ -53,23 +46,13 @@ class Match extends Model
     }
 
     /**
-     * A match has a type.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function type()
-    {
-        return $this->belongsTo(MatchType::class, 'match_type_id');
-    }
-
-    /**
-     * A match can have many titles.
+     * A match can have many losers.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function titles()
+    public function losers()
     {
-        return $this->belongsToMany(Title::class);
+        return $this->belongsToMany(Wrestler::class, 'match_loser');
     }
 
     /**
@@ -93,13 +76,23 @@ class Match extends Model
     }
 
     /**
-     * A match has a decision.
+     * A match can have many titles.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function titles()
+    {
+        return $this->belongsToMany(Title::class);
+    }
+
+    /**
+     * A match has a type.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function decision()
+    public function type()
     {
-        return $this->belongsTo(MatchDecision::class, 'match_decision_id');
+        return $this->belongsTo(MatchType::class, 'match_type_id');
     }
 
     /**
@@ -113,13 +106,91 @@ class Match extends Model
     }
 
     /**
-     * A match can have many losers.
+     * A match can have many wrestlers.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function losers()
+    public function wrestlers()
     {
-        return $this->belongsToMany(Wrestler::class, 'match_loser');
+        return $this->belongsToMany(Wrestler::class)->withPivot('side_number');
+    }
+
+    /**
+     * A collection of wrestlers grouped by side.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function groupedWrestlersBySide()
+    {
+        return $this->wrestlers->groupBy('pivot.side_number');
+    }
+
+    /**
+     * Add a referee to a match.
+     *
+     * @param  \App\Models\Referee  $referee
+     * @return void
+     */
+    public function addReferee(Referee $referee)
+    {
+        $this->referees()->save($referee);
+    }
+
+    /**
+     * Add referees to a match.
+     *
+     * @param  array  $referees
+     * @return void
+     */
+    public function addReferees($referees)
+    {
+        $this->referees()->saveMany($referees);
+    }
+
+    /**
+     * Add a stipulation to a match.
+     *
+     * @param  \App\Models\Stipulation  $stipulation
+     * @return void
+     */
+    public function addStipulation(Stipulation $stipulation)
+    {
+        $this->stipulation()->associate($stipulation);
+        $this->save();
+    }
+
+    /**
+     * Add a title to a match.
+     *
+     * @param  \App\Models\Title  $title
+     * @return void
+     */
+    public function addTitle(Title $title)
+    {
+        $this->titles()->save($title);
+    }
+
+    /**
+     * Add titles to a match.
+     *
+     * @param  array  $titles
+     * @return void
+     */
+    public function addTitles($titles)
+    {
+        $this->titles()->saveMany($titles);
+    }
+
+    /**
+     * Add a match to an event.
+     *
+     * @param  \App\Models\Event  $event
+     * @return void
+     */
+    public function addToEvent(Event $event)
+    {
+        $this->event()->associate($event);
+        $this->save();
     }
 
     /**
@@ -149,62 +220,6 @@ class Match extends Model
     }
 
     /**
-     * Add a title to a match.
-     *
-     * @param  \App\Models\Title  $title
-     * @return void
-     */
-    public function addTitle(Title $title)
-    {
-        $this->titles()->save($title);
-    }
-
-    /**
-     * Add titles to a match.
-     *
-     * @param  array  $titles
-     * @return void
-     */
-    public function addTitles($titles)
-    {
-        $this->titles()->saveMany($titles);
-    }
-
-    /**
-     * Add a stipulation to a match.
-     *
-     * @param  \App\Models\Stipulation  $stipulation
-     * @return void
-     */
-    public function addStipulation(Stipulation $stipulation)
-    {
-        $this->stipulation()->associate($stipulation);
-        $this->save();
-    }
-
-    /**
-     * Add a referee to a match.
-     *
-     * @param  \App\Models\Referee  $referee
-     * @return void
-     */
-    public function addReferee(Referee $referee)
-    {
-        $this->referees()->save($referee);
-    }
-
-    /**
-     * Add referees to a match.
-     *
-     * @param  array  $referees
-     * @return void
-     */
-    public function addReferees($referees)
-    {
-        $this->referees()->saveMany($referees);
-    }
-
-    /**
      * Determines if the match has a title associated to it.
      *
      * @return bool
@@ -212,6 +227,31 @@ class Match extends Model
     public function isTitleMatch()
     {
         return $this->titles->isNotEmpty();
+    }
+
+    public function setLosers($losers)
+    {
+        // $this->losers()->sync($losers->flatten()->pluck('id'));
+        $this->losers()->sync($losers);
+    }
+
+    public function setWinners($winners)
+    {
+        $this->winners()->sync($winners);
+
+        // if ($this->isTitleMatch()) {
+        //     $this->titles->each(function ($title) use ($winners) {
+        //         if (!$title->isVacant()) {
+        //         } else {
+        //             $title->setChampion($winners, $this->date);
+        //         }
+        //         // if (!$winners->first()->hasTitle($title) && $this->decision->titleCanChangeHands()) {
+        //         //     $title->setChampion($winners, $this->date);
+        //         // } else {
+        //         //     $title->currentChampion->increment('successful_defenses');
+        //         // }
+        //     });
+        // }
     }
 
     /**
@@ -222,18 +262,6 @@ class Match extends Model
     public function getDateAttribute()
     {
         return $this->event->date;
-    }
-
-    /**
-     * Add a match to an event.
-     *
-     * @param  \App\Models\Event  $event
-     * @return void
-     */
-    public function addToEvent(Event $event)
-    {
-        $this->event()->associate($event);
-        $this->save();
     }
 
     /**
@@ -258,30 +286,5 @@ class Match extends Model
     public function scopeWithMatchNumber(Builder $query, $matchNumber)
     {
         return $query->where('match_number', $matchNumber);
-    }
-
-    public function setWinners($winners)
-    {
-        $this->winners()->sync($winners->modelKeys());
-
-        if ($this->isTitleMatch()) {
-            $this->titles->each(function ($title) use ($winners) {
-                if ($title->hasAChampion()) {
-
-                } else {
-                    $title->setChampion($winners, $this->date);
-                }
-                // if (! $winners->first()->hasTitle($title) && $this->decision->titleCanChangeHands()) {
-                //     $title->setChampion($winners, $this->date);
-                // } else {
-                //     $title->currentChampion->increment('successful_defenses');
-                // }
-            });
-        }
-    }
-
-    public function setLosers($losers)
-    {
-        $this->losers()->sync($losers->flatten()->pluck('id'));
     }
 }

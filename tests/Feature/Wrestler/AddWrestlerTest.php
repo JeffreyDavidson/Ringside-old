@@ -87,7 +87,7 @@ class AddWrestlerTest extends TestCase
         $response = $this->actingAs($this->authorizedUser)
                         ->from(route('wrestlers.create'))
                         ->post(route('wrestlers.index'), $this->validParams([
-                            'hired_at' => Carbon::today()
+                            'hired_at' => Carbon::today(),
                         ]));
 
         tap(Wrestler::first(), function ($wrestler) use ($response) {
@@ -101,7 +101,7 @@ class AddWrestlerTest extends TestCase
         $response = $this->actingAs($this->authorizedUser)
                         ->from(route('wrestlers.create'))
                         ->post(route('wrestlers.index'), $this->validParams([
-                            'hired_at' => Carbon::tomorrow()
+                            'hired_at' => Carbon::tomorrow(),
                         ]));
 
         tap(Wrestler::first(), function ($wrestler) use ($response) {

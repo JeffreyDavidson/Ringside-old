@@ -7,18 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 class Injury extends Model
 {
     /**
-     * Don't auto-apply mass assignment protection.
+     * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $guarded = [];
+    protected $fillable = ['injured_at', 'healed_at'];
 
     /**
-     * The attributes that should be mutated to dates.
+     * The attributes that should be cast to native types.
      *
      * @var array
      */
-    protected $dates = ['injured_at', 'healed_at'];
+    protected $casts = [
+        'injured_at' => 'datetime',
+        'healed_at' => 'datetime',
+    ];
 
     /**
      * Heals an injury.

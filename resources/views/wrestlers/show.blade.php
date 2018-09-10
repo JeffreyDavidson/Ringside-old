@@ -11,7 +11,7 @@
         </div>
         <div class="panel-body container-fluid">
             <p>Hometown: {{ $wrestler->hometown }}</p>
-            <p>Height: {!!  $wrestler->present()->height !!}</p>
+            <p>Height: {{  $wrestler->present()->height }}</p>
             <p>Weight: {{ $wrestler->weight }} lbs.</p>
 
             @if($wrestler->signature_move)

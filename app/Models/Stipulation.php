@@ -8,21 +8,23 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Stipulation extends Model
 {
-    use SoftDeletes, HasMatches;
+    use HasMatches, SoftDeletes;
 
     /**
-     * Don't auto-apply mass assignment protection.
+     * The attributes that should be cast to native types.
      *
      * @var array
      */
-    protected $guarded = [];
+    protected $casts = [
+        'deleted_at' => 'datetime',
+    ];
 
     /**
-     * The attributes that should be mutated to dates.
+     * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $dates = ['deleted_at'];
+    protected $fillable = ['name', 'slug'];
 
     /**
      * A stipulation can be assigned to many matches.

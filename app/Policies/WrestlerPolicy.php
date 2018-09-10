@@ -10,7 +10,7 @@ class WrestlerPolicy
     use HandlesAuthorization;
 
     /**
-     * Checks to see if the user has permission to view list of wrestlers.
+     * Checks to see if the user has permission to view list of roster members.
      *
      * @param  \App\Models\User  $user
      * @return bool
@@ -21,7 +21,7 @@ class WrestlerPolicy
     }
 
     /**
-     * Checks to see if the user has permission to create a wrestler.
+     * Checks to see if the user has permission to create a roster member.
      *
      * @param  \App\Models\User  $user
      * @return bool
@@ -32,18 +32,18 @@ class WrestlerPolicy
     }
 
     /**
-     * Checks to see if the user has permission to view a wrestler.
+     * Checks to see if the user has permission to view a roster-= member.
      *
      * @param  \App\Models\User  $user
      * @return bool
      */
-    public function show(User $user)
+    public function view(User $user)
     {
-        return $user->hasPermission('show-wrestler');
+        return $user->hasPermission('view-wrestler');
     }
 
     /**
-     * Checks to see if the user has permission to edit a wrestler.
+     * Checks to see if the user has permission to edit a roster member.
      *
      * @param  \App\Models\User  $user
      * @return bool
@@ -54,7 +54,18 @@ class WrestlerPolicy
     }
 
     /**
-     * Checks to see if the user has permission to delete a wrestler.
+     * Checks to see if the user has permission to update a roster member.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function update(User $user)
+    {
+        return $user->hasPermission('update-wrestler');
+    }
+
+    /**
+     * Checks to see if the user has permission to delete a roster member.
      *
      * @param  \App\Models\User  $user
      * @return bool
@@ -65,7 +76,7 @@ class WrestlerPolicy
     }
 
     /**
-     * Checks to see if the user has permission to retire a wrestler.
+     * Checks to see if the user has permission to retire a roster member.
      *
      * @param  \App\Models\User  $user
      * @return bool

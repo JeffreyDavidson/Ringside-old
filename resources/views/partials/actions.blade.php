@@ -1,5 +1,3 @@
-{{-- {{dd($actions)}} --}}
-
 @if ($actions->contains('edit'))
     @can('edit', $model)
         <a class="btn btn-sm btn-icon btn-flat btn-default" href="{{ route($resource.'.edit', $model) }}" data-toggle="tooltip" data-original-title="Edit">

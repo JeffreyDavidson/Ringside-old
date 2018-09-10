@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\Match;
+
 class UpdateMatchResults
 {
     protected $matches;
@@ -15,29 +17,33 @@ class UpdateMatchResults
 
     public function save()
     {
-        foreach ($matches as $index => $match) {
-            $retrievedMatch = Match::withMatchNumber($index + 1)->forEvent($event)->first();
+        foreach ($this->matches as $index => $match) {
+            $retrievedMatch = Match::withMatchNumber($index + 1)->forEvent($this->event)->first();
+
             $retrievedMatch->update([
                 'match_decision_id' => $match['match_decision_id'],
-                'winner_id' => $match['winner_id'],
                 'result' => $match['result'],
             ]);
 
-            $losers = $retrievedMatch->wrestlers->except($match['winner_id']);
+            $winners = $match['winners'];
+            $losers = array_values(array_diff($retrievedMatch->wrestlers->modelKeys(), $winners));
 
-            $retrievedMatch->losers()->saveMany($losers);
+            $retrievedMatch->setWinners($winners);
+            $retrievedMatch->setLosers($losers);
 
             if ($retrievedMatch->isTitleMatch()) {
                 foreach ($retrievedMatch->titles as $title) {
-                    if ($title->hasAChampion()) {
-                        if (! $retrievedMatch->winner->hasTitle($title) && $retrievedMatch->decision->titleCanChangeHands()) {
-                            $title->currentChampion->loseTitle($retrievedMatch->date);
-                            $retrievedMatch->winner->winTitle($title, $retrievedMatch->date);
+                    if (!$title->isVacant()) {
+                        if (!$retrievedMatch->winners->contains->hasTitle($title) && $retrievedMatch->decision->titleCanChangeHands()) {
+                            $title->currentChampion->loseTitle($title, $retrievedMatch->date);
+                            $retrievedMatch->winners->each->winTitle($title, $retrievedMatch->date);
                         } else {
-                            $title->currentChampion->increment('successful_defenses');
+                            $title->currentChampion()->updateExistingPivot($title->currentChampion->id, [
+                                'successful_defenses' => $title->currentChampion->pivot->successful_defenses + 1,
+                            ]);
                         }
                     } elseif ($retrievedMatch->decision->titleCanBeWon()) {
-                        $retrievedMatch->winner->winTitle($title, $retrievedMatch->date);
+                        $retrievedMatch->winners->each->winTitle($title, $retrievedMatch->date);
                     }
                 }
             }
