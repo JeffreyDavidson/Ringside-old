@@ -16,7 +16,7 @@ trait HasTitles
      */
     public function titles()
     {
-        return $this->belongsToMany(Title::class, 'championships')->using(Championship::class);
+        return $this->belongsToMany(Title::class, 'championships')->using(Championship::class)->withPivot('won_on', 'lost_on', 'successful_defenses');
     }
 
     /**

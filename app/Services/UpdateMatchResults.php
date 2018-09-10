@@ -24,24 +24,36 @@ class UpdateMatchResults
                 'match_decision_id' => $match['match_decision_id'],
                 'result' => $match['result'],
             ]);
+            // dd('fasfkljdskf;adfjksd');
+            $winners = $match['winners'];
+            $losers = array_values(array_diff($retrievedMatch->wrestlers->modelKeys(), $winners));
 
-            $winners = collect($match['winners']);
-            $losers = $retrievedMatch->wrestlers->diff($winners);
-
-            $retrievedMatch->losers()->saveMany($losers);
-            $retrievedMatch->winners()->saveMany($winners);
+            $retrievedMatch->setWinners($winners);
+            $retrievedMatch->setLosers($losers);
 
             if ($retrievedMatch->isTitleMatch()) {
                 foreach ($retrievedMatch->titles as $title) {
+                    // dd($title->isVacant());
                     if (!$title->isVacant()) {
-                        if (!$retrievedMatch->winner->hasTitle($title) && $retrievedMatch->decision->titleCanChangeHands()) {
+                        // dd('title is not vacant');
+                        // dd($retrievedMatch->decision->titleCanChangeHands());
+                        // dd($retrievedMatch->winners->contains->hasTitle($title));
+                        if (!$retrievedMatch->winners->contains->hasTitle($title) && $retrievedMatch->decision->titleCanChangeHands()) {
+                            dd('lalala');
                             $title->currentChampion->loseTitle($retrievedMatch->date);
-                            $retrievedMatch->winner->winTitle($title, $retrievedMatch->date);
+                            $retrievedMatch->winners->winTitle($title, $retrievedMatch->date);
                         } else {
-                            $title->currentChampion->increment('successful_defenses');
+                            // dd('increase defenses');
+                            // dd($title->currentChampion->pivot->successful_defenses);
+                            // dd($title->currentChampion->pivot->toArray());
+                            // dd($title->currentChampion->pivot->increment('successful_defenses'));
+                            $title->currentChampion->pivot->increment('successful_defenses');
+                            dd($title->currentChampion->fresh()->pivot->successful_defenses);
+                            dd($title->currentChampion->pivot->successful_defenses);
                         }
                     } elseif ($retrievedMatch->decision->titleCanBeWon()) {
-                        $retrievedMatch->winner->winTitle($title, $retrievedMatch->date);
+                        dd('no champion');
+                        $retrievedMatch->winners->each->winTitle($title, $retrievedMatch->date);
                     }
                 }
             }

@@ -88,6 +88,6 @@ class EventPolicy
      */
     public function updateResults(User $user)
     {
-        return $user->hasPermission('edit-event-results');
+        return $user->hasPermission('update-event-results');
     }
 }

@@ -37,6 +37,8 @@ class EventResultsFormRequest extends FormRequest
             'matches.*.winners' => ['array'],
             'matches.*.winners.*' => [
                 'required',
+                'integer',
+                'min:1',
                 Rule::exists('wrestlers', 'id'),
             ],
             'matches.*.result' => ['required', 'string'],

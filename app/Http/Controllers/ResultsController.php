@@ -26,8 +26,6 @@ class ResultsController extends Controller
      */
     public function edit(Event $event)
     {
-        $this->authorize('updateResults', Event::class);
-
         return view('events.results', compact('event'));
     }
 

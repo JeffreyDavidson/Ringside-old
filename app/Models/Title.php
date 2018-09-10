@@ -48,7 +48,7 @@ class Title extends Model
      */
     public function champions()
     {
-        return $this->belongsToMany(Wrestler::class, 'championships')->using(Championship::class)->withPivot('won_on', 'lost_on');
+        return $this->belongsToMany(Wrestler::class, 'championships')->using(Championship::class)->withPivot('won_on', 'lost_on', 'successful_defenses');
     }
 
     /**
@@ -69,5 +69,10 @@ class Title extends Model
     public function getCurrentChampionAttribute()
     {
         return $this->currentChampion()->first();
+    }
+
+    public function isVacant()
+    {
+        return blank($this->currentChampion);
     }
 }

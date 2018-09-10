@@ -22,72 +22,9 @@ class UpdateEventMatchesWithResultsTest extends TestCase
     {
         parent::setUp();
 
-        $this->setupAuthorizedUser(['edit-event-results', 'update-event-results']);
-    }
+        $this->seed('MatchDecisionsTableSeeder');
 
-    public function createStandardMatch()
-    {
-        $event = factory(Event::class)->create();
-        $matchtype = factory(MatchType::class)->create(['number_of_sides' => 2, 'total_competitors' => 2]);
-        $match = MatchFactory::forEvent($event)->withMatchtype($matchtype)->create();
-
-        return $match;
-    }
-
-    public function createStandardTitleMatchWithNoChampion()
-    {
-        $event = factory(Event::class)->create();
-        $matchtype = factory(MatchType::class)->create(['number_of_sides' => 2, 'total_competitors' => 2]);
-        $title = factory(Title::class)->create();
-
-        $match = MatchFactory::forEvent($event)->withMatchtype($matchtype)->withTitle($title)->create();
-
-        return $match;
-    }
-
-    public function createStandardTitleMatchWithChampion()
-    {
-        $event = factory(Event::class)->create(['date' => '2018-04-27 19:00:00']);
-        $matchtype = factory(MatchType::class)->create(['number_of_sides' => 2, 'total_competitors' => 2]);
-        $title = factory(Title::class)->create(['introduced_at' => $event->date->copy()->subMonths(4)]);
-        $wrestler = factory(Wrestler::class)->create(['hired_at' => $event->date->copy()->subMonths(4)]);
-
-        $match = MatchFactory::forEvent($event)
-                            ->withMatchtype($matchtype)
-                            ->withTitle($title)
-                            ->withChampion($wrestler)
-                            ->create();
-
-        return $match;
-    }
-
-    private function nonChampionWinner($match)
-    {
-        return $match->wrestlers->reject(function ($wrestler, $key) use ($match) {
-            return $wrestler->id == $match->titles->first()->currentChampion->wrestler->id;
-        })->random()->id;
-    }
-
-    private function validParams($overrides = [])
-    {
-        // dd(Match::first()->groupedWrestlersBySide()->first());
-
-        return array_replace_recursive([
-            'matches' => [
-                [
-                    'match_decision_id' => factory(MatchDecision::class)->create()->id,
-                    'winners' => Match::first()->groupedWrestlersBySide()->first(),
-                    'result' => 'Donec sed odio dui. Cras mattis consectetur purus sit amet fermentum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.',
-                ],
-            ],
-        ], $overrides);
-    }
-
-    private function assertFormError($field, $match)
-    {
-        $this->response->assertStatus(302);
-        $this->response->assertRedirect(route('results.edit', ['event' => $match->event->id]));
-        $this->response->assertSessionHasErrors($field);
+        $this->setupAuthorizedUser(['update-event-results']);
     }
 
     /** @test */
@@ -163,8 +100,8 @@ class UpdateEventMatchesWithResultsTest extends TestCase
     public function winners_and_losers_can_be_separated_based_off_decision_of_match()
     {
         $match = $this->createStandardMatch();
-        $winners = $match->groupedWrestlersBySide()->first();
-        $losers = $match->wrestlers->diff($winners);
+        $winners = $match->groupedWrestlersBySide()->first()->modelKeys();
+        $losers = array_diff($match->wrestlers->modelKeys(), $winners);
 
         $response = $this->actingAs($this->authorizedUser)
                         ->from(route('results.edit', ['event' => $match->event->id]))
@@ -177,8 +114,8 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                         ]));
 
         tap($match->fresh(), function ($match) use ($response, $winners, $losers) {
-            $this->assertEquals($match->losers->modelKeys(), $losers->modelKeys());
-            $this->assertEquals($match->winners->modelKeys(), $winners->modelKeys());
+            $this->assertValuesEqual($match->winners->modelKeys(), $winners);
+            $this->assertValuesEqual($match->losers->modelKeys(), $losers);
         });
     }
 
@@ -186,6 +123,7 @@ class UpdateEventMatchesWithResultsTest extends TestCase
     public function a_title_match_with_no_champion_can_crown_a_champion_depending_on_match_decision()
     {
         $match = $this->createStandardTitleMatchWithNoChampion();
+        $winners = $match->groupedWrestlersBySide()->first()->modelKeys();
 
         $response = $this->actingAs($this->authorizedUser)
                         ->from(route('results.edit', ['event' => $match->event->id]))
@@ -193,15 +131,14 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                             'matches' => [
                                 [
                                     'match_decision_id' => MatchDecision::titleCanBeWonBySlug()->first()->id,
-                                    'winners' => $match->wrestlers->first()->id,
+                                    'winners' => $winners,
                                 ],
                             ],
                         ]));
 
         tap($match->fresh(), function ($match) use ($response) {
             $match->titles->each(function ($title, $key) use ($match) {
-                $this->assertTrue($match->winners->contains($this->fresh()->currentChampion->wrestler_id));
-                // $this->assertEquals($match->winners->, $title->fresh()->currentChampion->wrestler_id);
+                $this->assertTrue($match->winners->contains($title->currentChampion->id));
             });
         });
     }
@@ -217,7 +154,7 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                             'matches' => [
                                 [
                                     'match_decision_id' => MatchDecision::titleCannotBeWonBySlug()->first()->id,
-                                    'winners' => $match->wrestlers->first()->id,
+                                    'winners' => $match->wrestlers->first()->modelKeys(),
                                 ],
                             ],
                         ]));
@@ -240,14 +177,15 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                             'matches' => [
                                 [
                                     'match_decision_id' => MatchDecision::titleCanBeWonBySlug()->first()->id,
-                                    'winners' => $match->titles->first()->currentChampion->wrestler->id,
+                                    'winners' => [$match->titles->first()->currentChampion->id],
                                 ],
                             ],
                         ]));
 
         tap($match->fresh(), function ($match) use ($response) {
             $match->titles->each(function ($title, $key) use ($match) {
-                $this->assertEquals(1, $title->currentChampion->fresh()->successful_defenses);
+                // dd($title->currentChampion->pivot->successful_defenses);
+                $this->assertEquals(1, $title->currentChampion->pivot->successful_defenses);
             });
         });
     }
@@ -525,5 +463,73 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                             ]));
 
         $this->assertFormError('matches.*.result', $match);
+    }
+
+    private function createStandardMatch()
+    {
+        $event = factory(Event::class)->create();
+        $matchtype = factory(MatchType::class)->create(['number_of_sides' => 2, 'total_competitors' => 2]);
+        $match = MatchFactory::forEvent($event)->withMatchtype($matchtype)->create();
+
+        return $match;
+    }
+
+    private function createStandardTitleMatchWithNoChampion()
+    {
+        $event = factory(Event::class)->create();
+        $matchtype = factory(MatchType::class)->create(['number_of_sides' => 2, 'total_competitors' => 2]);
+        $title = factory(Title::class)->create();
+
+        $match = MatchFactory::forEvent($event)->withMatchtype($matchtype)->withTitle($title)->create();
+
+        return $match;
+    }
+
+    private function createStandardTitleMatchWithChampion()
+    {
+        $event = factory(Event::class)->create(['date' => '2018-04-27 19:00:00']);
+        $matchtype = factory(MatchType::class)->create(['number_of_sides' => 2, 'total_competitors' => 2]);
+        $title = factory(Title::class)->create(['introduced_at' => $event->date->copy()->subMonths(4)]);
+        $wrestler = factory(Wrestler::class)->create(['hired_at' => $event->date->copy()->subMonths(4)]);
+
+        $match = MatchFactory::forEvent($event)
+                            ->withMatchtype($matchtype)
+                            ->withTitle($title)
+                            ->withChampion($wrestler)
+                            ->create();
+
+        return $match;
+    }
+
+    private function nonChampionWinner($match)
+    {
+        return $match->wrestlers->reject(function ($wrestler, $key) use ($match) {
+            return $wrestler->id == $match->titles->first()->currentChampion->wrestler->id;
+        })->random()->id;
+    }
+
+    private function validParams($overrides = [])
+    {
+        return array_replace_recursive([
+            'matches' => [
+                [
+                    'match_decision_id' => factory(MatchDecision::class)->create()->id,
+                    'winners' => Match::first()->groupedWrestlersBySide()->first()->modelKeys(),
+                    'result' => 'Donec sed odio dui. Cras mattis consectetur purus sit amet fermentum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.',
+                ],
+            ],
+        ], $overrides);
+    }
+
+    private function assertFormError($field, $match)
+    {
+        $this->response->assertStatus(302);
+        $this->response->assertRedirect(route('results.edit', ['event' => $match->event->id]));
+        $this->response->assertSessionHasErrors($field);
+    }
+
+    public function assertValuesEqual(array $expected, array $actual, $msg = '')
+    {
+        return $this->assertEquals(array_values($expected), array_values($actual), $msg);
     }
 }

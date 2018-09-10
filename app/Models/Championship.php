@@ -27,6 +27,8 @@ class Championship extends Pivot
         'lost_on' => 'datetime',
     ];
 
+    protected $fillable = ['won_on', 'lost_on', 'successful_defenses'];
+
     /**
      * Assign which presenter to be used for model.
      *

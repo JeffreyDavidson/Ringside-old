@@ -61,7 +61,6 @@ class RolesAndPermissionTableSeeder extends Seeder
         $viewEvent = Permission::create(['name' => 'View Event', 'slug' => 'view-event']);
         $deleteEvent = Permission::create(['name' => 'Delete Event', 'slug' => 'delete-event']);
         $archiveEvent = Permission::create(['name' => 'Archive Event', 'slug' => 'archive-event']);
-        $editEventResults = Permission::create(['name' => 'Edit Event Results', 'slug' => 'edit-event-results']);
         $updateEventResults = Permission::create(['name' => 'Update Event Results', 'slug' => 'update-event-results']);
 
         $createMatch = Permission::create(['name' => 'Create Match', 'slug' => 'create-match']);
@@ -114,7 +113,6 @@ class RolesAndPermissionTableSeeder extends Seeder
         $admin->givePermissionTo($viewEvent);
         $admin->givePermissionTo($deleteEvent);
         $admin->givePermissionTo($archiveEvent);
-        $admin->givePermissionTo($editEventResults);
         $admin->givePermissionTo($updateEventResults);
 
         $admin->givePermissionTo($createMatch);
@@ -167,7 +165,6 @@ class RolesAndPermissionTableSeeder extends Seeder
         $superAdmin->givePermissionTo($viewEvent);
         $superAdmin->givePermissionTo($deleteEvent);
         $superAdmin->givePermissionTo($archiveEvent);
-        $superAdmin->givePermissionTo($editEventResults);
         $superAdmin->givePermissionTo($updateEventResults);
 
         $superAdmin->givePermissionTo($createMatch);
