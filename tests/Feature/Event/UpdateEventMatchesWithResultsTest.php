@@ -154,7 +154,7 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                             'matches' => [
                                 [
                                     'match_decision_id' => MatchDecision::titleCannotBeWonBySlug()->first()->id,
-                                    'winners' => $match->wrestlers->first()->modelKeys(),
+                                    'winners' => [$match->wrestlers->first()->id],
                                 ],
                             ],
                         ]));
@@ -184,7 +184,6 @@ class UpdateEventMatchesWithResultsTest extends TestCase
 
         tap($match->fresh(), function ($match) use ($response) {
             $match->titles->each(function ($title, $key) use ($match) {
-                // dd($title->currentChampion->pivot->successful_defenses);
                 $this->assertEquals(1, $title->currentChampion->pivot->successful_defenses);
             });
         });
@@ -201,16 +200,15 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                             'matches' => [
                                 [
                                     'match_decision_id' => MatchDecision::titleCanChangeHandsBySlug()->first()->id,
-                                    'winners' => $this->nonChampionWinner($match),
+                                    'winners' => [$this->nonChampionWinner($match)],
                                 ],
                             ],
                         ]));
 
         tap($match->fresh(), function ($match) use ($response) {
             $match->titles->each(function ($title, $key) use ($match) {
-                $this->assertEquals($match->date->toDateTimeString(), $title->fresh()->champions->reverse()->slice(1, 1)->first()->lost_on->toDateTimeString());
-                $this->assertEquals($match->winner_id, $title->fresh()->currentChampion->wrestler_id);
-                $this->assertEquals($match->date->toDateTimeString(), $title->currentChampion->won_on);
+                $this->assertEquals($match->date->toDateTimeString(), $title->previousChampion->pivot->lost_on->toDateTimeString());
+                $this->assertEquals($match->date->toDateTimeString(), $title->currentChampion->pivot->won_on->toDateTimeString());
             });
         });
     }
@@ -226,14 +224,14 @@ class UpdateEventMatchesWithResultsTest extends TestCase
                             'matches' => [
                                 [
                                     'match_decision_id' => MatchDecision::titleCannotChangeHandsBySlug()->first()->id,
-                                    'winners' => $this->nonChampionWinner($match),
+                                    'winners' => [$this->nonChampionWinner($match)],
                                 ],
                             ],
                         ]));
 
         tap($match->fresh(), function ($match) use ($response) {
             $match->titles->each(function ($title, $key) use ($match) {
-                $this->assertNotEquals($match->winner_id, $title->currentChampion->wrestler_id);
+                $this->assertFalse($match->winners->contains($title->currentChampion));
             });
         });
     }
@@ -504,7 +502,7 @@ class UpdateEventMatchesWithResultsTest extends TestCase
     private function nonChampionWinner($match)
     {
         return $match->wrestlers->reject(function ($wrestler, $key) use ($match) {
-            return $wrestler->id == $match->titles->first()->currentChampion->wrestler->id;
+            return $wrestler->id == $match->titles->first()->currentChampion->id;
         })->random()->id;
     }
 

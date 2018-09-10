@@ -16,7 +16,7 @@ trait HasTitles
      */
     public function titles()
     {
-        return $this->belongsToMany(Title::class, 'championships')->using(Championship::class)->withPivot('won_on', 'lost_on', 'successful_defenses');
+        return $this->belongsToMany(Title::class, 'championships')->using(Championship::class)->withPivot('id', 'won_on', 'lost_on', 'successful_defenses');
     }
 
     /**
@@ -81,8 +81,10 @@ trait HasTitles
      */
     public function winTitle(Title $title, $date)
     {
-        if ($this->hasTitle($title)) {
-            throw new WrestlerAlreadyHasTitleException;
+        if (!blank($title->currentChampion)) {
+            if ($title->currentChampion->is($this)) {
+                throw new WrestlerAlreadyHasTitleException;
+            }
         }
 
         $this->titles()->attach([
@@ -103,7 +105,7 @@ trait HasTitles
      */
     public function loseTitle(Title $title, $date)
     {
-        if (!$this->hasTitle($title)) {
+        if (empty($title->currentChampion) || !$title->currentChampion->is($this)) {
             throw new WrestlerNotTitleChampionException;
         }
 

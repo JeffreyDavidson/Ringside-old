@@ -48,7 +48,7 @@ class Title extends Model
      */
     public function champions()
     {
-        return $this->belongsToMany(Wrestler::class, 'championships')->using(Championship::class)->withPivot('won_on', 'lost_on', 'successful_defenses');
+        return $this->belongsToMany(Wrestler::class, 'championships')->using(Championship::class)->withPivot('id', 'won_on', 'lost_on', 'successful_defenses');
     }
 
     /**
@@ -62,6 +62,16 @@ class Title extends Model
     }
 
     /**
+     * Defines the relationship between a title and its previous champion.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function previousChampion()
+    {
+        return $this->champions()->wherePivot('lost_on', '!=', null)->latest('championships.won_on')->limit(1);
+    }
+
+    /**
      * Retrieves the current champion for the title.
      *
      * @return \App\Models\Wrestler|null
@@ -69,6 +79,16 @@ class Title extends Model
     public function getCurrentChampionAttribute()
     {
         return $this->currentChampion()->first();
+    }
+
+    /**
+     * Retrieves the current champion for the title.
+     *
+     * @return \App\Models\Wrestler|null
+     */
+    public function getPreviousChampionAttribute()
+    {
+        return $this->previousChampion()->first();
     }
 
     public function isVacant()
