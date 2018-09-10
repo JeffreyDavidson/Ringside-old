@@ -2,8 +2,8 @@
 
 namespace App\Traits;
 
-use App\Models\Event;
 use Carbon\Carbon;
+use App\Models\Event;
 
 trait HasEvents
 {

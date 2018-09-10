@@ -65,7 +65,7 @@ class EventsTableSeeder extends Seeder
                 'match_type_id' => MatchType::inRandomOrder()->first()->id,
                 'event_id' => $event->id,
                 'match_number' => $matchNumber,
-                'match_decision_id' => MatchDecision::inRandomOrder()->first()->id
+                'match_decision_id' => MatchDecision::inRandomOrder()->first()->id,
             ]));
 
             $this->addReferees($match);
@@ -116,7 +116,7 @@ class EventsTableSeeder extends Seeder
                                     ->whereNotIn('id', $champions->pluck('id')->all())
                                     ->get();
 
-        $expectedWrestlersCount = ($match->type->total_competitors ??  rand(5, max(5, $availableWrestlers->count())) - $champions->count());
+        $expectedWrestlersCount = ($match->type->total_competitors ?? rand(5, max(5, $availableWrestlers->count())) - $champions->count());
 
         $wrestlersForMatch = $availableWrestlers->take($expectedWrestlersCount);
 
@@ -145,24 +145,27 @@ class EventsTableSeeder extends Seeder
 
                 $match->setWinners($winners);
                 $match->setLosers($groupedWrestlersBySides);
+
                 return;
             } elseif ($this->chance(10)) {
                 // Champion retained their title
                 $match->setWinners($champions);
                 $groupedWrestlersBySides = $match->wrestlers->groupBy('pivot.side_number');
-                $losingSides = $groupedWrestlersBySides->reject(function(Collection $side) use ($champions) {
+                $losingSides = $groupedWrestlersBySides->reject(function (Collection $side) use ($champions) {
                     return $side->has($champions->first()->id);
                 });
                 $match->setLosers($losingSides);
+
                 return;
             } else {
                 // Champion lost the title
                 $groupedWrestlersBySides = $match->wrestlers->groupBy('pivot.side_number');
-                $winningSideKey = $groupedWrestlersBySides->reject(function(Collection $side) use ($champions) {
+                $winningSideKey = $groupedWrestlersBySides->reject(function (Collection $side) use ($champions) {
                     return $side->has($champions->first()->id);
                 })->keys()->random();
                 $match->setWinners($groupedWrestlersBySides->pull($winningSideKey)); // pull = remove the item from the collection, and return it
                 $match->setLosers($groupedWrestlersBySides);
+
                 return;
             }
         }

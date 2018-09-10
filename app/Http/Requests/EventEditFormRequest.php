@@ -15,6 +15,7 @@ class EventEditFormRequest extends FormRequest
     public function authorize()
     {
         $event = $this->route('event');
+
         return $this->user()->can('update', $event);
     }
 

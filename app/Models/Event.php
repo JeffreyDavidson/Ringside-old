@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Laracodes\Presenter\Traits\Presentable;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Exceptions\EventIsScheduledException;
 use App\Exceptions\EventIsArchivedException;
+use App\Exceptions\EventIsScheduledException;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Event extends Model
 {
@@ -140,7 +140,7 @@ class Event extends Model
     /**
      * Checks to see if the event is scheduled for a future date.
      *
-     * @return boolean
+     * @return bool
      */
     public function isScheduled()
     {
@@ -150,7 +150,7 @@ class Event extends Model
     /**
      * Checks to see if the event's date has past.
      *
-     * @return boolean
+     * @return bool
      */
     public function isPast()
     {
@@ -160,10 +160,10 @@ class Event extends Model
     /**
      * Checks to see if the event is archived.
      *
-     * @return boolean
+     * @return bool
      */
     public function isArchived()
     {
-        return !is_null($this->archived_at);
+        return ! is_null($this->archived_at);
     }
 }

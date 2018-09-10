@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
-use App\Http\Requests\EventResultsFormRequest;
 use App\Services\UpdateMatchResults;
+use App\Http\Requests\EventResultsFormRequest;
 
 class ResultsController extends Controller
 {

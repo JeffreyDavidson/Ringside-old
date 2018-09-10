@@ -2,8 +2,8 @@
 
 namespace App\Traits;
 
-use App\Models\Suspension;
 use Carbon\Carbon;
+use App\Models\Suspension;
 use Illuminate\Database\Eloquent\Builder;
 use App\Exceptions\ModelIsActiveException;
 use App\Exceptions\ModelIsSuspendedException;

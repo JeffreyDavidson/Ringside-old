@@ -2,8 +2,8 @@
 
 namespace App\Traits;
 
-use App\Models\Match;
 use Carbon\Carbon;
+use App\Models\Match;
 
 trait HasMatches
 {

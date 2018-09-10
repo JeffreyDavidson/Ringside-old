@@ -2,8 +2,8 @@
 
 namespace App\Traits;
 
-use App\Models\Injury;
 use Carbon\Carbon;
+use App\Models\Injury;
 use App\Exceptions\ModelIsActiveException;
 use App\Exceptions\ModelIsInjuredException;
 

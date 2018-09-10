@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 /**
  * @mixin \Illuminate\Database\Eloquent\Model
  */
-trait Hireable
+trait HIreable
 {
     public static function bootHireable()
     {
