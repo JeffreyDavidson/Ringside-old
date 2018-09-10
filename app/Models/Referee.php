@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\Hireable;
+use App\Traits\HasStatus;
 use App\Traits\HasRetirements;
+use App\Traits\HasSuspensions;
 use Illuminate\Database\Eloquent\Model;
 use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Traits\Hireable;
-use App\Traits\HasStatus;
-use App\Traits\HasSuspensions;
 
 class Referee extends Model
 {
@@ -25,10 +25,10 @@ class Referee extends Model
     ];
 
     /**
-    * The attributes that are mass assignable.
-    *
-    * @var array
-    */
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = ['first_name', 'last_name', 'is_active', 'hired_at'];
 
     /**

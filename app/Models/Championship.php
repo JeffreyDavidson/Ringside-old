@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use App\Collections\ChampionshipCollection;
-use Illuminate\Database\Eloquent\Relations\Pivot;
 use Laracodes\Presenter\Traits\Presentable;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class Championship extends Pivot
 {

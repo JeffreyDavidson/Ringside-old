@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Referee;
 use Carbon\Carbon;
+use App\Models\Referee;
 use Faker\Generator as Faker;
 
 $factory->define(Referee::class, function (Faker $faker) {

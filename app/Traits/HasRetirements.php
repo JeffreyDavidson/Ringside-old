@@ -2,8 +2,8 @@
 
 namespace App\Traits;
 
-use App\Models\Retirement;
 use Carbon\Carbon;
+use App\Models\Retirement;
 use Illuminate\Database\Eloquent\Builder;
 use App\Exceptions\ModelIsActiveException;
 use App\Exceptions\ModelIsRetiredException;

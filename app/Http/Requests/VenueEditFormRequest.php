@@ -15,6 +15,7 @@ class VenueEditFormRequest extends FormRequest
     public function authorize()
     {
         $venue = $this->route('venue');
+
         return $this->user()->can('update', $venue);
     }
 

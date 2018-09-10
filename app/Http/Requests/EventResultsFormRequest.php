@@ -32,7 +32,7 @@ class EventResultsFormRequest extends FormRequest
         $this->expectedMatchesCount = Event::find(request()->event->id)->matches()->count();
 
         $rules = [
-            'matches' => ['array', 'size:' . $this->expectedMatchesCount],
+            'matches' => ['array', 'size:'.$this->expectedMatchesCount],
             'matches.*.match_decision_id' => ['required', 'integer', 'min:1', Rule::exists('match_decisions', 'id')],
             'matches.*.winners' => ['array'],
             'matches.*.winners.*' => [
@@ -46,7 +46,7 @@ class EventResultsFormRequest extends FormRequest
 
         if (is_array($this->matches)) {
             foreach ($this->matches as $index => $match) {
-                $rules['matches.' . $index . '.winners'] = [
+                $rules['matches.'.$index.'.winners'] = [
                     new WrestlerInvolvedInMatch($index + 1, request()->event),
                 ];
             }
@@ -63,7 +63,7 @@ class EventResultsFormRequest extends FormRequest
     public function messages()
     {
         return [
-            'matches.size' => 'This event should have exactly ' . $this->expectedMatchesCount . ' ' . str_plural('match', $this->expectedMatchesCount) . ' in size.',
+            'matches.size' => 'This event should have exactly '.$this->expectedMatchesCount.' '.str_plural('match', $this->expectedMatchesCount).' in size.',
         ];
     }
 }

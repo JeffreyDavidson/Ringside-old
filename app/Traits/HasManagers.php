@@ -77,7 +77,7 @@ trait HasManagers
      */
     public function hireManager($manager, $date)
     {
-        if (!$manager->is_active) {
+        if (! $manager->is_active) {
             throw new ModelIsInactiveException;
         }
 
@@ -96,7 +96,7 @@ trait HasManagers
      */
     public function fireManager($manager, $date)
     {
-        if (!$this->hasManager($manager)) {
+        if (! $this->hasManager($manager)) {
             throw new ManagerNotHiredException;
         }
 

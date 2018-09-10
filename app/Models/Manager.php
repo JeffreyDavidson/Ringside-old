@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\Hireable;
+use App\Traits\HasStatus;
 use App\Traits\HasRetirements;
+use App\Traits\HasSuspensions;
 use Illuminate\Database\Eloquent\Model;
 use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Traits\Hireable;
-use App\Traits\HasStatus;
-use App\Traits\HasSuspensions;
 
 class Manager extends Model
 {

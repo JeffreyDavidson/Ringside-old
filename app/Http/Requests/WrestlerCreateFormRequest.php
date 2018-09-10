@@ -39,7 +39,7 @@ class WrestlerCreateFormRequest extends FormRequest
 
     public function withValidator(Validator $validator)
     {
-        $validator->after(function(Validator $validator) {
+        $validator->after(function (Validator $validator) {
             if ($validator->errors()->isEmpty()) {
                 $this->offsetSet('height', ($this->input('feet') * 12) + $this->input('inches'));
             }

@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\Match;
-use App\Http\Requests\MatchCreateFormRequest;
 use App\Services\AddMatchesToEvent;
+use App\Http\Requests\MatchCreateFormRequest;
 
 class MatchesController extends Controller
 {
