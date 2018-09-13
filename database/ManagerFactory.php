@@ -25,7 +25,7 @@ class ManagerFactory
 
     public function create()
     {
-        $manager = factory(Manager::class)->states($this->states)->create([
+        $manager = factory(Manager::class)->create([
             'hired_at' => $this->hiredOn->subWeeks(2),
         ]);
 
@@ -57,6 +57,22 @@ class ManagerFactory
     public function firedOn(Carbon $date)
     {
         $this->firedOn = $date;
+
+        return $this;
+    }
+
+    public function current()
+    {
+        $this->hiredOn = Carbon::today()->subWeeks(2);
+        $this->firedOn = null;
+
+        return $this;
+    }
+
+    public function past()
+    {
+        $this->hiredOn = Carbon::today()->subWeeks(2);
+        $this->firedOn = Carbon::yesterday();
 
         return $this;
     }

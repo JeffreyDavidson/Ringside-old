@@ -90,6 +90,22 @@ class ChampionshipFactory
         return $this;
     }
 
+    public function current()
+    {
+        $this->wonOn = Carbon::today()->subWeeks(2);
+        $this->lostOn = null;
+
+        return $this;
+    }
+
+    public function past()
+    {
+        $this->wonOn = Carbon::today()->subWeeks(2);
+        $this->lostOn = Carbon::yesterday();
+
+        return $this;
+    }
+
     public function resetProperties()
     {
         if (!is_null($this->wrestler)) {

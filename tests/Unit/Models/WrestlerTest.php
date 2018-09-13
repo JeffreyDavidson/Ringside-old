@@ -248,9 +248,9 @@ class WrestlerTest extends TestCase
     public function it_can_retrieve_a_wrestlers_scheduled_matches()
     {
         $wrestler = factory(Wrestler::class)->create();
-        $scheduledMatchA = MatchFactory::states('scheduled')->withWrestler($wrestler)->create();
-        $scheduledMatchB = MatchFactory::states('scheduled')->withWrestler($wrestler)->create();
-        $pastMatch = MatchFactory::states('past')->withWrestler($wrestler)->create();
+        $scheduledMatchA = MatchFactory::scheduled()->withWrestler($wrestler)->create();
+        $scheduledMatchB = MatchFactory::scheduled()->withWrestler($wrestler)->create();
+        $pastMatch = MatchFactory::past()->withWrestler($wrestler)->create();
 
         $scheduledMatches = $wrestler->scheduledMatches;
 
@@ -271,9 +271,9 @@ class WrestlerTest extends TestCase
     public function it_can_retrieve_a_wrestlers_past_matches()
     {
         $wrestler = factory(Wrestler::class)->create();
-        $pastMatchA = MatchFactory::states('past')->withWrestler($wrestler)->create();
-        $pastMatchB = MatchFactory::states('past')->withWrestler($wrestler)->create();
-        $scheduledMatch = MatchFactory::states('scheduled')->withWrestler($wrestler)->create();
+        $pastMatchA = MatchFactory::past()->withWrestler($wrestler)->create();
+        $pastMatchB = MatchFactory::past()->withWrestler($wrestler)->create();
+        $scheduledMatch = MatchFactory::scheduled()->withWrestler($wrestler)->create();
 
         $pastMatches = $wrestler->pastMatches;
 
@@ -325,9 +325,9 @@ class WrestlerTest extends TestCase
     public function current_titles_held_returns_a_collection_of_active_titles()
     {
         $wrestler = factory(Wrestler::class)->create();
-        $currentChampionshipA = ChampionshipFactory::states('current')->forWrestler($wrestler)->create();
-        $currentChampionshipB = ChampionshipFactory::states('current')->forWrestler($wrestler)->create();
-        $pastChampionship = ChampionshipFactory::states('past')->forWrestler($wrestler)->create();
+        $currentChampionshipA = ChampionshipFactory::current()->forWrestler($wrestler)->create();
+        $currentChampionshipB = ChampionshipFactory::current()->forWrestler($wrestler)->create();
+        $pastChampionship = ChampionshipFactory::past()->forWrestler($wrestler)->create();
 
         $currentTitlesHeld = $wrestler->currentTitlesHeld;
 
@@ -340,9 +340,9 @@ class WrestlerTest extends TestCase
     public function past_titles_held_returns_a_collection_of_past_titles()
     {
         $wrestler = factory(Wrestler::class)->create();
-        $pastChampionshipA = ChampionshipFactory::states('past')->forWrestler($wrestler)->create();
-        $pastChampionshipB = ChampionshipFactory::states('past')->forWrestler($wrestler)->create();
-        $currentChampionship = ChampionshipFactory::states('current')->forWrestler($wrestler)->create();
+        $pastChampionshipA = ChampionshipFactory::past()->forWrestler($wrestler)->create();
+        $pastChampionshipB = ChampionshipFactory::past()->forWrestler($wrestler)->create();
+        $currentChampionship = ChampionshipFactory::current()->forWrestler($wrestler)->create();
 
         $pastTitlesHeld = $wrestler->pastTitlesHeld;
 
@@ -483,9 +483,9 @@ class WrestlerTest extends TestCase
     public function it_can_retrieve_a_wrestlers_current_managers()
     {
         $wrestler = factory(Wrestler::class)->create();
-        $currentManagerA = ManagerFactory::states('current')->forWrestler($wrestler)->create();
-        $currentManagerB = ManagerFactory::states('current')->forWrestler($wrestler)->create();
-        $pastManager = ManagerFactory::states('past')->forWrestler($wrestler)->create();
+        $currentManagerA = ManagerFactory::current()->forWrestler($wrestler)->create();
+        $currentManagerB = ManagerFactory::current()->forWrestler($wrestler)->create();
+        $pastManager = ManagerFactory::past()->forWrestler($wrestler)->create();
 
         $currentManagers = $wrestler->currentManagers;
 
@@ -499,9 +499,9 @@ class WrestlerTest extends TestCase
     {
         $wrestler = factory(Wrestler::class)->create();
 
-        $pastManagerA = ManagerFactory::states('past')->forWrestler($wrestler)->create();
-        $pastManagerB = ManagerFactory::states('past')->forWrestler($wrestler)->create();
-        $currentManager = ManagerFactory::states('current')->forWrestler($wrestler)->create();
+        $pastManagerA = ManagerFactory::past()->forWrestler($wrestler)->create();
+        $pastManagerB = ManagerFactory::past()->forWrestler($wrestler)->create();
+        $currentManager = ManagerFactory::current()->forWrestler($wrestler)->create();
 
         $pastManagers = $wrestler->pastManagers;
 

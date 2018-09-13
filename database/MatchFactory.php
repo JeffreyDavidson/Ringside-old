@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use App\Models\Event;
 use App\Models\Match;
 use App\Models\Referee;
@@ -17,6 +18,7 @@ class MatchFactory
     public $titles;
     public $referees;
     public $states = null;
+    public $eventDate = null;
 
     public function __construct()
     {
@@ -33,7 +35,7 @@ class MatchFactory
     public function create()
     {
         $match = factory(Match::class)->create([
-            'event_id' => $this->event_id ?? factory(Event::class)->create(),
+            'event_id' => $this->event_id ?? factory(Event::class)->create(['date' => $this->eventDate]),
             'match_type_id' => $this->match_type_id ?? factory(MatchType::class)->create(),
             'stipulation_id' => $this->stipulation_id ?? null,
         ]);
@@ -165,6 +167,20 @@ class MatchFactory
         }
 
         $match->addReferees($refereesForMatch);
+    }
+
+    public function scheduled()
+    {
+        $this->eventDate =  Carbon::tomorrow();
+
+        return $this;
+    }
+
+    public function past()
+    {
+        $this->eventDate = Carbon::yesterday();
+
+        return $this;
     }
 
     public function populateDefaults()
