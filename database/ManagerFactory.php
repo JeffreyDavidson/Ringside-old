@@ -9,21 +9,29 @@ class ManagerFactory
     public $wrestler = null;
     public $hiredOn = null;
     public $firedOn = null;
+    public $states = null;
 
     public function __construct()
     {
         $this->resetProperties();
     }
 
+    public function states($states)
+    {
+        $this->states = $states;
+
+        return $this;
+    }
+
     public function create()
     {
-        $manager = factory(Manager::class)->create([
+        $manager = factory(Manager::class)->states($this->states)->create([
             'hired_at' => $this->hiredOn->subWeeks(2),
         ]);
 
         $this->wrestler->hireManager($manager, $this->hiredOn);
 
-        if (! is_null($this->firedOn)) {
+        if (!is_null($this->firedOn)) {
             $this->wrestler->fireManager($manager, $this->firedOn);
         }
 
@@ -55,15 +63,15 @@ class ManagerFactory
 
     public function resetProperties()
     {
-        if (! is_null($this->wrestler)) {
+        if (!is_null($this->wrestler)) {
             $this->wrestler = null;
         }
 
-        if (! is_null($this->hiredOn)) {
+        if (!is_null($this->hiredOn)) {
             $this->hiredOn = null;
         }
 
-        if (! is_null($this->firedOn)) {
+        if (!is_null($this->firedOn)) {
             $this->firedOn = null;
         }
     }

@@ -10,7 +10,7 @@ use App\Exceptions\ModelIsInjuredException;
 trait HasInjuries
 {
     /**
-     * A wrestler can have many injuries.
+     * A model can have many injuries.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -20,19 +20,19 @@ trait HasInjuries
     }
 
     /**
-     * Checks to see if the wrestler has past injuries.
+     * Checks to see if the model has past injuries.
      *
      * @return bool
      */
     public function hasPastInjuries()
     {
-        return $this->pastInjuries->isNotEmpty();
+        return $this->pastInjuries()->exists();
     }
 
     /**
-     * Returns all the past injuries for a wrestler.
+     * Returns all the past injuries for a model.
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function pastInjuries()
     {
@@ -40,9 +40,9 @@ trait HasInjuries
     }
 
     /**
-     * Returns all the current injuries for a wrestler.
+     * Returns the current injury for a model.
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return \App\Models\Injury
      */
     public function currentInjury()
     {
@@ -50,7 +50,7 @@ trait HasInjuries
     }
 
     /**
-     * Checks to see if the wrestler is currently injured.
+     * Checks to see if the model is currently injured.
      *
      * @return bool
      */
@@ -60,7 +60,7 @@ trait HasInjuries
     }
 
     /**
-     * Scope a query to only include wrestlers that are currently injured.
+     * Scope a query to only include models that are currently injured.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder

@@ -82,7 +82,7 @@ class Match extends Model
      */
     public function titles()
     {
-        return $this->belongsToMany(Title::class);
+        return $this->belongsToMany(Title::class)->with('currentChampion');
     }
 
     /**
@@ -231,27 +231,12 @@ class Match extends Model
 
     public function setLosers($losers)
     {
-        // $this->losers()->sync($losers->flatten()->pluck('id'));
         $this->losers()->sync($losers);
     }
 
     public function setWinners($winners)
     {
         $this->winners()->sync($winners);
-
-        // if ($this->isTitleMatch()) {
-        //     $this->titles->each(function ($title) use ($winners) {
-        //         if (!$title->isVacant()) {
-        //         } else {
-        //             $title->setChampion($winners, $this->date);
-        //         }
-        //         // if (!$winners->first()->hasTitle($title) && $this->decision->titleCanChangeHands()) {
-        //         //     $title->setChampion($winners, $this->date);
-        //         // } else {
-        //         //     $title->currentChampion->increment('successful_defenses');
-        //         // }
-        //     });
-        // }
     }
 
     /**

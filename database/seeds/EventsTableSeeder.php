@@ -38,8 +38,8 @@ class EventsTableSeeder extends Seeder
             return strtotime($a) - strtotime($b);
         })->values()->map(function ($date, $key) {
             return factory(Event::class)->create([
-                'name' => 'Event '.($key + 1),
-                'slug' => 'event'.($key + 1),
+                'name' => 'Event ' . ($key + 1),
+                'slug' => 'event' . ($key + 1),
                 'venue_id' => Venue::inRandomOrder()->first()->id,
                 'date' => $date->hour(19),
             ]);
@@ -135,48 +135,49 @@ class EventsTableSeeder extends Seeder
     {
         // If this is a title match give the champion a 10% chance to retain their title.
         if ($match->isTitleMatch()) {
-            $champions = $match->titles->pluck('currentChampion.wrestler')->filter();
+            $champions = $match->titles->pluck('currentChampion');
             if ($champions->isEmpty()) {
-                // No current Champion
-                $groupedWrestlersBySides = $match->wrestlers->groupBy('pivot.side_number');
-                $winningSideKey = $groupedWrestlersBySides->keys()->random();
-                $winners = $groupedWrestlersBySides->get($winningSideKey);
-                $groupedWrestlersBySides->forget($winningSideKey);
+                $winners = $match->groupedWrestlersBySide()->random()->modelKeys();
+                $losers = array_diff($match->wrestlers->modelKeys(), $winners);
 
                 $match->setWinners($winners);
-                $match->setLosers($groupedWrestlersBySides);
+                $match->setLosers($losers);
 
                 return;
             } elseif ($this->chance(10)) {
-                // Champion retained their title
-                $match->setWinners($champions);
-                $groupedWrestlersBySides = $match->wrestlers->groupBy('pivot.side_number');
-                $losingSides = $groupedWrestlersBySides->reject(function (Collection $side) use ($champions) {
+                // Get all of teh groupWrestlersBySide and then reject any side that has the champions collection
+                $losers = $match->groupedWrestlersBySides->reject(function (Collection $side) use ($champions) {
                     return $side->has($champions->first()->id);
                 });
-                $match->setLosers($losingSides);
+
+                $match->setWinners($champions);
+                $match->setLosers($losers);
 
                 return;
             } else {
                 // Champion lost the title
-                $groupedWrestlersBySides = $match->wrestlers->groupBy('pivot.side_number');
-                $winningSideKey = $groupedWrestlersBySides->reject(function (Collection $side) use ($champions) {
-                    return $side->has($champions->first()->id);
-                })->keys()->random();
-                $match->setWinners($groupedWrestlersBySides->pull($winningSideKey)); // pull = remove the item from the collection, and return it
-                $match->setLosers($groupedWrestlersBySides);
+                // Get the grouped wrestlers for the match and then eliminate any side that includes the champions collection in that
+                //side and then get a random side and then get their model keys to send to winners.
+                $winners = $match->groupedWrestlersBySide()->reject(function (Collection $side) use ($champions) {
+                    dd($side);
+
+                    return $side->has($champions);
+                })->random()->modelKeys();
+
+                $losers = array_diff($match->wrestlers->modelKeys(), $winners);
+
+                $match->setWinners($winners); // pull = remove the item from the collection, and return it
+                $match->setLosers($losers);
 
                 return;
             }
+        } else {
+            $winners = $match->groupedWrestlersBySide()->random()->modelKeys();
+            $losers = array_diff($match->wrestlers->modelKeys(), $winners);
+
+            $match->setWinners($winners);
+            $match->setLosers($losers);
         }
-
-        $groupedWrestlersBySides = $match->wrestlers->groupBy('pivot.side_number');
-        $winningSideKey = $groupedWrestlersBySides->keys()->random();
-        $winners = $groupedWrestlersBySides->get($winningSideKey);
-        $groupedWrestlersBySides->forget($winningSideKey);
-
-        $match->setWinners($winners);
-        $match->setLosers($groupedWrestlersBySides);
     }
 
     private function dates(Carbon $from, Carbon $to, $day, $last = false)

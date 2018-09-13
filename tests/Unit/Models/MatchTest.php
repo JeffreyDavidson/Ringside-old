@@ -9,7 +9,6 @@ use App\Models\Title;
 use App\Models\Referee;
 use App\Models\Wrestler;
 use App\Models\Stipulation;
-use App\Models\MatchType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class MatchTest extends TestCase
@@ -23,54 +22,6 @@ class MatchTest extends TestCase
         parent::setUp();
 
         $this->match = factory(Match::class)->create();
-    }
-
-    /** @test */
-    public function a_match_has_many_wrestlers()
-    {
-        $match = factory(Match::class)->create();
-
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $match->wrestlers);
-    }
-
-    /** @test */
-    public function a_match_belongs_to_an_event()
-    {
-        $match = factory(Match::class)->create();
-
-        $this->assertInstanceOf(Event::class, $match->event);
-    }
-
-    /** @test */
-    public function a_match_has_a_type()
-    {
-        $match = factory(Match::class)->create();
-
-        $this->assertInstanceOf(MatchType::class, $match->type);
-    }
-
-    /** @test */
-    public function a_match_can_have_many_titles()
-    {
-        $match = factory(Match::class)->create();
-
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $match->titles);
-    }
-
-    /** @test */
-    public function a_match_can_have_many_referees()
-    {
-        $match = factory(Match::class)->create();
-
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $match->referees);
-    }
-
-    /** @test */
-    public function a_match_can_have_a_stipulation()
-    {
-        $match = factory(Match::class)->create();
-
-        $this->assertInstanceOf(Stipulation::class, $match->stipulation);
     }
 
     /** @test */

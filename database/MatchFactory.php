@@ -16,10 +16,18 @@ class MatchFactory
     public $wrestlers;
     public $titles;
     public $referees;
+    public $states = null;
 
     public function __construct()
     {
         $this->populateDefaults();
+    }
+
+    public function states($states)
+    {
+        $this->states = $states;
+
+        return $this;
     }
 
     public function create()

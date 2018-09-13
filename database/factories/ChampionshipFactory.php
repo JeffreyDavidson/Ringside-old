@@ -11,3 +11,6 @@ $factory->define(Championship::class, function (Faker $faker) {
         'won_on' => Carbon::now(),
     ];
 });
+
+$factory->state(Championship::class, 'current', ['won_on' => today()->addMonths(2)]);
+$factory->state(Championship::class, 'past', ['won_on' => today()->subMonths(2), 'lost_on' => today()->subMonth()]);
