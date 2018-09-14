@@ -103,7 +103,7 @@ trait HasInjuries
      */
     public function recover()
     {
-        if ($this->is_active) {
+        if ($this->isActive()) {
             throw new ModelIsActiveException;
         }
 

@@ -102,7 +102,7 @@ trait HasSuspensions
      */
     public function reinstate()
     {
-        if ($this->is_active) {
+        if ($this->isActive()) {
             throw new ModelIsActiveException;
         }
 

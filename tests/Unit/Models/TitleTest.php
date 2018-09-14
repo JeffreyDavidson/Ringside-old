@@ -49,7 +49,7 @@ class TitleTest extends TestCase
 
         $title->activate();
 
-        $this->assertTrue($title->is_active);
+        $this->assertTrue($title->isActive());
     }
 
     /** @test */
@@ -59,7 +59,7 @@ class TitleTest extends TestCase
 
         $title->deactivate();
 
-        $this->assertFalse($title->is_active);
+        $this->assertFalse($title->isActive());
     }
 
     /**
@@ -94,7 +94,7 @@ class TitleTest extends TestCase
         $title->retire();
 
         $this->assertEquals(1, $title->retirements->count());
-        $this->assertFalse($title->is_active);
+        $this->assertFalse($title->isActive());
         $this->assertTrue($title->isRetired());
         $this->assertNull($title->retirements()->first()->ended_at);
     }
@@ -107,7 +107,7 @@ class TitleTest extends TestCase
         $title->unretire();
 
         $this->assertNotNull($title->retirements()->first()->ended_at);
-        $this->assertTrue($title->is_active);
+        $this->assertTrue($title->isActive());
         $this->assertFalse($title->isRetired());
     }
 

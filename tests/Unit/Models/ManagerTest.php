@@ -32,9 +32,9 @@ class ManagerTest extends TestCase
         $managerB = factory(Manager::class)->create(['hired_at' => Carbon::today()]);
         $managerC = factory(Manager::class)->create(['hired_at' => Carbon::today()->addDays(2)]);
 
-        $this->assertTrue($managerA->is_active);
-        $this->assertTrue($managerB->is_active);
-        $this->assertFalse($managerC->is_active);
+        $this->assertTrue($managerA->isActive());
+        $this->assertTrue($managerB->isActive());
+        $this->assertFalse($managerC->isActive());
     }
 
     /** @test */
@@ -72,7 +72,7 @@ class ManagerTest extends TestCase
 
         $manager->activate();
 
-        $this->assertTrue($manager->is_active);
+        $this->assertTrue($manager->isActive());
     }
 
     /** @test */
@@ -82,7 +82,7 @@ class ManagerTest extends TestCase
 
         $manager->deactivate();
 
-        $this->assertFalse($manager->is_active);
+        $this->assertFalse($manager->isActive());
     }
 
     /**
@@ -117,7 +117,7 @@ class ManagerTest extends TestCase
         $manager->retire();
 
         $this->assertEquals(1, $manager->retirements->count());
-        $this->assertFalse($manager->is_active);
+        $this->assertFalse($manager->isActive());
         $this->assertTrue($manager->isRetired());
         $this->assertNull($manager->retirements()->first()->ended_at);
     }
@@ -130,7 +130,7 @@ class ManagerTest extends TestCase
         $manager->unretire();
 
         $this->assertNotNull($manager->retirements()->first()->ended_at);
-        $this->assertTrue($manager->is_active);
+        $this->assertTrue($manager->isActive());
         $this->assertFalse($manager->isRetired());
     }
 
@@ -180,7 +180,7 @@ class ManagerTest extends TestCase
         $manager->suspend();
 
         $this->assertEquals(1, $manager->suspensions->count());
-        $this->assertFalse($manager->is_active);
+        $this->assertFalse($manager->isActive());
         $this->assertNull($manager->suspensions()->first()->ended_at);
         $this->assertTrue($manager->isSuspended());
     }
@@ -193,7 +193,7 @@ class ManagerTest extends TestCase
         $manager->reinstate();
 
         $this->assertNotNull($manager->suspensions->last()->ended_at);
-        $this->assertTrue($manager->is_active);
+        $this->assertTrue($manager->isActive());
         $this->assertFalse($manager->isSuspended());
         $this->assertTrue($manager->hasPastSuspensions());
         $this->assertEquals(1, $manager->pastSuspensions->count());

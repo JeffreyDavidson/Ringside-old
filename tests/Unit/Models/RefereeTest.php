@@ -32,9 +32,9 @@ class RefereeTest extends TestCase
         $refereeB = factory(Referee::class)->create(['hired_at' => Carbon::today()]);
         $refereeC = factory(Referee::class)->create(['hired_at' => Carbon::today()->addDays(2)]);
 
-        $this->assertTrue($refereeA->is_active);
-        $this->assertTrue($refereeB->is_active);
-        $this->assertFalse($refereeC->is_active);
+        $this->assertTrue($refereeA->isActive());
+        $this->assertTrue($refereeB->isActive());
+        $this->assertFalse($refereeC->isActive());
     }
 
     /** @test */
@@ -72,7 +72,7 @@ class RefereeTest extends TestCase
 
         $referee->activate();
 
-        $this->assertTrue($referee->is_active);
+        $this->assertTrue($referee->isActive());
     }
 
     /** @test */
@@ -82,7 +82,7 @@ class RefereeTest extends TestCase
 
         $referee->deactivate();
 
-        $this->assertFalse($referee->is_active);
+        $this->assertFalse($referee->isActive());
     }
 
     /**
@@ -117,7 +117,7 @@ class RefereeTest extends TestCase
         $referee->retire();
 
         $this->assertEquals(1, $referee->retirements->count());
-        $this->assertFalse($referee->is_active);
+        $this->assertFalse($referee->isActive());
         $this->assertTrue($referee->isRetired());
         $this->assertNull($referee->retirements()->first()->ended_at);
     }
@@ -130,7 +130,7 @@ class RefereeTest extends TestCase
         $referee->unretire();
 
         $this->assertNotNull($referee->retirements()->first()->ended_at);
-        $this->assertTrue($referee->is_active);
+        $this->assertTrue($referee->isActive());
         $this->assertFalse($referee->isRetired());
     }
 
@@ -180,7 +180,7 @@ class RefereeTest extends TestCase
         $referee->suspend();
 
         $this->assertEquals(1, $referee->suspensions->count());
-        $this->assertFalse($referee->is_active);
+        $this->assertFalse($referee->isActive());
         $this->assertNull($referee->suspensions()->first()->ended_at);
         $this->assertTrue($referee->isSuspended());
     }
@@ -193,7 +193,7 @@ class RefereeTest extends TestCase
         $referee->reinstate();
 
         $this->assertNotNull($referee->suspensions->last()->ended_at);
-        $this->assertTrue($referee->is_active);
+        $this->assertTrue($referee->isActive());
         $this->assertFalse($referee->isSuspended());
         $this->assertTrue($referee->hasPastSuspensions());
         $this->assertEquals(1, $referee->pastSuspensions->count());
