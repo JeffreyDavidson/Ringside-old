@@ -31,7 +31,7 @@ class ChampionshipFactory
         if (is_null($this->title)) {
             $this->title = factory(Title::class)->create();
             $this->wonOn = $this->title->introduced_at->copy()->addMonth();
-        } elseif (!is_null($this->title) && is_null($this->wonOn)) {
+        } elseif (! is_null($this->title) && is_null($this->wonOn)) {
             if ($this->title->champions()->exists()) {
                 $dateLastChampionWon = $this->title->fresh()->currentChampion->pivot->won_on;
                 $dateOfTitleChange = $dateLastChampionWon->copy()->addMonth();
@@ -108,11 +108,11 @@ class ChampionshipFactory
 
     public function resetProperties()
     {
-        if (!is_null($this->wrestler)) {
+        if (! is_null($this->wrestler)) {
             $this->wrestler = null;
         }
 
-        if (!is_null($this->title)) {
+        if (! is_null($this->title)) {
             $this->title = null;
         }
 
