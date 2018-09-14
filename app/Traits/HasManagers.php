@@ -10,7 +10,7 @@ use App\Exceptions\ModelIsInactiveException;
 trait HasManagers
 {
     /**
-     * A wrestler can have many managers.
+     * A model can have many managers.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -20,19 +20,19 @@ trait HasManagers
     }
 
     /**
-     * Checks to see if the wrestler has past managers.
+     * Checks to see if the model has past managers.
      *
      * @return bool
      */
     public function hasPastManagers()
     {
-        return $this->pastManagers->isNotEmpty();
+        return $this->pastManagers()->exists();
     }
 
     /**
-     * Returns all the past managers for a wrestler.
+     * Returns all the past managers for a model.
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function pastManagers()
     {
@@ -40,17 +40,17 @@ trait HasManagers
     }
 
     /**
-     * Checks to see if the wrestler has any current managers.
+     * Checks to see if the model has any current managers.
      *
      * @return bool
      */
     public function hasCurrentManagers()
     {
-        return $this->currentManagers->isNotEmpty();
+        return $this->currentManagers()->exists();
     }
 
     /**
-     * Checks to see if the wrestler has a specific manager.
+     * Checks to see if the model has a specific manager.
      *
      * @return bool
      */
@@ -60,9 +60,9 @@ trait HasManagers
     }
 
     /**
-     * Returns the wrestler's current managers.
+     * Returns the model's current managers.
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function currentManagers()
     {
@@ -70,14 +70,17 @@ trait HasManagers
     }
 
     /**
-     * A wrestler hires a given manager.
+     * A model hires a given manager.
      *
      * @param  \App\Models\Manager  $manager
      * @return bool
+     *
+     * @throws \App\Exceptions\ModelIsInactiveException
+     * @throws \App\Exceptions\ModelHasManagerException
      */
     public function hireManager($manager, $date)
     {
-        if (! $manager->is_active) {
+        if (! $manager->isActive()) {
             throw new ModelIsInactiveException;
         }
 
@@ -89,10 +92,12 @@ trait HasManagers
     }
 
     /**
-     * A wrestler fires a given manager.
+     * A model fires a given manager.
      *
      * @param  \App\Models\Manager  $manager
      * @return bool
+     *
+     * @throws \App\Exceptions\ManagerNotHiredException
      */
     public function fireManager($manager, $date)
     {

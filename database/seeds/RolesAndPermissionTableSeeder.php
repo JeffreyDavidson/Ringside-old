@@ -53,7 +53,7 @@ class RolesAndPermissionTableSeeder extends Seeder
         $viewVenue = Permission::create(['name' => 'View Venue', 'slug' => 'view-venue']);
         $deleteVenue = Permission::create(['name' => 'Delete Venue', 'slug' => 'delete-venue']);
 
-        $viewEvent = Permission::create(['name' => 'View Events', 'slug' => 'view-events']);
+        $viewEvents = Permission::create(['name' => 'View Events', 'slug' => 'view-events']);
         $createEvent = Permission::create(['name' => 'Create Event', 'slug' => 'create-event']);
         $storeEvent = Permission::create(['name' => 'Store Event', 'slug' => 'store-event']);
         $editEvent = Permission::create(['name' => 'Edit Event', 'slug' => 'edit-event']);
@@ -105,7 +105,7 @@ class RolesAndPermissionTableSeeder extends Seeder
         $admin->givePermissionTo($viewVenue);
         $admin->givePermissionTo($deleteVenue);
 
-        $admin->givePermissionTo($viewEvent);
+        $admin->givePermissionTo($viewEvents);
         $admin->givePermissionTo($createEvent);
         $admin->givePermissionTo($storeEvent);
         $admin->givePermissionTo($editEvent);
@@ -157,7 +157,7 @@ class RolesAndPermissionTableSeeder extends Seeder
         $superAdmin->givePermissionTo($viewVenue);
         $superAdmin->givePermissionTo($deleteVenue);
 
-        $superAdmin->givePermissionTo($viewEvent);
+        $superAdmin->givePermissionTo($viewEvents);
         $superAdmin->givePermissionTo($createEvent);
         $superAdmin->givePermissionTo($storeEvent);
         $superAdmin->givePermissionTo($editEvent);

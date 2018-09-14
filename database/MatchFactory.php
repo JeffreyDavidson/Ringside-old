@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use App\Models\Event;
 use App\Models\Match;
 use App\Models\Referee;
@@ -16,16 +17,25 @@ class MatchFactory
     public $wrestlers;
     public $titles;
     public $referees;
+    public $states = null;
+    public $eventDate = null;
 
     public function __construct()
     {
         $this->populateDefaults();
     }
 
+    public function states($states)
+    {
+        $this->states = $states;
+
+        return $this;
+    }
+
     public function create()
     {
         $match = factory(Match::class)->create([
-            'event_id' => $this->event_id ?? factory(Event::class)->create(),
+            'event_id' => $this->event_id ?? factory(Event::class)->create(['date' => $this->eventDate]),
             'match_type_id' => $this->match_type_id ?? factory(MatchType::class)->create(),
             'stipulation_id' => $this->stipulation_id ?? null,
         ]);
@@ -33,7 +43,7 @@ class MatchFactory
         $this->addWrestlersForMatch($match);
 
         if ($this->titles->isNotEmpty()) {
-            $match->addTitles($this->titles);
+            $match->addTitles($this->titles->pluck('id'));
         }
 
         $this->populateDefaults();
@@ -122,18 +132,16 @@ class MatchFactory
     {
         if ($this->wrestlers->isEmpty()) {
             $numWrestlersToAddToMatch = $match->type->total_competitors;
-            $wrestlersForMatch = factory(Wrestler::class, (int) $numWrestlersToAddToMatch)->create(['hired_at' => $match->date->copy()->subMonths(2)]);
-            $concatenatedWrestlers = $this->wrestlers->merge($wrestlersForMatch);
-            $this->wrestlers = $concatenatedWrestlers;
         } else {
             $numWrestlersToAddToMatch = $match->type->total_competitors - $this->wrestlers->count();
-            $wrestlersForMatch = factory(Wrestler::class, (int) $numWrestlersToAddToMatch)->create(['hired_at' => $match->date->copy()->subMonths(2)]);
-            $concatenatedWrestlers = $this->wrestlers->merge($wrestlersForMatch);
-            $this->wrestlers = $concatenatedWrestlers;
         }
 
-        $splitWrestlers = $this->wrestlers->split($match->type->number_of_sides);
+        $wrestlersForMatch = factory(Wrestler::class, (int) $numWrestlersToAddToMatch)->create(['hired_at' => $match->date->copy()->subMonths(2)]);
+        $concatenatedWrestlers = $this->wrestlers->merge($wrestlersForMatch);
+        $this->wrestlers = $concatenatedWrestlers;
 
+        $splitWrestlers = $this->wrestlers->pluck('id')->split($match->type->number_of_sides)->flatten(1);
+        // dd($splitWrestlers);
         $match->addWrestlers($splitWrestlers);
     }
 
@@ -157,6 +165,20 @@ class MatchFactory
         }
 
         $match->addReferees($refereesForMatch);
+    }
+
+    public function scheduled()
+    {
+        $this->eventDate = Carbon::tomorrow();
+
+        return $this;
+    }
+
+    public function past()
+    {
+        $this->eventDate = Carbon::yesterday();
+
+        return $this;
     }
 
     public function populateDefaults()

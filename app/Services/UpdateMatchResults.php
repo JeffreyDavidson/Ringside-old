@@ -6,15 +6,30 @@ use App\Models\Match;
 
 class UpdateMatchResults
 {
+    /** @var array $matches */
     protected $matches;
+
+    /** @var \App\Models\Event $event */
     protected $event;
 
+    /**
+     * Create a new UpdateMatchResults instance.
+     *
+     * @param array $matches
+     * @param \App\Models\Event $event
+     * @return void
+     */
     public function __construct($matches, $event)
     {
         $this->matches = $matches;
         $this->event = $event;
     }
 
+    /**
+     * Update each match of an event with its result.
+     *
+     * @return void
+     */
     public function save()
     {
         foreach ($this->matches as $index => $match) {

@@ -73,7 +73,7 @@ class AddTitleTest extends TestCase
                         ]));
 
         tap(Title::first(), function ($title) use ($response) {
-            $this->assertTrue($title->is_active);
+            $this->assertTrue($title->isActive());
         });
     }
 
@@ -87,7 +87,7 @@ class AddTitleTest extends TestCase
                         ]));
 
         tap(Title::first(), function ($title) use ($response) {
-            $this->assertFalse($title->is_active);
+            $this->assertFalse($title->isActive());
         });
     }
 

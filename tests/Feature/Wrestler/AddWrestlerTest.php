@@ -91,7 +91,7 @@ class AddWrestlerTest extends TestCase
                         ]));
 
         tap(Wrestler::first(), function ($wrestler) use ($response) {
-            $this->assertTrue($wrestler->is_active);
+            $this->assertTrue($wrestler->isActive());
         });
     }
 
@@ -105,7 +105,7 @@ class AddWrestlerTest extends TestCase
                         ]));
 
         tap(Wrestler::first(), function ($wrestler) use ($response) {
-            $this->assertFalse($wrestler->is_active);
+            $this->assertFalse($wrestler->isActive());
         });
     }
 

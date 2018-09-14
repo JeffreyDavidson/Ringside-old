@@ -4,15 +4,30 @@ namespace App\Services;
 
 class AddMatchesToEvent
 {
+    /** @var array $matches */
     protected $matches;
+
+    /** @var \App\Models\Event $event */
     protected $event;
 
+    /**
+     * Create a new AddMatchesToEvent instance.
+     *
+     * @param array $matches
+     * @param \App\Models\Event $event
+     * @return void
+     */
     public function __construct($matches, $event)
     {
         $this->matches = $matches;
         $this->event = $event;
     }
 
+    /**
+     * Schedule all matches for an event.
+     *
+     * @return void
+     */
     public function schedule()
     {
         foreach ($this->matches as $match) {
@@ -23,24 +38,11 @@ class AddMatchesToEvent
             ]);
 
             if (! empty($match['titles'])) {
-                foreach ($match['titles'] as $titleId) {
-                    $matchObj->titles()->attach($titleId);
-                }
+                $matchObj->addTitles($match['titles']);
             }
 
-            if (! empty($match['referees'])) {
-                foreach ($match['referees'] as $refereeId) {
-                    $matchObj->referees()->attach($refereeId);
-                }
-            }
-
-            if (! empty($match['wrestlers'])) {
-                foreach ($match['wrestlers'] as $groupingId => $wrestlersArray) {
-                    foreach ($wrestlersArray as $wrestlerId) {
-                        $matchObj->wrestlers()->attach($wrestlerId, ['side_number' => $groupingId]);
-                    }
-                }
-            }
+            $matchObj->addReferees($match['referees']);
+            $matchObj->addWrestlers($match['wrestlers']);
         }
     }
 }

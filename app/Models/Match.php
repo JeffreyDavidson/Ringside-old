@@ -82,7 +82,7 @@ class Match extends Model
      */
     public function titles()
     {
-        return $this->belongsToMany(Title::class);
+        return $this->belongsToMany(Title::class)->with('currentChampion');
     }
 
     /**
@@ -144,7 +144,9 @@ class Match extends Model
      */
     public function addReferees($referees)
     {
-        $this->referees()->saveMany($referees);
+        foreach ($referees as $refereeId) {
+            $this->referees()->attach($refereeId);
+        }
     }
 
     /**
@@ -178,7 +180,7 @@ class Match extends Model
      */
     public function addTitles($titles)
     {
-        $this->titles()->saveMany($titles);
+        $this->titles()->attach($titles);
     }
 
     /**
@@ -212,10 +214,8 @@ class Match extends Model
      */
     public function addWrestlers($wrestlers)
     {
-        foreach ($wrestlers as $sideNumber => $wrestlersGroup) {
-            foreach ($wrestlersGroup as $wrestler) {
-                $this->addWrestler($wrestler, $sideNumber);
-            }
+        foreach ($wrestlers as $groupingId => $wrestlerIds) {
+            $this->wrestlers()->attach($wrestlerIds, ['side_number' => $groupingId]);
         }
     }
 
@@ -231,27 +231,12 @@ class Match extends Model
 
     public function setLosers($losers)
     {
-        // $this->losers()->sync($losers->flatten()->pluck('id'));
         $this->losers()->sync($losers);
     }
 
     public function setWinners($winners)
     {
         $this->winners()->sync($winners);
-
-        // if ($this->isTitleMatch()) {
-        //     $this->titles->each(function ($title) use ($winners) {
-        //         if (!$title->isVacant()) {
-        //         } else {
-        //             $title->setChampion($winners, $this->date);
-        //         }
-        //         // if (!$winners->first()->hasTitle($title) && $this->decision->titleCanChangeHands()) {
-        //         //     $title->setChampion($winners, $this->date);
-        //         // } else {
-        //         //     $title->currentChampion->increment('successful_defenses');
-        //         // }
-        //     });
-        // }
     }
 
     /**
@@ -286,5 +271,19 @@ class Match extends Model
     public function scopeWithMatchNumber(Builder $query, $matchNumber)
     {
         return $query->where('match_number', $matchNumber);
+    }
+
+    /**
+     * Scope a query to only include matches with a specific wrestler.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  int  $id
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWithWrestler(Builder $query, $id)
+    {
+        return $query->whereHas('wrestlers', function ($query) use ($id) {
+            $query->where('wrestlers.id', $id);
+        });
     }
 }

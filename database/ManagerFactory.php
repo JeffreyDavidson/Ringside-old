@@ -9,10 +9,18 @@ class ManagerFactory
     public $wrestler = null;
     public $hiredOn = null;
     public $firedOn = null;
+    public $states = null;
 
     public function __construct()
     {
         $this->resetProperties();
+    }
+
+    public function states($states)
+    {
+        $this->states = $states;
+
+        return $this;
     }
 
     public function create()
@@ -49,6 +57,22 @@ class ManagerFactory
     public function firedOn(Carbon $date)
     {
         $this->firedOn = $date;
+
+        return $this;
+    }
+
+    public function current()
+    {
+        $this->hiredOn = Carbon::today()->subWeeks(2);
+        $this->firedOn = null;
+
+        return $this;
+    }
+
+    public function past()
+    {
+        $this->hiredOn = Carbon::today()->subWeeks(2);
+        $this->firedOn = Carbon::yesterday();
 
         return $this;
     }

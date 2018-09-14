@@ -39,7 +39,7 @@ trait HasStatus
      */
     public function activate()
     {
-        if ($this->is_active) {
+        if ($this->isActive()) {
             throw new ModelIsActiveException;
         }
 
@@ -55,10 +55,20 @@ trait HasStatus
      */
     public function deactivate()
     {
-        if (! $this->is_active) {
+        if (! $this->isActive()) {
             throw new ModelIsInactiveException;
         }
 
         return $this->update(['is_active' => false]);
+    }
+
+    /**
+     * Checks to see if the model is active.
+     *
+     * @return bool
+     */
+    public function isActive()
+    {
+        return $this->is_active;
     }
 }

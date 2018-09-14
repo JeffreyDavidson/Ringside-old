@@ -102,7 +102,7 @@ trait HasRetirements
      */
     public function unretire()
     {
-        if ($this->is_active) {
+        if ($this->isActive()) {
             throw new ModelIsActiveException;
         }
 

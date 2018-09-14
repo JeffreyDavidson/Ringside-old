@@ -4,8 +4,8 @@ namespace App\Traits;
 
 use App\Models\Title;
 use App\Models\Championship;
-use App\Exceptions\WrestlerAlreadyHasTitleException;
-use App\Exceptions\WrestlerNotTitleChampionException;
+use App\Exceptions\ModelIsTitleChampionException;
+use App\Exceptions\ModelNotTitleChampionException;
 
 trait HasTitles
 {
@@ -77,13 +77,13 @@ trait HasTitles
      * @param  string  $date
      * @return $this
      *
-     * @throws App\Exceptions\WrestlerAlreadyHasTitleException
+     * @throws App\Exceptions\ModelIsTitleChampionException
      */
     public function winTitle(Title $title, $date)
     {
-        if (! blank($title->currentChampion)) {
+        if (! empty($title->currentChampion)) {
             if ($title->currentChampion->is($this)) {
-                throw new WrestlerAlreadyHasTitleException;
+                throw new ModelIsTitleChampionException;
             }
         }
 
@@ -101,12 +101,12 @@ trait HasTitles
      * @param  string  $date
      * @return $this
      *
-     * @throws App\Exceptions\WrestlerNotTitleChampionException
+     * @throws App\Exceptions\ModelNotTitleChampionException
      */
     public function loseTitle(Title $title, $date)
     {
         if (empty($title->currentChampion) || ! $title->currentChampion->is($this)) {
-            throw new WrestlerNotTitleChampionException;
+            throw new ModelNotTitleChampionException;
         }
 
         $this->titles()->updateExistingPivot($title->id, [
