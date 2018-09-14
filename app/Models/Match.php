@@ -286,5 +286,4 @@ class Match extends Model
             $query->where('wrestlers.id', $id);
         });
     }
-
 }

@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Retirement;
 use Carbon\Carbon;
+use App\Models\Retirement;
 use Faker\Generator as Faker;
 
 $factory->define(Retirement::class, function (Faker $faker) {

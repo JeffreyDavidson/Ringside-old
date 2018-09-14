@@ -169,7 +169,7 @@ class MatchFactory
 
     public function scheduled()
     {
-        $this->eventDate =  Carbon::tomorrow();
+        $this->eventDate = Carbon::tomorrow();
 
         return $this;
     }

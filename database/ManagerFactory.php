@@ -31,7 +31,7 @@ class ManagerFactory
 
         $this->wrestler->hireManager($manager, $this->hiredOn);
 
-        if (!is_null($this->firedOn)) {
+        if (! is_null($this->firedOn)) {
             $this->wrestler->fireManager($manager, $this->firedOn);
         }
 
@@ -79,15 +79,15 @@ class ManagerFactory
 
     public function resetProperties()
     {
-        if (!is_null($this->wrestler)) {
+        if (! is_null($this->wrestler)) {
             $this->wrestler = null;
         }
 
-        if (!is_null($this->hiredOn)) {
+        if (! is_null($this->hiredOn)) {
             $this->hiredOn = null;
         }
 
-        if (!is_null($this->firedOn)) {
+        if (! is_null($this->firedOn)) {
             $this->firedOn = null;
         }
     }
