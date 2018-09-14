@@ -38,9 +38,7 @@ class WrestlerInvolvedInMatch implements Rule
     {
         return Match::withMatchNumber($this->matchNumber)
             ->forEvent($this->event)
-            ->whereHas('wrestlers', function ($query) use ($value) {
-                $query->where('wrestlers.id', $value);
-            })
+            ->withWrestler($value)
             ->exists();
     }
 

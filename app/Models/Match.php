@@ -144,7 +144,9 @@ class Match extends Model
      */
     public function addReferees($referees)
     {
-        $this->referees()->saveMany($referees);
+        foreach ($referees as $refereeId) {
+            $this->referees()->attach($refereeId);
+        }
     }
 
     /**
@@ -178,7 +180,7 @@ class Match extends Model
      */
     public function addTitles($titles)
     {
-        $this->titles()->saveMany($titles);
+        $this->titles()->attach($titles);
     }
 
     /**
@@ -212,10 +214,8 @@ class Match extends Model
      */
     public function addWrestlers($wrestlers)
     {
-        foreach ($wrestlers as $sideNumber => $wrestlersGroup) {
-            foreach ($wrestlersGroup as $wrestler) {
-                $this->addWrestler($wrestler, $sideNumber);
-            }
+        foreach ($wrestlers as $groupingId => $wrestlerIds) {
+            $this->wrestlers()->attach($wrestlerIds, ['side_number' => $groupingId]);
         }
     }
 
@@ -272,4 +272,19 @@ class Match extends Model
     {
         return $query->where('match_number', $matchNumber);
     }
+
+    /**
+     * Scope a query to only include matches with a specific wrestler.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  int  $id
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWithWrestler(Builder $query, $id)
+    {
+        return $query->whereHas('wrestlers', function ($query) use ($id) {
+            $query->where('wrestlers.id', $id);
+        });
+    }
+
 }

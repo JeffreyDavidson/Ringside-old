@@ -22,8 +22,8 @@ class MatchPresenterTest extends TestCase
         $wrestlerB = factory(Wrestler::class)->create(['name' => 'Wrestler B']);
         $match = factory(Match::class)->create();
         $match->addWrestlers([
-            0 => [$wrestlerA],
-            1 => [$wrestlerB]
+            0 => [$wrestlerA->id],
+            1 => [$wrestlerB->id]
         ]);
 
         $this->assertEquals('Wrestler A vs. Wrestler B', $match->present()->wrestlers);
@@ -38,8 +38,8 @@ class MatchPresenterTest extends TestCase
         $wrestlerD = factory(Wrestler::class)->create(['name' => 'Wrestler D']);
         $match = factory(Match::class)->create();
         $match->addWrestlers([
-            0 => [$wrestlerA, $wrestlerC],
-            1 => [$wrestlerB, $wrestlerD]
+            0 => [$wrestlerA->id, $wrestlerC->id],
+            1 => [$wrestlerB->id, $wrestlerD->id]
         ]);
 
         $this->assertEquals('Wrestler A & Wrestler C vs. Wrestler B & Wrestler D', $match->present()->wrestlers);

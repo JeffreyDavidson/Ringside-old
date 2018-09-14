@@ -43,7 +43,7 @@ class MatchFactory
         $this->addWrestlersForMatch($match);
 
         if ($this->titles->isNotEmpty()) {
-            $match->addTitles($this->titles);
+            $match->addTitles($this->titles->pluck('id'));
         }
 
         $this->populateDefaults();
@@ -132,18 +132,16 @@ class MatchFactory
     {
         if ($this->wrestlers->isEmpty()) {
             $numWrestlersToAddToMatch = $match->type->total_competitors;
-            $wrestlersForMatch = factory(Wrestler::class, (int) $numWrestlersToAddToMatch)->create(['hired_at' => $match->date->copy()->subMonths(2)]);
-            $concatenatedWrestlers = $this->wrestlers->merge($wrestlersForMatch);
-            $this->wrestlers = $concatenatedWrestlers;
         } else {
             $numWrestlersToAddToMatch = $match->type->total_competitors - $this->wrestlers->count();
-            $wrestlersForMatch = factory(Wrestler::class, (int) $numWrestlersToAddToMatch)->create(['hired_at' => $match->date->copy()->subMonths(2)]);
-            $concatenatedWrestlers = $this->wrestlers->merge($wrestlersForMatch);
-            $this->wrestlers = $concatenatedWrestlers;
         }
 
-        $splitWrestlers = $this->wrestlers->split($match->type->number_of_sides);
+        $wrestlersForMatch = factory(Wrestler::class, (int) $numWrestlersToAddToMatch)->create(['hired_at' => $match->date->copy()->subMonths(2)]);
+        $concatenatedWrestlers = $this->wrestlers->merge($wrestlersForMatch);
+        $this->wrestlers = $concatenatedWrestlers;
 
+        $splitWrestlers = $this->wrestlers->pluck('id')->split($match->type->number_of_sides)->flatten(1);
+        // dd($splitWrestlers);
         $match->addWrestlers($splitWrestlers);
     }
 

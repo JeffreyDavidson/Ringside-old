@@ -17,11 +17,7 @@ class MatchPresenter extends Presenter
             return $this->model->type->name;
         }
 
-        $groupedWrestlers = $this->model->wrestlers->groupBy(function ($item, $key) {
-            return $item->pivot->side_number;
-        });
-
-        return $groupedWrestlers->map(function ($group) {
+        return $this->model->groupedWrestlersBySide()->map(function ($group) {
             return $group->pluck('name')->implode(' & ');
         })->implode(' vs. ');
     }
@@ -45,9 +41,7 @@ class MatchPresenter extends Presenter
      */
     public function match_number()
     {
-        $numberOfMatches = $this->model->event->matches()->count(); // use ->matches->count() if relation already loaded to avoid an extra query
-
-        if ($this->model->match_number == $numberOfMatches) {
+        if ($this->model->match_number == $this->model->event->matches()->count()) {
             return 'Main Event';
         }
 
