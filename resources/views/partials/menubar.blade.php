@@ -13,42 +13,121 @@
                     <li class="site-menu-category">Administrator</li>
                     @can('index', \App\Models\Wrestler::class)
                         <li class="site-menu-item has-sub">
-                            <a href="{{ route('wrestlers.index') }}">
+                            <a href="javascript:void(0)">
                                 <i class="site-menu-icon icon fa-group" aria-hidden="true"></i>
                                 <span class="site-menu-title">Wrestlers</span>
+                                <span class="site-menu-arrow"></span>
                             </a>
+                            <ul class="site-menu-sub">
+                                @can('create', App\Models\Wrestler::class)
+                                    <li class="site-menu-item">
+                                        <a href="{{ route('wrestlers.create') }}"><span class="site-menu-title">Create Wrestler</span></a>
+                                    </li>
+                                @endcan
+                                <li class="site-menu-item">
+                                    <a href="{{ route('wrestlers.index') }}"><span class="site-menu-title">View All</span></a>
+                                </li>
+                                <li class="site-menu-item">
+                                    <a href="{{ route('active-wrestlers.index') }}"><span class="site-menu-title">Active</span></a>
+                                </li>
+                                <li class="site-menu-item">
+                                    <a href="{{ route('inactive-wrestlers.index') }}"><span class="site-menu-title">Inactive</span></a>
+                                </li>
+                                <li class="site-menu-item">
+                                    <a href="{{ route('retired-wrestlers.index') }}"><span class="site-menu-title">Retired</span></a>
+                                </li>
+                            </ul>
                         </li>
                     @endcan
                     @can('index', \App\Models\Event::class)
                         <li class="site-menu-item has-sub">
-                            <a href="{{ route('events.index') }}">
+                            <a href="javascript:void(0)">
                                 <i class="site-menu-icon icon fa-calendar" aria-hidden="true"></i>
                                 <span class="site-menu-title">Events</span>
+                                <span class="site-menu-arrow"></span>
                             </a>
+                            <ul class="site-menu-sub">
+                                @can('create', App\Models\Event::class)
+                                    <li class="site-menu-item">
+                                        <a href="{{ route('events.create') }}"><span class="site-menu-title">Schedule Event</span></a>
+                                    </li>
+                                @endcan
+                                <li class="site-menu-item">
+                                    <a href="{{ route('events.index') }}"><span class="site-menu-title">View All</span></a>
+                                </li>
+                                <li class="site-menu-item">
+                                    <a href="{{ route('scheduled-events.index') }}"><span class="site-menu-title">Scheduled</span></a>
+                                </li>
+                                <li class="site-menu-item">
+                                    <a href="{{ route('past-events.index') }}"><span class="site-menu-title">Past</span></a>
+                                </li>
+                                <li class="site-menu-item">
+                                    <a href="{{ route('archived-events.index') }}"><span class="site-menu-title">Archived</span></a>
+                                </li>
+                            </ul>
                         </li>
                     @endcan
                     @can('index', \App\Models\Title::class)
                         <li class="site-menu-item">
-                            <a href="{{ route('titles.index') }}">
+                            <a href="javascript:void(0)">
                                 <i class="site-menu-icon icon fa-trophy" aria-hidden="true"></i>
                                 <span class="site-menu-title">Titles</span>
+                                <span class="site-menu-arrow"></span>
                             </a>
+                            <ul class="site-menu-sub">
+                                @can('create', App\Models\Title::class)
+                                    <li class="site-menu-item">
+                                        <a href="{{ route('titles.create') }}"><span class="site-menu-title">Create Title</span></a>
+                                    </li>
+                                @endcan
+                                <li class="site-menu-item">
+                                    <a href="{{ route('titles.index') }}"><span class="site-menu-title">View All</span></a>
+                                </li>
+                                <li class="site-menu-item">
+                                    <a href="{{ route('active-titles.index') }}"><span class="site-menu-title">Active</span></a>
+                                </li>
+                                <li class="site-menu-item">
+                                    <a href="{{ route('retired-titles.index') }}"><span class="site-menu-title">Retired</span></a>
+                                </li>
+                            </ul>
                         </li>
                     @endcan
                     @can('index', \App\Models\Stipulation::class)
                         <li class="site-menu-item">
-                            <a href="{{ route('stipulations.index') }}">
+                            <a href="javascript:void(0)">
                                 <i class="site-menu-icon icon fa-gavel" aria-hidden="true"></i>
                                 <span class="site-menu-title">Stipulations</span>
+                                <span class="site-menu-arrow"></span>
                             </a>
+                            <ul class="site-menu-sub">
+                                @can('create', App\Models\Stipulation::class)
+                                    <li class="site-menu-item">
+                                        <a href="{{ route('stipulations.create') }}"><span class="site-menu-title">Create Stipulation</span></a>
+                                    </li>
+                                @endcan
+                                <li class="site-menu-item">
+                                    <a href="{{ route('stipulations.index') }}"><span class="site-menu-title">View All</span></a>
+                                </li>
+                            </ul>
                         </li>
                     @endcan
                     @can('index', \App\Models\Venue::class)
                         <li class="site-menu-item">
-                            <a href="{{ route('venues.index') }}">
+                            <a href="javascript:void(0)">
                                 <i class="site-menu-icon icon fa-building" aria-hidden="true"></i>
                                 <span class="site-menu-title">Venues</span>
+                                <span class="site-menu-arrow"></span>
                             </a>
+                            <ul class="site-menu-sub">
+                                @can('create', App\Models\Venue::class)
+                                    <li class="site-menu-item">
+                                        <a href="{{ route('venues.create') }}"><span class="site-menu-title">Create Venue</span></a>
+                                    </li>
+                                @endcan
+                                <li class="site-menu-item">
+                                    <a href="{{ route('venues.index') }}"><span class="site-menu-title">View All</span></a>
+                                </li>
+                            </ul>
                         </li>
                     @endcan
                 </ul>

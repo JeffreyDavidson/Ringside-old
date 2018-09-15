@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Events;
 
 use App\Models\Event;
+use App\Http\Controllers\Controller;
 use App\Services\UpdateMatchResults;
 use App\Http\Requests\EventResultsFormRequest;
 

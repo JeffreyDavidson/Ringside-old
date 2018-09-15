@@ -1,10 +1,14 @@
 {
-  "/js/app.js": "/js/app.js",
-  "/css/app.css": "/css/app.css",
-  "/css/plugins.css": "/css/plugins.css",
-  "/css/fonts.css": "/css/fonts.css",
-  "/js/core.js": "/js/core.js",
-  "/js/plugins.js": "/js/plugins.js",
-  "/js/scripts.js": "/js/scripts.js",
-  "/js/page.js": "/js/page.js"
+    "/js/app.js": "/js/app.js",
+    "/css/app.css": "/css/app.css",
+    "/css/plugins.css": "/css/plugins.css",
+    "/css/fonts.css": "/css/fonts.css",
+    "/js/core.js": "/js/core.js",
+    "/js/plugins.js": "/js/plugins.js",
+    "/js/scripts.js": "/js/scripts.js",
+    "/js/page.js": "/js/page.js",
+    "/js/breakpoints.js": "/js/breakpoints.js",
+    "/js/media.match.js": "/js/media.match.js",
+    "/js/respond.min.js": "/js/respond.min.js",
+    "/js/script.js": "/js/script.js"
 }

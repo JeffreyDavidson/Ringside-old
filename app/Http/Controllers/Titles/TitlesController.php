@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Titles;
 
 use App\Models\Title;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\TitleEditFormRequest;
 use App\Http\Requests\TitleCreateFormRequest;
 

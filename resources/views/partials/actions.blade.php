@@ -6,9 +6,9 @@
     @endcan
 @endif
 
-@if ($actions->contains('show'))
-    @can('show', $model)
-        <a class="btn btn-sm btn-icon btn-flat btn-default" href="{{ route($resource.'.show', $model) }}" data-toggle="tooltip" data-original-title="Show">
+@if ($actions->contains('view'))
+    @can('view', $model)
+        <a class="btn btn-sm btn-icon btn-flat btn-default" href="{{ route($resource.'.show', $model) }}" data-toggle="tooltip" data-original-title="View">
             <i class="icon wb-eye" aria-hidden="true"></i>
         </a>
     @endcan
@@ -28,9 +28,8 @@
 
 @if ($actions->contains('retire'))
     @can('retire', $model)
-        <form style="display: inline-block;" action="{{ route('retired-'.$resource.'.store') }}" method="POST">
+        <form style="display: inline-block;" action="{{ route('retired-'.$resource.'.store', $model->id) }}" method="POST">
             {{ csrf_field() }}
-            <input type="hidden" name="{{ $field }}" value="{{ $model->id }}">
             <button style="cursor: pointer" class="btn btn-sm btn-icon btn-flat btn-default" type="submit" data-toggle="tooltip" data-original-title="Retire">
                 <i class="icon wb-star" aria-hidden="true"></i>
             </button>
@@ -55,5 +54,29 @@
         <a class="btn btn-sm btn-icon btn-flat btn-default" href="{{ route($resource.'.store', $model) }}" data-toggle="tooltip" data-original-title="Archive">
             <i class="icon wb-star" aria-hidden="true"></i>
         </a>
+    @endcan
+@endif
+
+@if ($actions->contains('activate'))
+    @can('update', $model)
+        <form style="display: inline-block;" action="{{ route('inactive-'.$resource.'.activate', $model->id) }}" method="POST">
+            {{ csrf_field() }}
+            {{ method_field('DELETE') }}
+            <button style="cursor: pointer" class="btn btn-sm btn-icon btn-flat btn-default" type="submit" data-toggle="tooltip" data-original-title="Activate">
+                <i class="icon wb-star" aria-hidden="true"></i>
+            </button>
+        </form>
+    @endcan
+@endif
+
+@if ($actions->contains('deactivate'))
+    @can('update', $model)
+        <form style="display: inline-block;" action="{{ route('active-'.$resource.'.deactivate', $model->id) }}" method="POST">
+            {{ csrf_field() }}
+            {{ method_field('DELETE') }}
+            <button style="cursor: pointer" class="btn btn-sm btn-icon btn-flat btn-default" type="submit" data-toggle="tooltip" data-original-title="Deactivate">
+                <i class="icon wb-close" aria-hidden="true"></i>
+            </button>
+        </form>
     @endcan
 @endif

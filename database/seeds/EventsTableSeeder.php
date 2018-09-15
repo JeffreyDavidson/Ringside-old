@@ -135,7 +135,9 @@ class EventsTableSeeder extends Seeder
     {
         // If this is a title match give the champion a 10% chance to retain their title.
         if ($match->isTitleMatch()) {
-            $champions = $match->titles->pluck('currentChampion');
+            $champions = $match->titles->filter(function ($title, $key) { 
+                return ! $title->isVacant();
+            })->pluck('currentChampion');
             if ($champions->isEmpty()) {
                 $winners = $match->groupedWrestlersBySide()->random()->modelKeys();
                 $losers = array_diff($match->wrestlers->modelKeys(), $winners);
@@ -146,7 +148,7 @@ class EventsTableSeeder extends Seeder
                 return;
             } elseif ($this->chance(10)) {
                 // Get all of teh groupWrestlersBySide and then reject any side that has the champions collection
-                $losers = $match->groupedWrestlersBySides->reject(function (Collection $side) use ($champions) {
+                $losers = $match->groupedWrestlersBySide()->reject(function (Collection $side) use ($champions) {
                     return $side->has($champions->first()->id);
                 });
 
@@ -159,8 +161,6 @@ class EventsTableSeeder extends Seeder
                 // Get the grouped wrestlers for the match and then eliminate any side that includes the champions collection in that
                 //side and then get a random side and then get their model keys to send to winners.
                 $winners = $match->groupedWrestlersBySide()->reject(function (Collection $side) use ($champions) {
-                    dd($side);
-
                     return $side->has($champions);
                 })->random()->modelKeys();
 

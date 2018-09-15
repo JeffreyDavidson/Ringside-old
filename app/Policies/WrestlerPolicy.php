@@ -85,4 +85,15 @@ class WrestlerPolicy
     {
         return $user->hasPermission('retire-wrestler');
     }
+
+    /**
+     * Checks to see if the user has permission to retire a roster member.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function unretire(User $user)
+    {
+        return $user->hasPermission('unretire-wrestler');
+    }
 }

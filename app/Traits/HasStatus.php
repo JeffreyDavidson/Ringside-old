@@ -27,7 +27,13 @@ trait HasStatus
      */
     public function scopeInactive(Builder $query)
     {
-        $query->where('is_active', false);
+        $query->where('is_active', false)->whereDoesntHave('retirements', function ($query) {
+            $query->whereNull('ended_at');
+        })->whereDoesntHave('injuries', function ($query) {
+            $query->whereNull('healed_at');
+        })->whereDoesntHave('suspensions', function ($query) {
+            $query->whereNull('ended_at');
+        });
     }
 
     /**
@@ -55,7 +61,7 @@ trait HasStatus
      */
     public function deactivate()
     {
-        if (! $this->isActive()) {
+        if (!$this->isActive()) {
             throw new ModelIsInactiveException;
         }
 

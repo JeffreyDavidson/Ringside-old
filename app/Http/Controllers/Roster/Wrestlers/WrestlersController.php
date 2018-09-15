@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Roster\Wrestlers;
 
 use App\Models\Wrestler;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\WrestlerEditFormRequest;
 use App\Http\Requests\WrestlerCreateFormRequest;
 
@@ -10,18 +11,6 @@ class WrestlersController extends Controller
 {
     /** @var string */
     protected $authorizeResource = Wrestler::class;
-
-    /**
-     * Display a listing of all the wrestlers.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function index()
-    {
-        $wrestlers = Wrestler::paginate(10);
-
-        return view('wrestlers.index', compact('wrestlers'));
-    }
 
     /**
      * Show the form for creating a new wrestler.
@@ -44,7 +33,7 @@ class WrestlersController extends Controller
     {
         Wrestler::create($request->all());
 
-        return redirect()->route('wrestlers.index');
+        return redirect()->route('active-wrestlers.index');
     }
 
     /**
@@ -80,7 +69,7 @@ class WrestlersController extends Controller
     {
         $wrestler->update($request->all());
 
-        return redirect()->route('wrestlers.index');
+        return redirect()->route('active-wrestlers.index');
     }
 
     /**
@@ -93,6 +82,6 @@ class WrestlersController extends Controller
     {
         $wrestler->delete();
 
-        return redirect()->route('wrestlers.index');
+        return redirect()->route('active-wrestlers.index');
     }
 }

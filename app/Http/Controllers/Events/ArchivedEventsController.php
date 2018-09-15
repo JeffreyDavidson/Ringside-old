@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Events;
 
 use App\Models\Event;
+use App\Http\Controllers\Controller;
 
 class ArchivedEventsController extends Controller
 {
@@ -20,6 +21,18 @@ class ArchivedEventsController extends Controller
             'store' => 'archive',
             'destroy' => 'restore',
         ];
+    }
+
+    /**
+     * Display a listing of all achived events.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function index()
+    {
+        $events = Event::archived()->with('venue')->paginate(10);
+
+        return view('events.archived', compact('events'));
     }
 
     /**

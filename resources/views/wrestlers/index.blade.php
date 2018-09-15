@@ -7,7 +7,7 @@
 @section('content')
     <div class="panel panel-bordered panel-primary">
         <div class="panel-heading clearfix">
-            <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-group"></i>List of Wrestlers</h3>
+            <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-group"></i>List of Active Wrestlers</h3>
             @can('create', App\Models\Wrestler::class)
                 <div class="panel-actions">
                     <a class="btn btn-default pull-right" href="{{ route('wrestlers.create') }}">Create Wrestler</a>
@@ -15,8 +15,28 @@
             @endcan
         </div>
         <div class="panel-body container-fluid">
-            @include('wrestlers.partials.table')
-            {{ $wrestlers->links() }}
+            @include('wrestlers.partials.table', ['wrestlers' => $activeWrestlers, 'actions' => collect(['edit', 'view', 'delete', 'deactivate', 'retire'])])
+            {{ $activeWrestlers->links() }}
+        </div>
+    </div>
+
+    <div class="panel panel-bordered panel-primary">
+        <div class="panel-heading clearfix">
+            <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-group"></i>List of Inactive Wrestlers</h3>
+        </div>
+        <div class="panel-body container-fluid">
+            @include('wrestlers.partials.table', ['wrestlers' => $inactiveWrestlers, 'actions' => collect(['edit', 'view', 'delete', 'activate', 'retire'])])
+            {{ $inactiveWrestlers->links() }}
+        </div>
+    </div>
+
+    <div class="panel panel-bordered panel-primary">
+        <div class="panel-heading clearfix">
+            <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-group"></i>List of Retired Wrestlers</h3>
+        </div>
+        <div class="panel-body container-fluid">
+            @include('wrestlers.partials.table', ['wrestlers' => $retiredWrestlers, 'actions' => collect(['edit', 'view', 'delete', 'unretire'])])
+            {{ $retiredWrestlers->links() }}
         </div>
     </div>
 @endsection

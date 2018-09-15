@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Roster\Wrestlers;
 
 use App\Models\Wrestler;
+use App\Http\Controllers\Controller;
 
 class RetiredWrestlersController extends Controller
 {
@@ -18,18 +19,31 @@ class RetiredWrestlersController extends Controller
     {
         return [
             'store' => 'retire',
-            'destroy' => 'activate',
+            'destroy' => 'unretire',
         ];
+    }
+
+    /**
+     * Display a listing of all retired wrestlers.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function index()
+    {
+        $wrestlers = Wrestler::retired()->paginate(10);
+
+        return view('wrestlers.retired', compact('wrestlers'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Wrestler  $wrestler
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Wrestler $wrestler)
     {
+        dd($wrestler);
         $wrestler->retire();
 
         return redirect()->route('wrestlers.index');
@@ -43,7 +57,7 @@ class RetiredWrestlersController extends Controller
      */
     public function destroy(Wrestler $wrestler)
     {
-        $wrestler->activate();
+        $wrestler->unretire();
 
         return redirect()->route('wrestlers.index');
     }

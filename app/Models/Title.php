@@ -93,6 +93,6 @@ class Title extends Model
 
     public function isVacant()
     {
-        return blank($this->currentChampion);
+        return empty($this->currentChampion);
     }
 }

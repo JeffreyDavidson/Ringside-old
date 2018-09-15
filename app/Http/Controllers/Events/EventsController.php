@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Events;
 
 use App\Models\Event;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\EventEditFormRequest;
 use App\Http\Requests\EventCreateFormRequest;
 
@@ -20,7 +21,6 @@ class EventsController extends Controller
     {
         $scheduledEvents = Event::scheduled()->with('venue')->paginate(10);
         $previousEvents = Event::past()->with('venue')->paginate(10);
-        $archivedEvents = Event::past()->archived()->with('venue')->paginate(10);
 
         return view('events.index', compact('scheduledEvents', 'previousEvents', 'archivedEvents'));
     }

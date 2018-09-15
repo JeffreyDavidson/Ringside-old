@@ -26,6 +26,7 @@ class RolesAndPermissionTableSeeder extends Seeder
         $viewWrestler = Permission::create(['name' => 'View Wrestler', 'slug' => 'view-wrestler']);
         $deleteWrestler = Permission::create(['name' => 'Delete Wrestler', 'slug' => 'delete-wrestler']);
         $retireWrestler = Permission::create(['name' => 'Retire Wrestler', 'slug' => 'retire-wrestler']);
+        $unretireWrestler = Permission::create(['name' => 'Unretire Wrestler', 'slug' => 'unretire-wrestler']);
 
         $viewTitles = Permission::create(['name' => 'View Titles', 'slug' => 'view-titles']);
         $createTitle = Permission::create(['name' => 'Create Title', 'slug' => 'create-title']);
@@ -78,6 +79,7 @@ class RolesAndPermissionTableSeeder extends Seeder
         $admin->givePermissionTo($viewWrestler);
         $admin->givePermissionTo($deleteWrestler);
         $admin->givePermissionTo($retireWrestler);
+        $admin->givePermissionTo($unretireWrestler);
 
         $admin->givePermissionTo($viewTitles);
         $admin->givePermissionTo($createTitle);
@@ -130,6 +132,7 @@ class RolesAndPermissionTableSeeder extends Seeder
         $superAdmin->givePermissionTo($viewWrestler);
         $superAdmin->givePermissionTo($deleteWrestler);
         $superAdmin->givePermissionTo($retireWrestler);
+        $superAdmin->givePermissionTo($unretireWrestler);
 
         $superAdmin->givePermissionTo($viewTitles);
         $superAdmin->givePermissionTo($createTitle);

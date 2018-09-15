@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Events;
 
 use App\Models\Event;
 use App\Models\Match;
 use App\Services\AddMatchesToEvent;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\MatchCreateFormRequest;
 
 class MatchesController extends Controller

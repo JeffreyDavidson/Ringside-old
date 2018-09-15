@@ -7,16 +7,18 @@
         <th>Actions</th>
     </thead>
     <tbody>
-        @foreach($wrestlers as $wrestler)
+        @forelse($wrestlers as $wrestler)
             <tr>
                 <td>{{ $wrestler->id }}</td>
                 <td>{{ $wrestler->name }}</td>
                 <td>{{ $wrestler->present()->height }}</td>
                 <td>{{ $wrestler->weight }} lbs.</td>
                 <td>
-                    @include('partials.actions', ['resource' => 'wrestlers', 'model' => $wrestler, 'actions' => collect(['edit', 'show', 'delete', 'retire']), 'field' => 'wrestler_id'])
+                    @include('partials.actions', ['resource' => 'wrestlers', 'model' => $wrestler, 'actions' => $actions, 'field' => 'wrestler_id'])
                 </td>
             </tr>
-        @endforeach
+        @empty
+            <td colspan="5">No wrestlers of this type.</td>   
+        @endforelse
     </tbody>
 </table>
