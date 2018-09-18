@@ -25,9 +25,6 @@
                                     </li>
                                 @endcan
                                 <li class="site-menu-item">
-                                    <a href="{{ route('wrestlers.index') }}"><span class="site-menu-title">View All</span></a>
-                                </li>
-                                <li class="site-menu-item">
                                     <a href="{{ route('active-wrestlers.index') }}"><span class="site-menu-title">Active</span></a>
                                 </li>
                                 <li class="site-menu-item">
@@ -53,9 +50,6 @@
                                     </li>
                                 @endcan
                                 <li class="site-menu-item">
-                                    <a href="{{ route('events.index') }}"><span class="site-menu-title">View All</span></a>
-                                </li>
-                                <li class="site-menu-item">
                                     <a href="{{ route('scheduled-events.index') }}"><span class="site-menu-title">Scheduled</span></a>
                                 </li>
                                 <li class="site-menu-item">
@@ -80,9 +74,6 @@
                                         <a href="{{ route('titles.create') }}"><span class="site-menu-title">Create Title</span></a>
                                     </li>
                                 @endcan
-                                <li class="site-menu-item">
-                                    <a href="{{ route('titles.index') }}"><span class="site-menu-title">View All</span></a>
-                                </li>
                                 <li class="site-menu-item">
                                     <a href="{{ route('active-titles.index') }}"><span class="site-menu-title">Active</span></a>
                                 </li>

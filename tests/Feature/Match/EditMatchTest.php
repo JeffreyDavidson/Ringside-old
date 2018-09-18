@@ -29,7 +29,7 @@ class EditMatchTest extends TestCase
     public function users_who_have_permission_can_view_the_edit_match_page()
     {
         $response = $this->actingAs($this->authorizedUser)
-                        ->get(route('event.matches.edit', ['event' => $this->event->id, 'match' => $this->match->id]));
+                        ->get(route('matches.edit', ['event' => $this->event->id, 'match' => $this->match->id]));
 
         $response->assertSuccessful();
     }
@@ -38,7 +38,7 @@ class EditMatchTest extends TestCase
     public function users_who_dont_have_permission_cannot_view_the_edit_match_page()
     {
         $response = $this->actingAs($this->unauthorizedUser)
-                        ->get(route('event.matches.edit', ['event' => $this->event->id, 'match' => $this->match->id]));
+                        ->get(route('matches.edit', ['event' => $this->event->id, 'match' => $this->match->id]));
 
         $response->assertStatus(403);
     }
@@ -46,7 +46,7 @@ class EditMatchTest extends TestCase
     /** @test */
     public function guests_cannot_view_the_edit_match_page()
     {
-        $response = $this->get(route('event.matches.edit', ['event' => $this->event->id, 'match' => $this->match->id]));
+        $response = $this->get(route('matches.edit', ['event' => $this->event->id, 'match' => $this->match->id]));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));
@@ -56,7 +56,7 @@ class EditMatchTest extends TestCase
     public function returns_404_on_invalid_event_id()
     {
         $response = $this->actingAs($this->authorizedUser)
-                        ->get(route('event.matches.edit', ['event' => null, 'match' => $this->match->id]));
+                        ->get(route('matches.edit', ['event' => null, 'match' => $this->match->id]));
 
         $response->assertStatus(404);
     }
@@ -65,7 +65,7 @@ class EditMatchTest extends TestCase
     public function returns_404_on_invalid_match_id()
     {
         $response = $this->actingAs($this->authorizedUser)
-                        ->get(route('event.matches.edit', ['event' => $this->event->id, 'match' => null]));
+                        ->get(route('matches.edit', ['event' => $this->event->id, 'match' => null]));
 
         $response->assertStatus(404);
     }

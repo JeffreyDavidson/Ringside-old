@@ -45,7 +45,7 @@ class ArchivedEventsController extends Controller
     {
         $event->archive();
 
-        return redirect()->route('events.index');
+        return redirect()->route('archived-events.index');
     }
 
     /**
@@ -58,6 +58,6 @@ class ArchivedEventsController extends Controller
     {
         $event->activate();
 
-        return redirect()->route('events.index');
+        return redirect()->route('past-events.index');
     }
 }

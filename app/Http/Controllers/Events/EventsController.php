@@ -21,6 +21,7 @@ class EventsController extends Controller
     {
         $scheduledEvents = Event::scheduled()->with('venue')->paginate(10);
         $previousEvents = Event::past()->with('venue')->paginate(10);
+        $archivedEvents = Event::archived()->with('venue')->paginate(10);
 
         return view('events.index', compact('scheduledEvents', 'previousEvents', 'archivedEvents'));
     }
@@ -46,7 +47,7 @@ class EventsController extends Controller
     {
         Event::create($request->all());
 
-        return redirect()->route('events.index');
+        return redirect()->route('scheduled-events.index');
     }
 
     /**
@@ -82,7 +83,7 @@ class EventsController extends Controller
     {
         $event->update($request->all());
 
-        return redirect()->route('events.index');
+        return redirect()->route('scheduled-events.index');
     }
 
     /**
@@ -95,6 +96,6 @@ class EventsController extends Controller
     {
         $event->delete();
 
-        return redirect()->route('events.index');
+        return redirect()->route('scheduled-events.index');
     }
 }

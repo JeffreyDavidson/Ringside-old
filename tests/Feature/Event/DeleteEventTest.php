@@ -22,23 +22,23 @@ class DeleteEventTest extends TestCase
     }
 
     /** @test */
-    public function users_who_have_permission_can_delete_a_event()
+    public function users_who_have_permission_can_delete_a_scheduled__event()
     {
         $response = $this->actingAs($this->authorizedUser)
-                        ->from(route('events.index'))
+                        ->from(route('scheduled-events.index'))
                         ->delete(route('events.destroy', $this->event->id));
 
         $response->assertStatus(302);
         $this->assertSoftDeleted('events', ['id' => $this->event->id, 'name' => $this->event->name]);
         $this->assertNotNull($this->event->fresh()->deleted_at);
-        $response->assertRedirect(route('events.index'));
+        $response->assertRedirect(route('scheduled-events.index'));
     }
 
     /** @test */
     public function users_who_dont_have_permission_cannot_delete_a_event()
     {
         $response = $this->actingAs($this->unauthorizedUser)
-                        ->from(route('events.index'))
+                        ->from(route('scheduled-events.index'))
                         ->delete(route('events.destroy', $this->event->id));
 
         $response->assertStatus(403);

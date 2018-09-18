@@ -44,6 +44,7 @@ class AddEventTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_view_the_add_event_page()
     {
+        $this->withoutExceptionHandling();
         $this->response = $this->actingAs($this->authorizedUser)
                             ->get(route('events.create'));
 
@@ -74,7 +75,7 @@ class AddEventTest extends TestCase
     {
         $this->response = $this->actingAs($this->authorizedUser)
                         ->from(route('events.create'))
-                        ->post(route('events.index'), $this->validParams([
+                        ->post(route('events.store'), $this->validParams([
                             'name' => '',
                         ]));
 
@@ -88,7 +89,7 @@ class AddEventTest extends TestCase
 
         $this->response = $this->actingAs($this->authorizedUser)
                         ->from(route('events.create'))
-                        ->post(route('events.index'), $this->validParams([
+                        ->post(route('events.store'), $this->validParams([
                             'name' => 'Event Name',
                         ]));
 
@@ -100,7 +101,7 @@ class AddEventTest extends TestCase
     {
         $this->response = $this->actingAs($this->authorizedUser)
                         ->from(route('events.create'))
-                        ->post(route('events.index'), $this->validParams([
+                        ->post(route('events.store'), $this->validParams([
                             'slug' => '',
                         ]));
 
@@ -114,7 +115,7 @@ class AddEventTest extends TestCase
 
         $this->response = $this->actingAs($this->authorizedUser)
                         ->from(route('events.create'))
-                        ->post(route('events.index'), $this->validParams([
+                        ->post(route('events.store'), $this->validParams([
                             'slug' => 'event-slug',
                         ]));
 
@@ -126,7 +127,7 @@ class AddEventTest extends TestCase
     {
         $this->response = $this->actingAs($this->authorizedUser)
                         ->from(route('events.create'))
-                        ->post(route('events.index'), $this->validParams([
+                        ->post(route('events.store'), $this->validParams([
                             'date' => '',
                         ]));
 
@@ -138,7 +139,7 @@ class AddEventTest extends TestCase
     {
         $this->response = $this->actingAs($this->authorizedUser)
                         ->from(route('events.create'))
-                        ->post(route('events.index'), $this->validParams([
+                        ->post(route('events.store'), $this->validParams([
                             'date' => 'not-a-date',
                         ]));
 
@@ -150,7 +151,7 @@ class AddEventTest extends TestCase
     {
         $this->response = $this->actingAs($this->authorizedUser)
                         ->from(route('events.create'))
-                        ->post(route('events.index'), $this->validParams([
+                        ->post(route('events.store'), $this->validParams([
                             'venue_id' => '',
                         ]));
 
@@ -162,7 +163,7 @@ class AddEventTest extends TestCase
     {
         $this->response = $this->actingAs($this->authorizedUser)
                         ->from(route('events.create'))
-                        ->post(route('events.index'), $this->validParams([
+                        ->post(route('events.store'), $this->validParams([
                             'venue_id' => 99,
                         ]));
 
@@ -174,7 +175,7 @@ class AddEventTest extends TestCase
     {
         $this->response = $this->actingAs($this->authorizedUser)
                         ->from(route('events.create'))
-                        ->post(route('events.index'), $this->validParams([
+                        ->post(route('events.store'), $this->validParams([
                             'name' => 'Event Name',
                             'slug' => 'event-slug',
                             'date' => '2017-09-17',
@@ -183,7 +184,7 @@ class AddEventTest extends TestCase
 
         tap(Event::first(), function ($event) {
             $this->response->assertStatus(302);
-            $this->response->assertRedirect(route('events.index'));
+            $this->response->assertRedirect(route('scheduled-events.index'));
 
             $this->assertEquals('Event Name', $event->name);
             $this->assertEquals('event-slug', $event->slug);

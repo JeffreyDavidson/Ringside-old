@@ -73,6 +73,6 @@ class MatchesController extends Controller
     {
         $match->delete();
 
-        return redirect()->route('event.matches.index', ['event' => $event->id]);
+        return redirect()->route('matches.index', ['event' => $event->id]);
     }
 }

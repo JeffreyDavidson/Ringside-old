@@ -22,46 +22,45 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::group(['prefix' => 'roster', 'namespace' => 'Roster'], function () {
         Route::group(['prefix' => 'wrestlers', 'namespace' => 'Wrestlers'], function () {
-            Route::resource('active', 'ActiveWrestlersController')
-                ->only(['index', 'destroy'])
-                ->parameters(['active' => 'wrestler'])
-                ->names(['index' => 'active-wrestlers.index', 'destroy' => 'active-wrestlers.deactivate']);
-            Route::resource('inactive', 'InactiveWrestlersController')
-                ->only(['index', 'destroy'])
-                ->parameters(['inactive' => 'wrestler'])
-                ->names(['index' => 'inactive-wrestlers.index', 'destroy' => 'inactive-wrestlers.activate']);
-            Route::resource('retired', 'RetiredWrestlersController')
-                ->only(['index', 'store', 'destroy'])
-                ->parameters(['retired' => 'wrestler'])
-                ->names(['index' => 'retired-wrestlers.index', 'store' => 'retired-wrestlers.store', 'destroy' => 'retired-wrestlers.destroy']);
-            Route::get('/', 'WrestlersController@index')->name('wrestlers.index');
-            Route::get('create', 'WrestlersController@create')->name('wrestlers.create');
-            Route::get('{wrestler}', 'WrestlersController@show')->name('wrestlers.show');
-            Route::post('/', 'WrestlersController@store')->name('wrestlers.store');
-            Route::get('edit/{wrestler}', 'WrestlersController@edit')->name('wrestlers.edit');
-            Route::patch('{wrestler}', 'WrestlersController@update')->name('wrestlers.update');
-            Route::delete('{wrestler}', 'WrestlersController@destroy')->name('wrestlers.destroy');
+            Route::resource('/', 'WrestlersController')
+                ->except('index')
+                ->parameters(['' => 'wrestler'])
+                ->names(['create' => 'wrestlers.create', 'edit' => 'wrestlers.edit', 'update' => 'wrestlers.update', 'show' => 'wrestlers.show', 'destroy' => 'wrestlers.destroy']);
+            Route::get('active', 'ActiveWrestlersController@index')->name('active-wrestlers.index');
+            Route::delete('active/{wrestler}/deactivate', 'ActiveWrestlersController@destroy')->name('active-wrestlers.deactivate');
+            Route::get('inactive', 'InactiveWrestlersController@index')->name('inactive-wrestlers.index');
+            Route::post('inactive/{wrestler}/activate', 'ActiveWrestlersController@store')->name('inactive-wrestlers.activate');
+            Route::post('{wrestler}/retire', 'RetiredWrestlersController@store')->name('wrestlers.retire');
+            Route::delete('retired/{wrestler}/unretire', 'RetiredWrestlersController@destroy')->name('retired-wrestlers.unretire');
         });
     });
 
     Route::group(['prefix' => 'events', 'namespace' => 'Events'], function () {
-        Route::resource('/', 'EventsController');
-        Route::resource('archived', 'ArchivedEventsController');
-        Route::resource('scheduled', 'ScheduledEventsController');
-        Route::get('{event}/results', 'ResultsController@edit')->name('results.edit');
-        Route::patch('{event}/results', 'ResultsController@update')->name('results.update');
-        // Route::get('archived-events', 'ArchivedEventsController@index')->name('archived-events.index');
-        // Route::post('archived-events/{event}', 'ArchivedEventsController@store')->name('archived-events.store');
-        // Route::delete('archived-events/{event}', 'ArchivedEventsController@destroy')->name('archived-events.destroy');
-        Route::resource('matches', 'MatchesController');
+        Route::resource('/', 'EventsController')
+            ->except('index')
+            ->parameters(['' => 'event'])
+            ->names(['create' => 'events.create', 'store' => 'events.store', 'edit' => 'events.edit', 'update' => 'events.update', 'show' => 'events.show', 'destroy' => 'events.destroy']);
+        Route::get('scheduled', 'ScheduledEventsController@index')->name('scheduled-events.index');
+        Route::get('past', 'PastEventsController@index')->name('past-events.index');
+        Route::get('{event}/results', 'ResultsController@edit')->name('event-results.edit');
+        Route::patch('{event}/results', 'ResultsController@update')->name('event-results.update');
+        Route::get('archived', 'ArchivedEventsController@index')->name('archived-events.index');
+        Route::post('{event}/archive', 'ArchivedEventsController@store')->name('past-events.archive');
+        Route::delete('archived/{event}/unarchive', 'ArchivedEventsController@destroy')->name('archived-events.unarchive');
+        Route::resource('.matches', 'MatchesController')
+            ->parameters(['' => 'event'])
+            ->names(['index' => 'matches.index', 'create' => 'matches.create']);
         Route::get('create', 'EventsController@create')->name('events.create');
     });
 
     Route::group(['prefix' => 'titles', 'namespace' => 'Titles'], function () {
-        Route::resource('titles', 'TitlesController');
-        Route::get('retired-titles', 'RetiredTitlesController@index')->name('retired-titles.index');
-        Route::post('retired-titles/{title}', 'RetiredTitlesController@store')->name('retired-titles.store');
-        Route::delete('retired-titles/{title}', 'RetiredTitlesController@destroy')->name('retired-titles.destroy');
+        Route::resource('/', 'TitlesController')
+            ->except('index')
+            ->names(['create' => 'titles.create', 'store' => 'titles.store', 'show' => 'titles.show', 'edit' => 'titles.edit', 'update' => 'titles.update', 'destroy' => 'titles.destroy']);
+        Route::get('active', 'ActiveTitlesController@index')->name('active-titles.index');
+        Route::get('retired', 'RetiredTitlesController@index')->name('retired-titles.index');
+        Route::post('{title}/reitre', 'RetiredTitlesController@store')->name('titles.retire');
+        Route::delete('retired/{title}/unretire', 'RetiredTitlesController@destroy')->name('retired-titles.unretire');
     });
 
     Route::resource('stipulations', 'StipulationsController');
