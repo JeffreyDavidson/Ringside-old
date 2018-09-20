@@ -19,7 +19,7 @@ class EditMatchTest extends TestCase
     {
         parent::setUp();
 
-        $this->setupAuthorizedUser(['edit-match', 'update-match']);
+        $this->setupAuthorizedUser(['update-match']);
 
         $this->event = factory(Event::class)->create(['date' => Carbon::now()]);
         $this->match = MatchFactory::forEvent($this->event)->create();
@@ -29,7 +29,7 @@ class EditMatchTest extends TestCase
     public function users_who_have_permission_can_view_the_edit_match_page()
     {
         $response = $this->actingAs($this->authorizedUser)
-                        ->get(route('matches.edit', ['event' => $this->event->id, 'match' => $this->match->id]));
+                        ->get(route('matches.edit', [$this->event->id, $this->match->id]));
 
         $response->assertSuccessful();
     }
@@ -38,7 +38,7 @@ class EditMatchTest extends TestCase
     public function users_who_dont_have_permission_cannot_view_the_edit_match_page()
     {
         $response = $this->actingAs($this->unauthorizedUser)
-                        ->get(route('matches.edit', ['event' => $this->event->id, 'match' => $this->match->id]));
+                        ->get(route('matches.edit', [$this->event->id, $this->match->id]));
 
         $response->assertStatus(403);
     }
@@ -46,27 +46,9 @@ class EditMatchTest extends TestCase
     /** @test */
     public function guests_cannot_view_the_edit_match_page()
     {
-        $response = $this->get(route('matches.edit', ['event' => $this->event->id, 'match' => $this->match->id]));
+        $response = $this->get(route('matches.edit', [$this->event->id, $this->match->id]));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));
-    }
-
-    /** @test */
-    public function returns_404_on_invalid_event_id()
-    {
-        $response = $this->actingAs($this->authorizedUser)
-                        ->get(route('matches.edit', ['event' => null, 'match' => $this->match->id]));
-
-        $response->assertStatus(404);
-    }
-
-    /** @test */
-    public function returns_404_on_invalid_match_id()
-    {
-        $response = $this->actingAs($this->authorizedUser)
-                        ->get(route('matches.edit', ['event' => $this->event->id, 'match' => null]));
-
-        $response->assertStatus(404);
     }
 }

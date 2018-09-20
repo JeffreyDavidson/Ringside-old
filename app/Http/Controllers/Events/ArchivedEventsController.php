@@ -18,8 +18,9 @@ class ArchivedEventsController extends Controller
     protected function resourceAbilityMap()
     {
         return [
+            'index' => 'index',
             'store' => 'archive',
-            'destroy' => 'restore',
+            'destroy' => 'unarchive',
         ];
     }
 
@@ -45,7 +46,7 @@ class ArchivedEventsController extends Controller
     {
         $event->archive();
 
-        return redirect()->route('archived-events.index');
+        return redirect()->route('past-events.index');
     }
 
     /**
@@ -56,8 +57,8 @@ class ArchivedEventsController extends Controller
      */
     public function destroy(Event $event)
     {
-        $event->activate();
+        $event->unarchive();
 
-        return redirect()->route('past-events.index');
+        return redirect()->route('archived-events.index');
     }
 }

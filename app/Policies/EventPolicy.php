@@ -32,17 +32,6 @@ class EventPolicy
     }
 
     /**
-     * Checks to see if the user has permission to edit an event.
-     *
-     * @param  \App\Models\User  $user
-     * @return bool
-     */
-    public function edit(User $user)
-    {
-        return $user->hasPermission('edit-event');
-    }
-
-    /**
      * Checks to see if the user has permission to view an event.
      *
      * @param  \App\Models\User  $user
@@ -51,6 +40,17 @@ class EventPolicy
     public function view(User $user)
     {
         return $user->hasPermission('view-event');
+    }
+
+    /**
+     * Checks to see if the user has permission to update an event.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function update(User $user)
+    {
+        return $user->hasPermission('update-event');
     }
 
     /**
@@ -64,13 +64,8 @@ class EventPolicy
         return $user->hasPermission('delete-event');
     }
 
-    public function update(User $user)
-    {
-        return $user->hasPermission('update-event');
-    }
-
     /**
-     * Checks to see if the user has permission to archive an event.
+     * Checks to see if the user has permission to archive a past event.
      *
      * @param  \App\Models\User  $user
      * @return bool
@@ -78,6 +73,17 @@ class EventPolicy
     public function archive(User $user)
     {
         return $user->hasPermission('archive-event');
+    }
+
+    /**
+     * Checks to see if the user has permission to unarchive an archived event.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function unarchive(User $user)
+    {
+        return $user->hasPermission('unarchive-event');
     }
 
     /**

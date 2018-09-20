@@ -13,7 +13,7 @@ class TitleCreateFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->hasPermission('store-title');
+        return $this->user()->hasPermission('create-title');
     }
 
     /**

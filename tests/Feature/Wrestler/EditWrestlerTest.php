@@ -19,43 +19,9 @@ class EditWrestlerTest extends TestCase
     {
         parent::setUp();
 
-        $this->setupAuthorizedUser(['edit-wrestler', 'update-wrestler']);
+        $this->setupAuthorizedUser(['update-wrestler']);
 
         $this->wrestler = factory(Wrestler::class)->create($this->oldAttributes());
-    }
-
-    private function oldAttributes($overrides = [])
-    {
-        return array_merge([
-            'name' => 'Old Name',
-            'slug' => 'old-slug',
-            'hometown' => 'Old City, Old State',
-            'height' => 63,
-            'weight' => 175,
-            'signature_move' => 'Old Signature Move',
-            'hired_at' => '2017-10-09',
-        ], $overrides);
-    }
-
-    private function validParams($overrides = [])
-    {
-        return array_merge([
-            'name' => 'Wrestler Name',
-            'slug' => 'wrestler-slug',
-            'hometown' => 'Laraville, FL',
-            'feet' => 6,
-            'inches' => 3,
-            'weight' => 175,
-            'signature_move' => 'New Signature Move',
-            'hired_at' => '2017-10-09 12:00:00',
-        ], $overrides);
-    }
-
-    private function assertFormError($field, $expectedValue, $actualValue)
-    {
-        $this->response->assertRedirect(route('wrestlers.edit', $this->wrestler->id));
-        $this->response->assertSessionHasErrors($field);
-        $this->assertEquals($expectedValue, $actualValue);
     }
 
     /** @test */
@@ -67,6 +33,24 @@ class EditWrestlerTest extends TestCase
         $response->assertSuccessful();
         $response->assertViewIs('wrestlers.edit');
         $response->assertViewHas('wrestler');
+    }
+
+    /** @test */
+    public function users_who_dont_have_permission_cannot_view_the_edit_wrestler_page()
+    {
+        $response = $this->actingAs($this->unauthorizedUser)
+                        ->get(route('wrestlers.edit', $this->wrestler->id));
+
+        $response->assertStatus(403);
+    }
+
+    /** @test */
+    public function guests_cannot_view_the_edit_wrestler_page()
+    {
+        $response = $this->get(route('wrestlers.edit', $this->wrestler->id));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('login'));
     }
 
     /** @test */
@@ -85,7 +69,7 @@ class EditWrestlerTest extends TestCase
                             'hired_at' => '2017-09-10',
                         ]));
 
-        $response->assertRedirect(route('wrestlers.index'));
+        $response->assertStatus(302);
         tap($this->wrestler->fresh(), function ($wrestler) {
             $this->assertEquals('New Name', $wrestler->name);
             $this->assertEquals('new-slug', $wrestler->slug);
@@ -98,7 +82,7 @@ class EditWrestlerTest extends TestCase
     }
 
     /** @test */
-    public function users_who_have_permission_can_edit_a_wrestler_with_matches()
+    public function users_who_have_permission_can_edit_a_wrestler_with_a_match_as_long_as_its_before_first_match_date()
     {
         $event = factory(Event::class)->create(['date' => '2017-10-11']);
         $match = MatchFactory::forEvent($event)->withWrestler($this->wrestler)->create();
@@ -109,19 +93,9 @@ class EditWrestlerTest extends TestCase
                             'hired_at' => '2017-10-01',
                         ]));
 
-        $response->assertRedirect(route('wrestlers.index'));
         tap($this->wrestler->fresh(), function ($wrestler) {
             $this->assertEquals('2017-10-01', $wrestler->hired_at->toDateString());
         });
-    }
-
-    /** @test */
-    public function users_who_dont_have_permission_cannot_view_the_edit_wrestler_page()
-    {
-        $response = $this->actingAs($this->unauthorizedUser)
-                        ->get(route('wrestlers.edit', $this->wrestler->id));
-
-        $response->assertStatus(403);
     }
 
     /** @test */
@@ -131,15 +105,6 @@ class EditWrestlerTest extends TestCase
                         ->patch(route('wrestlers.update', $this->wrestler->id), $this->validParams());
 
         $response->assertStatus(403);
-    }
-
-    /** @test */
-    public function guests_cannot_view_the_edit_wrestler_page()
-    {
-        $response = $this->get(route('wrestlers.edit', $this->wrestler->id));
-
-        $response->assertStatus(302);
-        $response->assertRedirect(route('login'));
     }
 
     /** @test */
@@ -228,5 +193,39 @@ class EditWrestlerTest extends TestCase
                             ]));
 
         $this->assertFormError('hired_at', '2017-10-09', $this->wrestler->hired_at->toDateString());
+    }
+
+    private function oldAttributes($overrides = [])
+    {
+        return array_merge([
+            'name' => 'Old Name',
+            'slug' => 'old-slug',
+            'hometown' => 'Old City, Old State',
+            'height' => 63,
+            'weight' => 175,
+            'signature_move' => 'Old Signature Move',
+            'hired_at' => '2017-10-09',
+        ], $overrides);
+    }
+
+    private function validParams($overrides = [])
+    {
+        return array_merge([
+            'name' => 'Wrestler Name',
+            'slug' => 'wrestler-slug',
+            'hometown' => 'Laraville, FL',
+            'feet' => 6,
+            'inches' => 3,
+            'weight' => 175,
+            'signature_move' => 'New Signature Move',
+            'hired_at' => '2017-10-09 12:00:00',
+        ], $overrides);
+    }
+
+    private function assertFormError($field, $expectedValue, $actualValue)
+    {
+        $this->response->assertRedirect(route('wrestlers.edit', $this->wrestler->id));
+        $this->response->assertSessionHasErrors($field);
+        $this->assertEquals($expectedValue, $actualValue);
     }
 }

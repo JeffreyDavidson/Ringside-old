@@ -13,7 +13,7 @@ class StipulationCreateFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->hasPermission('store-stipulation');
+        return $this->user()->hasPermission('create-stipulation');
     }
 
     /**

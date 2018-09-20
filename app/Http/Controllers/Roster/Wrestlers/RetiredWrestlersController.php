@@ -18,6 +18,7 @@ class RetiredWrestlersController extends Controller
     protected function resourceAbilityMap()
     {
         return [
+            'index' => 'index',
             'store' => 'retire',
             'destroy' => 'unretire',
         ];
@@ -43,10 +44,9 @@ class RetiredWrestlersController extends Controller
      */
     public function store(Wrestler $wrestler)
     {
-        dd($wrestler);
         $wrestler->retire();
 
-        return redirect()->route('wrestlers.index');
+        return redirect()->back();
     }
 
     /**
@@ -59,6 +59,6 @@ class RetiredWrestlersController extends Controller
     {
         $wrestler->unretire();
 
-        return redirect()->route('wrestlers.index');
+        return redirect()->back();
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Laracodes\Presenter\Traits\Presentable;
 use App\Exceptions\EventIsArchivedException;
+use App\Exceptions\EventNotArchivedException;
 use App\Exceptions\EventIsScheduledException;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -88,7 +89,6 @@ class Event extends Model
     /**
      * Archive an event.
      *
-     * @param  string|null  $date
      * @return void
      */
     public function archive()
@@ -102,6 +102,24 @@ class Event extends Model
         }
 
         return $this->update(['archived_at' => now()]);
+    }
+
+    /**
+     * Archive an event.
+     *
+     * @return void
+     */
+    public function unarchive()
+    {
+        if (!$this->isArchived()) {
+            throw new EventNotArchivedException;
+        }
+
+        if ($this->isScheduled()) {
+            throw new EventIsScheduledException;
+        }
+
+        return $this->update(['archived_at' => null]);
     }
 
     /**
@@ -164,6 +182,6 @@ class Event extends Model
      */
     public function isArchived()
     {
-        return ! is_null($this->archived_at);
+        return !is_null($this->archived_at);
     }
 }

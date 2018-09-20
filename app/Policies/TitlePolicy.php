@@ -43,17 +43,6 @@ class TitlePolicy
     }
 
     /**
-     * Checks to see if the user has permission to edit a title.
-     *
-     * @param  \App\Models\User  $user
-     * @return bool
-     */
-    public function edit(User $user)
-    {
-        return $user->hasPermission('edit-title');
-    }
-
-    /**
      * Checks to see if the user has permission to update a title.
      *
      * @param  \App\Models\User  $user
@@ -73,6 +62,28 @@ class TitlePolicy
     public function delete(User $user)
     {
         return $user->hasPermission('delete-title');
+    }
+
+    /**
+     * Checks to see if the user has permission to activate a title.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function activate(User $user)
+    {
+        return $user->hasPermission('activate-title');
+    }
+
+    /**
+     * Checks to see if the user has permission to deactivate a title.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function deactivate(User $user)
+    {
+        return $user->hasPermission('deactivate-title');
     }
 
     /**

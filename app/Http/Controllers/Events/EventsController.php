@@ -13,20 +13,6 @@ class EventsController extends Controller
     protected $authorizeResource = Event::class;
 
     /**
-     * Display a listing of all events.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function index()
-    {
-        $scheduledEvents = Event::scheduled()->with('venue')->paginate(10);
-        $previousEvents = Event::past()->with('venue')->paginate(10);
-        $archivedEvents = Event::archived()->with('venue')->paginate(10);
-
-        return view('events.index', compact('scheduledEvents', 'previousEvents', 'archivedEvents'));
-    }
-
-    /**
      * Show the form for creating an event.
      *
      * @return \App\Models\Event  $event
@@ -96,6 +82,6 @@ class EventsController extends Controller
     {
         $event->delete();
 
-        return redirect()->route('scheduled-events.index');
+        return redirect()->back();
     }
 }

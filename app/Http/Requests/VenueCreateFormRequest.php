@@ -13,7 +13,7 @@ class VenueCreateFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->hasPermission('store-venue');
+        return $this->user()->hasPermission('create-venue');
     }
 
     /**

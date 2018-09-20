@@ -41,14 +41,6 @@ class ViewWrestlerBioTest extends TestCase
         $response->assertViewHas('wrestler', function ($viewWrestler) use ($wrestler) {
             return $viewWrestler->id === $wrestler->id;
         });
-    }
-
-    /** @test */
-    public function a_wrestlers_data_can_be_viewed_on_their_bio()
-    {
-        $response = $this->actingAs($this->authorizedUser)
-                        ->get(route('wrestlers.show', $this->wrestler->id));
-
         $response->assertSee('Wrestler 1');
         $response->assertSee('Kansas City, Missouri');
         $response->assertSee(e('6\'1"'));

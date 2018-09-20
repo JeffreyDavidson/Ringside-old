@@ -9,7 +9,7 @@
         <div class="panel-heading clearfix">
             <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-info-circle"></i>Basic Info</h3>
             <div class="panel-actions">
-                <a class="btn btn-default pull-right" href="{{ route('events.index') }}">Back To All Events</a>
+                <a class="btn btn-default pull-right" href="{{ url()->previous() }}">Previous Page</a>
             </div>
         </div>
         <div class="panel-body">

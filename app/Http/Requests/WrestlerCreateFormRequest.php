@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Wrestler;
 use Illuminate\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -15,7 +14,7 @@ class WrestlerCreateFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->hasPermission('store-wrestler');
+        return $this->user()->hasPermission('create-wrestler');
     }
 
     /**

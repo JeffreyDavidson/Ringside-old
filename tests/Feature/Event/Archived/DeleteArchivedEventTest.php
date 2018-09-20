@@ -6,7 +6,7 @@ use Tests\TestCase;
 use App\Models\Event;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class DeleteEventTest extends TestCase
+class DeleteArchivedEventTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -18,27 +18,27 @@ class DeleteEventTest extends TestCase
 
         $this->setupAuthorizedUser('delete-event');
 
-        $this->event = factory(Event::class)->create();
+        $this->event = factory(Event::class)->states('archived')->create();
     }
 
     /** @test */
-    public function users_who_have_permission_can_delete_a_scheduled__event()
+    public function users_who_have_permission_can_delete_an_archived_event()
     {
         $response = $this->actingAs($this->authorizedUser)
-                        ->from(route('scheduled-events.index'))
+                        ->from(route('archived-events.index'))
                         ->delete(route('events.destroy', $this->event->id));
 
         $response->assertStatus(302);
+        $response->assertRedirect(route('archived-events.index'));
         $this->assertSoftDeleted('events', ['id' => $this->event->id, 'name' => $this->event->name]);
         $this->assertNotNull($this->event->fresh()->deleted_at);
-        $response->assertRedirect(route('scheduled-events.index'));
     }
 
     /** @test */
-    public function users_who_dont_have_permission_cannot_delete_a_event()
+    public function users_who_dont_have_permission_cannot_delete_an_archived_event()
     {
         $response = $this->actingAs($this->unauthorizedUser)
-                        ->from(route('scheduled-events.index'))
+                        ->from(route('archived-events.index'))
                         ->delete(route('events.destroy', $this->event->id));
 
         $response->assertStatus(403);
@@ -46,13 +46,12 @@ class DeleteEventTest extends TestCase
     }
 
     /** @test */
-    public function guests_cannot_delete_a_event()
+    public function guests_cannot_delete_an_archived_event()
     {
-        $response = $this->from(route('events.index'))
+        $response = $this->from(route('archived-events.index'))
                         ->delete(route('events.destroy', $this->event->id));
 
         $response->assertStatus(302);
-        $this->assertNull($this->event->deleted_at);
         $response->assertRedirect(route('login'));
     }
 }

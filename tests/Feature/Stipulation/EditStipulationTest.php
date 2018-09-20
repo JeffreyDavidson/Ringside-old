@@ -17,34 +17,9 @@ class EditStipulationTest extends TestCase
     {
         parent::setUp();
 
-        $this->setupAuthorizedUser(['edit-stipulation', 'update-stipulation']);
+        $this->setupAuthorizedUser(['update-stipulation']);
 
         $this->stipulation = factory(Stipulation::class)->create($this->oldAttributes());
-    }
-
-    private function oldAttributes($overrides = [])
-    {
-        return array_merge([
-            'name' => 'Old Name',
-            'slug' => 'old-slug',
-        ], $overrides);
-    }
-
-    private function validParams($overrides = [])
-    {
-        return array_merge([
-            'name' => 'Stipulation Name',
-            'slug' => 'stipulation-slug',
-        ], $overrides);
-    }
-
-    private function assertFormError($field, $expectedValue, $property)
-    {
-        $this->response->assertRedirect(route('stipulations.edit', $this->stipulation->id));
-        $this->response->assertSessionHasErrors($field);
-        tap($this->stipulation->fresh(), function ($stipulation) use ($expectedValue, $property) {
-            $this->assertEquals($expectedValue, $property);
-        });
     }
 
     /** @test */
@@ -56,6 +31,24 @@ class EditStipulationTest extends TestCase
         $response->assertSuccessful();
         $response->assertViewIs('stipulations.edit');
         $response->assertViewHas('stipulation');
+    }
+
+    /** @test */
+    public function users_who_dont_have_permission_cannot_view_the_edit_stipulation_page()
+    {
+        $response = $this->actingAs($this->unauthorizedUser)
+                        ->get(route('stipulations.edit', $this->stipulation->id));
+
+        $response->assertStatus(403);
+    }
+
+    /** @test */
+    public function guests_cannot_view_the_edit_stipulation_page()
+    {
+        $response = $this->get(route('stipulations.edit', $this->stipulation->id));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('login'));
     }
 
     /** @test */
@@ -76,30 +69,12 @@ class EditStipulationTest extends TestCase
     }
 
     /** @test */
-    public function users_who_dont_have_permission_cannot_view_the_edit_stipulation_page()
-    {
-        $response = $this->actingAs($this->unauthorizedUser)
-                        ->get(route('stipulations.edit', $this->stipulation->id));
-
-        $response->assertStatus(403);
-    }
-
-    /** @test */
     public function users_who_dont_have_permission_cannot_edit_a_stipulation()
     {
         $response = $this->actingAs($this->unauthorizedUser)
                         ->patch(route('stipulations.update', $this->stipulation->id), $this->validParams());
 
         $response->assertStatus(403);
-    }
-
-    /** @test */
-    public function guests_cannot_view_the_edit_stipulation_page()
-    {
-        $response = $this->get(route('stipulations.edit', $this->stipulation->id));
-
-        $response->assertStatus(302);
-        $response->assertRedirect(route('login'));
     }
 
     /** @test */
@@ -161,5 +136,30 @@ class EditStipulationTest extends TestCase
                             ]));
 
         $this->assertFormError('slug', 'old-slug', $this->stipulation->slug);
+    }
+
+    private function oldAttributes($overrides = [])
+    {
+        return array_merge([
+            'name' => 'Old Name',
+            'slug' => 'old-slug',
+        ], $overrides);
+    }
+
+    private function validParams($overrides = [])
+    {
+        return array_merge([
+            'name' => 'Stipulation Name',
+            'slug' => 'stipulation-slug',
+        ], $overrides);
+    }
+
+    private function assertFormError($field, $expectedValue, $property)
+    {
+        $this->response->assertRedirect(route('stipulations.edit', $this->stipulation->id));
+        $this->response->assertSessionHasErrors($field);
+        tap($this->stipulation->fresh(), function ($stipulation) use ($expectedValue, $property) {
+            $this->assertEquals($expectedValue, $property);
+        });
     }
 }

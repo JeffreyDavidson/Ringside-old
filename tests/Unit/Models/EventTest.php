@@ -86,4 +86,16 @@ class EventTest extends TestCase
 
         $event->archive();
     }
+
+    /**
+     * @expectedException \App\Exceptions\EventNotArchivedException
+     *
+     * @test
+     */
+    public function an_unarchived_event_cannot_be_unarchived()
+    {
+        $event = factory(Event::class)->create();
+
+        $event->unarchive();
+    }
 }

@@ -17,7 +17,7 @@ class MatchCreateFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->hasPermission('store-match');
+        return $this->user()->hasPermission('create-match');
     }
 
     /**
@@ -37,12 +37,12 @@ class MatchCreateFormRequest extends FormRequest
             // if we get no competitors the match type id is wrong which will get caught below
             $competitors = (int) MatchType::whereKey($match['match_type_id'])->value('total_competitors');
 
-            if (! $competitors) {
+            if (!$competitors) {
                 return;
             }
 
             // Wrestlers input is not valid format, will get caught below
-            if (! isset($match['wrestlers']) || ! is_array($match['wrestlers'])) {
+            if (!isset($match['wrestlers']) || !is_array($match['wrestlers'])) {
                 return;
             }
 
@@ -66,17 +66,17 @@ class MatchCreateFormRequest extends FormRequest
         $validateQualifiedForMatch = new QualifiedForMatch($date, Wrestler::class, 'hired_at');
 
         $rules = [
-            'matches'                  => ['array'],
-            'matches.*'                => [$validateWrestlerNumbers],
-            'matches.*.match_type_id'  => ['required', 'integer', Rule::exists('match_types', 'id')],
+            'matches' => ['array'],
+            'matches.*' => [$validateWrestlerNumbers],
+            'matches.*.match_type_id' => ['required', 'integer', Rule::exists('match_types', 'id')],
             'matches.*.stipulation_id' => ['nullable', 'integer', Rule::exists('stipulations', 'id')],
-            'matches.*.titles'         => ['array'],
-            'matches.*.titles.*'       => ['sometimes', 'distinct', 'integer', Rule::exists('titles', 'id')],
-            'matches.*.referees'       => ['required', 'array'],
-            'matches.*.referees.*'     => ['distinct', 'integer', Rule::exists('referees', 'id')],
-            'matches.*.preview'        => ['required', 'string'],
-            'matches.*.wrestlers'      => ['bail', 'array', 'required', $validateWrestlersUnique],
-            'matches.*.wrestlers.*.*'  => ['integer', 'exists:wrestlers,id', $validateQualifiedForMatch],
+            'matches.*.titles' => ['array'],
+            'matches.*.titles.*' => ['sometimes', 'distinct', 'integer', Rule::exists('titles', 'id')],
+            'matches.*.referees' => ['required', 'array'],
+            'matches.*.referees.*' => ['distinct', 'integer', Rule::exists('referees', 'id')],
+            'matches.*.preview' => ['required', 'string'],
+            'matches.*.wrestlers' => ['bail', 'array', 'required', $validateWrestlersUnique],
+            'matches.*.wrestlers.*.*' => ['integer', 'exists:wrestlers,id', $validateQualifiedForMatch],
         ];
 
         return $rules;

@@ -21,17 +21,6 @@ class MatchPolicy
     }
 
     /**
-     * Checks to see if the user has permission to edit a match.
-     *
-     * @param  \App\Models\User  $user
-     * @return bool
-     */
-    public function edit(User $user)
-    {
-        return $user->hasPermission('edit-match');
-    }
-
-    /**
      * Checks to see if the user has permission to update a match.
      *
      * @param  \App\Models\User  $user
@@ -43,7 +32,7 @@ class MatchPolicy
     }
 
     /**
-     * Checks to see if the user has permission to show a match.
+     * Checks to see if the user has permission to view a match.
      *
      * @param  \App\Models\User  $user
      * @return bool

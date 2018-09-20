@@ -18,9 +18,22 @@ class RetiredTitlesController extends Controller
     protected function resourceAbilityMap()
     {
         return [
+            'index' => 'index',
             'store' => 'retire',
-            'destroy' => 'activate',
+            'destroy' => 'unretire',
         ];
+    }
+
+    /**
+     * Display a listing of all retired titles.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function index()
+    {
+        $titles = Title::retired()->paginate(10);
+
+        return view('titles.retired', compact('titles'));
     }
 
     /**
@@ -33,7 +46,7 @@ class RetiredTitlesController extends Controller
     {
         $title->retire();
 
-        return redirect()->route('titles.index');
+        return redirect()->back();
     }
 
     /**
@@ -44,8 +57,8 @@ class RetiredTitlesController extends Controller
      */
     public function destroy(Title $title)
     {
-        $title->activate();
+        $title->unretire();
 
-        return redirect()->route('titles.index');
+        return redirect()->back();
     }
 }

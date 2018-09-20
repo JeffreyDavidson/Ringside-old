@@ -13,7 +13,7 @@ class EventCreateFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->hasPermission('store-event');
+        return $this->user()->hasPermission('create-event');
     }
 
     /**
@@ -40,7 +40,7 @@ class EventCreateFormRequest extends FormRequest
     {
         return [
             'venue_id.required' => 'The venue field is required.',
-            'venue_id.not_in'  => 'The selected venue is invalid.',
+            'venue_id.not_in' => 'The selected venue is invalid.',
         ];
     }
 }

@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests\Feature\Wrestler;
+namespace Tests\Feature\Wrestler\Retired;
 
 use Tests\TestCase;
 use App\Models\Wrestler;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class DeleteWrestlerTest extends TestCase
+class DeleteRetiredWrestlerTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -18,26 +18,26 @@ class DeleteWrestlerTest extends TestCase
 
         $this->setupAuthorizedUser('delete-wrestler');
 
-        $this->wrestler = factory(Wrestler::class)->create();
+        $this->wrestler = factory(Wrestler::class)->states('retired')->create();
     }
 
     /** @test */
-    public function users_who_have_permission_can_soft_delete_a_wrestler()
+    public function users_who_have_permission_can_delete_a_retired_wrestler()
     {
         $response = $this->actingAs($this->authorizedUser)
-                        ->from(route('wrestlers.index'))
+                        ->from(route('retired-wrestlers.index'))
                         ->delete(route('wrestlers.destroy', $this->wrestler->id));
 
         $response->assertStatus(302);
-        $response->assertRedirect(route('wrestlers.index'));
+        $response->assertRedirect(route('retired-wrestlers.index'));
         $this->assertSoftDeleted('wrestlers', ['id' => $this->wrestler->id, 'name' => $this->wrestler->name]);
     }
 
     /** @test */
-    public function users_who_dont_have_permission_cannot_soft_delete_a_wrestler()
+    public function users_who_dont_have_permission_cannot_delete_a_retired_wrestler()
     {
         $response = $this->actingAs($this->unauthorizedUser)
-                        ->from(route('wrestlers.index'))
+                        ->from(route('retired-wrestlers.index'))
                         ->delete(route('wrestlers.destroy', $this->wrestler->id));
 
         $response->assertStatus(403);
@@ -45,13 +45,12 @@ class DeleteWrestlerTest extends TestCase
     }
 
     /** @test */
-    public function guests_cannot_soft_delete_a_wrestler()
+    public function guests_cannot_delete_a_retired_wrestler()
     {
-        $response = $this->from(route('wrestlers.index'))
+        $response = $this->from(route('retired-wrestlers.index'))
                         ->delete(route('wrestlers.destroy', $this->wrestler->id));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));
-        $this->assertNull($this->wrestler->deleted_at);
     }
 }

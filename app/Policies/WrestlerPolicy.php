@@ -32,7 +32,7 @@ class WrestlerPolicy
     }
 
     /**
-     * Checks to see if the user has permission to view a roster-= member.
+     * Checks to see if the user has permission to view a roster member.
      *
      * @param  \App\Models\User  $user
      * @return bool
@@ -40,17 +40,6 @@ class WrestlerPolicy
     public function view(User $user)
     {
         return $user->hasPermission('view-wrestler');
-    }
-
-    /**
-     * Checks to see if the user has permission to edit a roster member.
-     *
-     * @param  \App\Models\User  $user
-     * @return bool
-     */
-    public function edit(User $user)
-    {
-        return $user->hasPermission('edit-wrestler');
     }
 
     /**
@@ -73,6 +62,28 @@ class WrestlerPolicy
     public function delete(User $user)
     {
         return $user->hasPermission('delete-wrestler');
+    }
+
+    /**
+     * Checks to see if the user has permission to activate a roster member.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function activate(User $user)
+    {
+        return $user->hasPermission('activate-wrestler');
+    }
+
+    /**
+     * Checks to see if the user has permission to deactivate a roster member.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function deactivate(User $user)
+    {
+        return $user->hasPermission('deactivate-wrestler');
     }
 
     /**

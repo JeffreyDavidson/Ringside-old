@@ -55,13 +55,4 @@ class ViewVenueTest extends TestCase
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));
     }
-
-    /** @test */
-    public function venues_past_events_are_loaded_for_venue_page()
-    {
-        $response = $this->actingAs($this->authorizedUser)
-                        ->get(route('venues.show', $this->venue->id));
-
-        $this->assertTrue($response->data('venue')->relationLoaded('pastEvents'));
-    }
 }

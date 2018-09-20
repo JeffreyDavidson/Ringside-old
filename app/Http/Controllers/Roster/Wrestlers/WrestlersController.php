@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Roster\Wrestlers;
 
+use Carbon\Carbon;
 use App\Models\Wrestler;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\WrestlerEditFormRequest;
@@ -33,7 +34,12 @@ class WrestlersController extends Controller
     {
         Wrestler::create($request->all());
 
-        return redirect()->route('active-wrestlers.index');
+        if ($request->hired_at <= Carbon::today()->toDateTimeString()) {
+            return redirect()->route('active-wrestlers.index');
+        }
+
+
+        return redirect()->route('inactive-wrestlers.index');
     }
 
     /**
@@ -82,6 +88,6 @@ class WrestlersController extends Controller
     {
         $wrestler->delete();
 
-        return redirect()->route('active-wrestlers.index');
+        return redirect()->back();
     }
 }

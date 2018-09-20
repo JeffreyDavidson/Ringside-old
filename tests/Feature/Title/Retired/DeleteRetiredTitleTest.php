@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests\Feature\Title;
+namespace Tests\Feature\Title\Retired;
 
 use Tests\TestCase;
 use App\Models\Title;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class DeleteTitleTest extends TestCase
+class DeleteRetiredTitleTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -18,26 +18,26 @@ class DeleteTitleTest extends TestCase
 
         $this->setupAuthorizedUser('delete-title');
 
-        $this->title = factory(Title::class)->create();
+        $this->title = factory(Title::class)->states('retired')->create();
     }
 
     /** @test */
-    public function users_who_have_permission_can_soft_delete_a_title()
+    public function users_who_have_permission_can_delete_an_retired_title()
     {
         $response = $this->actingAs($this->authorizedUser)
-                        ->from(route('titles.index'))
+                        ->from(route('retired-titles.index'))
                         ->delete(route('titles.destroy', $this->title->id));
 
         $response->assertStatus(302);
-        $response->assertRedirect(route('titles.index'));
+        $response->assertRedirect(route('retired-titles.index'));
         $this->assertSoftDeleted('titles', ['id' => $this->title->id, 'name' => $this->title->name]);
     }
 
     /** @test */
-    public function users_who_dont_have_permission_cannot_soft_delete_a_title()
+    public function users_who_dont_have_permission_cannot_delete_an_retired_title()
     {
         $response = $this->actingAs($this->unauthorizedUser)
-                        ->from(route('titles.index'))
+                        ->from(route('retired-titles.index'))
                         ->delete(route('titles.destroy', $this->title->id));
 
         $response->assertStatus(403);
@@ -45,9 +45,9 @@ class DeleteTitleTest extends TestCase
     }
 
     /** @test */
-    public function guests_cannot_soft_delete_a_title()
+    public function guests_cannot_delete_an_retired_title()
     {
-        $response = $this->from(route('titles.index'))
+        $response = $this->from(route('retired-titles.index'))
                         ->delete(route('titles.destroy', $this->title->id));
 
         $response->assertStatus(302);

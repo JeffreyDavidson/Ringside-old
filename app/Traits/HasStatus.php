@@ -27,13 +27,25 @@ trait HasStatus
      */
     public function scopeInactive(Builder $query)
     {
-        $query->where('is_active', false)->whereDoesntHave('retirements', function ($query) {
-            $query->whereNull('ended_at');
-        })->whereDoesntHave('injuries', function ($query) {
-            $query->whereNull('healed_at');
-        })->whereDoesntHave('suspensions', function ($query) {
-            $query->whereNull('ended_at');
-        });
+        $query->where('is_active', false);
+
+        if ($this->retirements) {
+            $query->whereDoesntHave('retirements', function ($query) {
+                $query->whereNull('ended_at');
+            });
+        }
+
+        if ($this->injuries) {
+            $query->whereDoesntHave('injuries', function ($query) {
+                $query->whereNull('healed_at');
+            });
+        }
+
+        if ($this->suspensions) {
+            $query->whereDoesntHave('suspensions', function ($query) {
+                $query->whereNull('ended_at');
+            });
+        }
     }
 
     /**

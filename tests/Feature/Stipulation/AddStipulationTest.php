@@ -16,23 +16,7 @@ class AddStipulationTest extends TestCase
     {
         parent::setUp();
 
-        $this->setupAuthorizedUser(['create-stipulation', 'store-stipulation']);
-    }
-
-    private function validParams($overrides = [])
-    {
-        return array_merge([
-            'name' => 'Stipulation Name',
-            'slug' => 'stipulation-slug',
-        ], $overrides);
-    }
-
-    private function assertFormError($field, $expectedEventCount = 0)
-    {
-        $this->response->assertStatus(302);
-        $this->response->assertRedirect(route('stipulations.create'));
-        $this->response->assertSessionHasErrors($field);
-        $this->assertEquals($expectedEventCount, Stipulation::count());
+        $this->setupAuthorizedUser(['create-stipulation']);
     }
 
     /** @test */
@@ -43,6 +27,24 @@ class AddStipulationTest extends TestCase
 
         $response->assertSuccessful();
         $response->assertViewIs('stipulations.create');
+    }
+
+    /** @test */
+    public function users_who_dont_have_permission_cannot_view_the_add_stipulation_page()
+    {
+        $response = $this->actingAs($this->unauthorizedUser)
+                        ->get(route('stipulations.create'));
+
+        $response->assertStatus(403);
+    }
+
+    /** @test */
+    public function guests_cannot_view_the_add_stipulation_page()
+    {
+        $response = $this->get(route('stipulations.create'));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('login'));
     }
 
     /** @test */
@@ -62,30 +64,12 @@ class AddStipulationTest extends TestCase
     }
 
     /** @test */
-    public function users_who_dont_have_permission_cannot_view_the_add_stipulation_page()
-    {
-        $response = $this->actingAs($this->unauthorizedUser)
-                        ->get(route('stipulations.create'));
-
-        $response->assertStatus(403);
-    }
-
-    /** @test */
     public function users_who_dont_have_permission_cannot_create_a_stipulation()
     {
         $response = $this->actingAs($this->unauthorizedUser)
                         ->post(route('stipulations.store', $this->validParams()));
 
         $response->assertStatus(403);
-    }
-
-    /** @test */
-    public function guests_cannot_view_the_add_stipulation_page()
-    {
-        $response = $this->get(route('stipulations.create'));
-
-        $response->assertStatus(302);
-        $response->assertRedirect(route('login'));
     }
 
     /** @test */
@@ -101,10 +85,10 @@ class AddStipulationTest extends TestCase
     public function stipulation_name_is_required()
     {
         $this->response = $this->actingAs($this->authorizedUser)
-                        ->from(route('stipulations.create'))
-                        ->post(route('stipulations.index'), $this->validParams([
-                            'name' => '',
-                        ]));
+                            ->from(route('stipulations.create'))
+                            ->post(route('stipulations.index'), $this->validParams([
+                                'name' => '',
+                            ]));
 
         $this->assertFormError('name');
     }
@@ -115,10 +99,10 @@ class AddStipulationTest extends TestCase
         factory(Stipulation::class)->create(['name' => 'Stipulation Name']);
 
         $this->response = $this->actingAs($this->authorizedUser)
-                        ->from(route('stipulations.create'))
-                        ->post(route('stipulations.index'), $this->validParams([
-                            'name' => 'Stipulation Name',
-                        ]));
+                            ->from(route('stipulations.create'))
+                            ->post(route('stipulations.index'), $this->validParams([
+                                'name' => 'Stipulation Name',
+                            ]));
 
         $this->assertFormError('name', 1);
     }
@@ -127,10 +111,10 @@ class AddStipulationTest extends TestCase
     public function stipulation_slug_is_required()
     {
         $this->response = $this->actingAs($this->authorizedUser)
-                        ->from(route('stipulations.create'))
-                        ->post(route('stipulations.index'), $this->validParams([
-                            'slug' => '',
-                        ]));
+                            ->from(route('stipulations.create'))
+                            ->post(route('stipulations.index'), $this->validParams([
+                                'slug' => '',
+                            ]));
 
         $this->assertFormError('slug');
     }
@@ -141,11 +125,27 @@ class AddStipulationTest extends TestCase
         factory(Stipulation::class)->create(['slug' => 'stipulation-slug']);
 
         $this->response = $this->actingAs($this->authorizedUser)
-                        ->from(route('stipulations.create'))
-                        ->post(route('stipulations.index'), $this->validParams([
-                            'slug' => 'stipulation-slug',
-                        ]));
+                            ->from(route('stipulations.create'))
+                            ->post(route('stipulations.index'), $this->validParams([
+                                'slug' => 'stipulation-slug',
+                            ]));
 
         $this->assertFormError('slug', 1);
+    }
+
+    private function validParams($overrides = [])
+    {
+        return array_merge([
+            'name' => 'Stipulation Name',
+            'slug' => 'stipulation-slug',
+        ], $overrides);
+    }
+
+    private function assertFormError($field, $expectedEventCount = 0)
+    {
+        $this->response->assertStatus(302);
+        $this->response->assertRedirect(route('stipulations.create'));
+        $this->response->assertSessionHasErrors($field);
+        $this->assertEquals($expectedEventCount, Stipulation::count());
     }
 }

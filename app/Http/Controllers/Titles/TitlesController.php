@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Titles;
 
+use Carbon\Carbon;
 use App\Models\Title;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TitleEditFormRequest;
@@ -11,19 +12,6 @@ class TitlesController extends Controller
 {
     /** @var string */
     protected $authorizeResource = Title::class;
-
-    /**
-     * Display a listing of all the titles.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function index()
-    {
-        $activeTitles = Title::active()->paginate(10);
-        $retiredTitles = Title::retired()->paginate(10);
-
-        return view('titles.index', compact('activeTitles', 'retiredTitles'));
-    }
 
     /**
      * Show the form for creating a new title.
@@ -46,7 +34,11 @@ class TitlesController extends Controller
     {
         Title::create($request->all());
 
-        return redirect()->route('titles.index');
+        if ($request->introduced_at <= Carbon::today()->toDateTimeString()) {
+            return redirect()->route('active-titles.index');
+        }
+
+        return redirect()->route('inactive-titles.index');
     }
 
     /**
@@ -95,6 +87,6 @@ class TitlesController extends Controller
     {
         $title->delete();
 
-        return redirect()->route('titles.index');
+        return redirect()->back();
     }
 }

@@ -16,26 +16,7 @@ class AddVenueTest extends TestCase
     {
         parent::setUp();
 
-        $this->setupAuthorizedUser(['create-venue', 'store-venue']);
-    }
-
-    private function validParams($overrides = [])
-    {
-        return array_merge([
-            'name' => 'Venue Name',
-            'address' => '123 Main Street',
-            'city' => 'Laraville',
-            'state' => 'ON',
-            'postcode' => '12345',
-        ], $overrides);
-    }
-
-    private function assertFormError($field, $expectedVenueCount = 0)
-    {
-        $this->response->assertStatus(302);
-        $this->response->assertRedirect(route('venues.create'));
-        $this->response->assertSessionHasErrors($field);
-        $this->assertEquals($expectedVenueCount, Venue::count());
+        $this->setupAuthorizedUser(['create-venue']);
     }
 
     /** @test */
@@ -46,6 +27,25 @@ class AddVenueTest extends TestCase
 
         $response->assertSuccessful();
         $response->assertViewIs('venues.create');
+        $response->assertViewHas('venue');
+    }
+
+    /** @test */
+    public function users_who_dont_have_permission_cannot_view_the_add_venue_page()
+    {
+        $response = $this->actingAs($this->unauthorizedUser)
+                        ->get(route('venues.create'));
+
+        $response->assertStatus(403);
+    }
+
+    /** @test */
+    public function guests_cannot_view_the_add_venue_page()
+    {
+        $response = $this->get(route('venues.create'));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('login'));
     }
 
     /** @test */
@@ -68,30 +68,12 @@ class AddVenueTest extends TestCase
     }
 
     /** @test */
-    public function users_who_dont_have_permission_cannot_view_the_add_venue_page()
-    {
-        $response = $this->actingAs($this->unauthorizedUser)
-                        ->get(route('venues.create'));
-
-        $response->assertStatus(403);
-    }
-
-    /** @test */
     public function users_who_dont_have_permission_cannot_create_a_venue()
     {
         $response = $this->actingAs($this->unauthorizedUser)
                         ->post(route('venues.index'), $this->validParams());
 
         $response->assertStatus(403);
-    }
-
-    /** @test */
-    public function guests_cannot_view_the_add_venue_page()
-    {
-        $response = $this->get(route('venues.create'));
-
-        $response->assertStatus(302);
-        $response->assertRedirect(route('login'));
     }
 
     /** @test */
@@ -247,5 +229,24 @@ class AddVenueTest extends TestCase
                             ])));
 
         $this->assertFormError('postcode');
+    }
+
+    private function validParams($overrides = [])
+    {
+        return array_merge([
+            'name' => 'Venue Name',
+            'address' => '123 Main Street',
+            'city' => 'Laraville',
+            'state' => 'ON',
+            'postcode' => '12345',
+        ], $overrides);
+    }
+
+    private function assertFormError($field, $expectedVenueCount = 0)
+    {
+        $this->response->assertStatus(302);
+        $this->response->assertRedirect(route('venues.create'));
+        $this->response->assertSessionHasErrors($field);
+        $this->assertEquals($expectedVenueCount, Venue::count());
     }
 }

@@ -5,7 +5,7 @@ namespace Tests\Feature\Venue;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class ViewVenueListTest extends TestCase
+class ViewVenuesListTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -43,7 +43,7 @@ class ViewVenueListTest extends TestCase
     }
 
     /** @test */
-    public function guests_cannot_view_venue_list()
+    public function guests_cannot_view_the_list_of_venues()
     {
         $response = $this->get(route('venues.index'));
 

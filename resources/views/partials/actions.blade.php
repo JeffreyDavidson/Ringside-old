@@ -28,7 +28,7 @@
 
 @if ($actions->contains('retire'))
     @can('retire', $model)
-        <form style="display: inline-block;" action="{{ route('retired-'.$resource.'.store', $model->id) }}" method="POST">
+        <form style="display: inline-block;" action="{{ route('active-'.$resource.'.retire', $model->id) }}" method="POST">
             {{ csrf_field() }}
             <button style="cursor: pointer" class="btn btn-sm btn-icon btn-flat btn-default" type="submit" data-toggle="tooltip" data-original-title="Retire">
                 <i class="icon wb-star" aria-hidden="true"></i>

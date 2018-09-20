@@ -28,55 +28,32 @@ class DeleteMatchTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_delete_a_match()
     {
-        $this->withoutExceptionHandling();
         $response = $this->actingAs($this->authorizedUser)
-                        ->from(route('matches.index', ['event' => $this->event->id]))
-                        ->delete(route('matches.destroy', ['event' => $this->event->id, 'match' => $this->match->id]));
+                        ->from(route('matches.index', $this->event->id))
+                        ->delete(route('matches.destroy', [$this->event->id, $this->match->id]));
 
         $response->assertStatus(302);
-        $this->assertSoftDeleted('matches', ['id' => $this->match->id, 'event_id' => $this->event->id, 'match_number' => $this->match->match_number]);
-        $this->assertNotNull($this->match->fresh()->deleted_at);
         $response->assertRedirect(route('matches.index', ['event' => $this->event->id]));
+        $this->assertSoftDeleted('matches', ['id' => $this->match->id, 'event_id' => $this->event->id, 'match_number' => $this->match->match_number]);
     }
 
     /** @test */
     public function users_who_dont_have_permission_cannot_delete_a_match()
     {
         $response = $this->actingAs($this->unauthorizedUser)
-                        ->from(route('matches.index', ['event' => $this->event->id]))
-                        ->delete(route('matches.destroy', ['event' => $this->event->id, 'match' => $this->match->id]));
+                        ->from(route('matches.index', [$this->event->id]))
+                        ->delete(route('matches.destroy', [$this->event->id, $this->match->id]));
 
         $response->assertStatus(403);
-        $this->assertNull($this->match->deleted_at);
     }
 
     /** @test */
     public function guests_cannot_delete_a_match()
     {
-        $response = $this->from(route('matches.index', ['event' => $this->event->id]))
-                        ->delete(route('matches.destroy', ['event' => $this->event->id, 'match' => $this->match->id]));
+        $response = $this->from(route('matches.index', [$this->event->id]))
+                        ->delete(route('matches.destroy', [$this->event->id, $this->match->id]));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));
-    }
-
-    /** @test */
-    public function returns_404_on_invalid_event_id()
-    {
-        $response = $this->actingAs($this->authorizedUser)
-                        ->from(route('matches.index', ['event' => $this->event->id]))
-                        ->delete(route('matches.destroy', ['event' => null, 'match' => $this->match->id]));
-
-        $response->assertStatus(404);
-    }
-
-    /** @test */
-    public function returns_404_on_invalid_match_id()
-    {
-        $response = $this->actingAs($this->authorizedUser)
-                        ->from(route('matches.index', ['event' => $this->event->id]))
-                        ->delete(route('matches.destroy', ['event' => $this->event->id, 'match' => 2]));
-
-        $response->assertStatus(404);
     }
 }

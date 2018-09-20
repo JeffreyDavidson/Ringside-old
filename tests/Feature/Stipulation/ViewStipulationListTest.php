@@ -37,7 +37,7 @@ class ViewStipulationListTest extends TestCase
     }
 
     /** @test */
-    public function guests_cannot_view_stipulation_list()
+    public function guests_cannot_view_the_list_of_stipulations()
     {
         $response = $this->get(route('stipulations.index'));
 

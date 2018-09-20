@@ -41,6 +41,6 @@ class ResultsController extends Controller
     {
         (new UpdateMatchResults($request->matches, $event))->save();
 
-        return redirect()->route('events.index');
+        return redirect()->route('events.show', ['event' => $event->id]);
     }
 }
