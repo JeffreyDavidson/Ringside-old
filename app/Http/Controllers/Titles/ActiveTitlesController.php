@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Titles;
 
 use App\Models\Title;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class ActiveTitlesController extends Controller
@@ -24,7 +23,7 @@ class ActiveTitlesController extends Controller
             'destroy' => 'deactivate',
         ];
     }
-    
+
     /**
      * Display a listing of all active titles.
      *
@@ -47,7 +46,7 @@ class ActiveTitlesController extends Controller
     {
         $title->activate();
 
-        return redirect()->route('active-titles.index');
+        return redirect()->route('inactive-titles.index');
     }
 
     /**

@@ -11,7 +11,7 @@
                         </a>
                     </li>
                     <li class="site-menu-category">Administrator</li>
-                    @can('index', \App\Models\Wrestler::class)
+                    @can('index', App\Models\Wrestler::class)
                         <li class="site-menu-item has-sub">
                             <a href="javascript:void(0)">
                                 <i class="site-menu-icon icon fa-group" aria-hidden="true"></i>
@@ -36,7 +36,7 @@
                             </ul>
                         </li>
                     @endcan
-                    @can('index', \App\Models\Event::class)
+                    @can('index', App\Models\Event::class)
                         <li class="site-menu-item has-sub">
                             <a href="javascript:void(0)">
                                 <i class="site-menu-icon icon fa-calendar" aria-hidden="true"></i>
@@ -61,8 +61,8 @@
                             </ul>
                         </li>
                     @endcan
-                    @can('index', \App\Models\Title::class)
-                        <li class="site-menu-item">
+                    @can('index', App\Models\Title::class)
+                        <li class="site-menu-item has-sub">
                             <a href="javascript:void(0)">
                                 <i class="site-menu-icon icon fa-trophy" aria-hidden="true"></i>
                                 <span class="site-menu-title">Titles</span>
@@ -78,13 +78,16 @@
                                     <a href="{{ route('active-titles.index') }}"><span class="site-menu-title">Active</span></a>
                                 </li>
                                 <li class="site-menu-item">
+                                    <a href="{{ route('inactive-titles.index') }}"><span class="site-menu-title">Inactive</span></a>
+                                </li>
+                                <li class="site-menu-item">
                                     <a href="{{ route('retired-titles.index') }}"><span class="site-menu-title">Retired</span></a>
                                 </li>
                             </ul>
                         </li>
                     @endcan
-                    @can('index', \App\Models\Stipulation::class)
-                        <li class="site-menu-item">
+                    @can('index', App\Models\Stipulation::class)
+                        <li class="site-menu-item has-sub">
                             <a href="javascript:void(0)">
                                 <i class="site-menu-icon icon fa-gavel" aria-hidden="true"></i>
                                 <span class="site-menu-title">Stipulations</span>
@@ -102,8 +105,8 @@
                             </ul>
                         </li>
                     @endcan
-                    @can('index', \App\Models\Venue::class)
-                        <li class="site-menu-item">
+                    @can('index', App\Models\Venue::class)
+                        <li class="site-menu-item has-sub">
                             <a href="javascript:void(0)">
                                 <i class="site-menu-icon icon fa-building" aria-hidden="true"></i>
                                 <span class="site-menu-title">Venues</span>

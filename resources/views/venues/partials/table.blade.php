@@ -18,7 +18,7 @@
                 <td>{{ $venue->state }}</td>
                 <td>{{ $venue->postcode }}</td>
                 <td>
-                    @include('partials.actions', ['resource' => 'venues', 'model' => $venue, 'actions' => collect(['edit', 'show', 'delete'])])
+                    @include('partials.actions', ['resource' => 'venues', 'model' => $venue, 'actions' => collect(['edit', 'view', 'delete'])])
                 </td>
             </tr>
         @endforeach

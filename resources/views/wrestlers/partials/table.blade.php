@@ -18,7 +18,7 @@
                 </td>
             </tr>
         @empty
-            <td colspan="5">No wrestlers of this type.</td>   
+            <tr><td colspan="5">No wrestlers of this type.</td></tr>   
         @endforelse
     </tbody>
 </table>

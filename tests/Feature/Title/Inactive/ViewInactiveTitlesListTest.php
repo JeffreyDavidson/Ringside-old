@@ -19,7 +19,6 @@ class ViewInactiveTitlesListTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_view_the_list_of_inactive_titles()
     {
-        $this->withoutExceptionHandling();
         $response = $this->actingAs($this->authorizedUser)
                         ->get(route('inactive-titles.index'));
 

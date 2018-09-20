@@ -23,8 +23,8 @@ class RolesAndPermissionTableSeeder extends Seeder
         $updateWrestler = Permission::create(['name' => 'Update Wrestler', 'slug' => 'update-wrestler']);
         $viewWrestler = Permission::create(['name' => 'View Wrestler', 'slug' => 'view-wrestler']);
         $deleteWrestler = Permission::create(['name' => 'Delete Wrestler', 'slug' => 'delete-wrestler']);
-        $activeWrestler = Permission::create(['name' => 'Activate Wrestler', 'slug' => 'activate-wrestler']);
-        $deactiveWrestler = Permission::create(['name' => 'Deactivate Wrestler', 'slug' => 'deactivate-wrestler']);
+        $activateWrestler = Permission::create(['name' => 'Activate Wrestler', 'slug' => 'activate-wrestler']);
+        $deactivateWrestler = Permission::create(['name' => 'Deactivate Wrestler', 'slug' => 'deactivate-wrestler']);
         $retireWrestler = Permission::create(['name' => 'Retire Wrestler', 'slug' => 'retire-wrestler']);
         $unretireWrestler = Permission::create(['name' => 'Unretire Wrestler', 'slug' => 'unretire-wrestler']);
 
@@ -33,8 +33,8 @@ class RolesAndPermissionTableSeeder extends Seeder
         $updateTitle = Permission::create(['name' => 'Update Title', 'slug' => 'update-title']);
         $viewTitle = Permission::create(['name' => 'View Title', 'slug' => 'view-title']);
         $deleteTitle = Permission::create(['name' => 'Delete Title', 'slug' => 'delete-title']);
-        $activeTitle = Permission::create(['name' => 'Activate Title', 'slug' => 'activate-title']);
-        $deactiveTitle = Permission::create(['name' => 'Deactivate Title', 'slug' => 'deactivat-title']);
+        $activateTitle = Permission::create(['name' => 'Activate Title', 'slug' => 'activate-title']);
+        $deactivateTitle = Permission::create(['name' => 'Deactivate Title', 'slug' => 'deactivate-title']);
         $retireTitle = Permission::create(['name' => 'Retire Title', 'slug' => 'retire-title']);
         $unretireTitle = Permission::create(['name' => 'Unretire Title', 'slug' => 'unretire-title']);
 

@@ -19,7 +19,6 @@ class ViewActiveTitlesListTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_view_the_list_of_active_titles()
     {
-        $this->withoutExceptionHandling();
         $response = $this->actingAs($this->authorizedUser)
                         ->get(route('active-titles.index'));
 

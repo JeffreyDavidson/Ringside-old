@@ -12,7 +12,7 @@
                 <td>{{ $stipulation->name }}</td>
                 <td>{{ $stipulation->slug }}</td>
                 <td>
-                    @include('partials.actions', ['resource' => 'stipulations', 'model' => $stipulation, 'actions' => collect(['edit', 'show', 'delete'])])
+                    @include('partials.actions', ['resource' => 'stipulations', 'model' => $stipulation, 'actions' => collect(['edit', 'view', 'delete'])])
                 </td>
             </tr>
         @endforeach

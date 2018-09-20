@@ -38,7 +38,6 @@ class WrestlersController extends Controller
             return redirect()->route('active-wrestlers.index');
         }
 
-
         return redirect()->route('inactive-wrestlers.index');
     }
 

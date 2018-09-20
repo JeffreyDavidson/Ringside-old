@@ -29,7 +29,7 @@ class ActivateInactiveTitleTest extends TestCase
                         ->post(route('inactive-titles.activate', $this->title->id));
 
         $response->assertStatus(302);
-        $response->assertRedirect(route('active-titles.index'));
+        $response->assertRedirect(route('inactive-titles.index'));
         $this->assertTrue($this->title->fresh()->is_active);
     }
 
