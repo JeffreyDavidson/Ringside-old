@@ -37,7 +37,7 @@ class ActiveTitlesController extends Controller
     }
 
     /**
-     * Store a newly created active title.
+     * Activate an inactive title.
      *
      * @param  \App\Models\Title  $title
      * @return \Illuminate\Http\RedirectResponse

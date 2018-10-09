@@ -57,8 +57,8 @@
     @endcan
 @endif
 
-@if ($actions->contains('activate'))
-    @can('update', $model)
+@if ($actions->contains('activate'))  
+    @can('activate', $model)
         <form style="display: inline-block;" action="{{ route('inactive-'.$resource.'.activate', $model->id) }}" method="POST">
             {{ csrf_field() }}
             <button style="cursor: pointer" class="btn btn-sm btn-icon btn-flat btn-default" type="submit" data-toggle="tooltip" data-original-title="Activate">
@@ -69,7 +69,7 @@
 @endif
 
 @if ($actions->contains('deactivate'))
-    @can('update', $model)
+    @can('deactivate', $model)
         <form style="display: inline-block;" action="{{ route('active-'.$resource.'.deactivate', $model->id) }}" method="POST">
             {{ csrf_field() }}
             {{ method_field('DELETE') }}

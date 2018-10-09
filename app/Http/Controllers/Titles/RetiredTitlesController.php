@@ -37,7 +37,7 @@ class RetiredTitlesController extends Controller
     }
 
     /**
-     * Store a newly created retired title.
+     * Retire a title.
      *
      * @param  \App\Models\Title  $title
      * @return \Illuminate\Http\RedirectResponse
@@ -50,7 +50,7 @@ class RetiredTitlesController extends Controller
     }
 
     /**
-     * Activate a retired title.
+     * Unretire a retired title.
      *
      * @param  \App\Models\Title  $title
      * @return \Illuminate\Http\RedirectResponse

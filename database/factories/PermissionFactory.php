@@ -4,10 +4,10 @@ use App\Models\Permission;
 use Faker\Generator as Faker;
 
 $factory->define(Permission::class, function (Faker $faker) {
-    $name = $faker->sentence;
+    $name = $faker->word;
 
     return [
-        'name' => $name,
+        'name' => title_case($name),
         'slug' => str_slug($name),
     ];
 });

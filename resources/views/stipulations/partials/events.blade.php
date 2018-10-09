@@ -1,14 +1,12 @@
 <table class="table table-striped table-bordered datatable" cellspacing="0" width="100%">
     <thead>
-        <th>ID</th>
         <th>Event</th>
         <th>Match</th>
         <th>Actions</th>
     </thead>
     <tbody>
-        @forelse($title->matches as $match)
+        @forelse($stipulation->pastMatches() as $match)
             <tr>
-                <td>{{ $match->id }}</td>
                 <td>{{ $match->event->name }}</td>
                 <td>{{ $match->present()->wrestlers }}</td>
                 <td>
@@ -18,7 +16,7 @@
                 </td>
             </tr>
         @empty
-            <tr><td colspan="4">This title has not been competed for in a match.</td></tr>    
+            <tr><td colspan="3">There are no records of this model.</td></tr>    
         @endforelse
     </tbody>
 </table>

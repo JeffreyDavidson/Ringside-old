@@ -19,25 +19,23 @@
             @if ($title->retired_at)
                 <p>Retired At: {{ $title->present()->retired_at }}</p>
             @endif
-            @include('titles.partials.records')
+            {{-- @include('titles.partials.records') --}}
         </div>
     </div>
-    @if ($title->hasPastMatches())
-        <div class="panel panel-bordered panel-primary">
-            <div class="panel-heading clearfix">
-                <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-trophy"></i>Previous Champions</h3>
-            </div>
-            <div class="panel-body container-fluid">
-                @include('titles.partials.champions')
-            </div>
+    <div class="panel panel-bordered panel-primary">
+        <div class="panel-heading clearfix">
+            <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-trophy"></i>Previous Champions</h3>
         </div>
-        <div class="panel panel-bordered panel-primary">
-            <div class="panel-heading clearfix">
-                <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-calendar"></i>Matches</h3>
-            </div>
-            <div class="panel-body container-fluid">
-                @include('titles.partials.matches')
-            </div>
+        <div class="panel-body container-fluid">
+            @include('titles.partials.champions')
         </div>
-    @endif
+    </div>
+    <div class="panel panel-bordered panel-primary">
+        <div class="panel-heading clearfix">
+            <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-calendar"></i>Matches</h3>
+        </div>
+        <div class="panel-body container-fluid">
+            @include('titles.partials.matches')
+        </div>
+    </div>
 @endsection

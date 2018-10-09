@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Wrestler\Active;
 
-use Tests\TestCase;
 use App\Models\Wrestler;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class DeactivateActiveWrestlerTest extends TestCase
 {
@@ -25,9 +25,9 @@ class DeactivateActiveWrestlerTest extends TestCase
     public function users_who_have_permission_can_deactivate_an_active_wrestler()
     {
         $response = $this->actingAs($this->authorizedUser)
-                        ->from(route('active-wrestlers.index'))
-                        ->delete(route('active-wrestlers.deactivate', $this->wrestler->id));
-
+            ->from(route('active-wrestlers.index'))
+            ->delete(route('active-wrestlers.deactivate', $this->wrestler->id));
+        
         $response->assertStatus(302);
         $response->assertRedirect(route('active-wrestlers.index'));
         $this->assertFalse($this->wrestler->fresh()->is_active);
@@ -37,8 +37,8 @@ class DeactivateActiveWrestlerTest extends TestCase
     public function users_who_dont_have_permission_cannot_deactivate_an_active_wrestler()
     {
         $response = $this->actingAs($this->unauthorizedUser)
-                        ->from(route('active-wrestlers.index'))
-                        ->delete(route('active-wrestlers.deactivate', $this->wrestler->id));
+            ->from(route('active-wrestlers.index'))
+            ->delete(route('active-wrestlers.deactivate', $this->wrestler->id));
 
         $response->assertStatus(403);
         $this->assertTrue($this->wrestler->is_active);
@@ -48,7 +48,7 @@ class DeactivateActiveWrestlerTest extends TestCase
     public function guests_cannot_deactivate_an_active_wrestler()
     {
         $response = $this->from(route('active-wrestlers.index'))
-                        ->delete(route('active-wrestlers.deactivate', $this->wrestler->id));
+            ->delete(route('active-wrestlers.deactivate', $this->wrestler->id));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Roster\Wrestlers;
 
-use Carbon\Carbon;
-use App\Models\Wrestler;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\WrestlerEditFormRequest;
 use App\Http\Requests\WrestlerCreateFormRequest;
+use App\Http\Requests\WrestlerEditFormRequest;
+use App\Models\Wrestler;
+use Carbon\Carbon;
 
 class WrestlersController extends Controller
 {
@@ -49,6 +49,8 @@ class WrestlersController extends Controller
      */
     public function show(Wrestler $wrestler)
     {
+        $wrestler->load('matches');
+
         return view('wrestlers.show', compact('wrestler'));
     }
 
@@ -73,6 +75,12 @@ class WrestlersController extends Controller
     public function update(WrestlerEditFormRequest $request, Wrestler $wrestler)
     {
         $wrestler->update($request->all());
+
+        if ($wrestler->hired_at->gt(today()->toDateTimeString()) && !$wrestler->isActive() && !$wrestler->isRetired()) {
+            return redirect()->route('inactive-wrestlers.index');
+        } elseif ($wrestler->isRetired()) {
+            return redirect()->route('retired-wrestlers.index');
+        }
 
         return redirect()->route('active-wrestlers.index');
     }

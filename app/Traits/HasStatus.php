@@ -2,9 +2,10 @@
 
 namespace App\Traits;
 
-use Illuminate\Database\Eloquent\Builder;
 use App\Exceptions\ModelIsActiveException;
 use App\Exceptions\ModelIsInactiveException;
+use App\Exceptions\ModelNotHiredException;
+use Illuminate\Database\Eloquent\Builder;
 
 trait HasStatus
 {
@@ -59,6 +60,12 @@ trait HasStatus
     {
         if ($this->isActive()) {
             throw new ModelIsActiveException;
+        }
+
+        if (($this instanceof Wrestler || $this instanceof Manager) && $this->hired_at->gt(today())) {
+            throw new ModelNotHiredException;
+        } elseif ($this instanceof Title && $this->introduced_at->gt(today())) {
+            throw new TitleNotIntroduced;
         }
 
         return $this->update(['is_active' => true]);

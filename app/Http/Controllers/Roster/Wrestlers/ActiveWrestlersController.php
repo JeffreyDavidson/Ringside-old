@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Roster\Wrestlers;
 
-use App\Models\Wrestler;
 use App\Http\Controllers\Controller;
+use App\Models\Wrestler;
 
 class ActiveWrestlersController extends Controller
 {
@@ -37,13 +37,14 @@ class ActiveWrestlersController extends Controller
     }
 
     /**
-     * Store a newly created active wrestler.
+     * Active an inactive wrestler.
      *
      * @param  \App\Models\Wrestler  $wrestler
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Wrestler $wrestler)
     {
+        dd('store method hit');
         $wrestler->activate();
 
         return redirect()->route('inactive-wrestlers.index');

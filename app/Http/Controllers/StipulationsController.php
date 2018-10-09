@@ -37,7 +37,7 @@ class StipulationsController extends Controller
     /**
      * Store a newly created stipulation.
      *
-     * @param  App\Http\Requests\StipulationCreateFormRequest  $request
+     * @param  \App\Http\Requests\StipulationCreateFormRequest  $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(StipulationCreateFormRequest $request)

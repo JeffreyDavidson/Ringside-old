@@ -15,8 +15,15 @@ class ComposerServiceProvider extends ServiceProvider
     public function boot()
     {
         View::composer(
-            'titles.partials.records', 'App\Http\ViewComposers\TitleRecordsViewComposer'
+            'titles.partials.records',
+            'App\Http\ViewComposers\TitleRecordsViewComposer'
         );
+
+        View::composer(
+            'matches.partials.form',
+            'App\Http\ViewComposers\MatchFormViewComposer'
+        );
+
     }
 
     /**

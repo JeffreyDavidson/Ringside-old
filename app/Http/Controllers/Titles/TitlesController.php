@@ -74,8 +74,10 @@ class TitlesController extends Controller
     {
         $title->update($request->all());
 
-        if ($request->hired_at <= Carbon::today()->toDateTimeString()) {
-            return redirect()->route('active-titles.index');
+        if ($request->introduced_at > Carbon::today()->toDateTimeString() || !$title->isActive()) {
+            return redirect()->route('inactive-titles.index');
+        } elseif ($title->isRetired()) {
+            return redirect()->route('retired-titles.index');
         }
 
         return redirect()->route('inactive-titles.index');

@@ -9,8 +9,14 @@ use App\Http\Requests\EventResultsFormRequest;
 
 class ResultsController extends Controller
 {
+    /** @var string */
     protected $authorizeResource = Event::class;
 
+    /**
+     * Get the map of resource methods to ability names.
+     *
+     * @return array
+     */
     protected function resourceAbilityMap()
     {
         return [

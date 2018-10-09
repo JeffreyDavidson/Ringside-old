@@ -2,10 +2,10 @@
 
 namespace App\Traits;
 
-use App\Models\Manager;
 use App\Exceptions\ManagerNotHiredException;
 use App\Exceptions\ModelHasManagerException;
 use App\Exceptions\ModelIsInactiveException;
+use App\Models\Manager;
 
 trait HasManagers
 {
@@ -46,7 +46,7 @@ trait HasManagers
      */
     public function hasCurrentManagers()
     {
-        return $this->currentManagers()->exists();
+        return $this->currentManagers->isNotEmpty();
     }
 
     /**
@@ -80,7 +80,7 @@ trait HasManagers
      */
     public function hireManager($manager, $date)
     {
-        if (! $manager->isActive()) {
+        if (!$manager->isActive()) {
             throw new ModelIsInactiveException;
         }
 
@@ -101,7 +101,7 @@ trait HasManagers
      */
     public function fireManager($manager, $date)
     {
-        if (! $this->hasManager($manager)) {
+        if (!$this->hasManager($manager)) {
             throw new ManagerNotHiredException;
         }
 

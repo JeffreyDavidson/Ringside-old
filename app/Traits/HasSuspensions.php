@@ -2,16 +2,15 @@
 
 namespace App\Traits;
 
-use Carbon\Carbon;
-use App\Models\Suspension;
-use Illuminate\Database\Eloquent\Builder;
 use App\Exceptions\ModelIsActiveException;
 use App\Exceptions\ModelIsSuspendedException;
+use App\Models\Suspension;
+use Illuminate\Database\Eloquent\Builder;
 
 trait HasSuspensions
 {
     /**
-     * A wrestler can have many suspensions.
+     * A model can have many suspensions.
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
@@ -21,7 +20,7 @@ trait HasSuspensions
     }
 
     /**
-     * Checks to see if the wrestler has past suspensions.
+     * Checks to see if the model has past suspensions.
      *
      * @return bool
      */
@@ -88,7 +87,7 @@ trait HasSuspensions
 
         $this->deactivate();
 
-        $this->suspensions()->create(['suspended_at' => Carbon::now()]);
+        $this->suspensions()->create(['suspended_at' => now()]);
 
         return $this;
     }

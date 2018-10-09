@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
+use App\Models\Wrestler;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class WrestlerPolicy
@@ -68,11 +69,12 @@ class WrestlerPolicy
      * Checks to see if the user has permission to activate a roster member.
      *
      * @param  \App\Models\User  $user
+     * @param  \App\Models\Wrestler  $wrestler
      * @return bool
      */
-    public function activate(User $user)
+    public function activate(User $user, Wrestler $wrestler)
     {
-        return $user->hasPermission('activate-wrestler');
+        return $user->hasPermission('activate-wrestler') && $wrestler->hired_at->lte(today());
     }
 
     /**
@@ -90,11 +92,12 @@ class WrestlerPolicy
      * Checks to see if the user has permission to retire a roster member.
      *
      * @param  \App\Models\User  $user
+     * @param  \App\Models\Wrestler  $wrestler
      * @return bool
      */
-    public function retire(User $user)
+    public function retire(User $user, Wrestler $wrestler)
     {
-        return $user->hasPermission('retire-wrestler');
+        return $user->hasPermission('retire-wrestler') && $wrestler->hired_at->lte(today());
     }
 
     /**

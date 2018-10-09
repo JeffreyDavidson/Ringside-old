@@ -25,7 +25,7 @@ class ArchivedEventsController extends Controller
     }
 
     /**
-     * Display a listing of all achived events.
+     * Display a listing of all archived events.
      *
      * @return \Illuminate\View\View
      */
@@ -37,7 +37,7 @@ class ArchivedEventsController extends Controller
     }
 
     /**
-     * Store a newly created archived event.
+     * Archives a past event.
      *
      * @param  \App\Models\Event  $event
      * @return \Illuminate\Http\RedirectResponse
@@ -50,7 +50,7 @@ class ArchivedEventsController extends Controller
     }
 
     /**
-     * Activate an archived event.
+     * Unarchives an archived event.
      *
      * @param  \App\Models\Event  $event
      * @return \Illuminate\Http\RedirectResponse

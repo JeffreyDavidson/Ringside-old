@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests\Feature\Wrestler\Inactive;
+namespace Tests\Feature\Wrestler;
 
-use Tests\TestCase;
 use App\Models\Wrestler;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
-class RetireInactiveWrestlerTest extends TestCase
+class RetireWrestlerTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -25,8 +25,8 @@ class RetireInactiveWrestlerTest extends TestCase
     public function users_who_have_permission_can_retire_an_inactive_wrestler()
     {
         $response = $this->actingAs($this->authorizedUser)
-                        ->from(route('inactive-wrestlers.index'))
-                        ->post(route('wrestlers.retire', $this->wrestler->id));
+            ->from(route('inactive-wrestlers.index'))
+            ->post(route('wrestlers.retire', $this->wrestler->id));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('inactive-wrestlers.index'));
@@ -38,8 +38,8 @@ class RetireInactiveWrestlerTest extends TestCase
     public function users_who_dont_have_permission_cannot_retire_an_inactive_wrestler()
     {
         $response = $this->actingAs($this->unauthorizedUser)
-                        ->from(route('inactive-wrestlers.index'))
-                        ->post(route('wrestlers.retire', $this->wrestler->id));
+            ->from(route('inactive-wrestlers.index'))
+            ->post(route('wrestlers.retire', $this->wrestler->id));
 
         $response->assertStatus(403);
         $this->assertCount(0, $this->wrestler->retirements);
@@ -49,7 +49,7 @@ class RetireInactiveWrestlerTest extends TestCase
     public function guests_cannot_retire_an_inactive_wrestler()
     {
         $response = $this->from(route('inactive-wrestlers.index'))
-                        ->post(route('wrestlers.retire', $this->wrestler->id));
+            ->post(route('wrestlers.retire', $this->wrestler->id));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));

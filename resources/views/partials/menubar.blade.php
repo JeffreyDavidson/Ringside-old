@@ -12,7 +12,9 @@
                     </li>
                     <li class="site-menu-category">Administrator</li>
                     @can('index', App\Models\Wrestler::class)
-                        <li class="site-menu-item has-sub">
+                        <li class="site-menu-item has-sub 
+                            {{ set_open(['roster/wrestlers/create', 'roster/wrestlers/active', 'roster/wrestlers/inactive', 'roster/wrestlers/retired']) }}
+                            ">
                             <a href="javascript:void(0)">
                                 <i class="site-menu-icon icon fa-group" aria-hidden="true"></i>
                                 <span class="site-menu-title">Wrestlers</span>
@@ -20,17 +22,17 @@
                             </a>
                             <ul class="site-menu-sub">
                                 @can('create', App\Models\Wrestler::class)
-                                    <li class="site-menu-item">
+                                    <li class="site-menu-item {{ set_active('roster/wrestlers/create') }}">
                                         <a href="{{ route('wrestlers.create') }}"><span class="site-menu-title">Create Wrestler</span></a>
                                     </li>
                                 @endcan
-                                <li class="site-menu-item">
+                                <li class="site-menu-item {{ set_active('roster/wrestlers/active') }}">
                                     <a href="{{ route('active-wrestlers.index') }}"><span class="site-menu-title">Active</span></a>
                                 </li>
-                                <li class="site-menu-item">
+                                <li class="site-menu-item {{ set_active('roster/wrestlers/inactive') }}">
                                     <a href="{{ route('inactive-wrestlers.index') }}"><span class="site-menu-title">Inactive</span></a>
                                 </li>
-                                <li class="site-menu-item">
+                                <li class="site-menu-item {{ set_active('roster/wrestlers/retired') }}">
                                     <a href="{{ route('retired-wrestlers.index') }}"><span class="site-menu-title">Retired</span></a>
                                 </li>
                             </ul>

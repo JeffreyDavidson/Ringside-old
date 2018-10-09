@@ -2,10 +2,9 @@
 
 namespace App\Traits;
 
-use Carbon\Carbon;
-use App\Models\Injury;
 use App\Exceptions\ModelIsActiveException;
 use App\Exceptions\ModelIsInjuredException;
+use App\Models\Injury;
 
 trait HasInjuries
 {
@@ -26,7 +25,7 @@ trait HasInjuries
      */
     public function hasPastInjuries()
     {
-        return $this->pastInjuries()->exists();
+        return $this->pastInjuries->isNotEmpty();
     }
 
     /**
@@ -88,7 +87,7 @@ trait HasInjuries
 
         $this->deactivate();
 
-        $this->injuries()->create(['injured_at' => Carbon::now()]);
+        $this->injuries()->create(['injured_at' => now()]);
 
         return $this;
     }

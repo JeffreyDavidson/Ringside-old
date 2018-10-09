@@ -5,10 +5,10 @@ use Faker\Generator as Faker;
 
 $factory->define(Venue::class, function (Faker $faker) {
     return [
-        'name' => $faker->sentence(3),
+        'name' => $faker->company,
         'address' => $faker->streetAddress,
         'city' => $faker->city,
         'state' => $faker->state,
-        'postcode' => substr($faker->postcode, 0, 5),
+        'postcode' => $faker->postcode,
     ];
 });

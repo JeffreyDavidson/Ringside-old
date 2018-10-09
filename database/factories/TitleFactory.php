@@ -1,7 +1,7 @@
 <?php
 
-use Carbon\Carbon;
 use App\Models\Title;
+use Carbon\Carbon;
 use Faker\Generator as Faker;
 
 $factory->define(Title::class, function (Faker $faker) {
@@ -11,7 +11,7 @@ $factory->define(Title::class, function (Faker $faker) {
         'name' => $name,
         'slug' => str_slug($name),
         'is_active' => true,
-        'introduced_at' => Carbon::now()->subMonths(8),
+        'introduced_at' => $faker->dateTimeBetween('-30 years', '-1 year'),
     ];
 });
 

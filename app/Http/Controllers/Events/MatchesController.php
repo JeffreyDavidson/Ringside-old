@@ -10,6 +10,7 @@ use App\Http\Requests\MatchCreateFormRequest;
 
 class MatchesController extends Controller
 {
+    /** @var string */
     protected $authorizeResource = Match::class;
 
     /**

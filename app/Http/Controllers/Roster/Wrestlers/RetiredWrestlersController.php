@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Roster\Wrestlers;
 
-use App\Models\Wrestler;
 use App\Http\Controllers\Controller;
+use App\Models\Wrestler;
 
 class RetiredWrestlersController extends Controller
 {
@@ -37,20 +37,21 @@ class RetiredWrestlersController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Retires a wrestler.
      *
      * @param  \App\Models\Wrestler  $wrestler
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Wrestler $wrestler)
     {
+        dd($wrestler);
         $wrestler->retire();
 
         return redirect()->back();
     }
 
     /**
-     * Activate a retired wrestler.
+     * Unretires a wrestler.
      *
      * @param  \App\Models\Wrestler  $wrestler
      * @return \Illuminate\Http\RedirectResponse

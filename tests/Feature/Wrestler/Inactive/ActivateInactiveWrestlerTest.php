@@ -2,9 +2,10 @@
 
 namespace Tests\Feature\Wrestler\Inactive;
 
-use Tests\TestCase;
 use App\Models\Wrestler;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class ActivateInactiveWrestlerTest extends TestCase
 {
@@ -18,27 +19,28 @@ class ActivateInactiveWrestlerTest extends TestCase
 
         $this->setupAuthorizedUser('activate-wrestler');
 
-        $this->wrestler = factory(Wrestler::class)->states('inactive')->create();
+        $this->wrestler = factory(Wrestler::class)->states('inactive')->create(['hired_at' => Carbon::yesterday()]);
     }
 
     /** @test */
     public function users_who_have_permission_can_activate_an_inactive_wrestler()
     {
+        $this->withoutExceptionHandling();
         $response = $this->actingAs($this->authorizedUser)
-                        ->from(route('inactive-wrestlers.index'))
-                        ->post(route('inactive-wrestlers.activate', $this->wrestler->id));
+            ->from(route('inactive-wrestlers.index'))
+            ->post(route('inactive-wrestlers.activate', $this->wrestler->id));
 
-        $response->assertStatus(302);
-        $response->assertRedirect(route('inactive-wrestlers.index'));
+        $response->assertStatus(302)->assertRedirect(route('inactive-wrestlers.index'));
         $this->assertTrue($this->wrestler->fresh()->is_active);
     }
 
     /** @test */
     public function users_who_dont_have_permission_cannot_activate_an_inactive_wrestler()
     {
+        $this->withoutExceptionHandling();
         $response = $this->actingAs($this->unauthorizedUser)
-                        ->from(route('inactive-wrestlers.index'))
-                        ->post(route('inactive-wrestlers.activate', $this->wrestler->id));
+            ->from(route('inactive-wrestlers.index'))
+            ->post(route('inactive-wrestlers.activate', $this->wrestler->id));
 
         $response->assertStatus(403);
         $this->assertFalse($this->wrestler->is_active);
@@ -48,9 +50,8 @@ class ActivateInactiveWrestlerTest extends TestCase
     public function guests_cannot_activate_an_inactive_wrestler()
     {
         $response = $this->from(route('inactive-wrestlers.index'))
-                        ->post(route('inactive-wrestlers.activate', $this->wrestler->id));
+            ->post(route('inactive-wrestlers.activate', $this->wrestler->id));
 
-        $response->assertStatus(302);
-        $response->assertRedirect(route('login'));
+        $response->assertStatus(302)->assertRedirect(route('login'));
     }
 }

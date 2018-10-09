@@ -1,6 +1,5 @@
 <table class="table table-striped table-bordered" cellspacing="0" width="100%">
     <thead>
-        <th>ID</th>
         <th>Name</th>
         <th>Slug</th>
         <th>Introduced At</th>
@@ -9,7 +8,6 @@
     <tbody>
         @forelse($titles as $title)
             <tr>
-                <td>{{ $title->id }}</td>
                 <td>{{ $title->name }}</td>
                 <td>{{ $title->slug }}</td>
                 <td>{{ $title->present()->introduced_at }}</td>
@@ -18,7 +16,7 @@
                 </td>
             </tr>
         @empty
-            <tr><td colspan="5">No Titles Of This Type</td></tr>
+            <tr><td colspan="4">No titles of this type.</td></tr>
         @endforelse
     </tbody>
 </table>

@@ -1,12 +1,12 @@
 <?php
 
 use Carbon\Carbon;
+use App\Models\Wrestler;
 use App\Models\Event;
 use App\Models\Match;
 use App\Models\Title;
 use App\Models\Venue;
 use App\Models\Referee;
-use App\Models\Wrestler;
 use App\Models\MatchType;
 use App\Models\Stipulation;
 use App\Models\MatchDecision;
@@ -38,8 +38,8 @@ class EventsTableSeeder extends Seeder
             return strtotime($a) - strtotime($b);
         })->values()->map(function ($date, $key) {
             return factory(Event::class)->create([
-                'name' => 'Event '.($key + 1),
-                'slug' => 'event'.($key + 1),
+                'name' => 'Event ' . ($key + 1),
+                'slug' => 'event' . ($key + 1),
                 'venue_id' => Venue::inRandomOrder()->first()->id,
                 'date' => $date->hour(19),
             ]);
@@ -62,7 +62,7 @@ class EventsTableSeeder extends Seeder
 
         for ($matchNumber = 1; $matchNumber <= $matchesCount; $matchNumber++) {
             $match = $event->matches()->save(factory(Match::class)->create([
-                'match_type_id' => MatchType::inRandomOrder()->first()->id,
+                'match_type_id' => $this->getMatchType()->id,
                 'event_id' => $event->id,
                 'match_number' => $matchNumber,
                 'match_decision_id' => MatchDecision::inRandomOrder()->first()->id,
@@ -111,12 +111,11 @@ class EventsTableSeeder extends Seeder
             })->filter();
         }
 
-        $availableWrestlers = Wrestler::inRandomOrder()
-                                    ->hiredBefore($match->date)
-                                    ->whereNotIn('id', $champions->pluck('id')->all())
-                                    ->get();
+        $availableWrestlers = $this->getAvailableWrestlers($match, $champions);
 
-        $expectedWrestlersCount = ($match->type->total_competitors ?? rand(5, max(5, $availableWrestlers->count())) - $champions->count());
+        $totalCompetitors = $match->type->total_competitors ?? rand(5, 20);
+
+        $expectedWrestlersCount = $totalCompetitors - $champions->count();
 
         $wrestlersForMatch = $availableWrestlers->take($expectedWrestlersCount);
 
@@ -135,8 +134,8 @@ class EventsTableSeeder extends Seeder
     {
         // If this is a title match give the champion a 10% chance to retain their title.
         if ($match->isTitleMatch()) {
-            $champions = $match->titles->filter(function ($title, $key) { 
-                return ! $title->isVacant();
+            $champions = $match->titles->filter(function ($title, $key) {
+                return !$title->isVacant();
             })->pluck('currentChampion');
             if ($champions->isEmpty()) {
                 $winners = $match->groupedWrestlersBySide()->random()->modelKeys();
@@ -193,8 +192,37 @@ class EventsTableSeeder extends Seeder
         return $dates;
     }
 
+    private function getAvailableWrestlers($match, $champions)
+    {
+        return Wrestler::inRandomOrder()
+                        ->hiredBefore($match->date)
+                        ->whereNotIn('id', $champions->pluck('id')->all())
+                        ->get();
+    }
+
     private function chance(int $percent)
     {
         return rand(0, 100) < $percent;
+    }
+
+    private function getMatchType()
+    {
+        $weights = [];
+        $weights = array_merge($weights, array_fill(0, 4, MatchType::find(1)));  // 40%
+        $weights = array_merge($weights, array_fill(0, 2, MatchType::find(2))); // 20%%
+        $weights = array_merge($weights, array_fill(0, 1, MatchType::find(3))); // 10%
+        $weights = array_merge($weights, array_fill(0, .5, MatchType::find(4))); // 5%
+        $weights = array_merge($weights, array_fill(0, .4, MatchType::find(5))); // 4%
+        $weights = array_merge($weights, array_fill(0, .3, MatchType::find(6))); // 3%
+        $weights = array_merge($weights, array_fill(0, .3, MatchType::find(7))); // 3%
+        $weights = array_merge($weights, array_fill(0, .1, MatchType::find(8))); // 1%
+        $weights = array_merge($weights, array_fill(0, .2, MatchType::find(9))); // 2%
+        $weights = array_merge($weights, array_fill(0, .1, MatchType::find(10))); // 1%
+        $weights = array_merge($weights, array_fill(0, .7, MatchType::find(11))); // 7%
+        $weights = array_merge($weights, array_fill(0, .2, MatchType::find(12))); // 2%
+        $weights = array_merge($weights, array_fill(0, .1, MatchType::find(13))); // 1%
+        $weights = array_merge($weights, array_fill(0, .1, MatchType::find(14))); // 1%
+
+        return $weights[mt_rand(0, count($weights) - 1)];
     }
 }

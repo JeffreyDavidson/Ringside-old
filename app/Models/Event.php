@@ -2,31 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
-use Laracodes\Presenter\Traits\Presentable;
 use App\Exceptions\EventIsArchivedException;
-use App\Exceptions\EventNotArchivedException;
 use App\Exceptions\EventIsScheduledException;
+use App\Exceptions\EventNotArchivedException;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laracodes\Presenter\Traits\Presentable;
 
 class Event extends Model
 {
     use Presentable, SoftDeletes;
-
-    /**
-     * Assign which presenter to be used for model.
-     *
-     * @var array
-     */
-    protected $with = ['matches', 'venue'];
-
-    /**
-     * Assign which presenter to be used for model.
-     *
-     * @var string
-     */
-    protected $presenter = 'App\Presenters\EventPresenter';
 
     /**
      * The attributes that are mass assignable.
@@ -44,6 +30,13 @@ class Event extends Model
         'date' => 'datetime',
         'archived_at' => 'datetime',
     ];
+
+    /**
+     * Assign which presenter to be used for model.
+     *
+     * @var string
+     */
+    protected $presenter = 'App\Presenters\EventPresenter';
 
     /**
      * An event has many matches.
@@ -174,6 +167,7 @@ class Event extends Model
     {
         return $this->date->lt(today());
     }
+    
 
     /**
      * Checks to see if the event is archived.

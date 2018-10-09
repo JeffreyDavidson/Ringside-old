@@ -4,7 +4,7 @@ use App\Models\MatchDecision;
 use Faker\Generator as Faker;
 
 $factory->define(MatchDecision::class, function (Faker $faker) {
-    $name = $faker->sentence;
+    $name = $faker->word;
 
     return [
         'name' => $name,
