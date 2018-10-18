@@ -25,6 +25,16 @@ class RetiredWrestlersController extends Controller
     }
 
     /**
+     * Get the list of resource methods which do not have model parameters.
+     *
+     * @return array
+     */
+    protected function resourceMethodsWithoutModels()
+    {
+        return ['index'];
+    }
+
+    /**
      * Display a listing of all retired wrestlers.
      *
      * @return \Illuminate\View\View
@@ -44,7 +54,6 @@ class RetiredWrestlersController extends Controller
      */
     public function store(Wrestler $wrestler)
     {
-        dd($wrestler);
         $wrestler->retire();
 
         return redirect()->back();

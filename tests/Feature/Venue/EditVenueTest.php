@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Venue;
 
-use Tests\TestCase;
 use App\Models\Venue;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class EditVenueTest extends TestCase
 {
@@ -26,7 +26,7 @@ class EditVenueTest extends TestCase
     public function users_who_have_permission_can_view_the_edit_venue_page()
     {
         $response = $this->actingAs($this->authorizedUser)
-                        ->get(route('venues.edit', $this->venue->id));
+            ->get(route('venues.edit', $this->venue->id));
 
         $response->assertSuccessful();
         $response->assertViewIs('venues.edit');
@@ -37,7 +37,7 @@ class EditVenueTest extends TestCase
     public function users_who_dont_have_permission_cannot_view_the_edit_venue_page()
     {
         $response = $this->actingAs($this->unauthorizedUser)
-                        ->get(route('venues.edit', $this->venue->id));
+            ->get(route('venues.edit', $this->venue->id));
 
         $response->assertStatus(403);
     }
@@ -55,14 +55,14 @@ class EditVenueTest extends TestCase
     public function users_who_have_permission_can_edit_a_venue()
     {
         $response = $this->actingAs($this->authorizedUser)
-                        ->from(route('venues.edit', $this->venue->id))
-                        ->patch(route('venues.update', $this->venue->id), $this->validParams([
-                            'name' => 'New Venue Name',
-                            'address' => '456 Main Drive',
-                            'city' => 'Beverly Hills',
-                            'state' => 'California',
-                            'postcode' => '90210',
-                        ]));
+            ->from(route('venues.edit', $this->venue->id))
+            ->patch(route('venues.update', $this->venue->id), $this->validParams([
+                'name' => 'New Venue Name',
+                'address' => '456 Main Drive',
+                'city' => 'Beverly Hills',
+                'state' => 'California',
+                'postcode' => '90210',
+            ]));
 
         $response->assertRedirect(route('venues.index'));
         tap(Venue::first(), function ($venue) use ($response) {
@@ -78,7 +78,7 @@ class EditVenueTest extends TestCase
     public function users_who_dont_have_permission_cannot_edit_a_venue()
     {
         $response = $this->actingAs($this->unauthorizedUser)
-                        ->patch(route('venues.update', $this->venue->id), $this->validParams());
+            ->patch(route('venues.update', $this->venue->id), $this->validParams());
 
         $response->assertStatus(403);
     }
@@ -96,10 +96,10 @@ class EditVenueTest extends TestCase
     public function name_is_required()
     {
         $this->response = $this->actingAs($this->authorizedUser)
-                            ->from(route('venues.edit', $this->venue->id))
-                            ->patch(route('venues.update', $this->venue->id), $this->validParams([
-                                'name' => '',
-                            ]));
+            ->from(route('venues.edit', $this->venue->id))
+            ->patch(route('venues.update', $this->venue->id), $this->validParams([
+                'name' => '',
+            ]));
 
         $this->assertFormError('name', 'Old Name', $this->venue->name);
     }
@@ -108,10 +108,10 @@ class EditVenueTest extends TestCase
     public function name_must_only_contain_letters_numbers_and_spaces()
     {
         $this->response = $this->actingAs($this->authorizedUser)
-                            ->from(route('venues.edit', $this->venue->id))
-                            ->patch(route('venues.update', $this->venue->id), $this->validParams([
-                                'name' => 'Club 83%#(@0@(*U$',
-                            ]));
+            ->from(route('venues.edit', $this->venue->id))
+            ->patch(route('venues.update', $this->venue->id), $this->validParams([
+                'name' => 'Club 83%#(@0@(*U$',
+            ]));
 
         $this->assertFormError('name', 'Old Name', $this->venue->name);
     }
@@ -122,10 +122,10 @@ class EditVenueTest extends TestCase
         factory(Venue::class)->create($this->validParams());
 
         $this->response = $this->actingAs($this->authorizedUser)
-                            ->from(route('venues.edit', $this->venue->id))
-                            ->patch(route('venues.update', $this->venue->id), $this->validParams([
-                                'name' => 'Venue Name',
-                            ]));
+            ->from(route('venues.edit', $this->venue->id))
+            ->patch(route('venues.update', $this->venue->id), $this->validParams([
+                'name' => 'Venue Name',
+            ]));
 
         $this->assertFormError('name', 'Old Name', $this->venue->name);
     }
@@ -134,10 +134,10 @@ class EditVenueTest extends TestCase
     public function address_is_required()
     {
         $this->response = $this->actingAs($this->authorizedUser)
-                            ->from(route('venues.edit', $this->venue->id))
-                            ->patch(route('venues.update', $this->venue->id), $this->validParams([
-                                'address' => '',
-                            ]));
+            ->from(route('venues.edit', $this->venue->id))
+            ->patch(route('venues.update', $this->venue->id), $this->validParams([
+                'address' => '',
+            ]));
 
         $this->assertFormError('address', 'Old Address', $this->venue->address);
     }
@@ -146,10 +146,10 @@ class EditVenueTest extends TestCase
     public function address_must_only_contain_letters_numbers_and_spaces()
     {
         $this->response = $this->actingAs($this->authorizedUser)
-                            ->from(route('venues.edit', $this->venue->id))
-                            ->patch(route('venues.update', $this->venue->id), $this->validParams([
-                                'address' => 'Address 83%#(@0@(*U$',
-                            ]));
+            ->from(route('venues.edit', $this->venue->id))
+            ->patch(route('venues.update', $this->venue->id), $this->validParams([
+                'address' => 'Address 83%#(@0@(*U$',
+            ]));
 
         $this->assertFormError('address', 'Old Address', $this->venue->address);
     }
@@ -158,10 +158,10 @@ class EditVenueTest extends TestCase
     public function city_is_required()
     {
         $this->response = $this->actingAs($this->authorizedUser)
-                            ->from(route('venues.edit', $this->venue->id))
-                            ->patch(route('venues.update', $this->venue->id), $this->validParams([
-                                'city' => '',
-                            ]));
+            ->from(route('venues.edit', $this->venue->id))
+            ->patch(route('venues.update', $this->venue->id), $this->validParams([
+                'city' => '',
+            ]));
 
         $this->assertFormError('city', 'Old City', $this->venue->city);
     }
@@ -170,10 +170,10 @@ class EditVenueTest extends TestCase
     public function city_must_only_contain_letters_and_spaces()
     {
         $this->response = $this->actingAs($this->authorizedUser)
-                            ->from(route('venues.edit', $this->venue->id))
-                            ->patch(route('venues.update', $this->venue->id, $this->validParams([
-                                'city' => '90210',
-                            ])));
+            ->from(route('venues.edit', $this->venue->id))
+            ->patch(route('venues.update', $this->venue->id, $this->validParams([
+                'city' => '90210',
+            ])));
 
         $this->assertFormError('city', 'Old City', $this->venue->city);
     }
@@ -182,10 +182,10 @@ class EditVenueTest extends TestCase
     public function state_is_required()
     {
         $this->response = $this->actingAs($this->authorizedUser)
-                            ->from(route('venues.edit', $this->venue->id))
-                            ->patch(route('venues.update', $this->venue->id), $this->validParams([
-                                'state' => '',
-                            ]));
+            ->from(route('venues.edit', $this->venue->id))
+            ->patch(route('venues.update', $this->venue->id), $this->validParams([
+                'state' => '',
+            ]));
 
         $this->assertFormError('state', 'Old State', $this->venue->state);
     }
@@ -194,10 +194,10 @@ class EditVenueTest extends TestCase
     public function state_must_only_contain_letters()
     {
         $this->response = $this->actingAs($this->authorizedUser)
-                            ->from(route('venues.edit', $this->venue->id))
-                            ->patch(route('venues.update', $this->venue->id), $this->validParams([
-                                'state' => 'abcd789',
-                            ]));
+            ->from(route('venues.edit', $this->venue->id))
+            ->patch(route('venues.update', $this->venue->id), $this->validParams([
+                'state' => 'abcd789',
+            ]));
 
         $this->assertFormError('state', 'Old State', $this->venue->state);
     }
@@ -206,10 +206,10 @@ class EditVenueTest extends TestCase
     public function state_must_have_a_valid_selection()
     {
         $this->response = $this->actingAs($this->authorizedUser)
-                            ->from(route('venues.edit', $this->venue->id))
-                            ->patch(route('venues.update', $this->venue->id), $this->validParams([
-                                'state' => '0',
-                            ]));
+            ->from(route('venues.edit', $this->venue->id))
+            ->patch(route('venues.update', $this->venue->id), $this->validParams([
+                'state' => '0',
+            ]));
 
         $this->assertFormError('state', 'Old State', $this->venue->state);
     }
@@ -218,10 +218,10 @@ class EditVenueTest extends TestCase
     public function postcode_is_required()
     {
         $this->response = $this->actingAs($this->authorizedUser)
-                            ->from(route('venues.edit', $this->venue->id))
-                            ->patch(route('venues.update', $this->venue->id), $this->validParams([
-                                'postcode' => '',
-                            ]));
+            ->from(route('venues.edit', $this->venue->id))
+            ->patch(route('venues.update', $this->venue->id), $this->validParams([
+                'postcode' => '',
+            ]));
 
         $this->assertFormError('postcode', '98765', $this->venue->postcode);
     }
@@ -230,10 +230,10 @@ class EditVenueTest extends TestCase
     public function postcode_must_be_numeric()
     {
         $this->response = $this->actingAs($this->authorizedUser)
-                            ->from(route('venues.edit', $this->venue->id))
-                            ->patch(route('venues.update', $this->venue->id), $this->validParams([
-                                'postcode' => 'not a number',
-                            ]));
+            ->from(route('venues.edit', $this->venue->id))
+            ->patch(route('venues.update', $this->venue->id), $this->validParams([
+                'postcode' => 'not a number',
+            ]));
 
         $this->assertFormError('postcode', '98765', $this->venue->postcode);
     }
@@ -242,10 +242,10 @@ class EditVenueTest extends TestCase
     public function postcode_must_be_5_digits()
     {
         $this->response = $this->actingAs($this->authorizedUser)
-                            ->from(route('venues.edit', $this->venue->id))
-                            ->patch(route('venues.update', $this->venue->id), $this->validParams([
-                                'postcode' => time(),
-                            ]));
+            ->from(route('venues.edit', $this->venue->id))
+            ->patch(route('venues.update', $this->venue->id), $this->validParams([
+                'postcode' => time(),
+            ]));
 
         $this->assertFormError('postcode', '98765', $this->venue->postcode);
     }

@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateTitlesTable extends Migration
 {
@@ -18,7 +18,7 @@ class CreateTitlesTable extends Migration
             $table->string('name')->unique();
             $table->string('slug')->unique();
             $table->boolean('is_active');
-            $table->timestamp('introduced_at');
+            $table->datetime('introduced_at');
             $table->timestamps();
             $table->softDeletes();
         });

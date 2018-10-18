@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Events;
 
-use App\Models\Event;
 use App\Http\Controllers\Controller;
+use App\Models\Event;
 
 class ArchivedEventsController extends Controller
 {
@@ -22,6 +22,16 @@ class ArchivedEventsController extends Controller
             'store' => 'archive',
             'destroy' => 'unarchive',
         ];
+    }
+
+    /**
+     * Get the list of resource methods which do not have model parameters.
+     *
+     * @return array
+     */
+    protected function resourceMethodsWithoutModels()
+    {
+        return ['index'];
     }
 
     /**

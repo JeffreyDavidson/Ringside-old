@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Events;
 
-use App\Models\Event;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\EventEditFormRequest;
 use App\Http\Requests\EventCreateFormRequest;
+use App\Http\Requests\EventEditFormRequest;
+use App\Models\Event;
 
 class EventsController extends Controller
 {
@@ -68,6 +68,14 @@ class EventsController extends Controller
     public function update(EventEditFormRequest $request, Event $event)
     {
         $event->update($request->all());
+
+        if ($event->isArchived()) {
+            return redirect()->route('archived-events.index');
+        }
+
+        if (!$event->isScheduled()) {
+            return redirect()->route('past-events.index');
+        }
 
         return redirect()->route('scheduled-events.index');
     }

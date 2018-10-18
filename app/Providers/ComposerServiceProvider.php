@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Http\ViewComposers\MatchFormViewComposer;
+use App\Http\ViewComposers\TitleRecordsViewComposer;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -16,14 +18,13 @@ class ComposerServiceProvider extends ServiceProvider
     {
         View::composer(
             'titles.partials.records',
-            'App\Http\ViewComposers\TitleRecordsViewComposer'
+            TitleRecordsViewComposer::class
         );
 
         View::composer(
             'matches.partials.form',
-            'App\Http\ViewComposers\MatchFormViewComposer'
+            MatchFormViewComposer::class
         );
-
     }
 
     /**

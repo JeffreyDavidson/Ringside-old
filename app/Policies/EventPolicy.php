@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Event;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -95,5 +96,16 @@ class EventPolicy
     public function updateResults(User $user)
     {
         return $user->hasPermission('update-event-results');
+    }
+
+    /**
+     * Checks to see if the user has permission to edit event results.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function schedule(User $user, Event $event)
+    {
+        return $event->isScheduled();
     }
 }

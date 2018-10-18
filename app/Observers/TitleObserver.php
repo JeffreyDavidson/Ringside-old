@@ -16,4 +16,17 @@ class TitleObserver
     {
         $title->is_active = $title->introduced_at->lte(today());
     }
+
+    /**
+     * Set active state based off of when the title was introduced.
+     *
+     * @param  \App\Models\Title  $title
+     * @return void
+     */
+    public function saving(Title $title)
+    {
+        if ($title->isActive()) {
+            $title->is_active = $title->introduced_at->lte(today());
+        }
+    }
 }

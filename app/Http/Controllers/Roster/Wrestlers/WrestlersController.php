@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\WrestlerCreateFormRequest;
 use App\Http\Requests\WrestlerEditFormRequest;
 use App\Models\Wrestler;
-use Carbon\Carbon;
 
 class WrestlersController extends Controller
 {
@@ -34,7 +33,7 @@ class WrestlersController extends Controller
     {
         Wrestler::create($request->all());
 
-        if ($request->hired_at <= Carbon::today()->toDateTimeString()) {
+        if ($request->hired_at <= today()->toDateTimeString()) {
             return redirect()->route('active-wrestlers.index');
         }
 
@@ -76,10 +75,12 @@ class WrestlersController extends Controller
     {
         $wrestler->update($request->all());
 
-        if ($wrestler->hired_at->gt(today()->toDateTimeString()) && !$wrestler->isActive() && !$wrestler->isRetired()) {
-            return redirect()->route('inactive-wrestlers.index');
-        } elseif ($wrestler->isRetired()) {
+        if ($wrestler->isRetired()) {
             return redirect()->route('retired-wrestlers.index');
+        }
+
+        if (!$wrestler->isActive()) {
+            return redirect()->route('inactive-wrestlers.index');
         }
 
         return redirect()->route('active-wrestlers.index');

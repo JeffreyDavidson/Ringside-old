@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Title;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -70,9 +71,9 @@ class TitlePolicy
      * @param  \App\Models\User  $user
      * @return bool
      */
-    public function activate(User $user)
+    public function activate(User $user, Title $title)
     {
-        return $user->hasPermission('activate-title');
+        return $user->hasPermission('activate-title') && $title->introduced_at->lte(today());
     }
 
     /**
@@ -92,9 +93,9 @@ class TitlePolicy
      * @param  \App\Models\User  $user
      * @return bool
      */
-    public function retire(User $user)
+    public function retire(User $user, Title $title)
     {
-        return $user->hasPermission('retire-title');
+        return $user->hasPermission('retire-title') && $title->introduced_at->lte(today());
     }
 
     /**

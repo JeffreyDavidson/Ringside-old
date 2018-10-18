@@ -7,6 +7,9 @@ use App\Models\Wrestler;
 
 class InactiveWrestlersController extends Controller
 {
+    /** @var string */
+    protected $authorizeResource = Wrestler::class;
+
     /**
      * Display a listing of all inactive wrestlers.
      *

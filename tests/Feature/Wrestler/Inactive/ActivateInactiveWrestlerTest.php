@@ -25,7 +25,6 @@ class ActivateInactiveWrestlerTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_activate_an_inactive_wrestler()
     {
-        $this->withoutExceptionHandling();
         $response = $this->actingAs($this->authorizedUser)
             ->from(route('inactive-wrestlers.index'))
             ->post(route('inactive-wrestlers.activate', $this->wrestler->id));
@@ -37,7 +36,6 @@ class ActivateInactiveWrestlerTest extends TestCase
     /** @test */
     public function users_who_dont_have_permission_cannot_activate_an_inactive_wrestler()
     {
-        $this->withoutExceptionHandling();
         $response = $this->actingAs($this->unauthorizedUser)
             ->from(route('inactive-wrestlers.index'))
             ->post(route('inactive-wrestlers.activate', $this->wrestler->id));

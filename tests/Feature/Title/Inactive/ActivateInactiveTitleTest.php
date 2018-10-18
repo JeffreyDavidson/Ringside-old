@@ -24,6 +24,8 @@ class ActivateInactiveTitleTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_activate_an_inactive_title()
     {
+        // $this->withoutExceptionHandling();
+        // dd($this->title);
         $response = $this->actingAs($this->authorizedUser)
             ->from(route('inactive-titles.index'))
             ->post(route('inactive-titles.activate', $this->title->id));

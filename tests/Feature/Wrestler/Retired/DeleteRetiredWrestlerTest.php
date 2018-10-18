@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Wrestler\Retired;
 
-use Tests\TestCase;
 use App\Models\Wrestler;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class DeleteRetiredWrestlerTest extends TestCase
 {
@@ -25,8 +25,8 @@ class DeleteRetiredWrestlerTest extends TestCase
     public function users_who_have_permission_can_delete_a_retired_wrestler()
     {
         $response = $this->actingAs($this->authorizedUser)
-                        ->from(route('retired-wrestlers.index'))
-                        ->delete(route('wrestlers.destroy', $this->wrestler->id));
+            ->from(route('retired-wrestlers.index'))
+            ->delete(route('wrestlers.destroy', $this->wrestler->id));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('retired-wrestlers.index'));
@@ -37,8 +37,8 @@ class DeleteRetiredWrestlerTest extends TestCase
     public function users_who_dont_have_permission_cannot_delete_a_retired_wrestler()
     {
         $response = $this->actingAs($this->unauthorizedUser)
-                        ->from(route('retired-wrestlers.index'))
-                        ->delete(route('wrestlers.destroy', $this->wrestler->id));
+            ->from(route('retired-wrestlers.index'))
+            ->delete(route('wrestlers.destroy', $this->wrestler->id));
 
         $response->assertStatus(403);
         $this->assertNull($this->wrestler->deleted_at);
@@ -48,7 +48,7 @@ class DeleteRetiredWrestlerTest extends TestCase
     public function guests_cannot_delete_a_retired_wrestler()
     {
         $response = $this->from(route('retired-wrestlers.index'))
-                        ->delete(route('wrestlers.destroy', $this->wrestler->id));
+            ->delete(route('wrestlers.destroy', $this->wrestler->id));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));

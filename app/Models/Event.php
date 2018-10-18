@@ -134,7 +134,7 @@ class Event extends Model
      */
     public function scopePast(Builder $query)
     {
-        return $query->where('date', '<', today());
+        return $query->where('date', '<', today())->whereNull('archived_at');
     }
 
     /**
@@ -167,7 +167,6 @@ class Event extends Model
     {
         return $this->date->lt(today());
     }
-    
 
     /**
      * Checks to see if the event is archived.

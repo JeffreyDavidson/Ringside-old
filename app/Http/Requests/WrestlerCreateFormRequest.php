@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Validator;
 
 class WrestlerCreateFormRequest extends FormRequest
 {
@@ -31,11 +31,17 @@ class WrestlerCreateFormRequest extends FormRequest
             'feet' => 'required|integer',
             'inches' => 'required|integer|max:11',
             'weight' => 'required|integer',
-            'signature_move' => 'required',
+            'signature_move' => 'required|unique:wrestlers,signature_move',
             'hired_at' => 'required|date',
         ];
     }
 
+    /**
+     * Configure the validator instance.
+     *
+     * @param  \Illuminate\Validation\Validator  $validator
+     * @return void
+     */
     public function withValidator(Validator $validator)
     {
         $validator->after(function (Validator $validator) {

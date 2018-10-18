@@ -10,7 +10,7 @@
             <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-calendar"></i>List of Scheduled Events</h3>
         </div>
         <div class="panel-body container-fluid">
-            @include('events.partials.table', ['actions' => collect(['edit', 'view', 'delete'])])
+            @include('events.partials.table', ['actions' => collect(['edit', 'view', 'delete', 'book-matches'])])
             {{ $events->links() }}
         </div>
     </div>

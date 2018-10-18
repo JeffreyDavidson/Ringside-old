@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Titles;
 
-use Carbon\Carbon;
-use App\Models\Title;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\TitleEditFormRequest;
 use App\Http\Requests\TitleCreateFormRequest;
+use App\Http\Requests\TitleEditFormRequest;
+use App\Models\Title;
 
 class TitlesController extends Controller
 {
@@ -34,7 +33,7 @@ class TitlesController extends Controller
     {
         Title::create($request->all());
 
-        if ($request->introduced_at <= Carbon::today()->toDateTimeString()) {
+        if ($request->introduced_at <= today()->toDateTimeString()) {
             return redirect()->route('active-titles.index');
         }
 
@@ -74,13 +73,15 @@ class TitlesController extends Controller
     {
         $title->update($request->all());
 
-        if ($request->introduced_at > Carbon::today()->toDateTimeString() || !$title->isActive()) {
-            return redirect()->route('inactive-titles.index');
-        } elseif ($title->isRetired()) {
+        if ($title->isRetired()) {
             return redirect()->route('retired-titles.index');
         }
 
-        return redirect()->route('inactive-titles.index');
+        if (!$title->isActive()) {
+            return redirect()->route('inactive-titles.index');
+        }
+
+        return redirect()->route('active-titles.index');
     }
 
     /**

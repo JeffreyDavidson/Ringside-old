@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateManagersTable extends Migration
 {
@@ -18,7 +18,7 @@ class CreateManagersTable extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->boolean('is_active');
-            $table->timestamp('hired_at')->nullable();
+            $table->datetime('hired_at');
             $table->timestamps();
             $table->softDeletes();
             $table->unique(['first_name', 'last_name']);

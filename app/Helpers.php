@@ -25,4 +25,3 @@ function set_open(array $paths, $open = 'open')
 {
     return Request::is(...$paths) ? $open : '';
 }
-

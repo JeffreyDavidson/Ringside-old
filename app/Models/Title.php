@@ -2,19 +2,19 @@
 
 namespace App\Models;
 
-use App\Traits\HasStatus;
 use App\Traits\HasMatches;
 use App\Traits\HasRetirements;
+use App\Traits\HasStatus;
 use Illuminate\Database\Eloquent\Model;
-use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laracodes\Presenter\Traits\Presentable;
 
 class Title extends Model
 {
     use HasStatus,
-        HasMatches,
-        HasRetirements,
-        Presentable,
+    HasMatches,
+    HasRetirements,
+    Presentable,
         SoftDeletes;
 
     /**
@@ -23,8 +23,8 @@ class Title extends Model
      * @var array
      */
     protected $casts = [
-        'introduced_at' => 'datetime',
         'is_active' => 'boolean',
+        'introduced_at' => 'datetime',
     ];
 
     /**

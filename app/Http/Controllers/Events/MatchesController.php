@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Events;
 
-use App\Models\Event;
-use App\Models\Match;
-use App\Services\AddMatchesToEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MatchCreateFormRequest;
+use App\Models\Event;
+use App\Models\Match;
 
 class MatchesController extends Controller
 {
@@ -34,7 +33,8 @@ class MatchesController extends Controller
      */
     public function store(MatchCreateFormRequest $request, Event $event)
     {
-        (new AddMatchesToEvent($request->matches, $event))->schedule();
+        // dd('testing');
+        // (new AddMatchesToEvent($request->matches, $event))->schedule();
 
         return redirect()->route('events.show', ['event' => $event->id]);
     }

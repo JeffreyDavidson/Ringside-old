@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Titles;
 
-use App\Models\Title;
 use App\Http\Controllers\Controller;
+use App\Models\Title;
 
 class RetiredTitlesController extends Controller
 {
@@ -22,6 +22,16 @@ class RetiredTitlesController extends Controller
             'store' => 'retire',
             'destroy' => 'unretire',
         ];
+    }
+
+    /**
+     * Get the list of resource methods which do not have model parameters.
+     *
+     * @return array
+     */
+    protected function resourceMethodsWithoutModels()
+    {
+        return ['index'];
     }
 
     /**

@@ -25,6 +25,16 @@ class ActiveWrestlersController extends Controller
     }
 
     /**
+     * Get the list of resource methods which do not have model parameters.
+     *
+     * @return array
+     */
+    protected function resourceMethodsWithoutModels()
+    {
+        return ['index'];
+    }
+
+    /**
      * Display a listing of all active wrestlers.
      *
      * @return \Illuminate\View\View
@@ -44,7 +54,6 @@ class ActiveWrestlersController extends Controller
      */
     public function store(Wrestler $wrestler)
     {
-        dd('store method hit');
         $wrestler->activate();
 
         return redirect()->route('inactive-wrestlers.index');

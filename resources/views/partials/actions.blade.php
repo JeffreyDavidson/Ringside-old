@@ -51,9 +51,24 @@
 
 @if ($actions->contains('archive'))
     @can('archive', $model)
-        <a class="btn btn-sm btn-icon btn-flat btn-default" href="{{ route($resource.'.store', $model) }}" data-toggle="tooltip" data-original-title="Archive">
-            <i class="icon wb-star" aria-hidden="true"></i>
-        </a>
+        <form style="display: inline-block;" action="{{ route('past-'.$resource.'.archive', $model->id) }}" method="POST">
+            {{ csrf_field() }}
+            <button style="cursor: pointer" class="btn btn-sm btn-icon btn-flat btn-default" type="submit" data-toggle="tooltip" data-original-title="Archive">
+                <i class="icon wb-star" aria-hidden="true"></i>
+            </button>
+        </form>
+    @endcan
+@endif
+
+@if ($actions->contains('unarchive'))
+    @can('unarchive', $model)
+        <form style="display: inline-block;" action="{{ route('archived-'.$resource.'.unarchive', $model->id) }}" method="POST">
+            {{ csrf_field() }}
+            {{ method_field('DELETE') }}
+            <button style="cursor: pointer" class="btn btn-sm btn-icon btn-flat btn-default" type="submit" data-toggle="tooltip" data-original-title="Unarchive">
+                <i class="icon wb-star" aria-hidden="true"></i>
+            </button>
+        </form>
     @endcan
 @endif
 
@@ -77,5 +92,13 @@
                 <i class="icon wb-close" aria-hidden="true"></i>
             </button>
         </form>
+    @endcan
+@endif
+
+@if ($actions->contains('book-matches'))
+    @can('schedule', $model)
+        <a class="btn btn-sm btn-icon btn-flat btn-default" href="{{ route('matches.create', $model) }}" data-toggle="tooltip" data-original-title="Schedule">
+            <i class="icon wb-edit" aria-hidden="true"></i>
+        </a>
     @endcan
 @endif

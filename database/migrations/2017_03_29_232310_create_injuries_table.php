@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateInjuriesTable extends Migration
 {
@@ -16,8 +16,8 @@ class CreateInjuriesTable extends Migration
         Schema::create('injuries', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('wrestler_id')->index();
-            $table->timestamp('injured_at');
-            $table->timestamp('healed_at')->nullable();
+            $table->datetime('injured_at');
+            $table->datetime('healed_at')->nullable();
             $table->timestamps();
 
             $table->foreign('wrestler_id')->references('id')->on('wrestlers');

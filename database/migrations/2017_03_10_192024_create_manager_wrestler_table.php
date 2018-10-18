@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateManagerWrestlerTable extends Migration
 {
@@ -17,8 +17,8 @@ class CreateManagerWrestlerTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('manager_id')->index();
             $table->unsignedInteger('wrestler_id')->index();
-            $table->timestamp('hired_on');
-            $table->timestamp('fired_on')->nullable();
+            $table->datetime('hired_on');
+            $table->datetime('fired_on')->nullable();
             $table->timestamps();
 
             $table->foreign('manager_id')->references('id')->on('managers');

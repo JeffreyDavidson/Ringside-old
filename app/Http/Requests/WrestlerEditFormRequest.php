@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Validation\Rule;
 use App\Rules\BeforeFirstMatchDate;
-use Illuminate\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator;
 
 class WrestlerEditFormRequest extends FormRequest
 {
@@ -31,15 +31,21 @@ class WrestlerEditFormRequest extends FormRequest
         return [
             'name' => ['required', Rule::unique('wrestlers', 'name')->ignore($this->wrestler->id)],
             'slug' => ['required', Rule::unique('wrestlers', 'slug')->ignore($this->wrestler->id)],
-            'weight' => 'required|integer',
             'hometown' => 'required',
             'feet' => 'required|integer',
             'inches' => 'required|integer|max:11',
-            'signature_move' => 'required',
+            'weight' => 'required|integer',
+            'signature_move' => ['required', Rule::unique('wrestlers', 'signature_move')->ignore($this->wrestler->id)],
             'hired_at' => ['required', 'date', new BeforeFirstMatchDate($this->wrestler)],
         ];
     }
 
+    /**
+     * Configure the validator instance.
+     *
+     * @param  \Illuminate\Validation\Validator  $validator
+     * @return void
+     */
     public function withValidator(Validator $validator)
     {
         $validator->after(function (Validator $validator) {

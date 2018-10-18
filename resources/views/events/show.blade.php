@@ -8,9 +8,6 @@
     <div class="panel panel-primary panel-bordered">
         <div class="panel-heading clearfix">
             <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-info-circle"></i>Basic Info</h3>
-            <div class="panel-actions">
-                <a class="btn btn-default pull-right" href="{{ url()->previous() }}">Previous Page</a>
-            </div>
         </div>
         <div class="panel-body">
             <p>{{ $event->present()->date }}</p>
