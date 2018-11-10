@@ -33,7 +33,7 @@ trait HasRetirements
     /**
      * Retrieves the model's past retirements.
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Database\Query\Builder
      */
     public function pastRetirements()
     {
@@ -78,7 +78,7 @@ trait HasRetirements
      *
      * @return $this
      *
-     * @throws App\Exceptions\ModelIsRetiredException
+     * @throws \App\Exceptions\ModelIsRetiredException
      */
     public function retire()
     {
@@ -100,7 +100,7 @@ trait HasRetirements
      *
      * @return $this
      *
-     * @throws App\Exceptions\ModelIsActiveException
+     * @throws \App\Exceptions\ModelIsActiveException
      */
     public function unretire()
     {

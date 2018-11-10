@@ -3,10 +3,10 @@
 namespace App\Http\Requests;
 
 use App\Models\Wrestler;
-use App\Rules\EnsureCorrectWrestlerCount;
-use App\Rules\QualifiedForMatch;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\Rules\QualifiedForMatch;
+use App\Rules\EnsureCorrectCompetitorCount;
+use Illuminate\Foundation\Http\FormRequest;
 
 class MatchCreateFormRequest extends FormRequest
 {
@@ -27,9 +27,6 @@ class MatchCreateFormRequest extends FormRequest
      */
     public function rules()
     {
-        dd(request()->referees);
-        $date = request()->event->date;
-
         /**
          * TODO: Need to add rule for a title has to be introduced before the match event date.
          */
@@ -41,12 +38,12 @@ class MatchCreateFormRequest extends FormRequest
             'referees' => ['required', 'array'],
             'referees.*' => ['distinct', 'integer', Rule::exists('referees', 'id')],
             'preview' => ['required', 'string'],
-            'wrestlers' => ['array', 'required', new EnsureCorrectWrestlerCount(request()->match_type_id)],
+            'wrestlers' => ['array', 'required', new EnsureCorrectCompetitorCount(request()->match_type_id)],
             'wrestlers.*.*' => [
                 'integer',
                 'exists:wrestlers,id',
                 'distinct',
-                new QualifiedForMatch($date, Wrestler::class, 'hired_at'),
+                new QualifiedForMatch(Wrestler::class),
             ],
         ];
     }

@@ -17,7 +17,7 @@ class MatchPresenter extends Presenter
             return $this->model->type->name;
         }
 
-        return $this->model->groupedWrestlersBySide()->map(function ($group) {
+        return $this->model->groupedWrestlersBySide->map(function ($group) {
             return $group->pluck('name')->implode(' & ');
         })->implode(' vs. ');
     }
@@ -49,6 +49,6 @@ class MatchPresenter extends Presenter
             return 'Opening Match';
         }
 
-        return 'Match #'.$this->model->match_number;
+        return 'Match #' . $this->model->match_number;
     }
 }

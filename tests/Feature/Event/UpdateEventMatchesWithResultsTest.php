@@ -3,13 +3,13 @@
 namespace Tests\Feature\Event;
 
 use Tests\TestCase;
-use App\Models\Wrestler;
 use App\Models\Event;
 use App\Models\Match;
-use App\Models\MatchType;
-use App\Models\MatchDecision;
 use App\Models\Title;
+use App\Models\Wrestler;
+use App\Models\MatchType;
 use Facades\MatchFactory;
+use App\Models\MatchDecision;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UpdateEventMatchesWithResultsTest extends TestCase
@@ -524,10 +524,5 @@ class UpdateEventMatchesWithResultsTest extends TestCase
         $this->response->assertStatus(302);
         $this->response->assertRedirect(route('event-results.edit', ['event' => $match->event->id]));
         $this->response->assertSessionHasErrors($field);
-    }
-
-    public function assertValuesEqual(array $expected, array $actual, $msg = '')
-    {
-        return $this->assertEquals(array_values($expected), array_values($actual), $msg);
     }
 }

@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Event\Scheduled;
 
-use Tests\TestCase;
 use App\Models\Event;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class DeleteScheduledEventTest extends TestCase
 {
@@ -25,8 +25,8 @@ class DeleteScheduledEventTest extends TestCase
     public function users_who_have_permission_can_delete_a_scheduled_event()
     {
         $response = $this->actingAs($this->authorizedUser)
-                        ->from(route('scheduled-events.index'))
-                        ->delete(route('events.destroy', $this->event->id));
+            ->from(route('scheduled-events.index'))
+            ->delete(route('events.destroy', $this->event->id));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('scheduled-events.index'));
@@ -37,18 +37,18 @@ class DeleteScheduledEventTest extends TestCase
     public function users_who_dont_have_permission_cannot_delete_a_scheduled_event()
     {
         $response = $this->actingAs($this->unauthorizedUser)
-                        ->from(route('scheduled-events.index'))
-                        ->delete(route('events.destroy', $this->event->id));
+            ->from(route('scheduled-events.index'))
+            ->delete(route('events.destroy', $this->event->id));
 
         $response->assertStatus(403);
-        $this->assertNull($this->event->deleted_at);
+        $this->assertNotSoftDeleted($this->event);
     }
 
     /** @test */
     public function guests_cannot_delete_a_scheduled_event()
     {
         $response = $this->from(route('scheduled-events.index'))
-                        ->delete(route('events.destroy', $this->event->id));
+            ->delete(route('events.destroy', $this->event->id));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));

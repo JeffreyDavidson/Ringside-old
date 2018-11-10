@@ -5,22 +5,22 @@ namespace App\Rules;
 use App\Models\MatchType;
 use Illuminate\Contracts\Validation\Rule;
 
-class EnsureCorrectWrestlerCount implements Rule
+class EnsureCorrectCompetitorCount implements Rule
 {
-    private $match_competitors;
+    /**
+     * @var int
+     */
+    private $matchCompetitors;
 
     /**
-     * Create a new rule instance.
+     * Create a new Rule instance.
      *
+     * @param  int  $matchTypeId
      * @return void
      */
-    public function __construct($match_type_id)
+    public function __construct($matchTypeId)
     {
-        if (is_null($match_type_id)) {
-            return false;
-        }
-
-        $this->match_competitors = MatchType::whereKey($match_type_id)->value('total_competitors');
+        $this->matchCompetitors = MatchType::whereKey($matchTypeId)->value('total_competitors');
     }
 
     /**
@@ -32,7 +32,7 @@ class EnsureCorrectWrestlerCount implements Rule
      */
     public function passes($attribute, $value)
     {
-        return count($value) !== $this->match_competitors;
+        return count($value) !== $this->matchCompetitors;
     }
 
     /**
@@ -42,6 +42,6 @@ class EnsureCorrectWrestlerCount implements Rule
      */
     public function message()
     {
-        return 'This match requires ' . $this->match_competitors . ' competitors.';
+        return "This match requires {$this->matchCompetitors} competitors.";
     }
 }

@@ -30,7 +30,7 @@ trait HasMatches
     /**
      * Returns the model's past matches.
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Database\Eloquent\Builder
      */
     public function pastMatches()
     {
@@ -52,7 +52,7 @@ trait HasMatches
     /**
      * Returns the model's past matches.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scheduledMatches()
     {

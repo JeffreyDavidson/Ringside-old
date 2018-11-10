@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\HasStatus;
 use App\Traits\HasMatches;
 use App\Traits\HasRetirements;
-use App\Traits\HasStatus;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Exceptions\ModelIsActiveException;
 use Laracodes\Presenter\Traits\Presentable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Exceptions\TitleNotIntroducedException;
 
 class Title extends Model
 {
@@ -94,5 +96,24 @@ class Title extends Model
     public function isVacant()
     {
         return empty($this->currentChampion);
+    }
+
+    /**
+     * Activates a title.
+     *
+     * @return bool
+     *
+     * @throws \App\Exceptions\ModelIsActiveException
+     * @throws \App\Exceptions\TitleNotIntroducedException
+     */
+    public function activate()
+    {
+        if ($this->isActive()) {
+            throw new ModelIsActiveException;
+        } elseif ($this->introduced_at->gt(today())) {
+            throw new TitleNotIntroducedException;
+        }
+
+        return $this->update(['is_active' => true]);
     }
 }

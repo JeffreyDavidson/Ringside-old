@@ -7,27 +7,33 @@ use Illuminate\Contracts\Validation\Rule;
 
 class QualifiedForMatch implements Rule
 {
-    /** @var */
-    private $eventDate;
-
-    /** @var */
+    /**
+     * @var string
+     */
     private $modelClass;
 
-    /** @var */
+    /**
+     * @var string
+     */
     private $field;
+
+    /**
+     * @var string
+     */
+    private $eventDate;
 
     /**
      * Create a new rule instance.
      *
-     * @param  string  $eventDate
-     * @param  object  $modelClass
+     * @param  string  $modelClass
      * @param  string  $field
+     * @param  string  $eventDate
      */
-    public function __construct($eventDate, $modelClass, $field)
+    public function __construct($modelClass, $field = 'hired_at', $eventDate = 'now')
     {
-        $this->eventDate = $eventDate;
         $this->modelClass = $modelClass;
         $this->field = $field;
+        $this->eventDate = Carbon::parse($eventDate);
     }
 
     /**
@@ -37,10 +43,10 @@ class QualifiedForMatch implements Rule
      * @param  mixed  $value
      * @return bool
      */
-    public function passes($attribute, $modelId)
+    public function passes($attribute, $value)
     {
         return $this->modelClass::query()
-                    ->whereKey($modelId)
+                    ->whereKey($value)
                     ->where($this->field, '<=', Carbon::parse($this->eventDate))
                     ->exists();
     }
@@ -52,6 +58,6 @@ class QualifiedForMatch implements Rule
      */
     public function message()
     {
-        return 'This '.strtolower(class_basename($this->modelClass)).' is not qualified for the match.';
+        return 'This ' . strtolower(class_basename($this->modelClass)) . ' is not qualified for the match.';
     }
 }

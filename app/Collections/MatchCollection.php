@@ -9,9 +9,9 @@ class MatchCollection extends Collection
     /**
      * Groups each match wrestlers collection by the matching side number.
      *
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return static(App\Collections\MatchCollection)
      */
-    public function groupWrestlersBySide()
+    public function groupedWrestlersBySide()
     {
         return $this->groupBy('pivot.side_number');
     }

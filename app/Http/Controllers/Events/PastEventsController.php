@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Events;
 
-use App\Models\Event;
 use App\Http\Controllers\Controller;
+use App\Models\Event;
 
 class PastEventsController extends Controller
 {
@@ -17,8 +17,8 @@ class PastEventsController extends Controller
      */
     public function index()
     {
-        $events = Event::past()->with('venue')->paginate(10);
+        $pastEvents = Event::past()->with('venue')->paginate(10);
 
-        return view('events.past', compact('events'));
+        return view('events.past', compact('pastEvents'));
     }
 }

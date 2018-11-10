@@ -3,7 +3,6 @@
 namespace App\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * @mixin \Illuminate\Database\Eloquent\Model
@@ -12,11 +11,11 @@ trait Hireable
 {
     public static function bootHireable()
     {
-        static::creating(function (Model $model) {
+        static::creating(function ($model) {
             $model->is_active = $model->hired_at->lte(today());
         });
 
-        static::saving(function (Model $model) {
+        static::saving(function ($model) {
             if ($model->isActive()) {
                 $model->is_active = $model->hired_at->lte(today());
             }

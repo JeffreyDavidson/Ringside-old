@@ -153,14 +153,21 @@ class AddEventTest extends TestCase
     }
 
     /** @test */
-    public function adding_a_valid_event()
+    public function adding_a_valid_event_with_matches()
     {
+        // $this->withoutExceptionHandling();
         $this->response = $this->actingAs($this->authorizedUser)
                             ->from(route('events.create'))
                             ->post(route('events.store'), $this->validParams([
                                 'name' => 'Event Name',
                                 'slug' => 'event-slug',
                                 'date' => '2017-09-17',
+                                'number_of_matches' => '1',
+                                'schedule_matches' => 1,
+                                'matches' => [
+                                    0 => [
+                                    ],
+                                ],
                                 'venue_id' => $this->venue->id,
                             ]));
 
@@ -175,6 +182,35 @@ class AddEventTest extends TestCase
         });
     }
 
+    /** @test */
+    public function adding_a_valid_event_without_array_of_matches_that_doesnt_need_matches()
+    {
+        $this->response = $this->actingAs($this->authorizedUser)
+                            ->from(route('events.create'))
+                            ->post(route('events.store'), $this->validParams([
+                                'number_of_matches' => '1',
+                                'schedule_matches' => 0,
+                            ]));
+
+        tap(Event::first(), function ($event) {
+            $this->response->assertStatus(302);
+            $this->response->assertRedirect(route('scheduled-events.index'));
+        });
+    }
+
+    /** @test */
+    public function adding_a_valid_event_without_array_of_matches_that_needs_matches()
+    {
+        $this->response = $this->actingAs($this->authorizedUser)
+                            ->from(route('events.create'))
+                            ->post(route('events.store'), $this->validParams([
+                                'schedule_matches' => 1,
+                                'matches' => []
+                            ]));
+
+        $this->assertFormError('matches');
+    }
+
     private function validParams($overrides = [])
     {
         return array_merge([
@@ -182,6 +218,13 @@ class AddEventTest extends TestCase
             'slug' => 'event-slug',
             'date' => '2017-09-17',
             'venue_id' => $this->venue->id,
+            'number_of_matches' => 1,
+            'schedule_matches' => 1,
+            'matches' => [
+                0 => [
+                    'match_type_id' => 1,
+                ],
+            ],
         ], $overrides);
     }
 

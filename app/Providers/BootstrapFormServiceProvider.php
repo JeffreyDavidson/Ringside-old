@@ -18,6 +18,8 @@ class BootstrapFormServiceProvider extends ServiceProvider
         Form::component('bsTextarea', 'components.form.textarea', ['name', 'value', 'attributes' => [], 'required' => null, 'label' => null, 'addon' => false, 'addonLabel' => null, 'instructions' => null]);
         Form::component('bsSelect', 'components.form.select', ['name', 'options' => [], 'selected' => null, 'attributes' => [], 'required' => null, 'label' => null, 'instructions' => null, 'multiple' => false]);
         Form::component('bsDate', 'components.form.date', ['name', 'value', 'attributes' => [], 'required' => null, 'label' => null, 'instructions' => null]);
+        Form::component('bsCheckbox', 'components.form.checkbox', ['name', 'value', 'attributes' => [], 'required' => null, 'label' => null, 'instructions' => null]);
+        Form::component('bsRadio', 'components.form.radio', ['name', 'value']);
         Form::component('bsSubmit', 'components.form.submit', ['value' => 'Submit']);
     }
 

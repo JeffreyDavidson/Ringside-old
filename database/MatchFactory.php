@@ -6,6 +6,7 @@ use App\Models\Match;
 use App\Models\Referee;
 use App\Models\Wrestler;
 use App\Models\MatchType;
+use App\Models\Stipulation;
 use App\Models\Championship;
 
 class MatchFactory

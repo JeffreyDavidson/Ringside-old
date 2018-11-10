@@ -26,7 +26,7 @@ class TitleRecordsRepository
      * Gets the champions with the most title reigns.
      *
      * @param  \App\Models\Title  $title
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Support\Collection
      */
     public function mostTitleReigns(Title $title)
     {

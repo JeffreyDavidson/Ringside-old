@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Events;
 
-use App\Models\Event;
 use App\Http\Controllers\Controller;
+use App\Models\Event;
 
 class ScheduledEventsController extends Controller
 {
@@ -17,8 +17,8 @@ class ScheduledEventsController extends Controller
      */
     public function index()
     {
-        $events = Event::scheduled()->with('venue')->paginate(10);
+        $scheduledEvents = Event::scheduled()->with('venue')->paginate(10);
 
-        return view('events.scheduled', compact('events'));
+        return view('events.scheduled', compact('scheduledEvents'));
     }
 }

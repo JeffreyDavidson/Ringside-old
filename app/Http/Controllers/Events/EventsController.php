@@ -15,7 +15,7 @@ class EventsController extends Controller
     /**
      * Show the form for creating an event.
      *
-     * @return \App\Models\Event  $event
+     * @param \App\Models\Event  $event
      * @return \Illuminate\View\View
      */
     public function create(Event $event)

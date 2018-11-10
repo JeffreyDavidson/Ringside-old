@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Venue;
-use App\Http\Requests\VenueEditFormRequest;
 use App\Http\Requests\VenueCreateFormRequest;
+use App\Http\Requests\VenueEditFormRequest;
+use App\Models\Venue;
 
 class VenuesController extends Controller
 {
@@ -37,8 +37,8 @@ class VenuesController extends Controller
     /**
      * Store a newly created venue.
      *
-     * @param  \App\Http\Requets\VenueCreateFormRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param  \App\Http\Requests\VenueCreateFormRequest  $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(VenueCreateFormRequest $request)
     {

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Events;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\MatchCreateFormRequest;
 use App\Models\Event;
 use App\Models\Match;
+use App\Services\AddMatchesToEvent;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\MatchCreateFormRequest;
 
 class MatchesController extends Controller
 {
@@ -27,14 +28,13 @@ class MatchesController extends Controller
     /**
      * Store newly created matches for an event.
      *
-     * @param  \App\Http\Requests\MatchCreateFormRequest  $event
+     * @param  \App\Http\Requests\MatchCreateFormRequest  $request
      * @param  \App\Models\Event  $event
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(MatchCreateFormRequest $request, Event $event)
     {
-        // dd('testing');
-        // (new AddMatchesToEvent($request->matches, $event))->schedule();
+        (new AddMatchesToEvent($request->matches, $event))->schedule();
 
         return redirect()->route('events.show', ['event' => $event->id]);
     }

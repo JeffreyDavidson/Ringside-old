@@ -10,8 +10,8 @@
             <h3 class="panel-title pull-left d-inline-block"><i class="icon fa-calendar"></i>List of Archived Events</h3>
         </div>
         <div class="panel-body container-fluid">
-            @include('events.partials.table', ['actions' => collect(['edit', 'view', 'delete', 'unarchive'])])
-            {{ $events->links() }}
+            @include('events.partials.table', ['events' => $archivedEvents, 'actions' => collect(['edit', 'view', 'delete', 'unarchive'])])
+            {{ $archivedEvents->links() }}
         </div>
     </div>
 @endsection

@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Stipulation extends Model
 {
-    use HasMatches, SoftDeletes;
+    use HasMatches;
+    use SoftDeletes;
 
     /**
      * The attributes that should be cast to native types.

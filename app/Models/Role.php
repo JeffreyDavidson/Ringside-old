@@ -27,7 +27,7 @@ class Role extends Model
      * Add a permission to a role.
      *
      * @param  \App\Models\Permission  $permission
-     * @return bool
+     * @return \Illuminate\Database\Eloquent\Model
      */
     public function givePermissionTo(Permission $permission)
     {

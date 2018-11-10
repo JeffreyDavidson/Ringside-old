@@ -2,10 +2,10 @@
 
 namespace App\Traits;
 
+use App\Models\Title;
+use App\Models\Championship;
 use App\Exceptions\ModelIsTitleChampionException;
 use App\Exceptions\ModelNotTitleChampionException;
-use App\Models\Championship;
-use App\Models\Title;
 
 trait HasTitles
 {
@@ -79,7 +79,7 @@ trait HasTitles
      * @param  string  $date
      * @return $this
      *
-     * @throws App\Exceptions\ModelIsTitleChampionException
+     * @throws \App\Exceptions\ModelIsTitleChampionException
      */
     public function winTitle(Title $title, $date)
     {
@@ -87,9 +87,7 @@ trait HasTitles
             throw new ModelIsTitleChampionException;
         }
 
-        $this->titles()->attach([
-            $title->id => ['won_on' => $date],
-        ]);
+        $this->titles()->attach($title->id, ['won_on' => $date]);
 
         return $this;
     }
@@ -101,7 +99,7 @@ trait HasTitles
      * @param  string  $date
      * @return $this
      *
-     * @throws App\Exceptions\ModelNotTitleChampionException
+     * @throws \App\Exceptions\ModelNotTitleChampionException
      */
     public function loseTitle(Title $title, $date)
     {
@@ -109,9 +107,7 @@ trait HasTitles
             throw new ModelNotTitleChampionException;
         }
 
-        $this->titles()->updateExistingPivot($title->id, [
-            'lost_on' => $date,
-        ]);
+        $this->titles()->updateExistingPivot($title->id, ['lost_on' => $date]);
 
         return $this;
     }

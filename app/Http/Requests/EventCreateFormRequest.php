@@ -28,6 +28,9 @@ class EventCreateFormRequest extends FormRequest
             'slug' => 'required|unique:events,slug',
             'date' => 'required|date',
             'venue_id' => 'required|integer|not_in:0|exists:venues,id',
+            'number_of_matches' => 'required|integer|not_in:0',
+            'schedule_matches' => 'required|boolean',
+            'matches' => 'nullable|array|required_if:schedule_matches,1|min:1',
         ];
     }
 

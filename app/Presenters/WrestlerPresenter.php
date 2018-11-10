@@ -16,7 +16,7 @@ class WrestlerPresenter extends Presenter
         $feet = floor($this->model->height / 12);
         $inches = ($this->model->height % 12);
 
-        return $feet.'\''.$inches.'"';
+        return $feet . '\'' . $inches . '"';
     }
 
     /**
@@ -41,6 +41,6 @@ class WrestlerPresenter extends Presenter
         $feet = floor($this->model->height / 12);
         $inches = ($this->model->height % 12);
 
-        return (int) $inches;
+        return $inches;
     }
 }

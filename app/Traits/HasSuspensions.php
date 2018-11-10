@@ -2,10 +2,10 @@
 
 namespace App\Traits;
 
-use App\Exceptions\ModelIsActiveException;
-use App\Exceptions\ModelIsSuspendedException;
 use App\Models\Suspension;
 use Illuminate\Database\Eloquent\Builder;
+use App\Exceptions\ModelIsActiveException;
+use App\Exceptions\ModelIsSuspendedException;
 
 trait HasSuspensions
 {
@@ -32,7 +32,7 @@ trait HasSuspensions
     /**
      * Returns the wrestler's past suspensions.
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Database\Query\Builder
      */
     public function pastSuspensions()
     {
@@ -77,7 +77,7 @@ trait HasSuspensions
      *
      * @return $this
      *
-     * @throws App\Exceptions\ModelIsSuspendedException
+     * @throws \App\Exceptions\ModelIsSuspendedException
      */
     public function suspend()
     {
@@ -97,7 +97,7 @@ trait HasSuspensions
      *
      * @return $this
      *
-     * @throws App\Exceptions\ModelIsActiveException
+     * @throws \App\Exceptions\ModelIsActiveException
      */
     public function reinstate()
     {

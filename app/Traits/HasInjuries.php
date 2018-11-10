@@ -2,9 +2,9 @@
 
 namespace App\Traits;
 
+use App\Models\Injury;
 use App\Exceptions\ModelIsActiveException;
 use App\Exceptions\ModelIsInjuredException;
-use App\Models\Injury;
 
 trait HasInjuries
 {
@@ -31,7 +31,7 @@ trait HasInjuries
     /**
      * Returns all the past injuries for a model.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Query\Builder
      */
     public function pastInjuries()
     {
@@ -77,7 +77,7 @@ trait HasInjuries
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      *
-     * @throws App\Exceptions\ModelIsInjuredException
+     * @throws \App\Exceptions\ModelIsInjuredException
      */
     public function injure()
     {
@@ -95,10 +95,9 @@ trait HasInjuries
     /**
      * Recover a wrestler from an injury.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      *
-     * @throws App\Exceptions\ModelIsActiveException
+     * @throws \App\Exceptions\ModelIsActiveException
      */
     public function recover()
     {

@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Event\Archived;
 
-use Tests\TestCase;
 use App\Models\Event;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class UnarchiveArchivedEventTest extends TestCase
 {
@@ -25,30 +25,30 @@ class UnarchiveArchivedEventTest extends TestCase
     public function users_who_have_permission_can_unarchive_an_archived_event()
     {
         $response = $this->actingAs($this->authorizedUser)
-                        ->from(route('archived-events.index'))
-                        ->delete(route('archived-events.unarchive', $this->event->id));
+            ->from(route('archived-events.index'))
+            ->delete(route('archived-events.unarchive', $this->event->id));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('archived-events.index'));
-        $this->assertNull($this->event->fresh()->archived_at);
+        $this->assertFalse($this->event->fresh()->isArchived());
     }
 
     /** @test */
     public function users_who_dont_have_permission_cannot_unarchive_an_archived_event()
     {
         $response = $this->actingAs($this->unauthorizedUser)
-                        ->from(route('archived-events.index'))
-                        ->delete(route('archived-events.unarchive', $this->event->id));
+            ->from(route('archived-events.index'))
+            ->delete(route('archived-events.unarchive', $this->event->id));
 
         $response->assertStatus(403);
-        $this->assertNotNull($this->event->archived_at);
+        $this->assertTrue($this->event->fresh()->isArchived());
     }
 
     /** @test */
     public function guests_cannot_unarchive_an_archived_event()
     {
         $response = $this->from(route('archived-events.index'))
-                        ->delete(route('archived-events.unarchive', $this->event->id));
+            ->delete(route('archived-events.unarchive', $this->event->id));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));

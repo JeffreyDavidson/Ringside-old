@@ -12,12 +12,12 @@ use Laracodes\Presenter\Traits\Presentable;
 
 class Referee extends Model
 {
-    use Hireable,
-    HasStatus,
-    Presentable,
-    HasRetirements,
-    HasSuspensions,
-        SoftDeletes;
+    use Hireable;
+    use HasStatus;
+    use Presentable;
+    use HasRetirements;
+    use HasSuspensions;
+    use SoftDeletes;
 
     protected $casts = [
         'is_active' => 'boolean',

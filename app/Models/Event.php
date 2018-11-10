@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Laracodes\Presenter\Traits\Presentable;
 use App\Exceptions\EventIsArchivedException;
 use App\Exceptions\EventIsScheduledException;
 use App\Exceptions\EventNotArchivedException;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Laracodes\Presenter\Traits\Presentable;
 
 class Event extends Model
 {
@@ -82,7 +82,10 @@ class Event extends Model
     /**
      * Archive an event.
      *
-     * @return void
+     * @return bool
+     *
+     * @throws \App\Exceptions\EventIsArchivedException
+     * @throws \App\Exceptions\EventIsScheduledException
      */
     public function archive()
     {
@@ -98,9 +101,12 @@ class Event extends Model
     }
 
     /**
-     * Archive an event.
+     * Unarchive an event.
      *
-     * @return void
+     * @return bool
+     *
+     * @throws \App\Exceptions\EventNotArchivedException
+     * @throws \App\Exceptions\EventIsScheduledException
      */
     public function unarchive()
     {
@@ -141,7 +147,7 @@ class Event extends Model
      * Scope a query to only include archived events.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return \Illuminate\Database\Query\Builder
      */
     public function scopeArchived(Builder $query)
     {

@@ -2,10 +2,10 @@
 
 namespace App\Traits;
 
-use App\Exceptions\ModelIsActiveException;
-use App\Exceptions\ModelIsInactiveException;
-use App\Exceptions\ModelNotHiredException;
 use Illuminate\Database\Eloquent\Builder;
+use App\Exceptions\ModelIsActiveException;
+use App\Exceptions\ModelNotHiredException;
+use App\Exceptions\ModelIsInactiveException;
 
 trait HasStatus
 {
@@ -50,11 +50,12 @@ trait HasStatus
     }
 
     /**
-     * Activates an inactive model.
+     * Activates a roster member.
      *
      * @return bool
      *
-     * @throws App\Exceptions\ModelIsActiveExcepton
+     * @throws \App\Exceptions\ModelIsActiveException
+     * @throws \App\Exceptions\ModelNotHiredException
      */
     public function activate()
     {
@@ -62,10 +63,8 @@ trait HasStatus
             throw new ModelIsActiveException;
         }
 
-        if (($this instanceof Wrestler || $this instanceof Manager) && $this->hired_at->gt(today())) {
+        if ($this->hired_at->gt(today())) {
             throw new ModelNotHiredException;
-        } elseif ($this instanceof Title && $this->introduced_at->gt(today())) {
-            throw new TitleNotIntroduced;
         }
 
         return $this->update(['is_active' => true]);
@@ -76,7 +75,7 @@ trait HasStatus
      *
      * @return bool
      *
-     * @throws App\Exceptions\ModelIsInactiveExcepton
+     * @throws \App\Exceptions\ModelIsInactiveException
      */
     public function deactivate()
     {

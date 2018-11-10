@@ -8,23 +8,27 @@ use Illuminate\Contracts\Validation\Rule;
 
 class WrestlerInvolvedInMatch implements Rule
 {
-    /** @var */
-    private $matchNumber;
-
-    /** @var */
+    /**
+     * @var \App\Models\Event
+     */
     private $event;
+
+    /**
+     * @var int
+     */
+    private $matchNumber;
 
     /**
      * Create a new rule instance.
      *
-     * @param  int  $matchNumber
      * @param  \App\Models\Event  $event
+     * @param  int  $matchNumber
      * @return void
      */
-    public function __construct($matchNumber, Event $event)
+    public function __construct(Event $event, $matchNumber)
     {
-        $this->matchNumber = $matchNumber;
         $this->event = $event;
+        $this->matchNumber = $matchNumber;
     }
 
     /**
@@ -36,8 +40,8 @@ class WrestlerInvolvedInMatch implements Rule
      */
     public function passes($attribute, $value)
     {
-        return Match::withMatchNumber($this->matchNumber)
-            ->forEvent($this->event)
+        return Match::forEvent($this->event)
+            ->withMatchNumber($this->matchNumber)
             ->withWrestler($value)
             ->exists();
     }
@@ -49,6 +53,6 @@ class WrestlerInvolvedInMatch implements Rule
      */
     public function message()
     {
-        return 'The winner of this match '.$this->matchNumber.' not involved in the match.';
+        return 'The winner was not involved in the match.';
     }
 }

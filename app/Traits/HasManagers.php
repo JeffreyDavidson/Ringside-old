@@ -2,10 +2,10 @@
 
 namespace App\Traits;
 
+use App\Models\Manager;
 use App\Exceptions\ManagerNotHiredException;
 use App\Exceptions\ModelHasManagerException;
 use App\Exceptions\ModelIsInactiveException;
-use App\Models\Manager;
 
 trait HasManagers
 {
@@ -73,7 +73,7 @@ trait HasManagers
      * A model hires a given manager.
      *
      * @param  \App\Models\Manager  $manager
-     * @return bool
+     * @return void
      *
      * @throws \App\Exceptions\ModelIsInactiveException
      * @throws \App\Exceptions\ModelHasManagerException
@@ -88,14 +88,14 @@ trait HasManagers
             throw new ModelHasManagerException;
         }
 
-        return $this->managers()->attach($manager->id, ['hired_on' => $date]);
+        $this->managers()->attach($manager->id, ['hired_on' => $date]);
     }
 
     /**
      * A model fires a given manager.
      *
      * @param  \App\Models\Manager  $manager
-     * @return bool
+     * @return int
      *
      * @throws \App\Exceptions\ManagerNotHiredException
      */
@@ -105,6 +105,8 @@ trait HasManagers
             throw new ManagerNotHiredException;
         }
 
-        return $this->managers()->updateExistingPivot($manager->id, ['fired_on' => $date]);
+        $this->managers()->updateExistingPivot($manager->id, ['fired_on' => $date]);
+
+        return $this;
     }
 }

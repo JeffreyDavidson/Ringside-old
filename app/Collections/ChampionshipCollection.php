@@ -9,7 +9,7 @@ class ChampionshipCollection extends Collection
     /**
      * Groups a championship collection by the title.
      *
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return static(App\Collections\ChampionshipCollection)
      */
     public function groupByTitle()
     {

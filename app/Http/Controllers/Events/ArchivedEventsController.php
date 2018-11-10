@@ -41,9 +41,9 @@ class ArchivedEventsController extends Controller
      */
     public function index()
     {
-        $events = Event::archived()->with('venue')->paginate(10);
+        $archivedEvents = Event::archived()->with('venue')->paginate(10);
 
-        return view('events.archived', compact('events'));
+        return view('events.archived', compact('archivedEvents'));
     }
 
     /**
