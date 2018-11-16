@@ -2,15 +2,12 @@
 
 namespace Tests\Unit\Models;
 
-use Tests\TestCase;
-use App\Models\Retirement;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Models\Retirement;
+use Tests\IntegrationTestCase;
 
-class RetirementTest extends TestCase
+class RetirementTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
     /** @test */
     public function a_retirement_can_be_ended()
     {

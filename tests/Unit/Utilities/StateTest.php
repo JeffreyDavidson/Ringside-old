@@ -2,14 +2,11 @@
 
 namespace Tests\Unit\Utilities;
 
-use Tests\TestCase;
 use App\Http\Utilities\State;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\IntegrationTestCase;
 
-class StateTest extends TestCase
+class StateTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
     /** @test */
     public function it_can_get_all_states()
     {

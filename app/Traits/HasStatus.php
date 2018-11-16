@@ -7,6 +7,9 @@ use App\Exceptions\ModelIsActiveException;
 use App\Exceptions\ModelNotHiredException;
 use App\Exceptions\ModelIsInactiveException;
 
+/**
+ * @mixin \Eloquent
+ */
 trait HasStatus
 {
     /**

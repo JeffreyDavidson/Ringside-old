@@ -2,17 +2,14 @@
 
 namespace Tests\Unit\Rules;
 
-use Tests\TestCase;
 use App\Models\Event;
 use App\Models\Title;
 use App\Models\Wrestler;
+use Tests\IntegrationTestCase;
 use App\Rules\QualifiedForMatch;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class QualifiedForMatchRuleTest extends TestCase
+class QualifiedForMatchRuleTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
     /** @test */
     public function a_wrestler_with_a_hired_at_date_after_an_event_date_cannot_participate_in_the_match()
     {
@@ -22,7 +19,6 @@ class QualifiedForMatchRuleTest extends TestCase
         $validator = new QualifiedForMatch($wrestler, 'hired_at', $event->date);
 
         $this->assertFalse($validator->passes('hired_at', $wrestler));
-        $this->assertEquals($validator->message(), 'This wrestler is not qualified for the match.');
     }
 
     /** @test */
@@ -45,7 +41,6 @@ class QualifiedForMatchRuleTest extends TestCase
         $validator = new QualifiedForMatch($title, 'introduced_at', $event->date);
 
         $this->assertFalse($validator->passes('introduced_at', $title));
-        $this->assertEquals($validator->message(), 'This title is not qualified for the match.');
     }
 
     /** @test */

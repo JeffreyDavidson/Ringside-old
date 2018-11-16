@@ -27,18 +27,19 @@ class MatchCreateFormRequest extends FormRequest
      */
     public function rules()
     {
+        // dd(request()->all());
         /**
          * TODO: Need to add rule for a title has to be introduced before the match event date.
          */
         return [
             'match_type_id' => ['required', 'integer', Rule::exists('match_types', 'id')],
-            'stipulation_id' => ['sometimes', 'integer', Rule::exists('stipulations', 'id')],
+            'stipulation_id' => ['nullable', 'integer', Rule::exists('stipulations', 'id')],
             'titles' => ['array'],
             'titles.*' => ['sometimes', 'distinct', 'integer', Rule::exists('titles', 'id')],
             'referees' => ['required', 'array'],
             'referees.*' => ['distinct', 'integer', Rule::exists('referees', 'id')],
             'preview' => ['required', 'string'],
-            'wrestlers' => ['array', 'required', new EnsureCorrectCompetitorCount(request()->match_type_id)],
+            'wrestlers' => ['required', 'array', new EnsureCorrectCompetitorCount(request()->match_type_id)],
             'wrestlers.*.*' => [
                 'integer',
                 'exists:wrestlers,id',

@@ -2,14 +2,11 @@
 
 namespace Tests\Unit\Presenters;
 
-use Tests\TestCase;
 use App\Models\Retirement;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\IntegrationTestCase;
 
-class RetirementPresenterTest extends TestCase
+class RetirementPresenterTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
     /** @test */
     public function a_retirement_can_have_its_retired_at_field_formatted()
     {

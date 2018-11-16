@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Exceptions\ModelIsActiveException;
 use App\Exceptions\ModelIsRetiredException;
 
+/**
+ * @mixin \Eloquent
+ */
 trait HasRetirements
 {
     /**
@@ -17,7 +20,7 @@ trait HasRetirements
      */
     public function retirements()
     {
-        return $this->morphMany(Retirement::class, 'retiree');
+        return $this->morphMany(Retirement::class, 'retirable');
     }
 
     /**

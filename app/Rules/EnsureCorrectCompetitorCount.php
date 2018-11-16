@@ -32,7 +32,7 @@ class EnsureCorrectCompetitorCount implements Rule
      */
     public function passes($attribute, $value)
     {
-        return count($value) !== $this->matchCompetitors;
+        return count($value) == $this->matchCompetitors;
     }
 
     /**

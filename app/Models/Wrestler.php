@@ -16,16 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Wrestler extends Model
 {
-    use Hireable,
-    HasStatus,
-    HasTitles,
-    HasMatches,
-    HasInjuries,
-    HasManagers,
-    HasSuspensions,
-    HasRetirements,
-    Presentable,
-    SoftDeletes;
+    use Hireable, HasStatus, HasTitles, HasMatches, HasInjuries, HasManagers, HasSuspensions, HasRetirements, Presentable, SoftDeletes;
 
     protected $casts = [
         'is_active' => 'boolean',

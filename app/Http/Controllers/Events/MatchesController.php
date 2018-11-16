@@ -34,7 +34,9 @@ class MatchesController extends Controller
      */
     public function store(MatchCreateFormRequest $request, Event $event)
     {
-        (new AddMatchesToEvent($request->matches, $event))->schedule();
+        $matches = collect()->push($request->all());
+
+        (new AddMatchesToEvent($matches, $event))->schedule();
 
         return redirect()->route('events.show', ['event' => $event->id]);
     }

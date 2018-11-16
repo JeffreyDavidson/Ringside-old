@@ -3,14 +3,11 @@
 namespace Tests\Unit\Presenters;
 
 use Carbon\Carbon;
-use Tests\TestCase;
 use App\Models\Championship;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\IntegrationTestCase;
 
-class ChampionshipPresenterTest extends TestCase
+class ChampionshipPresenterTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
     /** @test */
     public function a_champions_won_on_date_can_be_formatted()
     {

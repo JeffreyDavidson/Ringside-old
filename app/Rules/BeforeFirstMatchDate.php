@@ -32,7 +32,7 @@ class BeforeFirstMatchDate implements Rule
     public function passes($attribute, $value)
     {
         if ($this->model->hasPastMatches()) {
-            return Carbon::parse($value)->lte($this->model->firstMatchDate());
+            return Carbon::parse($value)->lte($this->model->first_match_date);
         }
 
         return true;
@@ -45,6 +45,6 @@ class BeforeFirstMatchDate implements Rule
      */
     public function message()
     {
-        return 'The :attribute cannot be after ' . $this->model->firstMatchDate()->toDateString();
+        return 'The :attribute cannot be after ' . $this->model->first_match_date;
     }
 }

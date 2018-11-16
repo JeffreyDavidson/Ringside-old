@@ -2,15 +2,54 @@
 
 namespace Tests\Unit\Models;
 
-use Tests\TestCase;
+use Carbon\Carbon;
 use App\Models\Event;
 use App\Models\Match;
-use Carbon\Carbon;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Models\Venue;
+use Tests\IntegrationTestCase;
 
-class EventTest extends TestCase
+class EventTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
+    /** @test */
+    public function an_event_has_a_name()
+    {
+        $event = factory(Event::class)->create(['name' => 'Some Event']);
+
+        $this->assertEquals('Some Event', $event->name);
+    }
+
+    /** @test */
+    public function an_event_has_a_slug()
+    {
+        $event = factory(Event::class)->create(['slug' => 'some-slug']);
+
+        $this->assertEquals('some-slug', $event->slug);
+    }
+
+    /** @test */
+    public function an_event_has_a_date()
+    {
+        $event = factory(Event::class)->create(['date' => '2018-10-31']);
+
+        $this->assertEquals('2018-10-31', $event->date->toDateString());
+    }
+
+    /** @test */
+    public function an_event_has_a_venue()
+    {
+        $venue = factory(Venue::class)->create();
+        $event = factory(Event::class)->create(['venue_id' => $venue->id]);
+
+        $this->assertTrue($event->venue->is($venue));
+    }
+
+    /** @test */
+    public function an_event_has_an_archived_at_date()
+    {
+        $event = factory(Event::class)->create(['archived_at' => Carbon::parse('2018-10-31')]);
+
+        $this->assertEquals('2018-10-31', $event->archived_at->toDateString());
+    }
 
     /** @test */
     public function the_last_match_in_an_event_is_the_main_event()

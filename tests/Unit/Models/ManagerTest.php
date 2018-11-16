@@ -2,15 +2,12 @@
 
 namespace Tests\Unit\Models;
 
-use App\Models\Manager;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use App\Models\Manager;
+use Tests\IntegrationTestCase;
 
-class ManagerTest extends TestCase
+class ManagerTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
     /** @test */
     public function it_can_get_managers_hired_before_a_certain_date()
     {

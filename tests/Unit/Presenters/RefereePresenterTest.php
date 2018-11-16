@@ -8,10 +8,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class RefereePresenterTest extends TestCase
 {
-    use RefreshDatabase;
-
     /** @test */
-    public function it_can_have_their_name_concatenated()
+    public function a_referees_name_can_be_concatenated()
     {
         $referee = factory(Referee::class)->make(['first_name' => 'Michael', 'last_name' => 'Smith']);
 

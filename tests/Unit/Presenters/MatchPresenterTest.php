@@ -3,18 +3,15 @@
 namespace Tests\Unit\Presenters;
 
 use stdClass;
-use Tests\TestCase;
 use App\Models\Event;
 use App\Models\Match;
 use App\Models\Referee;
 use App\Models\Wrestler;
 use App\Models\Stipulation;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\IntegrationTestCase;
 
-class MatchPresenterTest extends TestCase
+class MatchPresenterTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
     /** @test */
     public function a_match_can_present_wrestlers_in_match()
     {

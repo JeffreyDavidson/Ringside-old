@@ -118,7 +118,7 @@ class Match extends Model
     /**
      * A collection of wrestlers grouped by side.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function groupedWrestlersBySide()
     {
@@ -201,7 +201,7 @@ class Match extends Model
      * @param  \App\Models\Wrestler  $wrestler
      * @param  int  $sideNumber
      */
-    public function addWrestler(Wrestler $wrestler, $sideNumber)
+    public function addWrestler(Wrestler $wrestler, int $sideNumber)
     {
         $this->wrestlers()->attach($wrestler->id, ['side_number' => $sideNumber]);
     }
@@ -229,14 +229,28 @@ class Match extends Model
         return $this->titles->isNotEmpty();
     }
 
+    /**
+     * Adds the losers of the match.
+     *
+     * @return $this
+     */
     public function setLosers($losers)
     {
         $this->losers()->sync($losers);
+
+        return $this;
     }
 
+    /**
+     * Adds the winners of a match.
+     *
+     * @return $this
+     */
     public function setWinners($winners)
     {
         $this->winners()->sync($winners);
+
+        return $this;
     }
 
     /**

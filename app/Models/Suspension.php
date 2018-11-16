@@ -24,6 +24,16 @@ class Suspension extends Model
     protected $fillable = ['suspended_at', 'ended_at'];
 
     /**
+     * Retrieves the model that was suspended.
+     *
+     * @return \Illuminate\Database\Relations\MorphTo
+     */
+    public function suspendee()
+    {
+        return $this->morphTo('suspendable');
+    }
+
+    /**
      * Lifts a suspension.
      *
      * @param  string|null  $date

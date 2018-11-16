@@ -25,7 +25,7 @@ class WrestlerInvolvedInMatch implements Rule
      * @param  int  $matchNumber
      * @return void
      */
-    public function __construct(Event $event, $matchNumber)
+    public function __construct(Event $event, int $matchNumber)
     {
         $this->event = $event;
         $this->matchNumber = $matchNumber;

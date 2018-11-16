@@ -100,7 +100,7 @@ class UpdateEventMatchesWithResultsTest extends TestCase
     public function winners_and_losers_can_be_separated_based_off_decision_of_match()
     {
         $match = $this->createStandardMatch();
-        $winners = $match->groupedWrestlersBySide()->first()->modelKeys();
+        $winners = $match->groupedWrestlersBySide->first()->modelKeys();
         $losers = array_diff($match->wrestlers->modelKeys(), $winners);
 
         $response = $this->actingAs($this->authorizedUser)
@@ -123,7 +123,7 @@ class UpdateEventMatchesWithResultsTest extends TestCase
     public function a_title_match_with_no_champion_can_crown_a_champion_depending_on_match_decision()
     {
         $match = $this->createStandardTitleMatchWithNoChampion();
-        $winners = $match->groupedWrestlersBySide()->first()->modelKeys();
+        $winners = $match->groupedWrestlersBySide->first()->modelKeys();
 
         $response = $this->actingAs($this->authorizedUser)
                         ->from(route('event-results.edit', $match->event->id))
@@ -512,7 +512,7 @@ class UpdateEventMatchesWithResultsTest extends TestCase
             'matches' => [
                 [
                     'match_decision_id' => factory(MatchDecision::class)->create()->id,
-                    'winners' => Match::first()->groupedWrestlersBySide()->first()->modelKeys(),
+                    'winners' => Match::first()->groupedWrestlersBySide->first()->modelKeys(),
                     'result' => 'Donec sed odio dui. Cras mattis consectetur purus sit amet fermentum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.',
                 ],
             ],

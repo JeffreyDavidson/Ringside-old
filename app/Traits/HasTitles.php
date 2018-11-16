@@ -7,6 +7,9 @@ use App\Models\Championship;
 use App\Exceptions\ModelIsTitleChampionException;
 use App\Exceptions\ModelNotTitleChampionException;
 
+/**
+ * @mixin \Eloquent
+ */
 trait HasTitles
 {
     /**

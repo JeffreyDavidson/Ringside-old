@@ -2,16 +2,13 @@
 
 namespace Tests\Feature\Wrestler;
 
-use Tests\TestCase;
-use App\Models\Wrestler;
 use App\Models\Event;
+use App\Models\Wrestler;
 use Facades\MatchFactory;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\IntegrationTestCase;
 
-class EditWrestlerTest extends TestCase
+class EditWrestlerTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
     private $wrestler;
     private $response;
 

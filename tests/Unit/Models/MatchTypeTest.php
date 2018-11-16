@@ -2,14 +2,11 @@
 
 namespace Tests\Unit\Models;
 
-use Tests\TestCase;
 use App\Models\MatchType;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\IntegrationTestCase;
 
-class MatchTypeTest extends TestCase
+class MatchTypeTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
     /** @test */
     public function a_battle_royal_and_royal_rumble_match_types_requires_multiple_referees()
     {

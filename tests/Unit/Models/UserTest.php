@@ -2,16 +2,13 @@
 
 namespace Tests\Unit\Models;
 
-use Tests\TestCase;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Permission;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\IntegrationTestCase;
 
-class UserTest extends TestCase
+class UserTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
     /** @test */
     public function a_user_has_a_role()
     {

@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Exceptions\ModelIsActiveException;
 use App\Exceptions\ModelIsSuspendedException;
 
+/**
+ * @mixin \Eloquent
+ */
 trait HasSuspensions
 {
     /**
@@ -16,7 +19,7 @@ trait HasSuspensions
      */
     public function suspensions()
     {
-        return $this->morphMany(Suspension::class, 'suspendee');
+        return $this->morphMany(Suspension::class, 'suspendable');
     }
 
     /**

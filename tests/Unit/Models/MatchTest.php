@@ -2,19 +2,16 @@
 
 namespace Tests\Unit\Models;
 
-use Tests\TestCase;
 use App\Models\Event;
 use App\Models\Match;
 use App\Models\Title;
 use App\Models\Referee;
 use App\Models\Wrestler;
 use App\Models\Stipulation;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\IntegrationTestCase;
 
-class MatchTest extends TestCase
+class MatchTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
     protected $match;
 
     public function setUp()

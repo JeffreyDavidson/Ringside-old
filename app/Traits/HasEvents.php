@@ -4,6 +4,9 @@ namespace App\Traits;
 
 use App\Models\Event;
 
+/**
+ * @mixin \Eloquent
+ */
 trait HasEvents
 {
     /**

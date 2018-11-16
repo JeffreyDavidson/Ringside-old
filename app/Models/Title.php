@@ -13,11 +13,7 @@ use App\Exceptions\TitleNotIntroducedException;
 
 class Title extends Model
 {
-    use HasStatus,
-    HasMatches,
-    HasRetirements,
-    Presentable,
-        SoftDeletes;
+    use HasStatus, HasMatches, HasRetirements, Presentable, SoftDeletes;
 
     /**
      * The attributes that should be cast to native types.
@@ -93,6 +89,11 @@ class Title extends Model
         return $this->previousChampion()->first();
     }
 
+    /**
+     * Checks to see if the title is currently held.
+     *
+     * @return bool
+     */
     public function isVacant()
     {
         return empty($this->currentChampion);
