@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Events;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\EventCreateFormRequest;
-use App\Http\Requests\EventEditFormRequest;
 use App\Models\Event;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\EventEditFormRequest;
+use App\Http\Requests\EventCreateFormRequest;
 
 class EventsController extends Controller
 {
@@ -31,7 +31,17 @@ class EventsController extends Controller
      */
     public function store(EventCreateFormRequest $request)
     {
-        Event::create($request->all());
+        $event = Event::create([
+            'name' => $request->name,
+            'slug' => $request->slug,
+            'date' => $request->date,
+            'number_of_matches' => $request->number_of_matches,
+            'venue_id' => $request->venue_id
+        ]);
+
+        if ($request->has('matches')) {
+            $event->matches()->createMany($request->matches);
+        }
 
         return redirect()->route('scheduled-events.index');
     }

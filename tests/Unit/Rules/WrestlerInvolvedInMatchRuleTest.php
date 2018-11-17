@@ -16,7 +16,7 @@ class WrestlerInvolvedInMatchRuleTest extends IntegrationTestCase
         $wrestlerInMatch = factory(Wrestler::class)->create();
         $wrestlerNotInMatch = factory(Wrestler::class)->create();
         $event = factory(Event::class)->create();
-        $match = MatchFactory::forEvent($event)->withWrestler($wrestlerInMatch)->create();
+        $match = MatchFactory::forEvent($event)->withWrestler($wrestlerInMatch)->create();;
 
         $validator = new WrestlerInvolvedInMatch($event, $match->match_number);
 

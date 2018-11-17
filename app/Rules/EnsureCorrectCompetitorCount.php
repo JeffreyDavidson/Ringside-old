@@ -10,7 +10,12 @@ class EnsureCorrectCompetitorCount implements Rule
     /**
      * @var int
      */
-    private $matchCompetitors;
+    private $matchTypeCompetitorsCount;
+
+    /**
+     * @var int
+     */
+    private $matchCompetitorsCount;
 
     /**
      * Create a new Rule instance.
@@ -18,9 +23,10 @@ class EnsureCorrectCompetitorCount implements Rule
      * @param  int  $matchTypeId
      * @return void
      */
-    public function __construct($matchTypeId)
+    public function __construct($matchTypeId, $matchCompetitorsCount)
     {
-        $this->matchCompetitors = MatchType::whereKey($matchTypeId)->value('total_competitors');
+        $this->matchTypeCompetitorsCount = MatchType::whereKey($matchTypeId)->value('total_competitors');
+        $this->matchCompetitorsCount = $matchCompetitorsCount;
     }
 
     /**
@@ -32,7 +38,7 @@ class EnsureCorrectCompetitorCount implements Rule
      */
     public function passes($attribute, $value)
     {
-        return count($value) == $this->matchCompetitors;
+        return $matchTypeCompetitorsCount == $this->matchCompetitorsCount;
     }
 
     /**
@@ -42,6 +48,6 @@ class EnsureCorrectCompetitorCount implements Rule
      */
     public function message()
     {
-        return "This match requires {$this->matchCompetitors} competitors.";
+        return 'This match requires '.$this->matchTypeCompetitors.' competitors.';
     }
 }

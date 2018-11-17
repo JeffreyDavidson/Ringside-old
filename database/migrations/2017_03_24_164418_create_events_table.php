@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateEventsTable extends Migration
 {
@@ -19,6 +19,7 @@ class CreateEventsTable extends Migration
             $table->string('slug')->unique();
             $table->datetime('date');
             $table->unsignedInteger('venue_id');
+            $table->integer('number_of_matches');
             $table->datetime('archived_at')->nullable();
             $table->timestamps();
             $table->softDeletes();

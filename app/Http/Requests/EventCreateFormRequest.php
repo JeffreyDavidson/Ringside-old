@@ -2,11 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Title;
+use App\Models\Wrestler;
 use Illuminate\Validation\Rule;
 use App\Rules\QualifiedForMatch;
 use App\Rules\EnsureCorrectCompetitorCount;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\RequiredIf;
 
 class EventCreateFormRequest extends FormRequest
 {
@@ -34,17 +35,17 @@ class EventCreateFormRequest extends FormRequest
             'date' => ['required', 'string', 'date'],
             'venue_id' => ['required', 'integer', 'not_in:0', 'exists:venues,id'],
             'schedule_matches' => ['required', 'boolean'],
-            'number_of_matches' => ['required_if:schedule_matches, 1', 'integer', 'min:1'],
-            'matches' => ['sometimes', 'array'],
-            'matches.*' => ['size:1'],
+            'number_of_matches' => ['required', 'integer', 'min:1'],
+            'matches' => ['required_if:schedule_matches, 1', 'sometimes', 'array'],
+            'matches.*' => ['min:1'],
             'matches.*.match_type_id' => ['required_if:matches.*, 1', 'integer', Rule::exists('match_types', 'id')],
             'matches.*.stipulation_id' => ['nullable', 'integer', Rule::exists('stipulations', 'id')],
             'matches.*.titles' => ['array'],
-            'matches.*.titles.*' => ['sometimes', 'distinct', 'integer', Rule::exists('titles', 'id')],
+            'matches.*.titles.*' => ['sometimes', 'distinct', 'integer', Rule::exists('titles', 'id'), new QualifiedForMatch(Title::class, 'introduced_at')],
             'matches.*.referees' => ['required_if:matches.*, 1', 'array'],
             'matches.*.referees.*' => ['distinct', 'integer', Rule::exists('referees', 'id')],
             'matches.*.preview' => ['required_if:matches.*, 1', 'string'],
-            'matches.*.wrestlers' => ['required_if:matches.*, 1', 'array', new EnsureCorrectCompetitorCount(request()->match_type_id)],
+            'matches.*.wrestlers' => ['required_if:matches.*, 1', 'array'],
             'matches.*.wrestlers.*.*' => [
                 'integer',
                 'exists:wrestlers,id',
@@ -77,11 +78,14 @@ class EventCreateFormRequest extends FormRequest
     {
         $validator->after(function ($validator) {
             if ($this->schedule_matches && !$this->matches) {
-                $validator->errors()->add('matches', 'Something is wrong with this field!');
+                $validator->errors()->add('matches', 'You have selected to schedule matches for the even but none were provided!');
+            }
+
+            if ($this->matches && is_array($this->matches && !empty($this->matches))) {
+                foreach ($this->matches as $match) {
+                    new EnsureCorrectCompetitorCount($match['match_type_id'], count(array_flatten($match['wrestlers'])));
+                }
             }
         });
-
-        // dd($validator->errors());
-
     }
 }

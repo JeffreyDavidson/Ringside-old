@@ -5,6 +5,7 @@ namespace Tests\Feature\Event;
 use Carbon\Carbon;
 use App\Models\Event;
 use App\Models\Venue;
+use App\Models\Referee;
 use App\Models\Wrestler;
 use App\Models\MatchType;
 use Tests\IntegrationTestCase;
@@ -12,6 +13,10 @@ use Tests\IntegrationTestCase;
 class SaveEventTest extends IntegrationTestCase
 {
     private $venue;
+    private $matchType;
+    private $referee;
+    private $wrestlerA;
+    private $wrestlerB;
 
     public function setUp()
     {
@@ -20,38 +25,66 @@ class SaveEventTest extends IntegrationTestCase
         $this->setupAuthorizedUser(['create-event']);
 
         $this->venue = factory(Venue::class)->create();
+        $this->matchType = factory(MatchType::class)->create(['number_of_sides' => 2, 'total_competitors' => 2]);
+        $this->referee = factory(Referee::class)->create();
+        $this->wrestlerA = factory(Wrestler::class)->create(['hired_at' => Carbon::yesterday()]);
+        $this->wrestlerB = factory(Wrestler::class)->create(['hired_at' => Carbon::yesterday()]);
     }
 
     private function validParams($overrides = [])
     {
-        return array_merge([
+        return array_replace_recursive([
             'name' => 'Event Name',
             'slug' => 'event-slug',
             'date' => '2017-09-17',
-            'venue_id' => 1,
+            'venue_id' => $this->venue->id,
             'number_of_matches' => 1,
-            'schedule_matches' => 0,
+            'schedule_matches' => 1,
+            'matches' => [
+                0 => [
+                    'match_type_id' => $this->matchType->id,
+                    'referees' => [$this->referee->id],
+                    'preview' => 'This is just a basic preview.',
+                    'wrestlers' => [
+                        0 => [$this->wrestlerA->id],
+                        1 => [$this->wrestlerB->id]
+                    ],
+                ],
+            ],
+        ], $overrides);
+    }
+
+    private function validWithoutMatchesParams($overrides = [])
+    {
+        return array_replace_recursive([
+            'name' => 'Event Name',
+            'slug' => 'event-slug',
+            'date' => '2017-09-17',
+            'venue_id' => $this->venue->id,
+            'number_of_matches' => 1,
+            'schedule_matches' => 1,
         ], $overrides);
     }
 
     /** @test */
     public function adding_a_valid_event_with_matches()
     {
+        $this->withoutExceptionHandling();
         $response = $this->actingAs($this->authorizedUser)->from(route('events.create'))->post(route('events.store'), $this->validParams([
             'name' => 'Event Name',
             'slug' => 'event-slug',
             'date' => '2017-09-17',
-            'venue_id' => 1,
-            'number_of_matches' => '1',
+            'venue_id' => $this->venue->id,
+            'number_of_matches' => 1,
             'schedule_matches' => 1,
             'matches' => [
                 0 => [
-                    'match_type_id' => 1,
-                    'referees' => [1],
+                    'match_type_id' => $this->matchType->id,
+                    'referees' => [$this->referee->id],
                     'preview' => 'This is just a basic preview.',
                     'wrestlers' => [
-                        0 => [1],
-                        1 => [2] 
+                        0 => [$this->wrestlerA->id],
+                        1 => [$this->wrestlerB->id] 
                     ],
                 ],
             ],
@@ -340,7 +373,7 @@ class SaveEventTest extends IntegrationTestCase
     /** @test */
     public function adding_a_valid_event_and_must_schedule_matches_cannot_have_an_empty_matches_array()
     {
-        $response = $this->actingAs($this->authorizedUser)->from(route('events.create'))->post(route('events.store'), $this->validParams([
+        $response = $this->actingAs($this->authorizedUser)->from(route('events.create'))->post(route('events.store'), $this->validWithoutMatchesParams([
             'schedule_matches' => 1,
             'matches' => []
         ]));
@@ -415,7 +448,7 @@ class SaveEventTest extends IntegrationTestCase
 
         tap(Event::first()->matches()->first(), function ($match) use ($response) {
             $response->assertStatus(302);
-            $response->assertRedirect(route('events.show', $match->event->id));
+            $response->assertRedirect(route('scheduled-events.index'));
             $this->assertNull($match->stipulation_id);
         });
     }
@@ -657,7 +690,7 @@ class SaveEventTest extends IntegrationTestCase
 
         $response->assertStatus(302);
         $response->assertRedirect(route('events.create'));
-        $response->assertSessionHasErrors('matches.*.wrestlers');
+        $response->assertSessionHasErrors('matches.*.wrestlers.*');
         $this->assertEquals(0, Event::count());
     }
 
@@ -708,7 +741,10 @@ class SaveEventTest extends IntegrationTestCase
             'matches' => [
                 [
                     'match_type_id' => $matchType->id,
-                    'wrestlers' => [1, 2, 3],
+                    'wrestlers' => [
+                        0 => [1, 2],
+                        1 => [3]
+                    ]
                 ],
             ],
         ]));
@@ -722,8 +758,8 @@ class SaveEventTest extends IntegrationTestCase
     /** @test */
     public function each_match_wrestlers_must_be_qualified_to_be_in_the_match()
     {
+        // $this->withoutExceptionHandling();
         $wrestler = factory(Wrestler::class)->create(['hired_at' => Carbon::tomorrow()]);
-        $this->event = factory(Event::class)->create(['date' => Carbon::yesterday()]);
 
         $response = $this->actingAs($this->authorizedUser)->from(route('events.create'))->post(route('events.store'), $this->validParams([
             'matches' => [

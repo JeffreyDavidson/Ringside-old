@@ -387,7 +387,7 @@ class AddMatchTest extends IntegrationTestCase
 
         $response->assertStatus(302);
         $response->assertRedirect(route('matches.create', $this->event->id));
-        $response->assertSessionHasErrors('wrestlers');
+        $response->assertSessionHasErrors('wrestlers.*');
         $this->assertCount(0, $this->event->matches);
     }
 

@@ -10,6 +10,7 @@ $factory->define(Event::class, function (Faker $faker) {
     return [
         'name' => title_case($name),
         'slug' => str_slug($name),
+        'number_of_matches' => $faker->randomDigit,
         'date' => $faker->dateTimeBetween('-10 years'),
         'venue_id' => function () {
             return factory(Venue::class)->create()->id;
