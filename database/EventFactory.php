@@ -8,14 +8,22 @@ use Illuminate\Support\Collection;
 
 class EventFactory
 {
+    public $states = null;
     public $date;
     public $venue_id;
     public $matchesCount = 0;
 
+    public function states($states)
+    {
+        $this->states = $states;
+
+        return $this;
+    }
+
     public function create()
     {
-        $event = factory(Event::class)->create([
-            'date' => $this->date ?? null,
+        $event = factory(Event::class)->states($this->states)->create([
+            'date' => $this->date ?? Carbon::tomorrow(),
         ]);
 
         Collection::times($this->matchesCount, function ($number) use ($event) {

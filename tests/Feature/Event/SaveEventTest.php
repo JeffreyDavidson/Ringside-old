@@ -641,6 +641,25 @@ class SaveEventTest extends IntegrationTestCase
     }
 
     /** @test */
+    public function each_match_should_have_at_least_two_sides()
+    {
+        $response = $this->actingAs($this->authorizedUser)->from(route('events.create'))->post(route('events.store'), $this->validParams([
+            'matches' => [
+                [
+                    'wrestlers' => [
+                        [$this->wrestlerA->id, $this->wrestlerB->id],
+                    ]
+                ],
+            ],
+        ]));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('events.create'));
+        $response->assertSessionHasErrors('matches.*.wrestlers');
+        $this->assertEquals(0, Event::count());
+    }
+
+    /** @test */
     public function each_match_wrestlers_is_required()
     {
         $response = $this->actingAs($this->authorizedUser)->from(route('events.create'))->post(route('events.store'), $this->validParams([

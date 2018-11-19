@@ -45,7 +45,7 @@ class EventCreateFormRequest extends FormRequest
             'matches.*.referees' => ['required_if:matches.*, 1', 'array'],
             'matches.*.referees.*' => ['distinct', 'integer', Rule::exists('referees', 'id')],
             'matches.*.preview' => ['required_if:matches.*, 1', 'string'],
-            'matches.*.wrestlers' => ['required_if:matches.*, 1', 'array'],
+            'matches.*.wrestlers' => ['required_if:matches.*, 1', 'array', 'min:2'],
             'matches.*.wrestlers.*.*' => [
                 'integer',
                 'exists:wrestlers,id',

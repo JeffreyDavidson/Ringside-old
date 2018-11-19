@@ -2,8 +2,9 @@
 
 namespace App\Policies;
 
-use App\Models\Event;
+use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Event;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class EventPolicy
@@ -49,9 +50,10 @@ class EventPolicy
      * @param  \App\Models\User  $user
      * @return bool
      */
-    public function update(User $user)
+    public function update(User $user, Event $event)
     {
-        return $user->hasPermission('update-event');
+        dd($event);
+        return $user->hasPermission('update-event') && $event->date->gte(Carbon::today());
     }
 
     /**

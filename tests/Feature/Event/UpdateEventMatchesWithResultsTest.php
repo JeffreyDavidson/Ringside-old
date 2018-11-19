@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Event;
 
-use Tests\TestCase;
 use App\Models\Event;
 use App\Models\Match;
 use App\Models\Title;
@@ -10,12 +9,10 @@ use App\Models\Wrestler;
 use App\Models\MatchType;
 use Facades\MatchFactory;
 use App\Models\MatchDecision;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\IntegrationTestCase;
 
-class UpdateEventMatchesWithResultsTest extends TestCase
+class UpdateEventMatchesWithResultsTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
     private $response;
 
     public function setUp()
@@ -25,6 +22,26 @@ class UpdateEventMatchesWithResultsTest extends TestCase
         $this->seed('MatchDecisionsTableSeeder');
 
         $this->setupAuthorizedUser(['update-event-results']);
+    }
+
+    private function validParams($overrides = [])
+    {
+        return array_replace_recursive([
+            'matches' => [
+                [
+                    'match_decision_id' => factory(MatchDecision::class)->create()->id,
+                    'winners' => Match::first()->groupedWrestlersBySide()->first()->modelKeys(),
+                    'result' => 'Donec sed odio dui. Cras mattis consectetur purus sit amet fermentum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.',
+                ],
+            ],
+        ], $overrides);
+    }
+
+    private function assertFormError($field, $match)
+    {
+        $this->response->assertStatus(302);
+        $this->response->assertRedirect(route('event-results.edit', ['event' => $match->event->id]));
+        $this->response->assertSessionHasErrors($field);
     }
 
     /** @test */
@@ -100,7 +117,7 @@ class UpdateEventMatchesWithResultsTest extends TestCase
     public function winners_and_losers_can_be_separated_based_off_decision_of_match()
     {
         $match = $this->createStandardMatch();
-        $winners = $match->groupedWrestlersBySide->first()->modelKeys();
+        $winners = $match->groupedWrestlersBySide()->first()->modelKeys();
         $losers = array_diff($match->wrestlers->modelKeys(), $winners);
 
         $response = $this->actingAs($this->authorizedUser)
@@ -123,7 +140,7 @@ class UpdateEventMatchesWithResultsTest extends TestCase
     public function a_title_match_with_no_champion_can_crown_a_champion_depending_on_match_decision()
     {
         $match = $this->createStandardTitleMatchWithNoChampion();
-        $winners = $match->groupedWrestlersBySide->first()->modelKeys();
+        $winners = $match->groupedWrestlersBySide()->first()->modelKeys();
 
         $response = $this->actingAs($this->authorizedUser)
                         ->from(route('event-results.edit', $match->event->id))
@@ -504,25 +521,5 @@ class UpdateEventMatchesWithResultsTest extends TestCase
         return $match->wrestlers->reject(function ($wrestler, $key) use ($match) {
             return $wrestler->id == $match->titles->first()->currentChampion->id;
         })->random()->id;
-    }
-
-    private function validParams($overrides = [])
-    {
-        return array_replace_recursive([
-            'matches' => [
-                [
-                    'match_decision_id' => factory(MatchDecision::class)->create()->id,
-                    'winners' => Match::first()->groupedWrestlersBySide->first()->modelKeys(),
-                    'result' => 'Donec sed odio dui. Cras mattis consectetur purus sit amet fermentum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.',
-                ],
-            ],
-        ], $overrides);
-    }
-
-    private function assertFormError($field, $match)
-    {
-        $this->response->assertStatus(302);
-        $this->response->assertRedirect(route('event-results.edit', ['event' => $match->event->id]));
-        $this->response->assertSessionHasErrors($field);
     }
 }

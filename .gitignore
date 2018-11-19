@@ -16,3 +16,4 @@ public/images
 .DS_Store
 /coverage
 .env.testing
+/.vscode
