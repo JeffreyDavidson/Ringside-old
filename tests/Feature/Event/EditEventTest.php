@@ -8,8 +8,6 @@ use Tests\IntegrationTestCase;
 
 class EditEventTest extends IntegrationTestCase
 {
-    private $event;
-
     public function setUp()
     {
         parent::setUp();
