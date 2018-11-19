@@ -9,14 +9,18 @@ use Illuminate\Contracts\Validation\Rule;
 class WrestlerInvolvedInMatch implements Rule
 {
     /**
-     * @var \App\Models\Event
-     */
-    private $event;
-
-    /**
+     * The match number of the match.
+     *
      * @var int
      */
     private $matchNumber;
+
+    /**
+     * The event that the match is a part of.
+     *
+     * @var \App\Models\Event
+     */
+    private $event;
 
     /**
      * Create a new rule instance.
@@ -53,6 +57,6 @@ class WrestlerInvolvedInMatch implements Rule
      */
     public function message()
     {
-        return 'The winner was not involved in the match.';
+        return 'The winner of this match not involved in the match.';
     }
 }
