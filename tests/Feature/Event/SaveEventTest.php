@@ -69,7 +69,6 @@ class SaveEventTest extends IntegrationTestCase
     /** @test */
     public function adding_a_valid_event_with_matches()
     {
-        $this->withoutExceptionHandling();
         $response = $this->actingAs($this->authorizedUser)->from(route('events.create'))->post(route('events.store'), $this->validParams([
             'name' => 'Event Name',
             'slug' => 'event-slug',
@@ -84,7 +83,7 @@ class SaveEventTest extends IntegrationTestCase
                     'preview' => 'This is just a basic preview.',
                     'wrestlers' => [
                         0 => [$this->wrestlerA->id],
-                        1 => [$this->wrestlerB->id] 
+                        1 => [$this->wrestlerB->id]
                     ],
                 ],
             ],
@@ -643,15 +642,10 @@ class SaveEventTest extends IntegrationTestCase
     /** @test */
     public function each_match_should_have_at_least_two_sides()
     {
-        $response = $this->actingAs($this->authorizedUser)->from(route('events.create'))->post(route('events.store'), $this->validParams([
-            'matches' => [
-                [
-                    'wrestlers' => [
-                        [$this->wrestlerA->id, $this->wrestlerB->id],
-                    ]
-                ],
-            ],
-        ]));
+        $event = $this->validParams();
+        data_set($event, 'matches.0.wrestlers', [[$this->wrestlerA->id, $this->wrestlerB->id]]);
+
+        $response = $this->actingAs($this->authorizedUser)->from(route('events.create'))->post(route('events.store'), $event);
 
         $response->assertStatus(302);
         $response->assertRedirect(route('events.create'));

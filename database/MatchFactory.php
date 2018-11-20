@@ -142,7 +142,7 @@ class MatchFactory
         $this->wrestlers = $concatenatedWrestlers;
 
         $splitWrestlers = $this->wrestlers->pluck('id')->split($match->type->number_of_sides)->flatten(1);
-        // dd($splitWrestlers);
+
         $match->addWrestlers($splitWrestlers);
     }
 

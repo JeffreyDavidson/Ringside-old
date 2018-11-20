@@ -19,9 +19,7 @@
         "filp/whoops": "~2.1.10",
         "fzaninotto/faker": "~1.4",
         "laravel/browser-kit-testing": "^1.0",
-        "laravel/telescope": "^0.1.2",
         "mockery/mockery": "0.9.*",
-        "nunomaduro/larastan": "^0.3.4",
         "phpunit/phpunit": "~7.0"
     },
     "autoload": {

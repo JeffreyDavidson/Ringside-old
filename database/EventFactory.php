@@ -12,6 +12,8 @@ class EventFactory
     public $date;
     public $venue_id;
     public $matchesCount = 0;
+    public $name;
+    public $slug;
 
     public function states($states)
     {
@@ -22,8 +24,12 @@ class EventFactory
 
     public function create()
     {
+        $str = 'Example Event Name';
         $event = factory(Event::class)->states($this->states)->create([
+            'name' => $this->name ?? $str,
+            'slug' => $this->slug ?? str_slug($this->name),
             'date' => $this->date ?? Carbon::tomorrow(),
+            'venue_id' => $this->venue_id ?? factory(Venue::class)->create()->id
         ]);
 
         Collection::times($this->matchesCount, function ($number) use ($event) {
@@ -50,6 +56,20 @@ class EventFactory
     public function withMatches($count)
     {
         $this->matchesCount = $count;
+
+        return $this;
+    }
+
+    public function withName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function withSlug($slug)
+    {
+        $this->slug = $slug;
 
         return $this;
     }

@@ -26,7 +26,6 @@ class EventEditFormRequest extends FormRequest
      */
     public function rules()
     {
-        dd($this->event->id);
         return [
             'name' => ['required', Rule::unique('events', 'name')->ignore($this->event->id)],
             'slug' => ['required', Rule::unique('events', 'slug')->ignore($this->event->id)],
