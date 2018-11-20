@@ -52,10 +52,9 @@ class EditEventTest extends IntegrationTestCase
     public function an_event_that_has_a_date_in_the_past_cannot_be_edited()
     {
         $event = EventFactory::onDate(Carbon::yesterday())->create();
-        dd($event);
 
         $response = $this->actingAs($this->authorizedUser)->get(route('events.edit', $event->id));
 
-        $response->assertStatus(404);
+        $response->assertStatus(403);
     }
 }

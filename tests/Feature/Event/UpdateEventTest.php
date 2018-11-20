@@ -2,13 +2,14 @@
 
 namespace Tests\Feature\Event;
 
+use Carbon\Carbon;
 use App\Models\Event;
 use App\Models\Venue;
+use Facades\EventFactory;
 use Tests\IntegrationTestCase;
 
 class UpdateEventTest extends IntegrationTestCase
 {
-    private $event;
     private $venue;
 
     public function setUp()
@@ -18,7 +19,6 @@ class UpdateEventTest extends IntegrationTestCase
         $this->setupAuthorizedUser(['update-event']);
 
         $this->venue = factory(Venue::class)->create(['id' => 1]);
-        $this->event = factory(Event::class)->create($this->oldAttributes(['venue_id' => $this->venue->id]));
     }
 
     private function oldAttributes($overrides = [])
@@ -26,7 +26,7 @@ class UpdateEventTest extends IntegrationTestCase
         return array_merge([
             'name' => 'Old Name',
             'slug' => 'old-slug',
-            'date' => '2017-09-27',
+            'date' => Carbon::now()->addDays(3)->toDateString(),
             'venue_id' => 1,
         ], $overrides);
     }
@@ -42,21 +42,38 @@ class UpdateEventTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function users_who_have_permission_can_edit_an_event()
+    public function users_who_have_permission_can_edit_a_scheduled_event()
     {
-        $response = $this->actingAs($this->authorizedUser)->from(route('events.edit', $this->event->id))->patch(route('events.update', $this->event->id), [
+        $event = EventFactory::onDate(Carbon::now()->addWeeks(3))->create();
+
+        $response = $this->actingAs($this->authorizedUser)->from(route('events.edit', $this->event->id))->patch(route('events.update', $this->event->id), $this->validParams([
             'name' => 'New Name',
             'slug' => 'new-slug',
             'date' => '2017-09-27',
             'venue_id' => $this->venue->id,
-        ]);
+        ]));
 
-        tap($this->event->fresh(), function ($event) {
+        tap($event->fresh(), function ($event) {
             $this->assertEquals('New Name', $event->name);
             $this->assertEquals('new-slug', $event->slug);
             $this->assertEquals('2017-09-27', $event->date->toDateString());
             $this->assertEquals(1, $event->venue_id);
         });
+    }
+
+    /** @test */
+    public function users_who_have_permission_cannot_edit_a_past_event()
+    {
+        $event = EventFactory::onDate(Carbon::yesterday())->create();
+
+        $response = $this->actingAs($this->authorizedUser)->from(route('events.edit', $this->event->id))->patch(route('events.update', $event->id), $this->validParams([
+            'name' => 'New Name',
+            'slug' => 'new-slug',
+            'date' => '2017-09-27',
+            'venue_id' => $this->venue->id,
+        ]));
+
+        $response->assertStatus(403);
     }
 
     /** @test */
@@ -83,19 +100,27 @@ class UpdateEventTest extends IntegrationTestCase
             'name' => '',
         ]));
 
-        $this->assertFormError('name', 'Old Name', $this->event->name);
+        $response->assertRedirect(route('events.edit', $this->event->id));
+        $response->assertSessionHasErrors('name');
+        tap($this->event->fresh(), function ($event) {
+            $this->assertEquals('Old Name', $event->name);
+        });
     }
 
     /** @test */
     public function event_name_must_be_unique()
     {
-        factory(Event::class)->create(['name' => 'Event Name']);
+        EventFactory::create(['name' => 'Event Name']);
 
         $response = $this->actingAs($this->authorizedUser)->from(route('events.edit', $this->event->id))->patch(route('events.update', $this->event->id), $this->validParams([
             'name' => 'Event Name',
         ]));
 
-        $this->assertFormError('name', 'Old Name', $this->event->name);
+        $response->assertRedirect(route('events.edit', $this->event->id));
+        $response->assertSessionHasErrors('name');
+        tap($this->event->fresh(), function ($event) {
+            $this->assertEquals('Old Name', $event->name);
+        });
     }
 
     /** @test */
@@ -105,39 +130,60 @@ class UpdateEventTest extends IntegrationTestCase
             'slug' => '',
         ]));
 
-        $this->assertFormError('slug', 'old-slug', $this->event->slug);
+        $response->assertRedirect(route('events.edit', $this->event->id));
+        $response->assertSessionHasErrors('slug');
+        tap($this->event->fresh(), function ($event) {
+            $this->assertEquals('old-slug', $event->slug);
+        });
     }
 
     /** @test */
     public function event_slug_must_be_unique()
     {
-        factory(Event::class)->create(['slug' => 'event-slug']);
+        EventFactory::create(['slug' => 'event-slug']);
+        $event = EventFactory::create(['slug' => 'old-slug']);
 
-        $response = $this->actingAs($this->authorizedUser)->from(route('events.edit', $this->event->id))->patch(route('events.update', $this->event->id), $this->validParams([
+        $response = $this->actingAs($this->authorizedUser)->from(route('events.edit', $event->id))->patch(route('events.update', $event->id), $this->validParams([
             'slug' => 'event-slug',
         ]));
 
-        $this->assertFormError('slug', 'old-slug', $this->event->slug);
+        $response->assertRedirect(route('events.edit', $event->id));
+        $response->assertSessionHasErrors('slug');
+        tap($event->fresh(), function ($event) {
+            $this->assertEquals('old-slug', $event->slug);
+        });
     }
 
     /** @test */
     public function event_date_is_required()
     {
-        $response = $this->actingAs($this->authorizedUser)->from(route('events.edit', $this->event->id))->patch(route('events.update', $this->event->id), $this->validParams([
+        $event = EventFactory::onDate(Carbon::tomorrow())->create();
+
+        $response = $this->actingAs($this->authorizedUser)->from(route('events.edit', $event->id))->patch(route('events.update', $event->id), $this->validParams([
             'date' => '',
         ]));
 
-        $this->assertFormError('date', '2017-09-27', $this->event->date->toDateString());
+        $response->assertRedirect(route('events.edit', $event->id));
+        $response->assertSessionHasErrors('date');
+        tap($event->fresh(), function ($event) {
+            $this->assertEquals(Carbon::tomorrow()->toDateString(), $event->date->toDateString());
+        });
     }
 
     /** @test */
     public function event_date_must_be_a_date()
     {
+        $event = EventFactory::onDate(Carbon::tomorrow())->create();
+        
         $response = $this->actingAs($this->authorizedUser)->from(route('events.edit', $this->event->id))->patch(route('events.update', $this->event->id), $this->validParams([
             'date' => 'not-a-date',
         ]));
 
-        $this->assertFormError('date', '2017-09-27', $this->event->date->toDateString());
+        $response->assertRedirect(route('events.edit', $this->event->id));
+        $response->assertSessionHasErrors('date');
+        tap($this->event->fresh(), function ($event) {
+            $this->assertEquals(Carbon::tomorrow()->toDateString(), $event->date->toDateString());
+        });
     }
 
     /** @test */
@@ -147,7 +193,11 @@ class UpdateEventTest extends IntegrationTestCase
             'venue_id' => '',
         ]));
 
-        $this->assertFormError('venue_id', 1, $this->event->venue_id);
+        $response->assertRedirect(route('events.edit', $this->event->id));
+        $response->assertSessionHasErrors('venue_id');
+        tap($this->event->fresh(), function ($event) {
+            $this->assertTrue($event->venue->is($this->venue));
+        });
     }
 
     /** @test */
@@ -157,7 +207,11 @@ class UpdateEventTest extends IntegrationTestCase
             'venue_id' => 99,
         ]));
 
-        $this->assertFormError('venue_id', 1, $this->event->venue_id);
+        $response->assertRedirect(route('events.edit', $this->event->id));
+        $response->assertSessionHasErrors('venue_id');
+        tap($this->event->fresh(), function ($event) {
+            $this->assertTrue($event->venue->is($this->venue));
+        });
     }
 
     /** @test */
@@ -170,6 +224,10 @@ class UpdateEventTest extends IntegrationTestCase
             'venue_id' => $venue->id,
         ]));
 
-        $this->assertFormError('venue_id', 1, $this->event->venue_id);
+        $response->assertRedirect(route('events.edit', $this->event->id));
+        $response->assertSessionHasErrors('venue_id');
+        tap($this->event->fresh(), function ($event) {
+            $this->assertTrue($event->venue->is($this->venue));
+        });
     }
 }

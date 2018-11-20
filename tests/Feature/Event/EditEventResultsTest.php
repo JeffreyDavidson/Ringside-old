@@ -5,7 +5,7 @@ namespace Tests\Feature\Event;
 use Facades\EventFactory;
 use Tests\IntegrationTestCase;
 
-class EditEvenResultsTest extends IntegrationTestCase
+class EditEventResultsTest extends IntegrationTestCase
 {
     private $response;
 

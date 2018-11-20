@@ -8,7 +8,7 @@ use Illuminate\Support\Collection;
 
 class EventFactory
 {
-    public $states = null;
+    public $states = [];
     public $date;
     public $venue_id;
     public $matchesCount = 0;

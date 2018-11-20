@@ -52,7 +52,6 @@ class EventPolicy
      */
     public function update(User $user, Event $event)
     {
-        dd($event);
         return $user->hasPermission('update-event') && $event->date->gte(Carbon::today());
     }
 
