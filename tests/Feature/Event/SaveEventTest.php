@@ -67,6 +67,32 @@ class SaveEventTest extends IntegrationTestCase
     }
 
     /** @test */
+    public function users_who_have_permission_can_save_an_event()
+    {
+        $response = $this->actingAs($this->authorizedUser)->post(route('events.store'), $this->validParams());
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('scheduled-events.index'));
+    }
+
+    /** @test */
+    public function users_who_dont_have_permission_cannot_save_an_event()
+    {
+        $response = $this->actingAs($this->unauthorizedUser)->post(route('events.store'), $this->validParams());
+
+        $response->assertStatus(403);
+    }
+
+    /** @test */
+    public function guests_cannot_save_an_event()
+    {
+        $response = $this->get(route('events.create'));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('login'));
+    }
+
+    /** @test */
     public function adding_a_valid_event_with_matches()
     {
         $response = $this->actingAs($this->authorizedUser)->from(route('events.create'))->post(route('events.store'), $this->validParams([
@@ -252,7 +278,7 @@ class SaveEventTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function event_venue_must_be_an_integer()
+    public function event_venue_id_must_be_an_integer()
     {
         $response = $this->actingAs($this->authorizedUser)->from(route('events.create'))->post(route('events.store'), $this->validParams([
             'venue_id' => 'abc',
@@ -265,7 +291,7 @@ class SaveEventTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function event_venue_cannot_be_a_zero_value()
+    public function event_venue_id_cannot_be_a_zero_value()
     {
         $response = $this->actingAs($this->authorizedUser)->from(route('events.create'))->post(route('events.store'), $this->validParams([
             'venue_id' => 0,
@@ -278,7 +304,7 @@ class SaveEventTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function event_venue_must_exist_in_database()
+    public function event_venue_id_must_exist_in_database()
     {
         $response = $this->actingAs($this->authorizedUser)->from(route('events.create'))->post(route('events.store'), $this->validParams([
             'venue_id' => 99,
@@ -291,10 +317,9 @@ class SaveEventTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function number_of_matches_is_required_if_schedule_matches_is_true()
+    public function number_of_matches_is_required()
     {
         $response = $this->actingAs($this->authorizedUser)->from(route('events.create'))->post(route('events.store'), $this->validParams([
-            'schedule_matches' => true,
             'number_of_matches' => '',
         ]));
 
@@ -357,6 +382,19 @@ class SaveEventTest extends IntegrationTestCase
     }
 
     /** @test */
+    public function matches_array_is_required_if_schedule_matches_is_true()
+    {
+        $response = $this->actingAs($this->authorizedUser)->from(route('events.create'))->post(route('events.store'), $this->validWithoutMatchesParams([
+            'schedule_matches' => 1,
+        ]));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('events.create'));
+        $response->assertSessionHasErrors('matches');
+        $this->assertEquals(0, Event::count());
+    }
+
+    /** @test */
     public function matches_must_be_a_valid_array()
     {
         $response = $this->actingAs($this->authorizedUser)->from(route('events.create'))->post(route('events.store'), $this->validParams([
@@ -370,12 +408,12 @@ class SaveEventTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function adding_a_valid_event_and_must_schedule_matches_cannot_have_an_empty_matches_array()
+    public function matches_array_must_contain_at_least_one_match_in_size()
     {
-        $response = $this->actingAs($this->authorizedUser)->from(route('events.create'))->post(route('events.store'), $this->validWithoutMatchesParams([
-            'schedule_matches' => 1,
-            'matches' => []
-        ]));
+        $event = $this->validParams();
+        data_set($event, 'matches', []);
+
+        $response = $this->actingAs($this->authorizedUser)->from(route('events.create'))->post(route('events.store'), $event);
 
         $response->assertStatus(302);
         $response->assertRedirect(route('events.create'));
@@ -435,7 +473,7 @@ class SaveEventTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function each_match_stipulation_is_optional_if_provided()
+    public function each_match_stipulation_is_optional()
     {
         $response = $this->actingAs($this->authorizedUser)->from(route('events.create'))->post(route('events.store'), $this->validParams([
             'matches' => [
@@ -453,7 +491,7 @@ class SaveEventTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function each_match_stipulation_must_be_an_integer_if_given()
+    public function each_match_stipulation_must_be_an_integer_if_provided()
     {
         $response = $this->actingAs($this->authorizedUser)->from(route('events.create'))->post(route('events.store'), $this->validParams([
             'matches' => [
@@ -470,7 +508,7 @@ class SaveEventTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function each_match_stipulation_must_exist_in_the_database_if_given()
+    public function each_match_stipulation_must_exist_in_the_database_if_provided()
     {
         $response = $this->actingAs($this->authorizedUser)->from(route('events.create'))->post(route('events.store'), $this->validParams([
             'matches' => [
@@ -487,7 +525,7 @@ class SaveEventTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function each_match_titles_must_be_an_array_if_given()
+    public function each_match_titles_must_be_an_array_if_provided()
     {
         $response = $this->actingAs($this->authorizedUser)->from(route('events.create'))->post(route('events.store'), $this->validParams([
             'matches' => [
@@ -521,7 +559,7 @@ class SaveEventTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function each_title_must_be_an_integer()
+    public function each_match_title_must_be_an_integer()
     {
         $response = $this->actingAs($this->authorizedUser)->from(route('events.create'))->post(route('events.store'), $this->validParams([
             'matches' => [
@@ -538,7 +576,7 @@ class SaveEventTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function each_title_must_exist_in_the_database()
+    public function each_match_title_must_exist_in_the_database()
     {
         $response = $this->actingAs($this->authorizedUser)->from(route('events.create'))->post(route('events.store'), $this->validParams([
             'matches' => [
@@ -640,7 +678,7 @@ class SaveEventTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function each_match_should_have_at_least_two_sides()
+    public function each_match_should_have_at_least_two_sides_of_wrestlers()
     {
         $event = $this->validParams();
         data_set($event, 'matches.0.wrestlers', [[$this->wrestlerA->id, $this->wrestlerB->id]]);
@@ -771,7 +809,6 @@ class SaveEventTest extends IntegrationTestCase
     /** @test */
     public function each_match_wrestlers_must_be_qualified_to_be_in_the_match()
     {
-        // $this->withoutExceptionHandling();
         $wrestler = factory(Wrestler::class)->create(['hired_at' => Carbon::tomorrow()]);
 
         $response = $this->actingAs($this->authorizedUser)->from(route('events.create'))->post(route('events.store'), $this->validParams([

@@ -28,13 +28,14 @@ class EventCreateFormRequest extends FormRequest
      */
     public function rules()
     {
+        // dd($this->all());
         return [
             'name' => ['required', 'string', 'unique:events,name'],
             'slug' => ['required', 'string', 'unique:events,slug'],
             'date' => ['required', 'string', 'date'],
             'venue_id' => ['required', 'integer', 'not_in:0', 'exists:venues,id'],
-            'schedule_matches' => ['required', 'boolean'],
             'number_of_matches' => ['required', 'integer', 'min:1'],
+            'schedule_matches' => ['required', 'boolean'],
             'matches' => ['required_if:schedule_matches, 1', 'sometimes', 'array'],
             'matches.*' => ['min:1'],
             'matches.*.match_type_id' => ['required_if:matches.*, 1', 'integer', Rule::exists('match_types', 'id')],

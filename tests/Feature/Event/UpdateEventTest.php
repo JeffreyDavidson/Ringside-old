@@ -5,12 +5,17 @@ namespace Tests\Feature\Event;
 use Carbon\Carbon;
 use App\Models\Event;
 use App\Models\Venue;
+use App\Models\Referee;
+use App\Models\Wrestler;
+use App\Models\MatchType;
 use Facades\EventFactory;
 use Tests\IntegrationTestCase;
 
 class UpdateEventTest extends IntegrationTestCase
 {
     private $venue;
+    private $matchType;
+    private $referee;
 
     public function setUp()
     {
@@ -18,21 +23,58 @@ class UpdateEventTest extends IntegrationTestCase
 
         $this->setupAuthorizedUser(['update-event']);
 
-        $this->venue = factory(Venue::class)->create(['name' => 'teting']);
+        $this->matchType = factory(MatchType::class)->create(['number_of_sides' => 2, 'total_competitors' => 2]);
+        $this->venue = factory(Venue::class)->create();
+        $this->referee = factory(Referee::class)->create();
+        $this->wrestlerA = factory(Wrestler::class)->create();
+        $this->wrestlerB = factory(Wrestler::class)->create();
     }
 
     private function validParams($overrides = [])
     {
-        return array_merge([
+        return array_replace_recursive([
             'name' => 'Event Name',
             'slug' => 'event-slug',
-            'date' => '2017-09-27',
+            'date' => '2017-09-17',
             'venue_id' => $this->venue->id,
+            'number_of_matches' => 1,
+            'schedule_matches' => 1,
+            'matches' => [
+                0 => [
+                    'match_type_id' => $this->matchType->id,
+                    'referees' => [$this->referee->id],
+                    'preview' => 'This is just a basic preview.',
+                    'wrestlers' => [
+                        0 => [$this->wrestlerA->id],
+                        1 => [$this->wrestlerB->id]
+                    ],
+                ],
+            ],
+        ], $overrides);
+    }
+
+    public function oldAttributes($overrides = []) 
+    {
+        return array_merge([
+            'name' => 'Old Name',
+            'slug' => 'old-slug',
+        ], $overrides); 
+    }
+
+    private function validWithoutMatchesParams($overrides = [])
+    {
+        return array_replace_recursive([
+            'name' => 'Event Name',
+            'slug' => 'event-slug',
+            'date' => '2017-09-17',
+            'venue_id' => $this->venue->id,
+            'number_of_matches' => 1,
+            'schedule_matches' => 1,
         ], $overrides);
     }
 
     /** @test */
-    public function users_who_have_permission_can_edit_a_scheduled_event()
+    public function users_who_have_permission_can_update_a_scheduled_event()
     {
         $event = EventFactory::onDate(Carbon::now()->addWeeks(3))->create();
 
@@ -52,16 +94,11 @@ class UpdateEventTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function users_who_have_permission_cannot_edit_a_past_event()
+    public function a_past_event_event_cannot_be_updated()
     {
         $event = EventFactory::onDate(Carbon::yesterday())->create();
 
-        $response = $this->actingAs($this->authorizedUser)->from(route('events.edit', $event->id))->patch(route('events.update', $event->id), $this->validParams([
-            'name' => 'New Name',
-            'slug' => 'new-slug',
-            'date' => '2017-09-27',
-            'venue_id' => $this->venue->id,
-        ]));
+        $response = $this->actingAs($this->authorizedUser)->from(route('events.edit', $event->id))->patch(route('events.update', $event->id), $this->validParams());
 
         $response->assertStatus(403);
     }
@@ -90,7 +127,7 @@ class UpdateEventTest extends IntegrationTestCase
     /** @test */
     public function event_name_is_required()
     {
-        $event = EventFactory::withName('Old Name')->create();
+        $event = factory(Event::class)->create($this->oldAttributes(['name' => 'Old Name']));
 
         $response = $this->actingAs($this->authorizedUser)->from(route('events.edit', $event->id))->patch(route('events.update', $event->id), $this->validParams([
             'name' => '',
@@ -106,7 +143,7 @@ class UpdateEventTest extends IntegrationTestCase
     /** @test */
     public function event_name_must_be_unique()
     {
-        $event = EventFactory::withName('Old Name')->create();
+        $event = factory(Event::class)->create($this->oldAttributes(['name' => 'Old Name']));
         factory(Event::class)->create(['name' => 'Other Event Name']);
 
         $response = $this->actingAs($this->authorizedUser)->from(route('events.edit', $event->id))->patch(route('events.update', $event->id), $this->validParams([
@@ -123,7 +160,7 @@ class UpdateEventTest extends IntegrationTestCase
     /** @test */
     public function event_slug_is_required()
     {
-        $event = EventFactory::withSlug('old-slug')->create();
+        $event = factory(Event::class)->create($this->oldAttributes(['slug' => 'old-slug']));
 
         $response = $this->actingAs($this->authorizedUser)->from(route('events.edit', $event->id))->patch(route('events.update', $event->id), $this->validParams([
             'slug' => '',
@@ -139,7 +176,7 @@ class UpdateEventTest extends IntegrationTestCase
     /** @test */
     public function event_slug_must_be_unique()
     {
-        $event = EventFactory::withSlug('old-slug')->create();
+        $event = factory(Event::class)->create($this->oldAttributes(['slug' => 'old-slug']));
         factory(Event::class)->create(['slug' => 'other-event-slug']);
 
         $response = $this->actingAs($this->authorizedUser)->from(route('events.edit', $event->id))->patch(route('events.update', $event->id), $this->validParams([
@@ -156,7 +193,7 @@ class UpdateEventTest extends IntegrationTestCase
     /** @test */
     public function event_date_is_required()
     {
-        $event = EventFactory::onDate(Carbon::tomorrow())->create();
+        $event = factory(Event::class)->create($this->oldAttributes(['date' => Carbon::tomorrow()]));
 
         $response = $this->actingAs($this->authorizedUser)->from(route('events.edit', $event->id))->patch(route('events.update', $event->id), $this->validParams([
             'date' => '',
@@ -172,7 +209,7 @@ class UpdateEventTest extends IntegrationTestCase
     /** @test */
     public function event_date_must_be_a_date()
     {
-        $event = EventFactory::onDate(Carbon::tomorrow())->create();
+        $event = factory(Event::class)->create($this->oldAttributes(['date' => Carbon::tomorrow()]));
 
         $response = $this->actingAs($this->authorizedUser)->from(route('events.edit', $event->id))->patch(route('events.update', $event->id), $this->validParams([
             'date' => 'not-a-date',
@@ -188,7 +225,7 @@ class UpdateEventTest extends IntegrationTestCase
     /** @test */
     public function event_venue_is_required()
     {
-        $event = EventFactory::atVenue($this->venue)->create();
+        $event = factory(Event::class)->create($this->oldAttributes(['venue_id' => $this->venue->id]));
 
         $response = $this->actingAs($this->authorizedUser)->from(route('events.edit', $event->id))->patch(route('events.update', $event->id), $this->validParams([
             'venue_id' => '',
@@ -204,7 +241,7 @@ class UpdateEventTest extends IntegrationTestCase
     /** @test */
     public function event_venue_must_exist_in_the_database()
     {
-        $event = EventFactory::atVenue($this->venue)->create();
+        $event = factory(Event::class)->create($this->oldAttributes(['venue_id' => $this->venue->id]));
 
         $response = $this->actingAs($this->authorizedUser)->from(route('events.edit', $event->id))->patch(route('events.update', $event->id), $this->validParams([
             'venue_id' => 99,
@@ -222,8 +259,8 @@ class UpdateEventTest extends IntegrationTestCase
     {
         $venueB = factory(Venue::class)->create(['name' => 'soft deleted venue']);
         $venueB->delete();
+        $event = factory(Event::class)->create($this->oldAttributes(['venue_id' => $this->venue->id]));
 
-        $event = EventFactory::atVenue($this->venue)->create();
 
         $response = $this->actingAs($this->authorizedUser)->from(route('events.edit', $event->id))->patch(route('events.update', $event->id), $this->validParams([
             'venue_id' => $venueB->id,

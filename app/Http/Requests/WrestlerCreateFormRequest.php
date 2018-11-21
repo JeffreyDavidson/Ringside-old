@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 
 class WrestlerCreateFormRequest extends FormRequest
 {
@@ -31,7 +31,7 @@ class WrestlerCreateFormRequest extends FormRequest
             'feet' => 'required|integer',
             'inches' => 'required|integer|max:11',
             'weight' => 'required|integer',
-            'signature_move' => 'required|unique:wrestlers,signature_move',
+            'signature_move' => 'required',
             'hired_at' => 'required|date',
         ];
     }
