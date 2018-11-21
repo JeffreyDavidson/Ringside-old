@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use App\Models\Wrestler;
 use Tests\IntegrationTestCase;
 
-class SaveWrestlerTest extends IntegrationTestCase
+class StoreWrestlerTest extends IntegrationTestCase
 {
     public function setUp()
     {
@@ -30,7 +30,7 @@ class SaveWrestlerTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function users_who_have_permission_can_create_a_wrestler()
+    public function users_who_have_permission_can_store_a_wrestler()
     {
         $response = $this->actingAs($this->authorizedUser)->from(route('wrestlers.create'))->post(route('wrestlers.store'), $this->validParams());
 
@@ -46,7 +46,7 @@ class SaveWrestlerTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function users_who_dont_have_permission_cannot_save_a_wrestler()
+    public function users_who_dont_have_permission_cannot_store_a_wrestler()
     {
         $response = $this->actingAs($this->unauthorizedUser)->post(route('wrestlers.store'), $this->validParams());
 
@@ -54,7 +54,7 @@ class SaveWrestlerTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function guests_cannot_create_a_wrestler()
+    public function guests_cannot_store_a_wrestler()
     {
         $response = $this->post(route('wrestlers.store'), $this->validParams());
 
@@ -63,10 +63,35 @@ class SaveWrestlerTest extends IntegrationTestCase
     }
 
     /** @test */
+    public function a_wrestler_that_is_hired_today_or_before_is_set_to_active()
+    {
+        $response = $this->actingAs($this->authorizedUser)->from(route('wrestlers.create'))->post(route('wrestlers.store'), $this->validParams([
+            'hired_at' => Carbon::today()->toDateString(),
+        ]));
+
+        $response->assertRedirect(route('active-wrestlers.index'));
+        tap(Wrestler::first(), function ($wrestler) {
+            $this->assertTrue($wrestler->is_active);
+        });
+    }
+
+    /** @test */
     public function wrestler_name_is_required()
     {
         $response = $this->actingAs($this->authorizedUser)->from(route('wrestlers.create'))->post(route('wrestlers.store'), $this->validParams([
             'name' => '',
+        ]));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('wrestlers.create'));
+        $response->assertSessionHasErrors('name');
+    }
+
+    /** @test */
+    public function wrestler_name_must_be_a_string()
+    {
+        $response = $this->actingAs($this->authorizedUser)->from(route('wrestlers.create'))->post(route('wrestlers.store'), $this->validParams([
+            'name' => [],
         ]));
 
         $response->assertStatus(302);
@@ -90,23 +115,10 @@ class SaveWrestlerTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function a_wrestler_that_is_hired_today_or_before_is_made_active()
+    public function a_wrestler_that_is_hired_after_today_is_set_to_inactive()
     {
         $response = $this->actingAs($this->authorizedUser)->from(route('wrestlers.create'))->post(route('wrestlers.store'), $this->validParams([
-            'hired_at' => Carbon::today(),
-        ]));
-
-        $response->assertRedirect(route('active-wrestlers.index'));
-        tap(Wrestler::first(), function ($wrestler) {
-            $this->assertTrue($wrestler->is_active);
-        });
-    }
-
-    /** @test */
-    public function a_wrestler_that_is_hired_after_today_is_inactive()
-    {
-        $response = $this->actingAs($this->authorizedUser)->from(route('wrestlers.create'))->post(route('wrestlers.store'), $this->validParams([
-            'hired_at' => Carbon::tomorrow(),
+            'hired_at' => Carbon::tomorrow()->toDateString(),
         ]));
 
         $response->assertRedirect(route('inactive-wrestlers.index'));
@@ -120,6 +132,18 @@ class SaveWrestlerTest extends IntegrationTestCase
     {
         $response = $this->actingAs($this->authorizedUser)->from(route('wrestlers.create'))->post(route('wrestlers.store'), $this->validParams([
             'slug' => '',
+        ]));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('wrestlers.create'));
+        $response->assertSessionHasErrors('slug');
+    }
+
+    /** @test */
+    public function wrestler_slug_is_must_be_string()
+    {
+        $response = $this->actingAs($this->authorizedUser)->from(route('wrestlers.create'))->post(route('wrestlers.store'), $this->validParams([
+            'slug' => [],
         ]));
 
         $response->assertStatus(302);
@@ -155,6 +179,18 @@ class SaveWrestlerTest extends IntegrationTestCase
     }
 
     /** @test */
+    public function wrestler_hometown_must_be_a_string()
+    {
+        $response = $this->actingAs($this->authorizedUser)->from(route('wrestlers.create'))->post(route('wrestlers.store'), $this->validParams([
+            'hometown' => [],
+        ]));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('wrestlers.create'));
+        $response->assertSessionHasErrors('hometown');
+    }
+
+    /** @test */
     public function wrestler_feet_is_required()
     {
         $response = $this->actingAs($this->authorizedUser)->from(route('wrestlers.create'))->post(route('wrestlers.store'), $this->validParams([
@@ -170,7 +206,7 @@ class SaveWrestlerTest extends IntegrationTestCase
     public function wrestler_feet_must_be_an_integer()
     {
         $response = $this->actingAs($this->authorizedUser)->from(route('wrestlers.create'))->post(route('wrestlers.store'), $this->validParams([
-            'feet' => 'abc',
+            'feet' => 'not-an-integer',
         ]));
 
         $response->assertStatus(302);
@@ -239,6 +275,18 @@ class SaveWrestlerTest extends IntegrationTestCase
     }
 
     /** @test */
+    public function wrestler_signature_move_must_be_a_string()
+    {
+        $response = $this->actingAs($this->authorizedUser)->from(route('wrestlers.create'))->post(route('wrestlers.store'), $this->validParams([
+            'signature_move' => [],
+        ]));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('wrestlers.create'));
+        $response->assertSessionHasErrors('signature_move');
+    }
+
+    /** @test */
     public function wrestler_hired_at_is_required()
     {
         $response = $this->actingAs($this->authorizedUser)->from(route('wrestlers.create'))->post(route('wrestlers.store'), $this->validParams([
@@ -251,10 +299,22 @@ class SaveWrestlerTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function wrestler_hired_at_must_be_a_date()
+    public function wrestler_hired_at_date_must_be_a_string()
     {
         $response = $this->actingAs($this->authorizedUser)->from(route('wrestlers.create'))->post(route('wrestlers.store'), $this->validParams([
-            'hired_at' => 'not-a-date',
+            'hired_at' => [],
+        ]));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('wrestlers.create'));
+        $response->assertSessionHasErrors('hired_at');
+    }
+
+    /** @test */
+    public function wrestler_hired_at_date_must_be_a_valid_date_format()
+    {
+        $response = $this->actingAs($this->authorizedUser)->from(route('wrestlers.create'))->post(route('wrestlers.store'), $this->validParams([
+            'hired_at' => 'not-a-valid-date',
         ]));
 
         $response->assertStatus(302);

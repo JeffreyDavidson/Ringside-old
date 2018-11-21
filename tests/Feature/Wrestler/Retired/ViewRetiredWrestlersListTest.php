@@ -2,13 +2,10 @@
 
 namespace Tests\Feature\Wrestler\Retired;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\IntegrationTestCase;
 
-class ViewRetiredWrestlersListTest extends TestCase
+class ViewRetiredWrestlersListTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
     public function setUp()
     {
         parent::setUp();
@@ -19,8 +16,7 @@ class ViewRetiredWrestlersListTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_view_the_list_of_retired_wrestlers()
     {
-        $response = $this->actingAs($this->authorizedUser)
-                        ->get(route('retired-wrestlers.index'));
+        $response = $this->actingAs($this->authorizedUser)->get(route('retired-wrestlers.index'));
 
         $response->assertSuccessful();
         $response->assertViewIs('wrestlers.retired');
@@ -30,8 +26,7 @@ class ViewRetiredWrestlersListTest extends TestCase
     /** @test */
     public function users_who_dont_have_permission_cannot_view_the_list_of_retired_wrestlers()
     {
-        $response = $this->actingAs($this->unauthorizedUser)
-                        ->get(route('retired-wrestlers.index'));
+        $response = $this->actingAs($this->unauthorizedUser)->get(route('retired-wrestlers.index'));
 
         $response->assertStatus(403);
     }

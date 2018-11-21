@@ -2,13 +2,10 @@
 
 namespace Tests\Feature\Wrestler\Inactive;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use Tests\IntegrationTestCase;
 
-class ViewInactiveWrestlersListTest extends TestCase
+class ViewInactiveWrestlersListTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
     public function setUp()
     {
         parent::setUp();
@@ -19,8 +16,7 @@ class ViewInactiveWrestlersListTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_view_the_list_of_inactive_wrestlers()
     {
-        $response = $this->actingAs($this->authorizedUser)
-            ->get(route('inactive-wrestlers.index'));
+        $response = $this->actingAs($this->authorizedUser)->get(route('inactive-wrestlers.index'));
 
         $response->assertSuccessful();
         $response->assertViewIs('wrestlers.inactive');
@@ -30,8 +26,7 @@ class ViewInactiveWrestlersListTest extends TestCase
     /** @test */
     public function users_who_dont_have_permission_cannot_view_the_list_of_inactive_wrestlers()
     {
-        $response = $this->actingAs($this->unauthorizedUser)
-            ->get(route('inactive-wrestlers.index'));
+        $response = $this->actingAs($this->unauthorizedUser)->get(route('inactive-wrestlers.index'));
 
         $response->assertStatus(403);
     }
