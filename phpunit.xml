@@ -29,6 +29,14 @@
         <testsuite name="Wrestler Tests">
             <directory suffix="Test.php">./tests/Feature/Wrestler</directory>
         </testsuite>
+
+        <testsuite name="Venue Tests">
+            <directory suffix="Test.php">./tests/Feature/Venue</directory>
+        </testsuite>
+
+        <testsuite name="Stipulation Tests">
+            <directory suffix="Test.php">./tests/Feature/Stipulation</directory>
+        </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">

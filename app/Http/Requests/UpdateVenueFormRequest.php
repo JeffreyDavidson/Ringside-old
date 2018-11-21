@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class VenueEditFormRequest extends FormRequest
+class UpdateVenueFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,11 +27,11 @@ class VenueEditFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'alpha_num_spaces', Rule::unique('venues', 'name')->ignore($this->venue->id)],
-            'address' => 'required|alpha_num_spaces',
-            'city' => 'required|alpha_spaces',
-            'state' => 'required|alpha',
-            'postcode' => 'required|numeric|digits:5',
+            'name' => ['required', 'string', 'alpha_num_spaces', Rule::unique('venues', 'name')->ignore($this->venue->id)],
+            'address' => ['required', 'string', 'alpha_num_spaces'],
+            'city' => ['required', 'string', 'alpha_spaces'],
+            'state' => ['required', 'string', 'alpha', 'size:2'],
+            'postcode' => ['required', 'numeric', 'digits:5'],
         ];
     }
 }

@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Stipulation;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StipulationCreateFormRequest extends FormRequest
+class StoreStipulationFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +14,7 @@ class StipulationCreateFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->hasPermission('create-stipulation');
+        return $this->user()->can('create', Stipulation::class);
     }
 
     /**
@@ -24,8 +25,8 @@ class StipulationCreateFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|unique:stipulations,name',
-            'slug' => 'required|unique:stipulations,slug',
+            'name' => ['required', 'string', 'unique:stipulations,name'],
+            'slug' => ['required', 'string', 'unique:stipulations,slug'],
         ];
     }
 }

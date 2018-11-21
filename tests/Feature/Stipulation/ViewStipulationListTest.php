@@ -2,13 +2,10 @@
 
 namespace Tests\Feature\Stipulation;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\IntegrationTestCase;
 
-class ViewStipulationListTest extends TestCase
+class ViewStipulationListTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
     public function setUp()
     {
         parent::setUp();
@@ -19,8 +16,7 @@ class ViewStipulationListTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_view_the_list_of_stipulations()
     {
-        $response = $this->actingAs($this->authorizedUser)
-                        ->get(route('stipulations.index'));
+        $response = $this->actingAs($this->authorizedUser)->get(route('stipulations.index'));
 
         $response->assertSuccessful();
         $response->assertViewIs('stipulations.index');
@@ -30,8 +26,7 @@ class ViewStipulationListTest extends TestCase
     /** @test */
     public function users_who_dont_have_permission_cannot_view_the_list_of_stipulations()
     {
-        $response = $this->actingAs($this->unauthorizedUser)
-                        ->get(route('stipulations.index'));
+        $response = $this->actingAs($this->unauthorizedUser)->get(route('stipulations.index'));
 
         $response->assertStatus(403);
     }

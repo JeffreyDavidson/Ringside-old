@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Validation\Rule;
+use App\Models\Title;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StipulationEditFormRequest extends FormRequest
+class StoreTitleFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,9 +14,7 @@ class StipulationEditFormRequest extends FormRequest
      */
     public function authorize()
     {
-        $stipulation = $this->route('stipulation');
-
-        return $this->user()->can('update', $stipulation);
+        return $this->user()->can('create', Title::class);
     }
 
     /**
@@ -27,8 +25,9 @@ class StipulationEditFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', Rule::unique('stipulations', 'name')->ignore($this->stipulation->id)],
-            'slug' => ['required', Rule::unique('stipulations', 'slug')->ignore($this->stipulation->id)],
+            'name' => ['required', 'string', 'unique:titles,name'],
+            'slug' => ['required', 'string', 'unique:titles,slug'],
+            'introduced_at' => ['required', 'string', 'date'],
         ];
     }
 }

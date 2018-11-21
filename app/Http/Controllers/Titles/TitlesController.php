@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Titles;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\TitleCreateFormRequest;
-use App\Http\Requests\TitleEditFormRequest;
+use App\Http\Requests\StoreTitleFormRequest;
+use App\Http\Requests\UpdateTitleFormRequest;
 use App\Models\Title;
 
 class TitlesController extends Controller
@@ -26,10 +26,10 @@ class TitlesController extends Controller
     /**
      * Store a newly created title.
      *
-     * @param  \App\Http\Requests\TitleCreateFormRequest  $request
+     * @param  \App\Http\Requests\StoreTitleFormRequest  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(TitleCreateFormRequest $request)
+    public function store(StoreTitleFormRequest $request)
     {
         Title::create($request->all());
 
@@ -65,11 +65,11 @@ class TitlesController extends Controller
     /**
      * Update the specified title.
      *
-     * @param  \App\Http\Requests\TitleEditFormRequest  $request
+     * @param  \App\Http\Requests\UpdateTitleFormRequest  $request
      * @param  \App\Models\Title  $title
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(TitleEditFormRequest $request, Title $title)
+    public function update(UpdateTitleFormRequest $request, Title $title)
     {
         $title->update($request->all());
 

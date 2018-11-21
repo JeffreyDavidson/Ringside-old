@@ -2,13 +2,10 @@
 
 namespace Tests\Feature\Venue;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\IntegrationTestCase;
 
-class ViewVenuesListTest extends TestCase
+class ViewVenuesListTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
     public function setUp()
     {
         parent::setUp();
@@ -16,17 +13,10 @@ class ViewVenuesListTest extends TestCase
         $this->setupAuthorizedUser('view-venues');
     }
 
-    public function a_user_must_be_authorized_to_view_the_venue_index_page()
-    {
-        $response = $this->actingAs($this->authorizedUser)
-                        ->get(route('venues.index'));
-    }
-
     /** @test */
     public function users_who_have_permission_can_view_the_list_of_venues()
     {
-        $response = $this->actingAs($this->authorizedUser)
-                        ->get(route('venues.index'));
+        $response = $this->actingAs($this->authorizedUser)->get(route('venues.index'));
 
         $response->assertSuccessful();
         $response->assertViewIs('venues.index');
@@ -36,8 +26,7 @@ class ViewVenuesListTest extends TestCase
     /** @test */
     public function users_who_dont_have_permission_cannot_view_the_list_of_venues()
     {
-        $response = $this->actingAs($this->unauthorizedUser)
-                        ->get(route('venues.index'));
+        $response = $this->actingAs($this->unauthorizedUser)->get(route('venues.index'));
 
         $response->assertStatus(403);
     }

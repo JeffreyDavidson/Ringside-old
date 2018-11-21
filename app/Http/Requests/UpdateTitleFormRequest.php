@@ -6,7 +6,7 @@ use Illuminate\Validation\Rule;
 use App\Rules\BeforeFirstMatchDate;
 use Illuminate\Foundation\Http\FormRequest;
 
-class TitleEditFormRequest extends FormRequest
+class UpdateTitleFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,9 +28,9 @@ class TitleEditFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', Rule::unique('titles', 'name')->ignore($this->title->id)],
-            'slug' => ['required', Rule::unique('titles', 'slug')->ignore($this->title->id)],
-            'introduced_at' => ['required', 'date', new BeforeFirstMatchDate($this->title)],
+            'name' => ['required', 'string', Rule::unique('titles', 'name')->ignore($this->title->id)],
+            'slug' => ['required', 'string',Rule::unique('titles', 'slug')->ignore($this->title->id)],
+            'introduced_at' => ['required', 'string', 'date', new BeforeFirstMatchDate($this->title)],
         ];
     }
 }
