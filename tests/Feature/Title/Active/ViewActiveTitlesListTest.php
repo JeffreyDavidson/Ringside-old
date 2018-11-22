@@ -2,13 +2,10 @@
 
 namespace Tests\Feature\Title\Active;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\IntegrationTestCase;
 
-class ViewActiveTitlesListTest extends TestCase
+class ViewActiveTitlesListTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
     public function setUp()
     {
         parent::setUp();
@@ -19,8 +16,7 @@ class ViewActiveTitlesListTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_view_the_list_of_active_titles()
     {
-        $response = $this->actingAs($this->authorizedUser)
-                        ->get(route('active-titles.index'));
+        $response = $this->actingAs($this->authorizedUser)->get(route('active-titles.index'));
 
         $response->assertSuccessful();
         $response->assertViewIs('titles.active');
@@ -30,8 +26,7 @@ class ViewActiveTitlesListTest extends TestCase
     /** @test */
     public function users_who_dont_have_permission_cannot_view_the_list_of_active_titles()
     {
-        $response = $this->actingAs($this->unauthorizedUser)
-                        ->get(route('active-titles.index'));
+        $response = $this->actingAs($this->unauthorizedUser)->get(route('active-titles.index'));
 
         $response->assertStatus(403);
     }

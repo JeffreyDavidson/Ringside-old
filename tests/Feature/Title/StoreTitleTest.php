@@ -25,7 +25,7 @@ class StoreTitleTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function users_who_have_permission_can_create_a_title()
+    public function users_who_have_permission_can_store_a_title()
     {
         $response = $this->actingAs($this->authorizedUser)->post(route('titles.store'), $this->validParams());
 
@@ -38,10 +38,10 @@ class StoreTitleTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function a_title_that_is_introduced_today_or_before_is_active()
+    public function a_title_that_is_introduced_today_or_before_is_set_as_active()
     {
         $response = $this->actingAs($this->authorizedUser)->from(route('titles.create'))->post(route('titles.store'), $this->validParams([
-            'introduced_at' => Carbon::today(),
+            'introduced_at' => Carbon::today()->toDateString(),
         ]));
 
         $response->assertRedirect(route('active-titles.index'));
@@ -51,20 +51,20 @@ class StoreTitleTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function a_title_that_is_hired_after_today_or_before_is_set_as_inactive()
+    public function a_title_that_is_hired_after_today_is_set_as_inactive()
     {
         $response = $this->actingAs($this->authorizedUser)->from(route('titles.create'))->post(route('titles.store'), $this->validParams([
-            'introduced_at' => Carbon::tomorrow(),
+            'introduced_at' => Carbon::tomorrow()->toDateString(),
         ]));
 
         $response->assertRedirect(route('inactive-titles.index'));
         tap(Title::first(), function ($title) {
-            $this->assertTrue($title->isInactive());
+            $this->assertFalse($title->isActive());
         });
     }
 
     /** @test */
-    public function users_who_dont_have_permission_cannot_create_a_title()
+    public function users_who_dont_have_permission_cannot_store_a_title()
     {
         $response = $this->actingAs($this->unauthorizedUser)->post(route('titles.store'), $this->validParams());
 
@@ -72,7 +72,7 @@ class StoreTitleTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function guests_cannot_create_a_title()
+    public function guests_cannot_store_a_title()
     {
         $response = $this->post(route('titles.store'), $this->validParams());
 
@@ -87,7 +87,21 @@ class StoreTitleTest extends IntegrationTestCase
             'name' => '',
         ]));
 
-        $this->assertFormError('name');
+        $response->assertStatus(302);
+        $response->assertRedirect(route('titles.create'));
+        $response->assertSessionHasErrors('name');
+    }
+
+    /** @test */
+    public function title_name_must_be_a_string()
+    {
+        $response = $this->actingAs($this->authorizedUser)->from(route('titles.create'))->post(route('titles.store'), $this->validParams([
+            'name' => [],
+        ]));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('titles.create'));
+        $response->assertSessionHasErrors('name');
     }
 
     /** @test */
@@ -99,7 +113,10 @@ class StoreTitleTest extends IntegrationTestCase
             'name' => 'Title Name',
         ]));
 
-        $this->assertFormError('name', 1);
+        $response->assertStatus(302);
+        $response->assertRedirect(route('titles.create'));
+        $response->assertSessionHasErrors('name');
+        $this->assertEquals(1, Title::count());
     }
 
     /** @test */
@@ -109,7 +126,21 @@ class StoreTitleTest extends IntegrationTestCase
             'slug' => '',
         ]));
 
-        $this->assertFormError('slug');
+        $response->assertStatus(302);
+        $response->assertRedirect(route('titles.create'));
+        $response->assertSessionHasErrors('slug');
+    }
+
+    /** @test */
+    public function title_slug_must_be_a_string()
+    {
+        $response = $this->actingAs($this->authorizedUser)->from(route('titles.create'))->post(route('titles.store'), $this->validParams([
+            'slug' => [],
+        ]));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('titles.create'));
+        $response->assertSessionHasErrors('slug');
     }
 
     /** @test */
@@ -121,7 +152,10 @@ class StoreTitleTest extends IntegrationTestCase
             'slug' => 'title-slug',
         ]));
 
-        $this->assertFormError('slug', 1);
+        $response->assertStatus(302);
+        $response->assertRedirect(route('titles.create'));
+        $response->assertSessionHasErrors('slug');
+        $this->assertEquals(1, Title::count());
     }
 
     /** @test */
@@ -131,16 +165,32 @@ class StoreTitleTest extends IntegrationTestCase
             'introduced_at' => '',
         ]));
 
-        $this->assertFormError('introduced_at');
+        $response->assertStatus(302);
+        $response->assertRedirect(route('titles.create'));
+        $response->assertSessionHasErrors('introduced_at');
     }
 
     /** @test */
-    public function title_introduced_at_date_must_be_a_valid_date()
+    public function title_introduced_at_date_must_be_a_string()
     {
         $response = $this->actingAs($this->authorizedUser)->from(route('titles.create'))->post(route('titles.store'), $this->validParams([
-            'introduced_at' => 'not-a-date',
+            'introduced_at' => [],
         ]));
 
-        $this->assertFormError('introduced_at');
+        $response->assertStatus(302);
+        $response->assertRedirect(route('titles.create'));
+        $response->assertSessionHasErrors('introduced_at');
+    }
+
+    /** @test */
+    public function title_introduced_at_date_must_be_in_a_valid_date_format()
+    {
+        $response = $this->actingAs($this->authorizedUser)->from(route('titles.create'))->post(route('titles.store'), $this->validParams([
+            'introduced_at' => 'not-a-valid-date',
+        ]));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('titles.create'));
+        $response->assertSessionHasErrors('introduced_at');
     }
 }

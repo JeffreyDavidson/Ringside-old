@@ -24,7 +24,7 @@ class DeactivateActiveWrestlerTest extends IntegrationTestCase
         $response->assertStatus(302);
         $response->assertRedirect(route('active-wrestlers.index'));
         tap($wrestler->fresh(), function ($wrestler) {
-            $this->assertFalse($wrestler->fresh()->is_active);
+            $this->assertFalse($wrestler->isActive());
         });
     }
 
@@ -37,7 +37,7 @@ class DeactivateActiveWrestlerTest extends IntegrationTestCase
 
         $response->assertStatus(403);
         tap($wrestler->fresh(), function ($wrestler) {
-            $this->assertTrue($wrestler->fresh()->is_active);
+            $this->assertTrue($wrestler->isActive());
         });
     }
 

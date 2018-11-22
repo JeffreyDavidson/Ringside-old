@@ -1,14 +1,11 @@
 <?php
 
-namespace Tests\Feature\Title\Retired;
+namespace Tests\Feature\Title\Inactive;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\IntegrationTestCase;
 
-class ViewInactiveTitlesListTest extends TestCase
+class ViewInactiveTitlesListTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
     public function setUp()
     {
         parent::setUp();
@@ -19,8 +16,7 @@ class ViewInactiveTitlesListTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_view_the_list_of_inactive_titles()
     {
-        $response = $this->actingAs($this->authorizedUser)
-                        ->get(route('inactive-titles.index'));
+        $response = $this->actingAs($this->authorizedUser)->get(route('inactive-titles.index'));
 
         $response->assertSuccessful();
         $response->assertViewIs('titles.inactive');
@@ -30,8 +26,7 @@ class ViewInactiveTitlesListTest extends TestCase
     /** @test */
     public function users_who_dont_have_permission_cannot_view_the_list_of_inactive_titles()
     {
-        $response = $this->actingAs($this->unauthorizedUser)
-                        ->get(route('inactive-titles.index'));
+        $response = $this->actingAs($this->unauthorizedUser)->get(route('inactive-titles.index'));
 
         $response->assertStatus(403);
     }

@@ -2,13 +2,10 @@
 
 namespace Tests\Feature\Title\Retired;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\IntegrationTestCase;
 
-class ViewRetiredTitlesListTest extends TestCase
+class ViewRetiredTitlesListTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
     public function setUp()
     {
         parent::setUp();
@@ -19,8 +16,7 @@ class ViewRetiredTitlesListTest extends TestCase
     /** @test */
     public function users_who_have_permission_can_view_the_list_of_retired_titles()
     {
-        $response = $this->actingAs($this->authorizedUser)
-                        ->get(route('retired-titles.index'));
+        $response = $this->actingAs($this->authorizedUser)->get(route('retired-titles.index'));
 
         $response->assertSuccessful();
         $response->assertViewIs('titles.retired');
@@ -30,8 +26,7 @@ class ViewRetiredTitlesListTest extends TestCase
     /** @test */
     public function users_who_dont_have_permission_cannot_view_the_list_of_retired_titles()
     {
-        $response = $this->actingAs($this->unauthorizedUser)
-                        ->get(route('retired-titles.index'));
+        $response = $this->actingAs($this->unauthorizedUser)->get(route('retired-titles.index'));
 
         $response->assertStatus(403);
     }
