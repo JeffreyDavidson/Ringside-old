@@ -124,7 +124,7 @@ class StoreEventTest extends IntegrationTestCase
             $this->assertEquals('2017-09-17', $event->date->toDateString());
             $this->assertEquals($this->venue->id, $event->venue_id);
             $this->assertCount(1, $event->matches);
-            $this->assertEquals(1, $event->matches()->first()->match_type_id);
+            $this->assertEquals(1, $event->matches->first()->match_type_id);
             $this->assertEquals('This is just a basic preview.', $event->matches()->first()->preview);
         });
     }
@@ -136,11 +136,9 @@ class StoreEventTest extends IntegrationTestCase
             'number_of_matches' => 1,
             'schedule_matches' => 0,
         ]));
-
-        tap(Event::first(), function ($event) use ($response) {
-            $response->assertStatus(302);
-            $response->assertRedirect(route('scheduled-events.index'));
-        });
+    
+        $response->assertStatus(302);
+        $response->assertRedirect(route('scheduled-events.index'));
     }
 
     /** @test */

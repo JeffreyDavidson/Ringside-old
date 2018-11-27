@@ -22,7 +22,7 @@ class DeleteEventTest extends IntegrationTestCase
         $response = $this->actingAs($this->authorizedUser)->delete(route('events.destroy', $event->id));
 
         $response->assertStatus(302);
-        $this->assertSoftDeleted('events', ['id' => $this->event->id, 'name' => $this->event->name]);
+        $this->assertSoftDeleted('events', ['id' => $event->id, 'name' => $event->name]);
     }
 
     /** @test */
@@ -68,12 +68,12 @@ class DeleteEventTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function a_scheduled_event_that_when_deleted_will_redirect_the_user_to_the_scheduled_events_page()
+    public function a_archived_event_that_when_deleted_will_redirect_the_user_to_the_archived_events_page()
     {
-        $event = factory(Event::class)->states('scheduled')->create();
+        $event = factory(Event::class)->states('archived')->create();
 
-        $response = $this->actingAs($this->authorizedUser)->from(route('scheduled-events.index'))->delete(route('events.destroy', $event->id));
+        $response = $this->actingAs($this->authorizedUser)->from(route('archived-events.index'))->delete(route('events.destroy', $event->id));
 
-        $response->assertRedirect(route('scheduled-events.index'));
+        $response->assertRedirect(route('archived-events.index'));
     }
 }
