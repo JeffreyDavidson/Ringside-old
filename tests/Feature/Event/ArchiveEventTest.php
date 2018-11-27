@@ -2,14 +2,11 @@
 
 namespace Tests\Feature\Event;
 
-use Tests\TestCase;
 use App\Models\Event;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\IntegrationTestCase;
 
-class ArchiveEventTest extends TestCase
+class ArchiveEventTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
     public function setUp()
     {
         parent::setUp();
@@ -22,13 +19,13 @@ class ArchiveEventTest extends TestCase
     {
         $event = factory(Event::class)->states('past')->create();
 
-        $response = $this->actingAs($this->authorizedUser)
-            ->from(route('past-events.index'))
-            ->post(route('archived-events.store', $this->event));
+        $response = $this->actingAs($this->authorizedUser)->from(route('past-events.index'))->post(route('archived-events.store', $event->id));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('past-events.index'));
-        $this->assertTrue($event->fresh()->isArchived());
+        tap($event->fresh(), function ($event) {
+            $this->assertTrue($event->isArchived());
+        });
     }
 
     /** @test */
@@ -36,12 +33,12 @@ class ArchiveEventTest extends TestCase
     {
         $event = factory(Event::class)->states('past')->create();
 
-        $response = $this->actingAs($this->unauthorizedUser)->from(route('past-events.index'))->post(route('archived-events.store', [
-            'event_id' => $event->id,
-        ]));
+        $response = $this->actingAs($this->unauthorizedUser)->from(route('past-events.index'))->post(route('archived-events.store', $event->id));
 
         $response->assertStatus(403);
-        $this->assertFalse($event->fresh()->isArchived());
+        tap($event->fresh(), function ($event) {
+            $this->assertFalse($event->isArchived());
+        });
     }
 
     /** @test */
@@ -49,9 +46,7 @@ class ArchiveEventTest extends TestCase
     {
         $event = factory(Event::class)->states('past')->create();
 
-        $response = $this->from(route('past-events.index'))->post(route('archived-events.store', [
-            'event_id' => $event->id,
-        ]));
+        $response = $this->from(route('past-events.index'))->post(route('archived-events.store', $event->id));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));
@@ -62,9 +57,7 @@ class ArchiveEventTest extends TestCase
     {
         $event = factory(Event::class)->states('scheduled')->create();
 
-        $response = $this->actingAs($this->authorizedUser)->post(route('archived-events.store', [
-            'event_id' => $event->id,
-        ]));
+        $response = $this->actingAs($this->authorizedUser)->post(route('archived-events.store', $event->id));
 
         $response->assertStatus(422);
     }
@@ -74,9 +67,7 @@ class ArchiveEventTest extends TestCase
     {
         $event = factory(Event::class)->states('archived')->create();
 
-        $response = $this->actingAs($this->authorizedUser)->post(route('archived-events.store', [
-            'event_id' => $event->id,
-        ]));
+        $response = $this->actingAs($this->authorizedUser)->post(route('archived-events.store', $event->id));
 
         $response->assertStatus(422);
     }
@@ -84,9 +75,7 @@ class ArchiveEventTest extends TestCase
     /** @test */
     public function an_event_that_does_not_exist_cannot_be_archived()
     {
-        $response = $this->actingAs($this->authorizedUser)->post(route('archived-events.store', [
-            'event_id' => 999,
-        ]));
+        $response = $this->actingAs($this->authorizedUser)->post(route('archived-events.store', 999));
 
         $response->assertStatus(404);
     }

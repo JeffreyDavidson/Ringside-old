@@ -14,7 +14,7 @@ class CreateEventTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function users_who_have_permission_can_view_the_add_event_page()
+    public function users_who_have_permission_can_view_the_ceate_event_page()
     {
         $response = $this->actingAs($this->authorizedUser)->get(route('events.create'));
 
@@ -24,7 +24,7 @@ class CreateEventTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function users_who_dont_have_permission_cannot_view_the_add_event_page()
+    public function users_who_dont_have_permission_cannot_view_the_create_event_page()
     {
         $response = $this->actingAs($this->unauthorizedUser)->get(route('events.create'));
 
@@ -32,7 +32,7 @@ class CreateEventTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function guests_cannot_view_the_add_event_page()
+    public function guests_cannot_view_the_create_event_page()
     {
         $response = $this->get(route('events.create'));
 

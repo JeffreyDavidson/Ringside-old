@@ -10,7 +10,7 @@ use App\Models\Wrestler;
 use App\Models\MatchType;
 use Tests\IntegrationTestCase;
 
-class SaveEventTest extends IntegrationTestCase
+class StoreEventTest extends IntegrationTestCase
 {
     private $venue;
     private $matchType;

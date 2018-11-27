@@ -2,34 +2,24 @@
 
 namespace Tests\Feature\Event;
 
-use Tests\TestCase;
 use App\Models\Event;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\IntegrationTestCase;
 
-class ViewEventTest extends TestCase
+class ViewEventTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
-    private $event;
-
     public function setUp()
     {
         parent::setUp();
 
         $this->setupAuthorizedUser('view-event');
-
-        $this->event = factory(Event::class)->create([
-            'name' => 'Event Name',
-            'slug' => 'event-slug',
-            'date' => '2017-09-17',
-        ]);
     }
 
     /** @test */
     public function users_who_have_permission_can_view_an_event()
     {
-        $response = $this->actingAs($this->authorizedUser)
-                        ->get(route('events.show', $this->event->id));
+        $event = factory(Event::class)->create();
+
+        $response = $this->actingAs($this->authorizedUser)->get(route('events.show', $event->id));
 
         $response->assertSuccessful();
         $response->assertViewIs('events.show');
@@ -39,8 +29,9 @@ class ViewEventTest extends TestCase
     /** @test */
     public function users_who_dont_have_permission_cannot_view_an_event()
     {
-        $response = $this->actingAs($this->unauthorizedUser)
-                        ->get(route('events.show', $this->event->id));
+        $event = factory(Event::class)->create();
+
+        $response = $this->actingAs($this->unauthorizedUser)->get(route('events.show', $event->id));
 
         $response->assertStatus(403);
     }
@@ -48,7 +39,9 @@ class ViewEventTest extends TestCase
     /** @test */
     public function guests_cannot_view_an_event()
     {
-        $response = $this->get(route('events.show', $this->event->id));
+        $event = factory(Event::class)->create();
+
+        $response = $this->get(route('events.show', $event->id));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));
