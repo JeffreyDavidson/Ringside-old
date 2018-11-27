@@ -11,10 +11,8 @@ use Facades\MatchFactory;
 use App\Models\MatchDecision;
 use Tests\IntegrationTestCase;
 
-class UpdateEventMatchesWithResultsTest extends IntegrationTestCase
+class UpdateEventResultsTest extends IntegrationTestCase
 {
-    private $response;
-
     public function setUp()
     {
         parent::setUp();
@@ -31,7 +29,7 @@ class UpdateEventMatchesWithResultsTest extends IntegrationTestCase
                 [
                     'match_decision_id' => factory(MatchDecision::class)->create()->id,
                     'winners' => Match::first()->groupedWrestlersBySide()->first()->modelKeys(),
-                    'result' => 'Donec sed odio dui. Cras mattis consectetur purus sit amet fermentum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.',
+                    'result' => 'This is an example result paragraph.',
                 ],
             ],
         ], $overrides);
@@ -45,50 +43,11 @@ class UpdateEventMatchesWithResultsTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function users_who_have_permission_can_view_the_event_results_page()
-    {
-        $event = factory(Event::class)->create();
-
-        $response = $this->actingAs($this->authorizedUser)
-                        ->get(route('event-results.edit', ['event' => $event->id]));
-
-        $response->assertSuccessful();
-        $response->assertViewIs('events.results');
-        $response->assertViewHas('event', function ($viewEvent) use ($event) {
-            return $viewEvent->id === $event->id;
-        });
-    }
-
-    /** @test */
-    public function users_who_dont_have_permission_cannot_view_the_edit_event_results_page()
-    {
-        $event = factory(Event::class)->create();
-
-        $response = $this->actingAs($this->unauthorizedUser)
-                        ->get(route('event-results.edit', $event->id));
-
-        $response->assertStatus(403);
-    }
-
-    /** @test */
-    public function guests_cannot_view_the_edit_event_results_page()
-    {
-        $event = factory(Event::class)->create();
-
-        $response = $this->get(route('event-results.edit', $event->id));
-
-        $response->assertStatus(302);
-        $response->assertRedirect(route('login'));
-    }
-
-    /** @test */
     public function users_who_have_permission_can_update_a_regular_match_with_a_result()
     {
         $match = $this->createStandardMatch();
 
-        $response = $this->actingAs($this->authorizedUser)
-                        ->from(route('event-results.edit', $match->event->id))
-                        ->patch(route('event-results.update', $match->event->id), $this->validParams([]));
+        $response = $this->actingAs($this->authorizedUser)->from(route('event-results.edit', $match->event->id))->patch(route('event-results.update', $match->event->id), $this->validParams([]));
 
         $response->assertRedirect(route('events.show', $match->event->id));
     }
@@ -98,15 +57,13 @@ class UpdateEventMatchesWithResultsTest extends IntegrationTestCase
     {
         $match = $this->createStandardMatch();
 
-        $response = $this->actingAs($this->authorizedUser)
-                        ->from(route('event-results.edit', $match->event->id))
-                        ->patch(route('event-results.update', $match->event->id), $this->validParams([
-                            'matches' => [
-                                [
-                                    'result' => 'Maecenas faucibus mollis interdum. Etiam porta sem malesuada magna mollis euismod.',
-                                ],
-                            ],
-                        ]));
+        $response = $this->actingAs($this->authorizedUser)->from(route('event-results.edit', $match->event->id))->patch(route('event-results.update', $match->event->id), $this->validParams([
+            'matches' => [
+                [
+                    'result' => 'Maecenas faucibus mollis interdum. Etiam porta sem malesuada magna mollis euismod.',
+                ],
+            ],
+        ]));
 
         tap($match->fresh(), function ($match) {
             $this->assertEquals('Maecenas faucibus mollis interdum. Etiam porta sem malesuada magna mollis euismod.', $match->result);

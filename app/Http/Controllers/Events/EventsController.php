@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Events;
 
 use App\Models\Event;
 use App\Http\Controllers\Controller;
+use App\Exceptions\EventHasPastException;
 use App\Http\Requests\EventEditFormRequest;
 use App\Http\Requests\EventCreateFormRequest;
 
@@ -76,6 +77,8 @@ class EventsController extends Controller
      * @param  \App\Http\Requests\EventEditFormRequest  $request
      * @param  \App\Models\Event  $event
      * @return \Illuminate\Http\RedirectResponse
+     * 
+     * @throws \App\Exceptions\EventHasPastException
      */
     public function update(EventEditFormRequest $request, Event $event)
     {

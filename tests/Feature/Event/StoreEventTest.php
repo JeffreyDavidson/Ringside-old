@@ -115,16 +115,16 @@ class StoreEventTest extends IntegrationTestCase
             ],
         ]));
 
-        tap(Event::first(), function ($event) use ($response) {
-            $response->assertStatus(302);
-            $response->assertRedirect(route('scheduled-events.index'));
+        $response->assertStatus(302);
+        $response->assertRedirect(route('scheduled-events.index'));
 
+        tap(Event::first(), function ($event) {
             $this->assertEquals('Event Name', $event->name);
             $this->assertEquals('event-slug', $event->slug);
             $this->assertEquals('2017-09-17', $event->date->toDateString());
             $this->assertEquals($this->venue->id, $event->venue_id);
             $this->assertCount(1, $event->matches);
-            $this->assertEquals(1, $event->matches->first()->match_type_id);
+            $this->assertEquals($this->matchType->id, $event->matches->first()->match_type_id);
             $this->assertEquals('This is just a basic preview.', $event->matches()->first()->preview);
         });
     }
@@ -250,7 +250,7 @@ class StoreEventTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function event_date_must_be_a_date()
+    public function event_date_must_be_a_valid_date()
     {
         $response = $this->actingAs($this->authorizedUser)->from(route('events.create'))->post(route('events.store'), $this->validParams([
             'date' => 'not-a-date',

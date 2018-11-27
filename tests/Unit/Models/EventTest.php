@@ -115,7 +115,7 @@ class EventTest extends IntegrationTestCase
     }
 
     /**
-     * @expectedException \App\Exceptions\EventIsArchivedException
+     * @expectedException \App\Exceptions\EventAlreadyArchivedException
      *
      * @test
      */
@@ -131,9 +131,9 @@ class EventTest extends IntegrationTestCase
      *
      * @test
      */
-    public function an_unarchived_event_cannot_be_unarchived()
+    public function an_event_that_is_not_archived_cannot_be_unarchived()
     {
-        $event = factory(Event::class)->create();
+        $event = factory(Event::class)->states('past')->create();
 
         $event->unarchive();
     }

@@ -51,7 +51,7 @@ Route::group(['middleware' => 'auth'], function () {
             ->parameters(['' => 'event'])
             ->names(['index' => 'matches.index', 'create' => 'matches.create']);
         Route::get('create', 'EventsController@create')->name('events.create');
-        Route::post('{event}/archive', 'ArchivedEventsController@store')->name('past-events.archive');
+        Route::post('{event}/archive', 'ArchivedEventsController@store')->name('archived-events.store');
         Route::delete('archived/{event}/unarchive', 'ArchivedEventsController@destroy')->name('archived-events.unarchive');
     });
 

@@ -52,24 +52,28 @@ class ArchiveEventTest extends IntegrationTestCase
         $response->assertRedirect(route('login'));
     }
 
-    /** @test */
+    /** 
+     * @expectedException \App\Exceptions\EventIsScheduledException
+     * @test 
+     */
     public function a_scheduled_event_cannot_be_archived()
     {
+        $this->withoutExceptionHandling();
         $event = factory(Event::class)->states('scheduled')->create();
 
         $response = $this->actingAs($this->authorizedUser)->post(route('archived-events.store', $event->id));
-
-        $response->assertStatus(422);
     }
 
-    /** @test */
+    /** 
+     * @expectedException \App\Exceptions\EventAlreadyArchivedException
+     * @test 
+     */
     public function an_event_can_only_be_archived_once()
     {
+        $this->withoutExceptionHandling();
         $event = factory(Event::class)->states('archived')->create();
 
         $response = $this->actingAs($this->authorizedUser)->post(route('archived-events.store', $event->id));
-
-        $response->assertStatus(422);
     }
 
     /** @test */
