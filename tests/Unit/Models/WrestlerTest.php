@@ -2,22 +2,19 @@
 
 namespace Tests\Unit\Models;
 
-use App\Models\Wrestler;
-use App\Models\Title;
-use App\Models\Manager;
+use Carbon\Carbon;
 use App\Models\Event;
 use App\Models\Match;
-use Facades\ChampionshipFactory;
+use App\Models\Title;
+use App\Models\Manager;
+use App\Models\Wrestler;
 use Facades\MatchFactory;
 use Facades\ManagerFactory;
-use Carbon\Carbon;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use Tests\IntegrationTestCase;
+use Facades\ChampionshipFactory;
 
-class WrestlerTest extends TestCase
+class WrestlerTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
     /** @test */
     public function it_can_get_wrestlers_hired_before_a_certain_date()
     {
@@ -252,7 +249,7 @@ class WrestlerTest extends TestCase
         $scheduledMatchB = MatchFactory::scheduled()->withWrestler($wrestler)->create();
         $pastMatch = MatchFactory::past()->withWrestler($wrestler)->create();
 
-        $scheduledMatches = $wrestler->scheduledMatches;
+        $scheduledMatches = $wrestler->scheduledMatches()->get();
 
         $this->assertTrue($scheduledMatches->contains($scheduledMatchA));
         $this->assertTrue($scheduledMatches->contains($scheduledMatchB));
@@ -275,7 +272,7 @@ class WrestlerTest extends TestCase
         $pastMatchB = MatchFactory::past()->withWrestler($wrestler)->create();
         $scheduledMatch = MatchFactory::scheduled()->withWrestler($wrestler)->create();
 
-        $pastMatches = $wrestler->pastMatches;
+        $pastMatches = $wrestler->pastMatches()->get();
 
         $this->assertTrue($pastMatches->contains($pastMatchA));
         $this->assertTrue($pastMatches->contains($pastMatchB));
@@ -329,7 +326,7 @@ class WrestlerTest extends TestCase
         $currentChampionshipB = ChampionshipFactory::current()->forWrestler($wrestler)->create();
         $pastChampionship = ChampionshipFactory::past()->forWrestler($wrestler)->create();
 
-        $currentTitlesHeld = $wrestler->currentTitlesHeld;
+        $currentTitlesHeld = $wrestler->currentTitlesHeld()->get();
 
         $this->assertTrue($currentTitlesHeld->contains('id', $currentChampionshipA->title_id));
         $this->assertTrue($currentTitlesHeld->contains('id', $currentChampionshipB->title_id));
@@ -344,7 +341,7 @@ class WrestlerTest extends TestCase
         $pastChampionshipB = ChampionshipFactory::past()->forWrestler($wrestler)->create();
         $currentChampionship = ChampionshipFactory::current()->forWrestler($wrestler)->create();
 
-        $pastTitlesHeld = $wrestler->pastTitlesHeld;
+        $pastTitlesHeld = $wrestler->pastTitlesHeld()->get();
 
         $this->assertTrue($pastTitlesHeld->contains('id', $pastChampionshipA->title_id));
         $this->assertTrue($pastTitlesHeld->contains('id', $pastChampionshipB->title_id));
@@ -487,7 +484,7 @@ class WrestlerTest extends TestCase
         $currentManagerB = ManagerFactory::current()->forWrestler($wrestler)->create();
         $pastManager = ManagerFactory::past()->forWrestler($wrestler)->create();
 
-        $currentManagers = $wrestler->currentManagers;
+        $currentManagers = $wrestler->currentManagers()->get();
 
         $this->assertTrue($currentManagers->contains($currentManagerA));
         $this->assertTrue($currentManagers->contains($currentManagerB));
@@ -503,7 +500,7 @@ class WrestlerTest extends TestCase
         $pastManagerB = ManagerFactory::past()->forWrestler($wrestler)->create();
         $currentManager = ManagerFactory::current()->forWrestler($wrestler)->create();
 
-        $pastManagers = $wrestler->pastManagers;
+        $pastManagers = $wrestler->pastManagers()->get();
 
         $this->assertTrue($pastManagers->contains($pastManagerA));
         $this->assertTrue($pastManagers->contains($pastManagerB));

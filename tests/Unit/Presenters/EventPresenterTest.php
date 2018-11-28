@@ -2,14 +2,11 @@
 
 namespace Tests\Unit\Presenters;
 
-use Tests\TestCase;
 use App\Models\Event;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\IntegrationTestCase;
 
-class EventPresenterTest extends TestCase
+class EventPresenterTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
     /** @test */
     public function event_date_can_be_presented_as_formatted()
     {

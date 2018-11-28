@@ -18,13 +18,36 @@ class RetiredTitlesController extends Controller
     protected function resourceAbilityMap()
     {
         return [
+            'index' => 'index',
             'store' => 'retire',
-            'destroy' => 'activate',
+            'destroy' => 'unretire',
         ];
     }
 
     /**
-     * Store a newly created retired title.
+     * Get the list of resource methods which do not have model parameters.
+     *
+     * @return array
+     */
+    protected function resourceMethodsWithoutModels()
+    {
+        return ['index'];
+    }
+
+    /**
+     * Display a listing of all retired titles.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function index()
+    {
+        $titles = Title::retired()->paginate(10);
+
+        return view('titles.retired', compact('titles'));
+    }
+
+    /**
+     * Retire a title.
      *
      * @param  \App\Models\Title  $title
      * @return \Illuminate\Http\RedirectResponse
@@ -33,19 +56,19 @@ class RetiredTitlesController extends Controller
     {
         $title->retire();
 
-        return redirect()->route('titles.index');
+        return redirect()->back();
     }
 
     /**
-     * Activate a retired title.
+     * Unretire a retired title.
      *
      * @param  \App\Models\Title  $title
      * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Title $title)
     {
-        $title->activate();
+        $title->unretire();
 
-        return redirect()->route('titles.index');
+        return redirect()->back();
     }
 }

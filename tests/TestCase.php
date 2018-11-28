@@ -2,12 +2,13 @@
 
 namespace Tests;
 
-use App\Models\User;
 use App\Models\Role;
+use App\Models\User;
 use App\Models\Permission;
 use PHPUnit\Framework\Assert;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\TestResponse;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
 {
@@ -48,12 +49,13 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
         });
 
         $this->setupUnauthorizedUser();
-        // $testName = str_replace(["test", "_"], ["", " "], $this->getName());
-    	// $testName = preg_replace_callback("/[a-zA-Z0-9]{3,}\b/", function($match){
-    	// 	return ucfirst($match[0]);
-    	// }, $testName);
 
-    	// dump(" ->" . $testName);
+        // $testName = str_replace(["test", "_"], ["", " "], $this->getName());
+        // $testName = preg_replace_callback("/[a-zA-Z0-9]{3,}\b/", function($match){
+        //     return ucfirst($match[0]);
+        // }, $testName);
+
+        // dump(" ->" . $testName);
     }
 
     /**
@@ -90,5 +92,18 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
     protected function dumpSessionErrors()
     {
         dd(app('session.store')->get('errors')->getBag('default'));
+    }
+
+    public function assertNotSoftDeleted(Model $model)
+    {
+        return $this->assertDatabaseHas($model->getTable(), [
+            $model->getKeyName() => $model->getKey(),
+            $model->getDeletedAtColumn() => null,
+        ]);
+    }
+
+    public function assertValuesEqual(array $expected, array $actual, $msg = '')
+    {
+        return $this->assertEquals(array_values($expected), array_values($actual), $msg);
     }
 }

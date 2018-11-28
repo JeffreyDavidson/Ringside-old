@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Exceptions\ModelIsActiveException;
 use App\Exceptions\ModelIsRetiredException;
 
+/**
+ * @mixin \Eloquent
+ */
 trait HasRetirements
 {
     /**
@@ -17,7 +20,7 @@ trait HasRetirements
      */
     public function retirements()
     {
-        return $this->morphMany(Retirement::class, 'retiree');
+        return $this->morphMany(Retirement::class, 'retirable');
     }
 
     /**
@@ -33,7 +36,7 @@ trait HasRetirements
     /**
      * Retrieves the model's past retirements.
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Database\Query\Builder
      */
     public function pastRetirements()
     {
@@ -78,7 +81,7 @@ trait HasRetirements
      *
      * @return $this
      *
-     * @throws App\Exceptions\ModelIsRetiredException
+     * @throws \App\Exceptions\ModelIsRetiredException
      */
     public function retire()
     {
@@ -86,7 +89,9 @@ trait HasRetirements
             throw new ModelIsRetiredException;
         }
 
-        $this->deactivate();
+        if ($this->isActive()) {
+            $this->deactivate();
+        }
 
         $this->retirements()->create(['retired_at' => Carbon::now()]);
 
@@ -98,7 +103,7 @@ trait HasRetirements
      *
      * @return $this
      *
-     * @throws App\Exceptions\ModelIsActiveException
+     * @throws \App\Exceptions\ModelIsActiveException
      */
     public function unretire()
     {

@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
+use App\Models\Wrestler;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class WrestlerPolicy
@@ -32,7 +33,7 @@ class WrestlerPolicy
     }
 
     /**
-     * Checks to see if the user has permission to view a roster-= member.
+     * Checks to see if the user has permission to view a roster member.
      *
      * @param  \App\Models\User  $user
      * @return bool
@@ -40,17 +41,6 @@ class WrestlerPolicy
     public function view(User $user)
     {
         return $user->hasPermission('view-wrestler');
-    }
-
-    /**
-     * Checks to see if the user has permission to edit a roster member.
-     *
-     * @param  \App\Models\User  $user
-     * @return bool
-     */
-    public function edit(User $user)
-    {
-        return $user->hasPermission('edit-wrestler');
     }
 
     /**
@@ -76,14 +66,38 @@ class WrestlerPolicy
     }
 
     /**
-     * Checks to see if the user has permission to retire a roster member.
+     * Checks to see if the user has permission to activate a roster member.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Wrestler  $wrestler
+     * @return bool
+     */
+    public function activate(User $user, Wrestler $wrestler)
+    {
+        return $user->hasPermission('activate-wrestler') && $wrestler->hired_at->lte(today());
+    }
+
+    /**
+     * Checks to see if the user has permission to deactivate a roster member.
      *
      * @param  \App\Models\User  $user
      * @return bool
      */
-    public function retire(User $user)
+    public function deactivate(User $user)
     {
-        return $user->hasPermission('retire-wrestler');
+        return $user->hasPermission('deactivate-wrestler');
+    }
+
+    /**
+     * Checks to see if the user has permission to retire a roster member.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Wrestler  $wrestler
+     * @return bool
+     */
+    public function retire(User $user, Wrestler $wrestler)
+    {
+        return $user->hasPermission('retire-wrestler') && $wrestler->hired_at->lte(today());
     }
 
     /**

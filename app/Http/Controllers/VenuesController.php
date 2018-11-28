@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Venue;
-use App\Http\Requests\VenueEditFormRequest;
-use App\Http\Requests\VenueCreateFormRequest;
+use App\Http\Requests\StoreVenueFormRequest;
+use App\Http\Requests\UpdateVenueFormRequest;
 
 class VenuesController extends Controller
 {
@@ -37,10 +37,10 @@ class VenuesController extends Controller
     /**
      * Store a newly created venue.
      *
-     * @param  \App\Http\Requets\VenueCreateFormRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param  \App\Http\Requests\StoreVenueFormRequest  $request
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(VenueCreateFormRequest $request)
+    public function store(StoreVenueFormRequest $request)
     {
         Venue::create($request->all());
 
@@ -72,11 +72,11 @@ class VenuesController extends Controller
     /**
      * Update the specified venue.
      *
-     * @param  \App\Http\Requests\VenueEditFormRequest  $request
+     * @param  \App\Http\Requests\UpdateVenueFormRequest  $request
      * @param  \App\Models\Venue  $venue
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(VenueEditFormRequest $request, Venue $venue)
+    public function update(UpdateVenueFormRequest $request, Venue $venue)
     {
         $venue->update($request->all());
 

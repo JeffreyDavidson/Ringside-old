@@ -6,16 +6,14 @@ use App\Traits\HasStatus;
 use App\Traits\HasMatches;
 use App\Traits\HasRetirements;
 use Illuminate\Database\Eloquent\Model;
+use App\Exceptions\ModelIsActiveException;
 use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Exceptions\TitleNotIntroducedException;
 
 class Title extends Model
 {
-    use HasStatus,
-        HasMatches,
-        HasRetirements,
-        Presentable,
-        SoftDeletes;
+    use HasStatus, HasMatches, HasRetirements, Presentable, SoftDeletes;
 
     /**
      * The attributes that should be cast to native types.
@@ -23,8 +21,8 @@ class Title extends Model
      * @var array
      */
     protected $casts = [
-        'introduced_at' => 'datetime',
         'is_active' => 'boolean',
+        'introduced_at' => 'datetime',
     ];
 
     /**
@@ -91,8 +89,32 @@ class Title extends Model
         return $this->previousChampion()->first();
     }
 
+    /**
+     * Checks to see if the title is currently held.
+     *
+     * @return bool
+     */
     public function isVacant()
     {
         return empty($this->currentChampion);
+    }
+
+    /**
+     * Activates a title.
+     *
+     * @return bool
+     *
+     * @throws \App\Exceptions\ModelIsActiveException
+     * @throws \App\Exceptions\TitleNotIntroducedException
+     */
+    public function activate()
+    {
+        if ($this->isActive()) {
+            throw new ModelIsActiveException;
+        } elseif ($this->introduced_at->gt(today())) {
+            throw new TitleNotIntroducedException;
+        }
+
+        return $this->update(['is_active' => true]);
     }
 }

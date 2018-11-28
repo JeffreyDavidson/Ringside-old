@@ -2,18 +2,15 @@
 
 namespace Tests\Unit\Repositories;
 
-use App\Models\Wrestler;
-use App\Models\Title;
 use Carbon\Carbon;
-use Tests\TestCase;
+use App\Models\Title;
+use App\Models\Wrestler;
+use Tests\IntegrationTestCase;
 use Facades\ChampionshipFactory;
 use App\Repositories\TitleRecordsRepository;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class TitleRecordsRepositoryTest extends TestCase
+class TitleRecordsRepositoryTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
     private $repository;
 
     public function setUp()

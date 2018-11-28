@@ -7,20 +7,25 @@ use App\Models\Championship;
 use App\Exceptions\ModelIsTitleChampionException;
 use App\Exceptions\ModelNotTitleChampionException;
 
+/**
+ * @mixin \Eloquent
+ */
 trait HasTitles
 {
     /**
-     * All of the titles this wrestler has held or currently holds.
+     * All of the titles a model has held or currently holds.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function titles()
     {
-        return $this->belongsToMany(Title::class, 'championships')->using(Championship::class)->withPivot('id', 'won_on', 'lost_on', 'successful_defenses');
+        return $this->belongsToMany(Title::class, 'championships')
+            ->using(Championship::class)
+            ->withPivot('id', 'won_on', 'lost_on', 'successful_defenses');
     }
 
     /**
-     * The titles that this wrestler used to hold.
+     * The titles that a model has held in the past.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -30,7 +35,7 @@ trait HasTitles
     }
 
     /**
-     * Checks to see if the wrestler used to hold any titles.
+     * Checks to see if a model used to hold any titles.
      *
      * @return bool
      */
@@ -40,7 +45,7 @@ trait HasTitles
     }
 
     /**
-     * The titles currently held by the wrestler.
+     * The titles currently held by a model.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -50,13 +55,13 @@ trait HasTitles
     }
 
     /**
-     * Determines if a wrestler is currently a champion.
+     * Determines if a model is currently a champion.
      *
      * @return bool
      */
     public function isCurrentlyAChampion()
     {
-        return $this->currentTitlesHeld()->exists();
+        return $this->currentTitlesHeld->isNotEmpty();
     }
 
     /**
@@ -71,37 +76,33 @@ trait HasTitles
     }
 
     /**
-     * A wrestler can win a title.
+     * A model can win a title.
      *
      * @param  \App\Models\Title  $title
      * @param  string  $date
      * @return $this
      *
-     * @throws App\Exceptions\ModelIsTitleChampionException
+     * @throws \App\Exceptions\ModelIsTitleChampionException
      */
     public function winTitle(Title $title, $date)
     {
-        if (! empty($title->currentChampion)) {
-            if ($title->currentChampion->is($this)) {
-                throw new ModelIsTitleChampionException;
-            }
+        if (! empty($title->currentChampion) && $title->currentChampion->is($this)) {
+            throw new ModelIsTitleChampionException;
         }
 
-        $this->titles()->attach([
-            $title->id => ['won_on' => $date],
-        ]);
+        $this->titles()->attach($title->id, ['won_on' => $date]);
 
         return $this;
     }
 
     /**
-     * A wrestler can lose a title.
+     * A model can lose a title.
      *
      * @param  \App\Models\Title  $title
      * @param  string  $date
      * @return $this
      *
-     * @throws App\Exceptions\ModelNotTitleChampionException
+     * @throws \App\Exceptions\ModelNotTitleChampionException
      */
     public function loseTitle(Title $title, $date)
     {
@@ -109,9 +110,7 @@ trait HasTitles
             throw new ModelNotTitleChampionException;
         }
 
-        $this->titles()->updateExistingPivot($title->id, [
-            'lost_on' => $date,
-        ]);
+        $this->titles()->updateExistingPivot($title->id, ['lost_on' => $date]);
 
         return $this;
     }

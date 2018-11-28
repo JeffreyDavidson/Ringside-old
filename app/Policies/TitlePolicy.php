@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
+use App\Models\Title;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class TitlePolicy
@@ -43,17 +44,6 @@ class TitlePolicy
     }
 
     /**
-     * Checks to see if the user has permission to edit a title.
-     *
-     * @param  \App\Models\User  $user
-     * @return bool
-     */
-    public function edit(User $user)
-    {
-        return $user->hasPermission('edit-title');
-    }
-
-    /**
      * Checks to see if the user has permission to update a title.
      *
      * @param  \App\Models\User  $user
@@ -76,14 +66,36 @@ class TitlePolicy
     }
 
     /**
+     * Checks to see if the user has permission to activate a title.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function activate(User $user, Title $title)
+    {
+        return $user->hasPermission('activate-title') && $title->introduced_at->lte(today());
+    }
+
+    /**
+     * Checks to see if the user has permission to deactivate a title.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function deactivate(User $user)
+    {
+        return $user->hasPermission('deactivate-title');
+    }
+
+    /**
      * Checks to see if the user has permission to retire a title.
      *
      * @param  \App\Models\User  $user
      * @return bool
      */
-    public function retire(User $user)
+    public function retire(User $user, Title $title)
     {
-        return $user->hasPermission('retire-title');
+        return $user->hasPermission('retire-title') && $title->introduced_at->lte(today());
     }
 
     /**

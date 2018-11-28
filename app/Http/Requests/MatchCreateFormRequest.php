@@ -3,9 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Models\Wrestler;
-use App\Models\MatchType;
 use Illuminate\Validation\Rule;
 use App\Rules\QualifiedForMatch;
+use App\Rules\EnsureCorrectCompetitorCount;
 use Illuminate\Foundation\Http\FormRequest;
 
 class MatchCreateFormRequest extends FormRequest
@@ -17,7 +17,7 @@ class MatchCreateFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->hasPermission('store-match');
+        return $this->user()->hasPermission('create-match');
     }
 
     /**
@@ -27,59 +27,25 @@ class MatchCreateFormRequest extends FormRequest
      */
     public function rules()
     {
-        $date = request()->event->date;
-
-        $validateWrestlerNumbers = function ($attribute, $match, $fail) {
-            if (is_null($match['match_type_id'])) {
-                return;
-            }
-
-            // if we get no competitors the match type id is wrong which will get caught below
-            $competitors = (int) MatchType::whereKey($match['match_type_id'])->value('total_competitors');
-
-            if (! $competitors) {
-                return;
-            }
-
-            // Wrestlers input is not valid format, will get caught below
-            if (! isset($match['wrestlers']) || ! is_array($match['wrestlers'])) {
-                return;
-            }
-
-            //now we just flatten our wrestlers again, and count them
-            $flattened = array_flatten($match['wrestlers']);
-
-            if (count($flattened) !== $competitors) {
-                $matchIndex = explode('.', $attribute)[1];
-                $fail("Match {$matchIndex} must have {$competitors} competitors");
-            }
-        };
-
-        $validateWrestlersUnique = function ($attribute, $value, $fail) {
-            $flattened = array_flatten($value);
-            if (count(array_unique($flattened)) !== count($flattened)) {
-                $matchIndex = explode('.', $attribute)[1];
-                $fail("Match {$matchIndex} has duplicate ids");
-            }
-        };
-
-        $validateQualifiedForMatch = new QualifiedForMatch($date, Wrestler::class, 'hired_at');
-
-        $rules = [
-            'matches'                  => ['array'],
-            'matches.*'                => [$validateWrestlerNumbers],
-            'matches.*.match_type_id'  => ['required', 'integer', Rule::exists('match_types', 'id')],
-            'matches.*.stipulation_id' => ['nullable', 'integer', Rule::exists('stipulations', 'id')],
-            'matches.*.titles'         => ['array'],
-            'matches.*.titles.*'       => ['sometimes', 'distinct', 'integer', Rule::exists('titles', 'id')],
-            'matches.*.referees'       => ['required', 'array'],
-            'matches.*.referees.*'     => ['distinct', 'integer', Rule::exists('referees', 'id')],
-            'matches.*.preview'        => ['required', 'string'],
-            'matches.*.wrestlers'      => ['bail', 'array', 'required', $validateWrestlersUnique],
-            'matches.*.wrestlers.*.*'  => ['integer', 'exists:wrestlers,id', $validateQualifiedForMatch],
+        /*
+         * TODO: Need to add rule for a title has to be introduced before the match event date.
+         */
+        return [
+            'match_type_id' => ['bail', 'required', 'integer', Rule::exists('match_types', 'id')],
+            'stipulation_id' => ['nullable', 'integer', Rule::exists('stipulations', 'id')],
+            'titles' => ['array'],
+            'titles.*' => ['sometimes', 'distinct', 'integer', Rule::exists('titles', 'id')],
+            'referees' => ['required', 'array'],
+            'referees.*' => ['distinct', 'integer', Rule::exists('referees', 'id')],
+            'preview' => ['required', 'string'],
+            'wrestlers' => ['required', 'array'],
+            'wrestlers.*.*' => [
+                'integer',
+                'exists:wrestlers,id',
+                'distinct',
+                new QualifiedForMatch(Wrestler::class),
+            ],
         ];
-
-        return $rules;
     }
 
     /**
@@ -90,14 +56,29 @@ class MatchCreateFormRequest extends FormRequest
     public function messages()
     {
         return [
-            'venue_id.required' => 'The venue field is required.',
-            'venue_id.not_in' => 'The selected venue is invalid.',
-            'matches.*.match_type_id.required' => 'The match type is required.',
-            'matches.*.match_type_id.not_in' => 'The selected match type is invalid.',
-            'matches.*.titles.not_in' => 'The selected title is invalid.',
-            'matches.*.referees.required' => 'The referees field is required.',
-            'matches.*.referees.not_in' => 'The selected referee is invalid.',
-            'matches.*.preview.required' => 'The preview field is required.',
+            'match_type_id.required' => 'The match type is required.',
+            'match_type_id.not_in' => 'The selected match type is invalid.',
+            'stipulation_id.required' => 'The stipulation is required.',
+            'stipulation_id.integer' => 'The stipulation must be an integer.',
+            'titles.not_in' => 'The selected title is invalid.',
+            'referees.required' => 'The referees field is required.',
+            'referees.not_in' => 'The selected referee is invalid.',
+            'preview.required' => 'The preview field is required.',
         ];
+    }
+
+    /**
+     * Configure the validator instance.
+     *
+     * @param  \Illuminate\Validation\Validator  $validator
+     * @return void
+     */
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            if (! is_null($this->match_type_id) && is_array($this->wrestlers) && ! empty($this->wrestlers)) {
+                new EnsureCorrectCompetitorCount($this->match_type_id, count(array_flatten($this->wrestlers)));
+            }
+        });
     }
 }

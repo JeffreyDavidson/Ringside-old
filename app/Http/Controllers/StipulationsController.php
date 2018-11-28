@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Stipulation;
-use App\Http\Requests\StipulationEditFormRequest;
-use App\Http\Requests\StipulationCreateFormRequest;
+use App\Http\Requests\StoreStipulationFormRequest;
+use App\Http\Requests\UpdateStipulationFormRequest;
 
 class StipulationsController extends Controller
 {
@@ -37,10 +37,10 @@ class StipulationsController extends Controller
     /**
      * Store a newly created stipulation.
      *
-     * @param  App\Http\Requests\StipulationCreateFormRequest  $request
+     * @param  \App\Http\Requests\StoreStipulationFormRequest  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(StipulationCreateFormRequest $request)
+    public function store(StoreStipulationFormRequest $request)
     {
         Stipulation::create($request->all());
 
@@ -72,11 +72,11 @@ class StipulationsController extends Controller
     /**
      * Update the specified stipulation.
      *
-     * @param  \App\Http\Requests\StipulationEditFormRequest  $request
+     * @param  \App\Http\Requests\UpdateStipulationFormRequest  $request
      * @param  \App\Models\Stipulation  $stipulation
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(StipulationEditFormRequest $request, Stipulation $stipulation)
+    public function update(UpdateStipulationFormRequest $request, Stipulation $stipulation)
     {
         $stipulation->update($request->all());
 

@@ -2,46 +2,36 @@
 
 namespace Tests\Feature\Title;
 
-use Tests\TestCase;
 use App\Models\Title;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\IntegrationTestCase;
 
-class ViewTitleTest extends TestCase
+class ViewTitleTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
-    private $title;
-
     public function setUp()
     {
         parent::setUp();
 
         $this->setupAuthorizedUser('view-title');
-
-        $this->title = factory(Title::class)->create([
-            'name' => 'Title Name',
-            'slug' => 'title-slug',
-            'introduced_at' => '2017-09-17',
-        ]);
     }
 
     /** @test */
     public function users_who_have_permission_can_view_a_title()
     {
-        $response = $this->actingAs($this->authorizedUser)
-                        ->get(route('titles.show', $this->title->id));
+        $title = factory(Title::class)->create();
+
+        $response = $this->actingAs($this->authorizedUser)->get(route('titles.show', $title->id));
 
         $response->assertSuccessful();
         $response->assertViewIs('titles.show');
-        $response->assertViewHas('title');
         $response->assertViewHas('title');
     }
 
     /** @test */
     public function users_who_dont_have_permission_cannot_view_a_title()
     {
-        $response = $this->actingAs($this->unauthorizedUser)
-                        ->get(route('titles.show', $this->title->id));
+        $title = factory(Title::class)->create();
+
+        $response = $this->actingAs($this->unauthorizedUser)->get(route('titles.show', $title->id));
 
         $response->assertStatus(403);
     }
@@ -49,7 +39,9 @@ class ViewTitleTest extends TestCase
     /** @test */
     public function guests_cannot_view_a_title()
     {
-        $response = $this->get(route('titles.show', $this->title->id));
+        $title = factory(Title::class)->create();
+
+        $response = $this->get(route('titles.show', $title->id));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));

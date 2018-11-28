@@ -10,7 +10,9 @@ class ApplicationPolicy
 {
     use HandlesAuthorization;
 
-    /** @var */
+    /**
+     * @var \Illuminate\Contracts\Auth\Access\Gate
+     */
     private $gate;
 
     /**

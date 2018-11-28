@@ -2,8 +2,6 @@
 
 namespace App\Traits;
 
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
@@ -13,8 +11,14 @@ trait HIreable
 {
     public static function bootHireable()
     {
-        static::creating(function (Model $model) {
-            $model->is_active = $model->hired_at->lte(Carbon::today());
+        static::creating(function ($model) {
+            $model->is_active = $model->hired_at->lte(today());
+        });
+
+        static::saving(function ($model) {
+            if ($model->isActive()) {
+                $model->is_active = $model->hired_at->lte(today());
+            }
         });
     }
 

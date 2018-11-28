@@ -24,16 +24,6 @@ class Controller extends BaseController
         }
     }
 
-    public function ajax()
-    {
-        return $this->request->ajax();
-    }
-
-    public function wantsJson()
-    {
-        return $this->request->wantsJson();
-    }
-
     protected function resourceAbilityMap()
     {
         return [

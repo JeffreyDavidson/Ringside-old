@@ -2,15 +2,12 @@
 
 namespace Tests\Unit\Models;
 
-use Tests\TestCase;
-use App\Models\Injury;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Models\Injury;
+use Tests\IntegrationTestCase;
 
-class InjuryTest extends TestCase
+class InjuryTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
     /** @test */
     public function an_injury_can_be_healed()
     {

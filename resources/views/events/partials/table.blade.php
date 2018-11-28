@@ -14,7 +14,7 @@
                 <td>{{ $event->present()->date }}</td>
                 <td>{{ $event->venue->name }}</td>
                 <td>
-                    @include('partials.actions', ['resource' => 'events', 'model' => $event, 'actions' => $actions])
+                    @include('partials.actions', ['resource' => 'events', 'model' => $event, 'actions' => $actions, 'field_id' => 'event_id'])
                 </td>
             </tr>
         @empty

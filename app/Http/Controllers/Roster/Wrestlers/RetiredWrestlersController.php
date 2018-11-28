@@ -18,9 +18,20 @@ class RetiredWrestlersController extends Controller
     protected function resourceAbilityMap()
     {
         return [
+            'index' => 'index',
             'store' => 'retire',
             'destroy' => 'unretire',
         ];
+    }
+
+    /**
+     * Get the list of resource methods which do not have model parameters.
+     *
+     * @return array
+     */
+    protected function resourceMethodsWithoutModels()
+    {
+        return ['index'];
     }
 
     /**
@@ -36,21 +47,20 @@ class RetiredWrestlersController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Retires a wrestler.
      *
      * @param  \App\Models\Wrestler  $wrestler
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Wrestler $wrestler)
     {
-        dd($wrestler);
         $wrestler->retire();
 
-        return redirect()->route('wrestlers.index');
+        return redirect()->back();
     }
 
     /**
-     * Activate a retired wrestler.
+     * Unretires a wrestler.
      *
      * @param  \App\Models\Wrestler  $wrestler
      * @return \Illuminate\Http\RedirectResponse
@@ -59,6 +69,6 @@ class RetiredWrestlersController extends Controller
     {
         $wrestler->unretire();
 
-        return redirect()->route('wrestlers.index');
+        return redirect()->back();
     }
 }

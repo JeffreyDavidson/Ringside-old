@@ -1,11 +1,10 @@
 <?php
 
-use Carbon\Carbon;
 use App\Models\Wrestler;
 use Faker\Generator as Faker;
 
 $factory->define(Wrestler::class, function (Faker $faker) {
-    $name = $faker->sentence;
+    $name = $faker->name;
 
     return [
         'name' => $name,
@@ -19,8 +18,13 @@ $factory->define(Wrestler::class, function (Faker $faker) {
     ];
 });
 
-$factory->state(Wrestler::class, 'active', ['is_active' => true, 'hired_at' => Carbon::today()]);
-$factory->state(Wrestler::class, 'inactive', ['is_active' => false, 'hired_at' => Carbon::tomorrow()]);
+$factory->state(Wrestler::class, 'active', function ($faker) {
+    return ['is_active' => true, 'hired_at' => $faker->dateTimeBetween('-30 years', '-1 year')];
+});
+
+$factory->afterCreatingState(Wrestler::class, 'inactive', function ($wrestler) {
+    $wrestler->deactivate();
+});
 
 $factory->afterCreatingState(Wrestler::class, 'suspended', function ($wrestler) {
     $wrestler->suspend();

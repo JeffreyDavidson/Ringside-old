@@ -1,16 +1,20 @@
 <?php
 
 use App\Models\Event;
+use App\Models\Venue;
 use Faker\Generator as Faker;
 
 $factory->define(Event::class, function (Faker $faker) {
-    $name = $faker->sentence;
+    $name = $faker->unique()->word;
 
     return [
-        'name' => $name,
+        'name' => title_case($name),
         'slug' => str_slug($name),
+        'number_of_matches' => $faker->randomDigit,
         'date' => $faker->dateTimeBetween('-10 years'),
-        'venue_id' => factory(App\Models\Venue::class)->lazy(),
+        'venue_id' => function () {
+            return factory(Venue::class)->create()->id;
+        },
     ];
 });
 

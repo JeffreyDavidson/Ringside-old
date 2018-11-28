@@ -18,25 +18,36 @@ class ArchivedEventsController extends Controller
     protected function resourceAbilityMap()
     {
         return [
+            'index' => 'index',
             'store' => 'archive',
-            'destroy' => 'restore',
+            'destroy' => 'unarchive',
         ];
     }
 
     /**
-     * Display a listing of all achived events.
+     * Get the list of resource methods which do not have model parameters.
+     *
+     * @return array
+     */
+    protected function resourceMethodsWithoutModels()
+    {
+        return ['index'];
+    }
+
+    /**
+     * Display a listing of all archived events.
      *
      * @return \Illuminate\View\View
      */
     public function index()
     {
-        $events = Event::archived()->with('venue')->paginate(10);
+        $archivedEvents = Event::archived()->with('venue')->paginate(10);
 
-        return view('events.archived', compact('events'));
+        return view('events.archived', compact('archivedEvents'));
     }
 
     /**
-     * Store a newly created archived event.
+     * Archives a past event.
      *
      * @param  \App\Models\Event  $event
      * @return \Illuminate\Http\RedirectResponse
@@ -45,19 +56,19 @@ class ArchivedEventsController extends Controller
     {
         $event->archive();
 
-        return redirect()->route('events.index');
+        return redirect()->route('past-events.index');
     }
 
     /**
-     * Activate an archived event.
+     * Unarchives an archived event.
      *
      * @param  \App\Models\Event  $event
      * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Event $event)
     {
-        $event->activate();
+        $event->unarchive();
 
-        return redirect()->route('events.index');
+        return redirect()->route('archived-events.index');
     }
 }

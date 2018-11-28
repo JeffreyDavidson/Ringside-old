@@ -10,6 +10,7 @@ use App\Http\Requests\MatchCreateFormRequest;
 
 class MatchesController extends Controller
 {
+    /** @var string */
     protected $authorizeResource = Match::class;
 
     /**
@@ -27,13 +28,15 @@ class MatchesController extends Controller
     /**
      * Store newly created matches for an event.
      *
-     * @param  \App\Http\Requests\MatchCreateFormRequest  $event
+     * @param  \App\Http\Requests\MatchCreateFormRequest  $request
      * @param  \App\Models\Event  $event
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(MatchCreateFormRequest $request, Event $event)
     {
-        (new AddMatchesToEvent($request->matches, $event))->schedule();
+        $matches = collect()->push($request->all());
+
+        (new AddMatchesToEvent($matches, $event))->schedule();
 
         return redirect()->route('events.show', ['event' => $event->id]);
     }
@@ -73,6 +76,6 @@ class MatchesController extends Controller
     {
         $match->delete();
 
-        return redirect()->route('event.matches.index', ['event' => $event->id]);
+        return redirect()->route('matches.index', ['event' => $event->id]);
     }
 }

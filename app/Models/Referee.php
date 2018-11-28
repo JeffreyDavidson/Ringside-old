@@ -12,12 +12,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Referee extends Model
 {
-    use Hireable,
-    HasStatus,
-    Presentable,
-    HasRetirements,
-    HasSuspensions,
-    SoftDeletes;
+    use Hireable;
+    use HasStatus;
+    use Presentable;
+    use HasRetirements;
+    use HasSuspensions;
+    use SoftDeletes;
 
     protected $casts = [
         'is_active' => 'boolean',
@@ -37,4 +37,9 @@ class Referee extends Model
      * @var string
      */
     protected $presenter = 'App\Presenters\RefereePresenter';
+
+    public function getNameAttribute()
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
 }

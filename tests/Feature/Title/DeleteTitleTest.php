@@ -2,56 +2,79 @@
 
 namespace Tests\Feature\Title;
 
-use Tests\TestCase;
 use App\Models\Title;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\IntegrationTestCase;
 
-class DeleteTitleTest extends TestCase
+class DeleteTitleTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
-    private $title;
-
     public function setUp()
     {
         parent::setUp();
 
         $this->setupAuthorizedUser('delete-title');
-
-        $this->title = factory(Title::class)->create();
     }
 
     /** @test */
-    public function users_who_have_permission_can_soft_delete_a_title()
+    public function users_who_have_permission_can_delete_a_title()
     {
-        $response = $this->actingAs($this->authorizedUser)
-                        ->from(route('titles.index'))
-                        ->delete(route('titles.destroy', $this->title->id));
+        $title = factory(Title::class)->create();
+
+        $response = $this->actingAs($this->authorizedUser)->delete(route('titles.destroy', $title->id));
 
         $response->assertStatus(302);
-        $response->assertRedirect(route('titles.index'));
-        $this->assertSoftDeleted('titles', ['id' => $this->title->id, 'name' => $this->title->name]);
+        $this->assertSoftDeleted('titles', ['id' => $title->id, 'name' => $title->name]);
     }
 
     /** @test */
-    public function users_who_dont_have_permission_cannot_soft_delete_a_title()
+    public function users_who_dont_have_permission_cannot_delete_a_title()
     {
-        $response = $this->actingAs($this->unauthorizedUser)
-                        ->from(route('titles.index'))
-                        ->delete(route('titles.destroy', $this->title->id));
+        $title = factory(Title::class)->create();
+
+        $response = $this->actingAs($this->unauthorizedUser)->delete(route('titles.destroy', $title->id));
 
         $response->assertStatus(403);
-        $this->assertNull($this->title->deleted_at);
+        $this->assertNull($title->deleted_at);
     }
 
     /** @test */
-    public function guests_cannot_soft_delete_a_title()
+    public function guests_cannot_delete_a_title()
     {
-        $response = $this->from(route('titles.index'))
-                        ->delete(route('titles.destroy', $this->title->id));
+        $title = factory(Title::class)->create();
+
+        $response = $this->delete(route('titles.destroy', $title->id));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));
-        $this->assertNull($this->title->deleted_at);
+        $this->assertNull($title->deleted_at);
+    }
+
+    /** @test */
+    public function an_active_title_that_when_deleted_will_redirect_the_user_to_the_active_titles_page()
+    {
+        $title = factory(Title::class)->states('active')->create();
+
+        $response = $this->actingAs($this->authorizedUser)->from(route('active-titles.index'))->delete(route('titles.destroy', $title->id));
+
+        $response->assertRedirect(route('active-titles.index'));
+    }
+
+    /** @test */
+    public function an_inactive_title_that_when_deleted_will_redirect_the_user_to_the_inactive_titles_page()
+    {
+        $title = factory(Title::class)->states('inactive')->create();
+
+        $response = $this->actingAs($this->authorizedUser)->from(route('inactive-titles.index'))->delete(route('titles.destroy', $title->id));
+
+        $response->assertRedirect(route('inactive-titles.index'));
+    }
+
+    /** @test */
+    public function a_retired_title_that_when_deleted_will_redirect_the_user_to_the_retired_titles_page()
+    {
+        $title = factory(Title::class)->states('retired')->create();
+
+        $response = $this->actingAs($this->authorizedUser)->from(route('retired-titles.index'))->delete(route('titles.destroy', $title->id));
+
+        $response->assertRedirect(route('retired-titles.index'));
     }
 }

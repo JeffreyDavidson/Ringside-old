@@ -2,16 +2,13 @@
 
 namespace Tests\Unit\Presenters;
 
-use Tests\TestCase;
 use App\Models\Manager;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\IntegrationTestCase;
 
-class ManagerPresenterTest extends TestCase
+class ManagerPresenterTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
     /** @test */
-    public function it_can_have_their_name_concatenated()
+    public function a_managers_name_can_be_concatenated()
     {
         $manager = factory(Manager::class)->make(['first_name' => 'Michael', 'last_name' => 'Smith']);
 

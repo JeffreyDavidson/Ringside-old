@@ -4,10 +4,13 @@ namespace App\Traits;
 
 use App\Models\Event;
 
+/**
+ * @mixin \Eloquent
+ */
 trait HasEvents
 {
     /**
-     * A venue can have many events.
+     * A model can have many events.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -17,7 +20,7 @@ trait HasEvents
     }
 
     /**
-     * Determines if a venue has held a past event.
+     * Determines if a model has held a past event.
      *
      * @return bool
      */
@@ -27,7 +30,7 @@ trait HasEvents
     }
 
     /**
-     * Determines if a venue has held a past event.
+     * Determines if a model has held a past event.
      *
      * @return bool
      */
@@ -39,7 +42,7 @@ trait HasEvents
     /**
      * Returns a collection of events before the current date.
      *
-     * @return \App\Models\Venue|\Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function pastEvents()
     {
@@ -49,7 +52,7 @@ trait HasEvents
     /**
      * Returns a collection of events before the current date.
      *
-     * @return \App\Models\Venue|\Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function scheduledEvents()
     {

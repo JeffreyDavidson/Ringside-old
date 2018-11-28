@@ -4,26 +4,13 @@ namespace App\Http\Controllers\Titles;
 
 use App\Models\Title;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\TitleEditFormRequest;
-use App\Http\Requests\TitleCreateFormRequest;
+use App\Http\Requests\StoreTitleFormRequest;
+use App\Http\Requests\UpdateTitleFormRequest;
 
 class TitlesController extends Controller
 {
     /** @var string */
     protected $authorizeResource = Title::class;
-
-    /**
-     * Display a listing of all the titles.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function index()
-    {
-        $activeTitles = Title::active()->paginate(10);
-        $retiredTitles = Title::retired()->paginate(10);
-
-        return view('titles.index', compact('activeTitles', 'retiredTitles'));
-    }
 
     /**
      * Show the form for creating a new title.
@@ -39,14 +26,18 @@ class TitlesController extends Controller
     /**
      * Store a newly created title.
      *
-     * @param  \App\Http\Requests\TitleCreateFormRequest  $request
+     * @param  \App\Http\Requests\StoreTitleFormRequest  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(TitleCreateFormRequest $request)
+    public function store(StoreTitleFormRequest $request)
     {
         Title::create($request->all());
 
-        return redirect()->route('titles.index');
+        if ($request->introduced_at <= today()->toDateTimeString()) {
+            return redirect()->route('active-titles.index');
+        }
+
+        return redirect()->route('inactive-titles.index');
     }
 
     /**
@@ -74,15 +65,23 @@ class TitlesController extends Controller
     /**
      * Update the specified title.
      *
-     * @param  \App\Http\Requests\TitleEditFormRequest  $request
+     * @param  \App\Http\Requests\UpdateTitleFormRequest  $request
      * @param  \App\Models\Title  $title
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(TitleEditFormRequest $request, Title $title)
+    public function update(UpdateTitleFormRequest $request, Title $title)
     {
         $title->update($request->all());
 
-        return redirect()->route('titles.index');
+        if ($title->isRetired()) {
+            return redirect()->route('retired-titles.index');
+        }
+
+        if (! $title->isActive()) {
+            return redirect()->route('inactive-titles.index');
+        }
+
+        return redirect()->route('active-titles.index');
     }
 
     /**
@@ -95,6 +94,6 @@ class TitlesController extends Controller
     {
         $title->delete();
 
-        return redirect()->route('titles.index');
+        return redirect()->back();
     }
 }

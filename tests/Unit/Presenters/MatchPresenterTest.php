@@ -3,24 +3,22 @@
 namespace Tests\Unit\Presenters;
 
 use stdClass;
-use Tests\TestCase;
+use App\Models\Event;
+use App\Models\Match;
 use App\Models\Referee;
 use App\Models\Wrestler;
 use App\Models\Stipulation;
-use App\Models\Event;
-use App\Models\Match;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\IntegrationTestCase;
 
-class MatchPresenterTest extends TestCase
+class MatchPresenterTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
     /** @test */
     public function a_match_can_present_wrestlers_in_match()
     {
         $wrestlerA = factory(Wrestler::class)->create(['name' => 'Wrestler A']);
         $wrestlerB = factory(Wrestler::class)->create(['name' => 'Wrestler B']);
         $match = factory(Match::class)->create();
+        
         $match->addWrestlers([
             0 => [$wrestlerA->id],
             1 => [$wrestlerB->id]
@@ -37,6 +35,7 @@ class MatchPresenterTest extends TestCase
         $wrestlerC = factory(Wrestler::class)->create(['name' => 'Wrestler C']);
         $wrestlerD = factory(Wrestler::class)->create(['name' => 'Wrestler D']);
         $match = factory(Match::class)->create();
+
         $match->addWrestlers([
             0 => [$wrestlerA->id, $wrestlerC->id],
             1 => [$wrestlerB->id, $wrestlerD->id]

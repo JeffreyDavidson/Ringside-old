@@ -22,7 +22,7 @@ class CreateWrestlersTable extends Migration
             $table->integer('weight');
             $table->string('signature_move')->unique();
             $table->boolean('is_active');
-            $table->timestamp('hired_at')->nullable();
+            $table->datetime('hired_at');
             $table->timestamps();
             $table->softDeletes();
         });

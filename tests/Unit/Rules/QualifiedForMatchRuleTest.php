@@ -3,26 +3,22 @@
 namespace Tests\Unit\Rules;
 
 use App\Models\Event;
-use Tests\TestCase;
-use App\Models\Wrestler;
 use App\Models\Title;
+use App\Models\Wrestler;
+use Tests\IntegrationTestCase;
 use App\Rules\QualifiedForMatch;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class QualifiedForMatchRuleTest extends TestCase
+class QualifiedForMatchRuleTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
     /** @test */
     public function a_wrestler_with_a_hired_at_date_after_an_event_date_cannot_participate_in_the_match()
     {
         $wrestler = factory(Wrestler::class)->create(['hired_at' => '2017-10-10']);
         $event = factory(Event::class)->create(['date' => '2017-10-09']);
 
-        $validator = new QualifiedForMatch($event->date, $wrestler, 'hired_at');
+        $validator = new QualifiedForMatch($wrestler, 'hired_at', $event->date);
 
         $this->assertFalse($validator->passes('hired_at', $wrestler));
-        $this->assertEquals($validator->message(), 'This wrestler is not qualified for the match.');
     }
 
     /** @test */
@@ -31,7 +27,7 @@ class QualifiedForMatchRuleTest extends TestCase
         $wrestler = factory(Wrestler::class)->create(['hired_at' => '2017-10-08']);
         $event = factory(Event::class)->create(['date' => '2017-10-09']);
 
-        $validator = new QualifiedForMatch($event->date, $wrestler, 'hired_at');
+        $validator = new QualifiedForMatch($wrestler, 'hired_at', $event->date);
 
         $this->assertTrue($validator->passes('hired_at', $wrestler));
     }
@@ -42,10 +38,9 @@ class QualifiedForMatchRuleTest extends TestCase
         $title = factory(Title::class)->create(['introduced_at' => '2017-10-10']);
         $event = factory(Event::class)->create(['date' => '2017-10-09']);
 
-        $validator = new QualifiedForMatch($event->date, $title, 'introduced_at');
+        $validator = new QualifiedForMatch($title, 'introduced_at', $event->date);
 
         $this->assertFalse($validator->passes('introduced_at', $title));
-        $this->assertEquals($validator->message(), 'This title is not qualified for the match.');
     }
 
     /** @test */
@@ -54,7 +49,7 @@ class QualifiedForMatchRuleTest extends TestCase
         $title = factory(Title::class)->create(['introduced_at' => '2017-10-08']);
         $event = factory(Event::class)->create(['date' => '2017-10-09']);
 
-        $validator = new QualifiedForMatch($event->date, $title, 'introduced_at');
+        $validator = new QualifiedForMatch($title, 'introduced_at', $event->date);
 
         $this->assertTrue($validator->passes('introduced_at', $title));
     }

@@ -6,6 +6,7 @@ use App\Models\Match;
 use App\Models\Referee;
 use App\Models\Wrestler;
 use App\Models\MatchType;
+use App\Models\Stipulation;
 use App\Models\Championship;
 
 class MatchFactory
@@ -141,7 +142,7 @@ class MatchFactory
         $this->wrestlers = $concatenatedWrestlers;
 
         $splitWrestlers = $this->wrestlers->pluck('id')->split($match->type->number_of_sides)->flatten(1);
-        // dd($splitWrestlers);
+
         $match->addWrestlers($splitWrestlers);
     }
 

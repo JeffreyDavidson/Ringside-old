@@ -4,10 +4,10 @@ use App\Models\Role;
 use Faker\Generator as Faker;
 
 $factory->define(Role::class, function (Faker $faker) {
-    $name = $faker->sentence;
+    $name = $faker->unique()->word;
 
     return [
-        'name' => $name,
+        'name' => title_case($name),
         'slug' => str_slug($name),
     ];
 });

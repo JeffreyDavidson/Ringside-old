@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Roster\Wrestlers;
 
 use App\Models\Wrestler;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\WrestlerEditFormRequest;
-use App\Http\Requests\WrestlerCreateFormRequest;
+use App\Http\Requests\StoreWrestlerFormRequest;
+use App\Http\Requests\UpdateWrestlerFormRequest;
 
 class WrestlersController extends Controller
 {
@@ -26,14 +26,18 @@ class WrestlersController extends Controller
     /**
      * Store a newly created wrestler.
      *
-     * @param  \App\Http\Requests\WrestlerCreateFormRequest  $request
+     * @param  \App\Http\Requests\StoreWrestlerFormRequest  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(WrestlerCreateFormRequest $request)
+    public function store(StoreWrestlerFormRequest $request)
     {
         Wrestler::create($request->all());
 
-        return redirect()->route('active-wrestlers.index');
+        if ($request->hired_at <= today()->toDateTimeString()) {
+            return redirect()->route('active-wrestlers.index');
+        }
+
+        return redirect()->route('inactive-wrestlers.index');
     }
 
     /**
@@ -44,6 +48,8 @@ class WrestlersController extends Controller
      */
     public function show(Wrestler $wrestler)
     {
+        $wrestler->load('matches');
+
         return view('wrestlers.show', compact('wrestler'));
     }
 
@@ -61,13 +67,21 @@ class WrestlersController extends Controller
     /**
      * Update the specified wrestler.
      *
-     * @param  \App\Http\Requests\WrestlerEditFormRequest  $request
+     * @param  \App\Http\Requests\UpdateWrestlerFormRequest  $request
      * @param  \App\Models\Wrestler  $wrestler
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(WrestlerEditFormRequest $request, Wrestler $wrestler)
+    public function update(UpdateWrestlerFormRequest $request, Wrestler $wrestler)
     {
         $wrestler->update($request->all());
+
+        if ($wrestler->isRetired()) {
+            return redirect()->route('retired-wrestlers.index');
+        }
+
+        if (! $wrestler->isActive()) {
+            return redirect()->route('inactive-wrestlers.index');
+        }
 
         return redirect()->route('active-wrestlers.index');
     }
@@ -82,6 +96,6 @@ class WrestlersController extends Controller
     {
         $wrestler->delete();
 
-        return redirect()->route('active-wrestlers.index');
+        return redirect()->back();
     }
 }

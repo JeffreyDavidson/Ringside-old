@@ -5,6 +5,9 @@ namespace App\Traits;
 use Carbon\Carbon;
 use App\Models\Match;
 
+/**
+ * @mixin \Eloquent
+ */
 trait HasMatches
 {
     /**
@@ -20,17 +23,21 @@ trait HasMatches
     /**
      * Retrieves the date of the model's first match.
      *
-     * @return string
+     * @return string|null
      */
-    public function firstMatchDate()
+    public function getFirstMatchDateAttribute()
     {
-        return $this->pastMatches->first()->date;
+        return $this->matches()
+            ->select('events.date as first_date')
+            ->join('events', 'matches.event_id', '=', 'events.id')
+            ->orderBy('events.date')
+            ->value('first_date');
     }
 
     /**
      * Returns the model's past matches.
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function pastMatches()
     {
@@ -52,7 +59,7 @@ trait HasMatches
     /**
      * Returns the model's past matches.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function scheduledMatches()
     {

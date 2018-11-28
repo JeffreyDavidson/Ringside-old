@@ -1,13 +1,19 @@
 <?php
 
 use Carbon\Carbon;
+use App\Models\Title;
+use App\Models\Wrestler;
 use App\Models\Championship;
 use Faker\Generator as Faker;
 
 $factory->define(Championship::class, function (Faker $faker) {
     return [
-        'wrestler_id' => factory(App\Models\Wrestler::class)->lazy(),
-        'title_id' => factory(App\Models\Title::class)->lazy(),
+        'wrestler_id' => function () {
+            return factory(Wrestler::class)->create()->id;
+        },
+        'title_id' => function () {
+            return factory(Title::class)->create()->id;
+        },
         'won_on' => Carbon::now(),
     ];
 });

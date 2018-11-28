@@ -21,7 +21,7 @@ trait HasRoles
      * Assigns a role to a user.
      *
      * @param  \App\Models\Role  $role
-     * @return \App\Models\User
+     * @return \Illuminate\Database\Eloquent\Model
      */
     public function assignRole(Role $role)
     {

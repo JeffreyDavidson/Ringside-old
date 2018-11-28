@@ -13,8 +13,11 @@ $factory->define(Manager::class, function (Faker $faker) {
     ];
 });
 
-$factory->state(Manager::class, 'active', ['is_active' => true, 'hired_at' => Carbon::today()]);
-$factory->state(Manager::class, 'inactive', ['is_active' => false, 'hired_at' => Carbon::tomorrow()]);
+$factory->state(Manager::class, 'active', ['is_active' => true, 'hired_at' => Carbon::yesterday()]);
+
+$factory->afterCreatingState(Manager::class, 'inactive', function ($wrestler) {
+    $wrestler->deactivate();
+});
 
 $factory->afterCreatingState(Manager::class, 'suspended', function ($manager) {
     $manager->suspend();

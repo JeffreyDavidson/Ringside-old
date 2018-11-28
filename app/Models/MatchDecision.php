@@ -76,7 +76,7 @@ class MatchDecision extends Model
      * Scope a query to only include match decisions that titles cannot be won.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return \Illuminate\Database\Query\Builder
      */
     public function scopeTitleCannotBeWonBySlug($query)
     {
@@ -98,7 +98,7 @@ class MatchDecision extends Model
      * Scope a query to only include match decisions that titles cannot change hands.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return \Illuminate\Database\Query\Builder
      */
     public function scopeTitleCannotChangeHandsBySlug($query)
     {

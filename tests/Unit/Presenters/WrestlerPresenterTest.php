@@ -2,16 +2,13 @@
 
 namespace Tests\Unit\Presenters;
 
-use Tests\TestCase;
 use App\Models\Wrestler;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\IntegrationTestCase;
 
-class WrestlerPresenterTest extends TestCase
+class WrestlerPresenterTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
     /** @test */
-    public function a_wrestler_can_have_their_height_formatted()
+    public function a_wrestlers_height_can_be_formatted()
     {
         $wrestler = factory(Wrestler::class)->make(['height' => '73']);
 

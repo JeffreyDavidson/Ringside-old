@@ -62,7 +62,7 @@ class EventsTableSeeder extends Seeder
 
         for ($matchNumber = 1; $matchNumber <= $matchesCount; $matchNumber++) {
             $match = $event->matches()->save(factory(Match::class)->create([
-                'match_type_id' => MatchType::inRandomOrder()->first()->id,
+                'match_type_id' => $this->getMatchType()->id,
                 'event_id' => $event->id,
                 'match_number' => $matchNumber,
                 'match_decision_id' => MatchDecision::inRandomOrder()->first()->id,
@@ -111,12 +111,11 @@ class EventsTableSeeder extends Seeder
             })->filter();
         }
 
-        $availableWrestlers = Wrestler::inRandomOrder()
-                                    ->hiredBefore($match->date)
-                                    ->whereNotIn('id', $champions->pluck('id')->all())
-                                    ->get();
+        $availableWrestlers = $this->getAvailableWrestlers($match, $champions);
 
-        $expectedWrestlersCount = ($match->type->total_competitors ?? rand(5, max(5, $availableWrestlers->count())) - $champions->count());
+        $totalCompetitors = $match->type->total_competitors ?? rand(5, 20);
+
+        $expectedWrestlersCount = $totalCompetitors - $champions->count();
 
         $wrestlersForMatch = $availableWrestlers->take($expectedWrestlersCount);
 
@@ -135,11 +134,11 @@ class EventsTableSeeder extends Seeder
     {
         // If this is a title match give the champion a 10% chance to retain their title.
         if ($match->isTitleMatch()) {
-            $champions = $match->titles->filter(function ($title, $key) { 
+            $champions = $match->titles->filter(function ($title, $key) {
                 return ! $title->isVacant();
             })->pluck('currentChampion');
             if ($champions->isEmpty()) {
-                $winners = $match->groupedWrestlersBySide()->random()->modelKeys();
+                $winners = $match->groupedWrestlersBySide->random()->modelKeys();
                 $losers = array_diff($match->wrestlers->modelKeys(), $winners);
 
                 $match->setWinners($winners);
@@ -148,7 +147,7 @@ class EventsTableSeeder extends Seeder
                 return;
             } elseif ($this->chance(10)) {
                 // Get all of teh groupWrestlersBySide and then reject any side that has the champions collection
-                $losers = $match->groupedWrestlersBySide()->reject(function (Collection $side) use ($champions) {
+                $losers = $match->groupedWrestlersBySide->reject(function (Collection $side) use ($champions) {
                     return $side->has($champions->first()->id);
                 });
 
@@ -160,7 +159,7 @@ class EventsTableSeeder extends Seeder
                 // Champion lost the title
                 // Get the grouped wrestlers for the match and then eliminate any side that includes the champions collection in that
                 //side and then get a random side and then get their model keys to send to winners.
-                $winners = $match->groupedWrestlersBySide()->reject(function (Collection $side) use ($champions) {
+                $winners = $match->groupedWrestlersBySide->reject(function (Collection $side) use ($champions) {
                     return $side->has($champions);
                 })->random()->modelKeys();
 
@@ -172,7 +171,7 @@ class EventsTableSeeder extends Seeder
                 return;
             }
         } else {
-            $winners = $match->groupedWrestlersBySide()->random()->modelKeys();
+            $winners = $match->groupedWrestlersBySide->random()->modelKeys();
             $losers = array_diff($match->wrestlers->modelKeys(), $winners);
 
             $match->setWinners($winners);
@@ -193,8 +192,37 @@ class EventsTableSeeder extends Seeder
         return $dates;
     }
 
+    private function getAvailableWrestlers($match, $champions)
+    {
+        return Wrestler::inRandomOrder()
+                        ->hiredBefore($match->date)
+                        ->whereNotIn('id', $champions->pluck('id')->all())
+                        ->get();
+    }
+
     private function chance(int $percent)
     {
         return rand(0, 100) < $percent;
+    }
+
+    private function getMatchType()
+    {
+        $weights = [];
+        $weights = array_merge($weights, array_fill(0, 4, MatchType::find(1)));  // 40%
+        $weights = array_merge($weights, array_fill(0, 2, MatchType::find(2))); // 20%%
+        $weights = array_merge($weights, array_fill(0, 1, MatchType::find(3))); // 10%
+        $weights = array_merge($weights, array_fill(0, .5, MatchType::find(4))); // 5%
+        $weights = array_merge($weights, array_fill(0, .4, MatchType::find(5))); // 4%
+        $weights = array_merge($weights, array_fill(0, .3, MatchType::find(6))); // 3%
+        $weights = array_merge($weights, array_fill(0, .3, MatchType::find(7))); // 3%
+        $weights = array_merge($weights, array_fill(0, .1, MatchType::find(8))); // 1%
+        $weights = array_merge($weights, array_fill(0, .2, MatchType::find(9))); // 2%
+        $weights = array_merge($weights, array_fill(0, .1, MatchType::find(10))); // 1%
+        $weights = array_merge($weights, array_fill(0, .7, MatchType::find(11))); // 7%
+        $weights = array_merge($weights, array_fill(0, .2, MatchType::find(12))); // 2%
+        $weights = array_merge($weights, array_fill(0, .1, MatchType::find(13))); // 1%
+        $weights = array_merge($weights, array_fill(0, .1, MatchType::find(14))); // 1%
+
+        return $weights[mt_rand(0, count($weights) - 1)];
     }
 }

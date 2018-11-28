@@ -5,34 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Laracodes\Presenter\Traits\Presentable;
-use App\Exceptions\EventIsArchivedException;
 use App\Exceptions\EventIsScheduledException;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Exceptions\EventAlreadyArchivedException;
+use App\Exceptions\EventNotAlreadyArchivedException;
 
 class Event extends Model
 {
     use Presentable, SoftDeletes;
 
     /**
-     * Assign which presenter to be used for model.
-     *
-     * @var array
-     */
-    protected $with = ['matches', 'venue'];
-
-    /**
-     * Assign which presenter to be used for model.
-     *
-     * @var string
-     */
-    protected $presenter = 'App\Presenters\EventPresenter';
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['name', 'slug', 'date', 'venue_id', 'archived_at'];
+    protected $fillable = ['name', 'slug', 'date', 'venue_id', 'number_of_matches', 'archived_at'];
 
     /**
      * The attributes that should be cast to native types.
@@ -43,6 +30,13 @@ class Event extends Model
         'date' => 'datetime',
         'archived_at' => 'datetime',
     ];
+
+    /**
+     * Assign which presenter to be used for model.
+     *
+     * @var string
+     */
+    protected $presenter = 'App\Presenters\EventPresenter';
 
     /**
      * An event has many matches.
@@ -88,13 +82,15 @@ class Event extends Model
     /**
      * Archive an event.
      *
-     * @param  string|null  $date
-     * @return void
+     * @return bool
+     *
+     * @throws \App\Exceptions\EventAlreadyArchivedException
+     * @throws \App\Exceptions\EventIsScheduledException
      */
     public function archive()
     {
         if ($this->isArchived()) {
-            throw new EventIsArchivedException;
+            throw new EventAlreadyArchivedException;
         }
 
         if ($this->isScheduled()) {
@@ -102,6 +98,27 @@ class Event extends Model
         }
 
         return $this->update(['archived_at' => now()]);
+    }
+
+    /**
+     * Unarchive an event.
+     *
+     * @return bool
+     *
+     * @throws \App\Exceptions\EventNotAlreadyArchivedException
+     * @throws \App\Exceptions\EventIsScheduledException
+     */
+    public function unarchive()
+    {
+        if (! $this->isArchived()) {
+            throw new EventNotAlreadyArchivedException;
+        }
+
+        if ($this->isScheduled()) {
+            throw new EventIsScheduledException;
+        }
+
+        return $this->update(['archived_at' => null]);
     }
 
     /**
@@ -123,14 +140,14 @@ class Event extends Model
      */
     public function scopePast(Builder $query)
     {
-        return $query->where('date', '<', today());
+        return $query->where('date', '<', today())->whereNull('archived_at');
     }
 
     /**
      * Scope a query to only include archived events.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return \Illuminate\Database\Query\Builder
      */
     public function scopeArchived(Builder $query)
     {

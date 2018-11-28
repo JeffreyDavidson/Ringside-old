@@ -2,27 +2,21 @@
 
 namespace Tests\Unit\Rules;
 
-use Tests\TestCase;
-use App\Models\Wrestler;
-use App\Models\Title;
-use App\Models\Referee;
-use App\Models\Match;
 use App\Models\Event;
+use App\Models\Title;
+use App\Models\Wrestler;
+use Facades\MatchFactory;
+use Tests\IntegrationTestCase;
 use App\Rules\BeforeFirstMatchDate;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class BeforeFirstMatchDateRuleTest extends TestCase
+class BeforeFirstMatchDateRuleTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
     /** @test */
     public function a_wrestler_with_a_match_after_they_were_hired_cannot_have_their_hired_at_date_after_their_first_match()
     {
         $wrestler = factory(Wrestler::class)->create(['hired_at' => '2017-10-07']);
-
         $event = factory(Event::class)->create(['date' => '2017-10-10']);
-        $match = factory(Match::class)->create(['event_id' => $event->id]);
-        $match->addWrestler($wrestler, 0);
+        $match = MatchFactory::forEvent($event)->withWrestler($wrestler)->create();
 
         $validator = new BeforeFirstMatchDate($wrestler);
 
@@ -34,8 +28,7 @@ class BeforeFirstMatchDateRuleTest extends TestCase
     {
         $wrestler = factory(Wrestler::class)->create(['hired_at' => '2017-10-07']);
         $event = factory(Event::class)->create(['date' => '2017-10-12']);
-        $match = factory(Match::class)->create(['event_id' => $event->id]);
-        $match->addWrestler($wrestler, 0);
+        $match = MatchFactory::forEvent($event)->withWrestler($wrestler)->create();
 
         $validator = new BeforeFirstMatchDate($wrestler);
 
@@ -47,8 +40,7 @@ class BeforeFirstMatchDateRuleTest extends TestCase
     {
         $title = factory(Title::class)->create(['introduced_at' => '2017-10-07']);
         $event = factory(Event::class)->create(['date' => '2017-10-09']);
-        $match = factory(Match::class)->create(['event_id' => $event->id]);
-        $match->addTitle($title);
+        $match = MatchFactory::forEvent($event)->withTitle($title)->create();
 
         $validator = new BeforeFirstMatchDate($title);
 
@@ -60,8 +52,7 @@ class BeforeFirstMatchDateRuleTest extends TestCase
     {
         $title = factory(Title::class)->create(['introduced_at' => '2017-10-07']);
         $event = factory(Event::class)->create(['date' => '2017-10-12']);
-        $match = factory(Match::class)->create(['event_id' => $event->id]);
-        $match->addTitle($title);
+        $match = MatchFactory::forEvent($event)->withTitle($title)->create();
 
         $validator = new BeforeFirstMatchDate($title);
 

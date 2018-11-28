@@ -2,15 +2,12 @@
 
 namespace Tests\Unit\Models;
 
-use Tests\TestCase;
 use App\Models\Role;
 use App\Models\Permission;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\IntegrationTestCase;
 
-class RoleTest extends TestCase
+class RoleTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
     /** @test */
     public function a_role_has_many_permissions()
     {

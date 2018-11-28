@@ -2,57 +2,78 @@
 
 namespace Tests\Feature\Event;
 
-use Tests\TestCase;
 use App\Models\Event;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\IntegrationTestCase;
 
-class DeleteEventTest extends TestCase
+class DeleteEventTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
-    private $event;
-
     public function setUp()
     {
         parent::setUp();
 
         $this->setupAuthorizedUser('delete-event');
-
-        $this->event = factory(Event::class)->create();
     }
 
     /** @test */
-    public function users_who_have_permission_can_delete_a_event()
+    public function users_who_have_permission_can_delete_a_past_event()
     {
-        $response = $this->actingAs($this->authorizedUser)
-                        ->from(route('events.index'))
-                        ->delete(route('events.destroy', $this->event->id));
+        $event = factory(Event::class)->create();
+
+        $response = $this->actingAs($this->authorizedUser)->delete(route('events.destroy', $event->id));
 
         $response->assertStatus(302);
-        $this->assertSoftDeleted('events', ['id' => $this->event->id, 'name' => $this->event->name]);
-        $this->assertNotNull($this->event->fresh()->deleted_at);
-        $response->assertRedirect(route('events.index'));
+        $this->assertSoftDeleted('events', ['id' => $event->id, 'name' => $event->name]);
     }
 
     /** @test */
-    public function users_who_dont_have_permission_cannot_delete_a_event()
+    public function users_who_dont_have_permission_cannot_delete_a_past_event()
     {
-        $response = $this->actingAs($this->unauthorizedUser)
-                        ->from(route('events.index'))
-                        ->delete(route('events.destroy', $this->event->id));
+        $event = factory(Event::class)->create();
+
+        $response = $this->actingAs($this->unauthorizedUser)->delete(route('events.destroy', $event->id));
 
         $response->assertStatus(403);
-        $this->assertNull($this->event->deleted_at);
+        $this->assertNotSoftDeleted($event);
     }
 
     /** @test */
-    public function guests_cannot_delete_a_event()
+    public function guests_cannot_delete_a_past_event()
     {
-        $response = $this->from(route('events.index'))
-                        ->delete(route('events.destroy', $this->event->id));
+        $event = factory(Event::class)->create();
+
+        $response = $this->from(route('past-events.index'))->delete(route('events.destroy', $event->id));
 
         $response->assertStatus(302);
-        $this->assertNull($this->event->deleted_at);
         $response->assertRedirect(route('login'));
+    }
+
+    /** @test */
+    public function a_scheduled_event_that_when_deleted_will_redirect_the_user_to_the_scheduled_events_page()
+    {
+        $event = factory(Event::class)->states('scheduled')->create();
+
+        $response = $this->actingAs($this->authorizedUser)->from(route('scheduled-events.index'))->delete(route('events.destroy', $event->id));
+
+        $response->assertRedirect(route('scheduled-events.index'));
+    }
+
+    /** @test */
+    public function a_past_event_that_when_deleted_will_redirect_the_user_to_the_past_events_page()
+    {
+        $event = factory(Event::class)->states('past')->create();
+
+        $response = $this->actingAs($this->authorizedUser)->from(route('past-events.index'))->delete(route('events.destroy', $event->id));
+
+        $response->assertRedirect(route('past-events.index'));
+    }
+
+    /** @test */
+    public function a_archived_event_that_when_deleted_will_redirect_the_user_to_the_archived_events_page()
+    {
+        $event = factory(Event::class)->states('archived')->create();
+
+        $response = $this->actingAs($this->authorizedUser)->from(route('archived-events.index'))->delete(route('events.destroy', $event->id));
+
+        $response->assertRedirect(route('archived-events.index'));
     }
 }

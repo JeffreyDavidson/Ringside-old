@@ -12,12 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Manager extends Model
 {
-    use Hireable,
-    HasStatus,
-    Presentable,
-    HasRetirements,
-    HasSuspensions,
-    SoftDeletes;
+    use Hireable, HasStatus, HasRetirements, HasSuspensions, Presentable, SoftDeletes;
 
     protected $casts = [
         'is_active' => 'boolean',

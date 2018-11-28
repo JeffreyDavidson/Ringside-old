@@ -32,17 +32,6 @@ class StipulationPolicy
     }
 
     /**
-     * Checks to see if the user has permission to edit a stipulation.
-     *
-     * @param  \App\Models\User  $user
-     * @return bool
-     */
-    public function edit(User $user)
-    {
-        return $user->hasPermission('edit-stipulation');
-    }
-
-    /**
      * Checks to see if the user has permission to update a stipulation.
      *
      * @param  \App\Models\User  $user
@@ -54,7 +43,7 @@ class StipulationPolicy
     }
 
     /**
-     * Checks to see if the user has permission to show a stipulation.
+     * Checks to see if the user has permission to view a stipulation.
      *
      * @param  \App\Models\User  $user
      * @return bool

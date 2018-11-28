@@ -19,7 +19,8 @@ class CreateEventsTable extends Migration
             $table->string('slug')->unique();
             $table->datetime('date');
             $table->unsignedInteger('venue_id');
-            $table->timestamp('archived_at')->nullable();
+            $table->integer('number_of_matches');
+            $table->datetime('archived_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

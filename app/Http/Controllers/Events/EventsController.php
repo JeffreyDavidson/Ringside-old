@@ -13,22 +13,9 @@ class EventsController extends Controller
     protected $authorizeResource = Event::class;
 
     /**
-     * Display a listing of all events.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function index()
-    {
-        $scheduledEvents = Event::scheduled()->with('venue')->paginate(10);
-        $previousEvents = Event::past()->with('venue')->paginate(10);
-
-        return view('events.index', compact('scheduledEvents', 'previousEvents', 'archivedEvents'));
-    }
-
-    /**
      * Show the form for creating an event.
      *
-     * @return \App\Models\Event  $event
+     * @param \App\Models\Event  $event
      * @return \Illuminate\View\View
      */
     public function create(Event $event)
@@ -44,9 +31,19 @@ class EventsController extends Controller
      */
     public function store(EventCreateFormRequest $request)
     {
-        Event::create($request->all());
+        $event = Event::create([
+            'name' => $request->name,
+            'slug' => $request->slug,
+            'date' => $request->date,
+            'number_of_matches' => $request->number_of_matches,
+            'venue_id' => $request->venue_id,
+        ]);
 
-        return redirect()->route('events.index');
+        if ($request->has('matches')) {
+            $event->matches()->createMany($request->matches);
+        }
+
+        return redirect()->route('scheduled-events.index');
     }
 
     /**
@@ -68,6 +65,8 @@ class EventsController extends Controller
      */
     public function edit(Event $event)
     {
+        $this->authorize('update', $event);
+
         return view('events.edit', compact('event'));
     }
 
@@ -77,12 +76,22 @@ class EventsController extends Controller
      * @param  \App\Http\Requests\EventEditFormRequest  $request
      * @param  \App\Models\Event  $event
      * @return \Illuminate\Http\RedirectResponse
+     *
+     * @throws \App\Exceptions\EventHasPastException
      */
     public function update(EventEditFormRequest $request, Event $event)
     {
         $event->update($request->all());
 
-        return redirect()->route('events.index');
+        if ($event->isArchived()) {
+            return redirect()->route('archived-events.index');
+        }
+
+        if (! $event->isScheduled()) {
+            return redirect()->route('past-events.index');
+        }
+
+        return redirect()->route('scheduled-events.index');
     }
 
     /**
@@ -95,6 +104,6 @@ class EventsController extends Controller
     {
         $event->delete();
 
-        return redirect()->route('events.index');
+        return redirect()->back();
     }
 }

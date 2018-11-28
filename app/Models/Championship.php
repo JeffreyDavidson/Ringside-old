@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Collections\ChampionshipCollection;
 use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
@@ -35,15 +34,4 @@ class Championship extends Pivot
      * @var string
      */
     protected $presenter = 'App\Presenters\ChampionshipPresenter';
-
-    /**
-     * Create a new Eloquent Collection instance.
-     *
-     * @param  array  $models
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function newCollection(array $models = [])
-    {
-        return new ChampionshipCollection($models);
-    }
 }
