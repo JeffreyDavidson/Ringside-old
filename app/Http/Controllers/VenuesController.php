@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Venue;
 use App\Http\Requests\StoreVenueFormRequest;
 use App\Http\Requests\UpdateVenueFormRequest;
-use App\Models\Venue;
 
 class VenuesController extends Controller
 {

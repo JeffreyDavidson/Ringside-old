@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Roster\Wrestlers;
 
+use App\Models\Wrestler;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreWrestlerFormRequest;
 use App\Http\Requests\UpdateWrestlerFormRequest;
-use App\Models\Wrestler;
 
 class WrestlersController extends Controller
 {
@@ -79,7 +79,7 @@ class WrestlersController extends Controller
             return redirect()->route('retired-wrestlers.index');
         }
 
-        if (!$wrestler->isActive()) {
+        if (! $wrestler->isActive()) {
             return redirect()->route('inactive-wrestlers.index');
         }
 

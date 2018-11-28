@@ -2,6 +2,6 @@
 
 namespace App\Exceptions;
 
-class TitleNotIntroducedException extends \RuntimeException
+class TItleNotIntroducedException extends \RuntimeException
 {
 }

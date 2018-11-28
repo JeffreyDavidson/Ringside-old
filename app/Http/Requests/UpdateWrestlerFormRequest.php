@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use App\Rules\BeforeFirstMatchDate;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
-use Illuminate\Validation\Validator;
 
 class UpdateWrestlerFormRequest extends FormRequest
 {

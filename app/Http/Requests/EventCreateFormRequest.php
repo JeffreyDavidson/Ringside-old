@@ -77,11 +77,11 @@ class EventCreateFormRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            if ($this->schedule_matches && !$this->matches) {
+            if ($this->schedule_matches && ! $this->matches) {
                 $validator->errors()->add('matches', 'You have selected to schedule matches for the even but none were provided!');
             }
 
-            if ($this->matches && is_array($this->matches && !empty($this->matches))) {
+            if ($this->matches && is_array($this->matches && ! empty($this->matches))) {
                 foreach ($this->matches as $match) {
                     new EnsureCorrectCompetitorCount($match['match_type_id'], count(array_flatten($match['wrestlers'])));
                 }

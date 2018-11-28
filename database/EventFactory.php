@@ -29,7 +29,7 @@ class EventFactory
             'name' => $this->name ?? $str,
             'slug' => $this->slug ?? str_slug($this->name),
             'date' => $this->date ?? Carbon::tomorrow(),
-            'venue_id' => $this->venue_id ?? factory(Venue::class)->create()->id
+            'venue_id' => $this->venue_id ?? factory(Venue::class)->create()->id,
         ]);
 
         Collection::times($this->matchesCount, function ($number) use ($event) {

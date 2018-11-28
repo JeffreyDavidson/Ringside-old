@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Roster\Wrestlers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Wrestler;
+use App\Http\Controllers\Controller;
 
 class InactiveWrestlersController extends Controller
 {

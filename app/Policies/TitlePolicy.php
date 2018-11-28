@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\Title;
 use App\Models\User;
+use App\Models\Title;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class TitlePolicy

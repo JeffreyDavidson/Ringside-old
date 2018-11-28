@@ -45,6 +45,6 @@ class BeforeFirstMatchDate implements Rule
      */
     public function message()
     {
-        return 'The :attribute cannot be after ' . $this->model->first_match_date;
+        return 'The :attribute cannot be after '.$this->model->first_match_date;
     }
 }

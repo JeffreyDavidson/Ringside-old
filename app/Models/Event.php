@@ -110,7 +110,7 @@ class Event extends Model
      */
     public function unarchive()
     {
-        if (!$this->isArchived()) {
+        if (! $this->isArchived()) {
             throw new EventNotAlreadyArchivedException;
         }
 
@@ -181,6 +181,6 @@ class Event extends Model
      */
     public function isArchived()
     {
-        return !is_null($this->archived_at);
+        return ! is_null($this->archived_at);
     }
 }

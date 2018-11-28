@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Events;
 
 use App\Models\Event;
 use App\Http\Controllers\Controller;
-use App\Exceptions\EventHasPastException;
 use App\Http\Requests\EventEditFormRequest;
 use App\Http\Requests\EventCreateFormRequest;
 
@@ -37,7 +36,7 @@ class EventsController extends Controller
             'slug' => $request->slug,
             'date' => $request->date,
             'number_of_matches' => $request->number_of_matches,
-            'venue_id' => $request->venue_id
+            'venue_id' => $request->venue_id,
         ]);
 
         if ($request->has('matches')) {
@@ -67,7 +66,7 @@ class EventsController extends Controller
     public function edit(Event $event)
     {
         $this->authorize('update', $event);
-        
+
         return view('events.edit', compact('event'));
     }
 
@@ -77,7 +76,7 @@ class EventsController extends Controller
      * @param  \App\Http\Requests\EventEditFormRequest  $request
      * @param  \App\Models\Event  $event
      * @return \Illuminate\Http\RedirectResponse
-     * 
+     *
      * @throws \App\Exceptions\EventHasPastException
      */
     public function update(EventEditFormRequest $request, Event $event)
@@ -88,7 +87,7 @@ class EventsController extends Controller
             return redirect()->route('archived-events.index');
         }
 
-        if (!$event->isScheduled()) {
+        if (! $event->isScheduled()) {
             return redirect()->route('past-events.index');
         }
 

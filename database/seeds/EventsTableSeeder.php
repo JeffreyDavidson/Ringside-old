@@ -38,8 +38,8 @@ class EventsTableSeeder extends Seeder
             return strtotime($a) - strtotime($b);
         })->values()->map(function ($date, $key) {
             return factory(Event::class)->create([
-                'name' => 'Event ' . ($key + 1),
-                'slug' => 'event' . ($key + 1),
+                'name' => 'Event '.($key + 1),
+                'slug' => 'event'.($key + 1),
                 'venue_id' => Venue::inRandomOrder()->first()->id,
                 'date' => $date->hour(19),
             ]);
@@ -135,7 +135,7 @@ class EventsTableSeeder extends Seeder
         // If this is a title match give the champion a 10% chance to retain their title.
         if ($match->isTitleMatch()) {
             $champions = $match->titles->filter(function ($title, $key) {
-                return !$title->isVacant();
+                return ! $title->isVacant();
             })->pluck('currentChampion');
             if ($champions->isEmpty()) {
                 $winners = $match->groupedWrestlersBySide->random()->modelKeys();

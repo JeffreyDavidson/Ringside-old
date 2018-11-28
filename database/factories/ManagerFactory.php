@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Manager;
 use Carbon\Carbon;
+use App\Models\Manager;
 use Faker\Generator as Faker;
 
 $factory->define(Manager::class, function (Faker $faker) {

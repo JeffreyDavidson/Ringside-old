@@ -49,6 +49,6 @@ class MatchPresenter extends Presenter
             return 'Opening Match';
         }
 
-        return 'Match #' . $this->model->match_number;
+        return 'Match #'.$this->model->match_number;
     }
 }
