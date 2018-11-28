@@ -58,6 +58,6 @@ class QualifiedForMatch implements Rule
      */
     public function message()
     {
-        return 'This ' . strtolower(class_basename($this->modelClass)) . ' is not qualified for the match.';
+        return 'This '.strtolower(class_basename($this->modelClass)).' is not qualified for the match.';
     }
 }

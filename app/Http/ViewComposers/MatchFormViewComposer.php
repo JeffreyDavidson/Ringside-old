@@ -2,12 +2,12 @@
 
 namespace App\Http\ViewComposers;
 
-use App\Models\MatchType;
-use App\Models\Referee;
-use App\Models\Stipulation;
 use App\Models\Title;
+use App\Models\Referee;
 use App\Models\Wrestler;
+use App\Models\MatchType;
 use Illuminate\View\View;
+use App\Models\Stipulation;
 
 class MatchFormViewComposer
 {

@@ -82,7 +82,7 @@ trait HasStatus
      */
     public function deactivate()
     {
-        if (!$this->isActive()) {
+        if (! $this->isActive()) {
             throw new ModelIsInactiveException;
         }
 

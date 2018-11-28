@@ -40,7 +40,7 @@ class TitleRecordsViewComposer
         $longestTitleReigns = $this->repository->longestTitleReigns($title)->map(function (Championship $reign) {
             return [
                 'wrestler' => $reign->wrestler->name,
-                'length' => number_format($reign->length) . ' ' . str_plural('day', $reign->length),
+                'length' => number_format($reign->length).' '.str_plural('day', $reign->length),
             ];
         });
 

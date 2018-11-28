@@ -86,7 +86,7 @@ trait HasTitles
      */
     public function winTitle(Title $title, $date)
     {
-        if (!empty($title->currentChampion) && $title->currentChampion->is($this)) {
+        if (! empty($title->currentChampion) && $title->currentChampion->is($this)) {
             throw new ModelIsTitleChampionException;
         }
 
@@ -106,7 +106,7 @@ trait HasTitles
      */
     public function loseTitle(Title $title, $date)
     {
-        if (empty($title->currentChampion) || !$title->currentChampion->is($this)) {
+        if (empty($title->currentChampion) || ! $title->currentChampion->is($this)) {
             throw new ModelNotTitleChampionException;
         }
 

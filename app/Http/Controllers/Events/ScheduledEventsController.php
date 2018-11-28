@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Events;
 
-use App\Http\Controllers\Controller;
 use App\Models\Event;
+use App\Http\Controllers\Controller;
 
 class ScheduledEventsController extends Controller
 {

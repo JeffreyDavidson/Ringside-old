@@ -1,9 +1,9 @@
 <?php
 
-use App\Models\Championship;
+use Carbon\Carbon;
 use App\Models\Title;
 use App\Models\Wrestler;
-use Carbon\Carbon;
+use App\Models\Championship;
 use Faker\Generator as Faker;
 
 $factory->define(Championship::class, function (Faker $faker) {

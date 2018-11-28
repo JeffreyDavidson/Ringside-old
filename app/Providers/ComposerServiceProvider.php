@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
-use App\Http\ViewComposers\MatchFormViewComposer;
-use App\Http\ViewComposers\TitleRecordsViewComposer;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use App\Http\ViewComposers\MatchFormViewComposer;
+use App\Http\ViewComposers\TitleRecordsViewComposer;
 
 class ComposerServiceProvider extends ServiceProvider
 {

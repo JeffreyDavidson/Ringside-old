@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Titles;
 
+use App\Models\Title;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTitleFormRequest;
 use App\Http\Requests\UpdateTitleFormRequest;
-use App\Models\Title;
 
 class TitlesController extends Controller
 {
@@ -77,7 +77,7 @@ class TitlesController extends Controller
             return redirect()->route('retired-titles.index');
         }
 
-        if (!$title->isActive()) {
+        if (! $title->isActive()) {
             return redirect()->route('inactive-titles.index');
         }
 

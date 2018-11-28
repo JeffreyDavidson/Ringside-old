@@ -27,7 +27,7 @@ class MatchCreateFormRequest extends FormRequest
      */
     public function rules()
     {
-        /**
+        /*
          * TODO: Need to add rule for a title has to be introduced before the match event date.
          */
         return [
@@ -76,7 +76,7 @@ class MatchCreateFormRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            if (!is_null($this->match_type_id) && is_array($this->wrestlers) && !empty($this->wrestlers)) {
+            if (! is_null($this->match_type_id) && is_array($this->wrestlers) && ! empty($this->wrestlers)) {
                 new EnsureCorrectCompetitorCount($this->match_type_id, count(array_flatten($this->wrestlers)));
             }
         });

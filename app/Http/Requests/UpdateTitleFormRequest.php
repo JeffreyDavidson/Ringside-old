@@ -29,7 +29,7 @@ class UpdateTitleFormRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', Rule::unique('titles', 'name')->ignore($this->title->id)],
-            'slug' => ['required', 'string',Rule::unique('titles', 'slug')->ignore($this->title->id)],
+            'slug' => ['required', 'string', Rule::unique('titles', 'slug')->ignore($this->title->id)],
             'introduced_at' => ['required', 'string', 'date', new BeforeFirstMatchDate($this->title)],
         ];
     }
