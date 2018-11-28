@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Laracodes\Presenter\Traits\Presentable;
 use App\Exceptions\EventIsScheduledException;
-use App\Exceptions\EventNotArchivedException;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Exceptions\EventAlreadyArchivedException;
+use App\Exceptions\EventNotAlreadyArchivedException;
 
 class Event extends Model
 {
@@ -105,13 +105,13 @@ class Event extends Model
      *
      * @return bool
      *
-     * @throws \App\Exceptions\EventNotArchivedException
+     * @throws \App\Exceptions\EventNotAlreadyArchivedException
      * @throws \App\Exceptions\EventIsScheduledException
      */
     public function unarchive()
     {
         if (!$this->isArchived()) {
-            throw new EventNotArchivedException;
+            throw new EventNotAlreadyArchivedException;
         }
 
         if ($this->isScheduled()) {

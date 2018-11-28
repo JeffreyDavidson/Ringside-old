@@ -127,7 +127,7 @@ class EventTest extends IntegrationTestCase
     }
 
     /**
-     * @expectedException \App\Exceptions\EventNotArchivedException
+     * @expectedException \App\Exceptions\EventNotAlreadyArchivedException
      *
      * @test
      */
