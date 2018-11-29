@@ -34,6 +34,14 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('{wrestler}/retire', 'RetiredWrestlersController@store')->name('wrestlers.retire');
             Route::delete('retired/{wrestler}/unretire', 'RetiredWrestlersController@destroy')->name('retired-wrestlers.unretire');
         });
+
+        Route::group(['prefix' => 'tagteams', 'namespace' => 'TagTeams'], function () {
+            Route::resource('/', 'TagTeamsController')
+                ->except('index')
+                ->parameters(['' => 'tagteam'])
+                ->names(['create' => 'tagteams.create', 'store' => 'tagteams.store', 'edit' => 'tagteams.edit', 'update' => 'tagteams.update', 'show' => 'tagteams.show', 'destroy' => 'tagteams.destroy']);
+
+        });
     });
 
     Route::group(['prefix' => 'events', 'namespace' => 'Events'], function () {
