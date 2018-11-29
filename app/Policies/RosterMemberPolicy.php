@@ -3,10 +3,10 @@
 namespace App\Policies;
 
 use App\Models\User;
-use App\Models\Wrestler;
+use App\Models\RosterMember;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class WrestlerPolicy
+class RosterMemberPolicy
 {
     use HandlesAuthorization;
 
@@ -18,7 +18,7 @@ class WrestlerPolicy
      */
     public function index(User $user)
     {
-        return $user->hasPermission('view-wrestlers');
+        return $user->hasPermission('view-roster-members');
     }
 
     /**
@@ -29,7 +29,7 @@ class WrestlerPolicy
      */
     public function create(User $user)
     {
-        return $user->hasPermission('create-wrestler');
+        return $user->hasPermission('create-roster-member');
     }
 
     /**
@@ -40,7 +40,7 @@ class WrestlerPolicy
      */
     public function view(User $user)
     {
-        return $user->hasPermission('view-wrestler');
+        return $user->hasPermission('view-roster-member');
     }
 
     /**
@@ -51,7 +51,7 @@ class WrestlerPolicy
      */
     public function update(User $user)
     {
-        return $user->hasPermission('update-wrestler');
+        return $user->hasPermission('update-roster-member');
     }
 
     /**
@@ -62,7 +62,7 @@ class WrestlerPolicy
      */
     public function delete(User $user)
     {
-        return $user->hasPermission('delete-wrestler');
+        return $user->hasPermission('delete-roster-member');
     }
 
     /**
@@ -72,9 +72,9 @@ class WrestlerPolicy
      * @param  \App\Models\Wrestler  $wrestler
      * @return bool
      */
-    public function activate(User $user, Wrestler $wrestler)
+    public function activate(User $user, RosterMember $rosterMember)
     {
-        return $user->hasPermission('activate-wrestler') && $wrestler->hired_at->lte(today());
+        return $user->hasPermission('activate-roster-member') && $rosterMember->hired_at->lte(today());
     }
 
     /**
@@ -85,7 +85,7 @@ class WrestlerPolicy
      */
     public function deactivate(User $user)
     {
-        return $user->hasPermission('deactivate-wrestler');
+        return $user->hasPermission('deactivate-roster-member');
     }
 
     /**
@@ -95,9 +95,9 @@ class WrestlerPolicy
      * @param  \App\Models\Wrestler  $wrestler
      * @return bool
      */
-    public function retire(User $user, Wrestler $wrestler)
+    public function retire(User $user, RosterMember $rosterMember)
     {
-        return $user->hasPermission('retire-wrestler') && $wrestler->hired_at->lte(today());
+        return $user->hasPermission('retire-roster-member') && $rosterMember->hired_at->lte(today());
     }
 
     /**
@@ -108,6 +108,6 @@ class WrestlerPolicy
      */
     public function unretire(User $user)
     {
-        return $user->hasPermission('unretire-wrestler');
+        return $user->hasPermission('unretire-roster-member');
     }
 }

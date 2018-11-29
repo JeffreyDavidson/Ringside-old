@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Wrestler\Retired;
+namespace Tests\Feature\Roster\Wrestler\Retired;
 
 use Tests\IntegrationTestCase;
 
@@ -10,7 +10,7 @@ class ViewRetiredWrestlersListTest extends IntegrationTestCase
     {
         parent::setUp();
 
-        $this->setupAuthorizedUser('view-wrestlers');
+        $this->setupAuthorizedUser('view-roster-members');
     }
 
     /** @test */

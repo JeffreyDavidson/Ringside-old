@@ -12,8 +12,8 @@ use App\Policies\EventPolicy;
 use App\Policies\MatchPolicy;
 use App\Policies\TitlePolicy;
 use App\Policies\VenuePolicy;
-use App\Policies\WrestlerPolicy;
 use App\Policies\StipulationPolicy;
+use App\Policies\RosterMemberPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -24,7 +24,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        Wrestler::class => WrestlerPolicy::class,
+        Wrestler::class => RosterMemberPolicy::class,
         Event::class => EventPolicy::class,
         Match::class => MatchPolicy::class,
         Title::class => TitlePolicy::class,

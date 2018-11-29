@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Wrestler;
+namespace Tests\Feature\Roster\Wrestler;
 
 use App\Models\Event;
 use App\Models\Wrestler;
@@ -13,7 +13,7 @@ class UpdateWrestlerTest extends IntegrationTestCase
     {
         parent::setUp();
 
-        $this->setupAuthorizedUser(['update-wrestler']);
+        $this->setupAuthorizedUser(['update-roster-member']);
     }
 
     private function oldAttributes($overrides = [])
