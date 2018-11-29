@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Wrestler;
+namespace Tests\Feature\Roster\Wrestler;
 
 use App\Models\Wrestler;
 use Tests\IntegrationTestCase;
@@ -11,7 +11,7 @@ class RetireWrestlerTest extends IntegrationTestCase
     {
         parent::setUp();
 
-        $this->setupAuthorizedUser('retire-wrestler');
+        $this->setupAuthorizedUser('retire-roster-member');
     }
 
     /** @test */

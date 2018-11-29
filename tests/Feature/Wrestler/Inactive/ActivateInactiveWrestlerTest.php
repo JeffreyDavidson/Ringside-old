@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\Feature\Wrestler\Inactive;
+namespace Tests\Feature\Roster\Wrestler\Inactive;
 
-use App\Models\Wrestler;
 use Carbon\Carbon;
+use App\Models\Wrestler;
 use Tests\IntegrationTestCase;
 
 class ActivateInactiveWrestlerTest extends IntegrationTestCase
@@ -12,7 +12,7 @@ class ActivateInactiveWrestlerTest extends IntegrationTestCase
     {
         parent::setUp();
 
-        $this->setupAuthorizedUser('activate-wrestler');
+        $this->setupAuthorizedUser('activate-roster-member');
     }
 
     /** @test */

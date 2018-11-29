@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Wrestler;
+namespace Tests\Feature\Roster\Wrestler;
 
 use App\Models\Wrestler;
 use Tests\IntegrationTestCase;
@@ -13,7 +13,7 @@ class DeleteWrestlerTest extends IntegrationTestCase
     {
         parent::setUp();
 
-        $this->setupAuthorizedUser('delete-wrestler');
+        $this->setupAuthorizedUser('delete-roster-member');
     }
 
     /** @test */
