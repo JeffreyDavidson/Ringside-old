@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Wrestler;
+namespace Tests\Feature\Roster\Wrestler;
 
 use Carbon\Carbon;
 use App\Models\Wrestler;
@@ -12,7 +12,7 @@ class StoreWrestlerTest extends IntegrationTestCase
     {
         parent::setUp();
 
-        $this->setupAuthorizedUser(['create-wrestler']);
+        $this->setupAuthorizedUser(['create-roster-member']);
     }
 
     private function validParams($overrides = [])

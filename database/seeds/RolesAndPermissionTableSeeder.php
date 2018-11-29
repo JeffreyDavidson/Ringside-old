@@ -18,15 +18,15 @@ class RolesAndPermissionTableSeeder extends Seeder
         $admin = Role::create(['name' => 'Admin', 'slug' => 'admin']);
         $superAdmin = Role::create(['name' => 'Super Administrator', 'slug' => 'super-admin']);
 
-        $viewWrestlers = Permission::create(['name' => 'View Wrestlers', 'slug' => 'view-wrestlers']);
-        $createWrestler = Permission::create(['name' => 'Create Wrestler', 'slug' => 'create-wrestler']);
-        $updateWrestler = Permission::create(['name' => 'Update Wrestler', 'slug' => 'update-wrestler']);
-        $viewWrestler = Permission::create(['name' => 'View Wrestler', 'slug' => 'view-wrestler']);
-        $deleteWrestler = Permission::create(['name' => 'Delete Wrestler', 'slug' => 'delete-wrestler']);
-        $activateWrestler = Permission::create(['name' => 'Activate Wrestler', 'slug' => 'activate-wrestler']);
-        $deactivateWrestler = Permission::create(['name' => 'Deactivate Wrestler', 'slug' => 'deactivate-wrestler']);
-        $retireWrestler = Permission::create(['name' => 'Retire Wrestler', 'slug' => 'retire-wrestler']);
-        $unretireWrestler = Permission::create(['name' => 'Unretire Wrestler', 'slug' => 'unretire-wrestler']);
+        $viewRosterMembers = Permission::create(['name' => 'View Roster Members', 'slug' => 'view-roster-members']);
+        $createRosterMember = Permission::create(['name' => 'Create Roster Member', 'slug' => 'create-roster-member']);
+        $updateRosterMember = Permission::create(['name' => 'Update Roster Member', 'slug' => 'update-roster-member']);
+        $viewRosterMember = Permission::create(['name' => 'View Roster Member', 'slug' => 'view-roster-member']);
+        $deleteRosterMember = Permission::create(['name' => 'Delete Roster Member', 'slug' => 'delete-roster-member']);
+        $activateRosterMember = Permission::create(['name' => 'Activate Roster Member', 'slug' => 'activate-roster-member']);
+        $deactivateRosterMember = Permission::create(['name' => 'Deactivate Roster Member', 'slug' => 'deactivate-roster-member']);
+        $retireRosterMember = Permission::create(['name' => 'Retire Roster Member', 'slug' => 'retire-roster-member']);
+        $unretireRosterMember = Permission::create(['name' => 'Unretire Roster Member', 'slug' => 'unretire-roster-member']);
 
         $viewTitles = Permission::create(['name' => 'View Titles', 'slug' => 'view-titles']);
         $createTitle = Permission::create(['name' => 'Create Title', 'slug' => 'create-title']);
@@ -64,15 +64,15 @@ class RolesAndPermissionTableSeeder extends Seeder
         $updateMatch = Permission::create(['name' => 'Update Match', 'slug' => 'update-match']);
         $deleteMatch = Permission::create(['name' => 'Delete Match', 'slug' => 'delete-match']);
 
-        $admin->givePermissionTo($viewWrestlers);
-        $admin->givePermissionTo($createWrestler);
-        $admin->givePermissionTo($updateWrestler);
-        $admin->givePermissionTo($viewWrestler);
-        $admin->givePermissionTo($deleteWrestler);
-        $admin->givePermissionTo($activateWrestler);
-        $admin->givePermissionTo($deactivateWrestler);
-        $admin->givePermissionTo($retireWrestler);
-        $admin->givePermissionTo($unretireWrestler);
+        $admin->givePermissionTo($viewRosterMembers);
+        $admin->givePermissionTo($createRosterMember);
+        $admin->givePermissionTo($updateRosterMember);
+        $admin->givePermissionTo($viewRosterMember);
+        $admin->givePermissionTo($deleteRosterMember);
+        $admin->givePermissionTo($activateRosterMember);
+        $admin->givePermissionTo($deactivateRosterMember);
+        $admin->givePermissionTo($retireRosterMember);
+        $admin->givePermissionTo($unretireRosterMember);
 
         $admin->givePermissionTo($viewTitles);
         $admin->givePermissionTo($createTitle);
@@ -110,15 +110,15 @@ class RolesAndPermissionTableSeeder extends Seeder
         $admin->givePermissionTo($viewMatch);
         $admin->givePermissionTo($deleteMatch);
 
-        $superAdmin->givePermissionTo($viewWrestlers);
-        $superAdmin->givePermissionTo($createWrestler);
-        $superAdmin->givePermissionTo($updateWrestler);
-        $superAdmin->givePermissionTo($viewWrestler);
-        $superAdmin->givePermissionTo($deleteWrestler);
-        $superAdmin->givePermissionTo($activateWrestler);
-        $superAdmin->givePermissionTo($deactivateWrestler);
-        $superAdmin->givePermissionTo($retireWrestler);
-        $superAdmin->givePermissionTo($unretireWrestler);
+        $superAdmin->givePermissionTo($viewRosterMembers);
+        $superAdmin->givePermissionTo($createRosterMember);
+        $superAdmin->givePermissionTo($updateRosterMember);
+        $superAdmin->givePermissionTo($viewRosterMember);
+        $superAdmin->givePermissionTo($deleteRosterMember);
+        $superAdmin->givePermissionTo($activateRosterMember);
+        $superAdmin->givePermissionTo($deactivateRosterMember);
+        $superAdmin->givePermissionTo($retireRosterMember);
+        $superAdmin->givePermissionTo($unretireRosterMember);
 
         $superAdmin->givePermissionTo($viewTitles);
         $superAdmin->givePermissionTo($createTitle);

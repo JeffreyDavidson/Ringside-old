@@ -2,27 +2,10 @@
 
 namespace App\Models;
 
-use App\Traits\Hireable;
-use App\Traits\HasStatus;
-use App\Traits\HasTitles;
-use App\Traits\HasMatches;
-use App\Traits\HasInjuries;
-use App\Traits\HasManagers;
-use App\Traits\HasRetirements;
-use App\Traits\HasSuspensions;
-use Illuminate\Database\Eloquent\Model;
-use Laracodes\Presenter\Traits\Presentable;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\RosterMember;
 
-class Wrestler extends Model
+class Wrestler extends RosterMember
 {
-    use Hireable, HasStatus, HasTitles, HasMatches, HasInjuries, HasManagers, HasSuspensions, HasRetirements, Presentable, SoftDeletes;
-
-    protected $casts = [
-        'is_active' => 'boolean',
-        'hired_at' => 'datetime',
-    ];
-
     /**
      * The attributes that are mass assignable.
      *

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Wrestler;
+namespace Tests\Feature\Roster\Wrestler;
 
 use App\Models\Wrestler;
 use Tests\IntegrationTestCase;
@@ -11,7 +11,7 @@ class EditWrestlerTest extends IntegrationTestCase
     {
         parent::setUp();
 
-        $this->setupAuthorizedUser(['update-wrestler']);
+        $this->setupAuthorizedUser(['update-roster-member']);
     }
 
     /** @test */

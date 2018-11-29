@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Wrestler\Active;
+namespace Tests\Feature\Roster\Wrestler\Active;
 
 use App\Models\Wrestler;
 use Tests\IntegrationTestCase;
@@ -11,7 +11,7 @@ class DeactivateActiveWrestlerTest extends IntegrationTestCase
     {
         parent::setUp();
 
-        $this->setupAuthorizedUser('deactivate-wrestler');
+        $this->setupAuthorizedUser('deactivate-roster-member');
     }
 
     /** @test */

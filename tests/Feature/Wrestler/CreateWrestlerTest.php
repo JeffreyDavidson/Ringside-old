@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Wrestler;
+namespace Tests\Feature\Roster\Wrestler;
 
 use Tests\IntegrationTestCase;
 
@@ -10,11 +10,11 @@ class CreateWrestlerTest extends IntegrationTestCase
     {
         parent::setUp();
 
-        $this->setupAuthorizedUser(['create-wrestler']);
+        $this->setupAuthorizedUser(['create-roster-member']);
     }
 
     /** @test */
-    public function users_who_have_permission_can_view_the_add_wrestler_page()
+    public function users_who_have_permission_can_view_the_create_wrestler_page()
     {
         $response = $this->actingAs($this->authorizedUser)->get(route('wrestlers.create'));
 
@@ -24,7 +24,7 @@ class CreateWrestlerTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function users_who_dont_have_permission_cannot_view_the_add_wrestler_page()
+    public function users_who_dont_have_permission_cannot_view_the_create_wrestler_page()
     {
         $response = $this->actingAs($this->unauthorizedUser)->get(route('wrestlers.create'));
 
@@ -32,7 +32,7 @@ class CreateWrestlerTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function guests_cannot_view_the_add_wrestler_page()
+    public function guests_cannot_view_the_create_wrestler_page()
     {
         $response = $this->get(route('wrestlers.create'));
 
