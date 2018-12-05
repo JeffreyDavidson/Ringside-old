@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Roster\Wrestler\Active;
 
-use App\Models\Wrestler;
+use App\Models\Roster\Wrestler;
 use Tests\IntegrationTestCase;
 
 class DeactivateActiveWrestlerTest extends IntegrationTestCase

@@ -3,7 +3,7 @@
 namespace Tests\Unit\Presenters;
 
 use Tests\TestCase;
-use App\Models\Referee;
+use App\Models\Roster\Referee;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class RefereePresenterTest extends TestCase

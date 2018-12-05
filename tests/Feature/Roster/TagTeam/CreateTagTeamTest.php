@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Feature\Roster\TagTeam;
+
 use Tests\IntegrationTestCase;
 
 class CreateTagTeamTest extends IntegrationTestCase

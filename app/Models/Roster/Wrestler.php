@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Roster;
 
-use App\Models\RosterMember;
+use App\Presenters\Roster\WrestlerPresenter;
+
 
 class Wrestler extends RosterMember
 {
@@ -18,5 +19,5 @@ class Wrestler extends RosterMember
      *
      * @var string
      */
-    protected $presenter = 'App\Presenters\WrestlerPresenter';
+    protected $presenter = WrestlerPresenter::class;
 }

@@ -3,8 +3,8 @@
 namespace Tests\Feature\Roster\Wrestler;
 
 use Carbon\Carbon;
-use App\Models\Wrestler;
 use Tests\IntegrationTestCase;
+use App\Models\Roster\Wrestler;
 
 class StoreWrestlerTest extends IntegrationTestCase
 {
@@ -20,12 +20,12 @@ class StoreWrestlerTest extends IntegrationTestCase
         return array_merge([
             'name' => 'Wrestler Name',
             'slug' => 'wrestler-slug',
-            'hired_at' => '2017-09-08',
             'hometown' => 'Laraville, ON',
             'feet' => 6,
             'inches' => 10,
             'weight' => 175,
             'signature_move' => 'Wrestler Signature Move',
+            'hired_at' => '2017-09-08',
         ], $overrides);
     }
 
@@ -279,6 +279,20 @@ class StoreWrestlerTest extends IntegrationTestCase
     {
         $response = $this->actingAs($this->authorizedUser)->from(route('wrestlers.create'))->post(route('wrestlers.store'), $this->validParams([
             'signature_move' => [],
+        ]));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('wrestlers.create'));
+        $response->assertSessionHasErrors('signature_move');
+    }
+
+    /** @test */
+    public function wrestler_signature_move_must_be_unique()
+    {
+        factory(Wrestler::class)->create(['signature_move' => 'Wrestler Signature Move']);
+        
+        $response = $this->actingAs($this->authorizedUser)->from(route('wrestlers.create'))->post(route('wrestlers.store'), $this->validParams([
+            'signature_move' => 'Wrestler Signature Move',
         ]));
 
         $response->assertStatus(302);

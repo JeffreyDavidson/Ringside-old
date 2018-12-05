@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Observers;
+namespace App\Observers\Roster;
 
-use App\Models\Wrestler;
+use App\Models\Roster\Wrestler;
 
 class WrestlerObserver
 {
     /**
      * Handle the Wrestler "creating" event.
      *
-     * @param  \App\Models\Wrestler  $wrestler
+     * @param  \App\Models\Roster\Wrestler  $wrestler
      * @return void
      */
     public function creating(Wrestler $wrestler)
@@ -22,7 +22,7 @@ class WrestlerObserver
     /**
      * Handle the Wrestler "updating" event.
      *
-     * @param  \App\Models\Wrestler  $wrestler
+     * @param  \App\Models\Roster\Wrestler  $wrestler
      * @return void
      */
     public function updating(Wrestler $wrestler)

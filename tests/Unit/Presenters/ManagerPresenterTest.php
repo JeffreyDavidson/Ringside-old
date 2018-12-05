@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Presenters;
 
-use App\Models\Manager;
+use App\Models\Roster\Manager;
 use Tests\IntegrationTestCase;
 
 class ManagerPresenterTest extends IntegrationTestCase

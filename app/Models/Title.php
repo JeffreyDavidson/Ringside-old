@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\HasStatus;
 use App\Traits\HasMatches;
 use App\Traits\HasRetirements;
+use App\Models\Roster\Wrestler;
 use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\ModelIsActiveException;
 use Laracodes\Presenter\Traits\Presentable;
@@ -72,7 +73,7 @@ class Title extends Model
     /**
      * Retrieves the current champion for the title.
      *
-     * @return \App\Models\Wrestler|null
+     * @return \App\Models\Roster\Wrestler|null
      */
     public function getCurrentChampionAttribute()
     {
@@ -82,7 +83,7 @@ class Title extends Model
     /**
      * Retrieves the current champion for the title.
      *
-     * @return \App\Models\Wrestler|null
+     * @return \App\Models\Roster\Wrestler|null
      */
     public function getPreviousChampionAttribute()
     {

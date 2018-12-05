@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\Roster\Referee;
+use App\Models\Roster\Wrestler;
+use App\Presenters\MatchPresenter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Laracodes\Presenter\Traits\Presentable;
@@ -23,7 +26,7 @@ class Match extends Model
      *
      * @var string
      */
-    protected $presenter = 'App\Presenters\MatchPresenter';
+    protected $presenter = MatchPresenter::class;
 
     /**
      * A match has a decision.
@@ -128,7 +131,7 @@ class Match extends Model
     /**
      * Add a referee to a match.
      *
-     * @param  \App\Models\Referee  $referee
+     * @param  \App\Models\Roster\Referee  $referee
      * @return void
      */
     public function addReferee(Referee $referee)
@@ -198,7 +201,7 @@ class Match extends Model
     /**
      * Add a wrestler to a match.
      *
-     * @param  \App\Models\Wrestler  $wrestler
+     * @param  \App\Models\Roster\Wrestler  $wrestler
      * @param  int  $sideNumber
      */
     public function addWrestler(Wrestler $wrestler, int $sideNumber)

@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use App\Models\Event;
 use App\Models\Match;
 use App\Models\Title;
-use App\Models\Wrestler;
+use App\Models\Roster\Wrestler;
 use Facades\MatchFactory;
 use App\Models\Championship;
 use Tests\IntegrationTestCase;

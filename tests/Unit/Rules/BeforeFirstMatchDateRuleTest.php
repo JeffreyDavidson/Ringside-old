@@ -4,7 +4,7 @@ namespace Tests\Unit\Rules;
 
 use App\Models\Event;
 use App\Models\Title;
-use App\Models\Wrestler;
+use App\Models\Roster\Wrestler;
 use Facades\MatchFactory;
 use Tests\IntegrationTestCase;
 use App\Rules\BeforeFirstMatchDate;

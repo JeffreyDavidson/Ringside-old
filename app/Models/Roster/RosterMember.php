@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Roster;
 
 use App\Traits\Hireable;
 use App\Traits\HasStatus;

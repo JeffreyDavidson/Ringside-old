@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Roster\Wrestlers;
+namespace App\Http\Controllers\Roster\Wrestler;
 
-use App\Models\Wrestler;
+use App\Models\Roster\Wrestler;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreWrestlerFormRequest;
-use App\Http\Requests\UpdateWrestlerFormRequest;
+use App\Http\Requests\Roster\Wrestler\StoreWrestlerFormRequest;
+use App\Http\Requests\Roster\Wrestler\UpdateWrestlerFormRequest;
 
 class WrestlersController extends Controller
 {
@@ -15,7 +15,7 @@ class WrestlersController extends Controller
     /**
      * Show the form for creating a new wrestler.
      *
-     * @param  \App\Models\Wrestler  $wrestler
+     * @param  \App\Models\Roster\Wrestler  $wrestler
      * @return \Illuminate\View\View
      */
     public function create(Wrestler $wrestler)
@@ -26,7 +26,7 @@ class WrestlersController extends Controller
     /**
      * Store a newly created wrestler.
      *
-     * @param  \App\Http\Requests\StoreWrestlerFormRequest  $request
+     * @param  \App\Http\Requests\Roster\Wrestler\StoreWrestlerFormRequest  $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(StoreWrestlerFormRequest $request)
@@ -43,7 +43,7 @@ class WrestlersController extends Controller
     /**
      * Display the specified wrestler.
      *
-     * @param  \App\Models\Wrestler  $wrestler
+     * @param  \App\Models\Roster\Wrestler  $wrestler
      * @return \Illuminate\View\View
      */
     public function show(Wrestler $wrestler)
@@ -56,7 +56,7 @@ class WrestlersController extends Controller
     /**
      * Show the form for editing a wrestler.
      *
-     * @param  \App\Models\Wrestler  $wrestler
+     * @param  \App\Models\Roster\Wrestler  $wrestler
      * @return \Illuminate\View\View
      */
     public function edit(Wrestler $wrestler)
@@ -67,8 +67,8 @@ class WrestlersController extends Controller
     /**
      * Update the specified wrestler.
      *
-     * @param  \App\Http\Requests\UpdateWrestlerFormRequest  $request
-     * @param  \App\Models\Wrestler  $wrestler
+     * @param  \App\Http\Requests\Roster\Wrestler\UpdateWrestlerFormRequest  $request
+     * @param  \App\Models\Roster\Wrestler  $wrestler
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(UpdateWrestlerFormRequest $request, Wrestler $wrestler)
@@ -89,7 +89,7 @@ class WrestlersController extends Controller
     /**
      * Delete the specified wrestler.
      *
-     * @param  \App\Models\Wrestler  $wrestler
+     * @param  \App\Models\Roster\Wrestler  $wrestler
      * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Wrestler $wrestler)

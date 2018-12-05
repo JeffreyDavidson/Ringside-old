@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Presenters;
 
-use App\Models\Wrestler;
+use App\Models\Roster\Wrestler;
 use Tests\IntegrationTestCase;
 
 class WrestlerPresenterTest extends IntegrationTestCase

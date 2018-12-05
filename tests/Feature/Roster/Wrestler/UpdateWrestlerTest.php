@@ -3,7 +3,7 @@
 namespace Tests\Feature\Roster\Wrestler;
 
 use App\Models\Event;
-use App\Models\Wrestler;
+use App\Models\Roster\Wrestler;
 use Facades\MatchFactory;
 use Tests\IntegrationTestCase;
 

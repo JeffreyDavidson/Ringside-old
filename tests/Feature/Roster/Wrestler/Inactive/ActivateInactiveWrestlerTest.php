@@ -3,7 +3,7 @@
 namespace Tests\Feature\Roster\Wrestler\Inactive;
 
 use Carbon\Carbon;
-use App\Models\Wrestler;
+use App\Models\Roster\Wrestler;
 use Tests\IntegrationTestCase;
 
 class ActivateInactiveWrestlerTest extends IntegrationTestCase

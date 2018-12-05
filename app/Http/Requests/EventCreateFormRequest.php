@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Title;
-use App\Models\Wrestler;
+use App\Models\Roster\Wrestler;
 use Illuminate\Validation\Rule;
 use App\Rules\QualifiedForMatch;
 use App\Rules\EnsureCorrectCompetitorCount;

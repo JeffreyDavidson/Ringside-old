@@ -1,16 +1,16 @@
 <?php
 
-namespace Tests\Unit\Models;
+namespace Tests\Unit\Models\Roster;
 
 use Carbon\Carbon;
 use App\Models\Event;
 use App\Models\Match;
 use App\Models\Title;
-use App\Models\Manager;
-use App\Models\Wrestler;
 use Facades\MatchFactory;
 use Facades\ManagerFactory;
+use App\Models\Roster\Manager;
 use Tests\IntegrationTestCase;
+use App\Models\Roster\Wrestler;
 use Facades\ChampionshipFactory;
 
 class WrestlerTest extends IntegrationTestCase

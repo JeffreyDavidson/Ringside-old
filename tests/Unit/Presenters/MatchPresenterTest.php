@@ -5,8 +5,8 @@ namespace Tests\Unit\Presenters;
 use stdClass;
 use App\Models\Event;
 use App\Models\Match;
-use App\Models\Referee;
-use App\Models\Wrestler;
+use App\Models\Roster\Referee;
+use App\Models\Roster\Wrestler;
 use App\Models\Stipulation;
 use Tests\IntegrationTestCase;
 

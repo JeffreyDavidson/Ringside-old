@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-use App\Models\Manager;
+use App\Models\Roster\Manager;
 use App\Exceptions\ManagerNotHiredException;
 use App\Exceptions\ModelHasManagerException;
 use App\Exceptions\ModelIsInactiveException;
@@ -72,7 +72,7 @@ trait HasManagers
     /**
      * A model hires a given manager.
      *
-     * @param  \App\Models\Manager  $manager
+     * @param  \App\Models\Roster\Manager  $manager
      * @return void
      *
      * @throws \App\Exceptions\ModelIsInactiveException
@@ -94,7 +94,7 @@ trait HasManagers
     /**
      * A model fires a given manager.
      *
-     * @param  \App\Models\Manager  $manager
+     * @param  \App\Models\Roster\Manager  $manager
      * @return int
      *
      * @throws \App\Exceptions\ManagerNotHiredException

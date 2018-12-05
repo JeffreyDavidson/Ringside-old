@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Roster\Wrestler;
 
-use App\Models\Wrestler;
 use Tests\IntegrationTestCase;
+use App\Models\Roster\Wrestler;
 
 class EditWrestlerTest extends IntegrationTestCase
 {

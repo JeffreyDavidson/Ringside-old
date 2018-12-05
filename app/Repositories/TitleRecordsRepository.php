@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 use DB;
 use App\Models\Title;
-use App\Models\Wrestler;
+use App\Models\Roster\Wrestler;
 use App\Models\Championship;
 
 class TitleRecordsRepository

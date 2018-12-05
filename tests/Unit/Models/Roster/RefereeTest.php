@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\Unit\Models;
+namespace Tests\Unit\Models\Roster;
 
 use Carbon\Carbon;
-use App\Models\Referee;
+use App\Models\Roster\Referee;
 use Tests\IntegrationTestCase;
 
 class RefereeTest extends IntegrationTestCase

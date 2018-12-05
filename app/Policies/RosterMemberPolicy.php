@@ -3,7 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
-use App\Models\RosterMember;
+use App\Models\Roster\RosterMember;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class RosterMemberPolicy
@@ -51,6 +51,7 @@ class RosterMemberPolicy
      */
     public function update(User $user)
     {
+        dd($user);
         return $user->hasPermission('update-roster-member');
     }
 
@@ -69,7 +70,7 @@ class RosterMemberPolicy
      * Checks to see if the user has permission to activate a roster member.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Wrestler  $wrestler
+     * @param  \App\Models\Roster\Wrestler  $wrestler
      * @return bool
      */
     public function activate(User $user, RosterMember $rosterMember)
@@ -92,7 +93,7 @@ class RosterMemberPolicy
      * Checks to see if the user has permission to retire a roster member.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Wrestler  $wrestler
+     * @param  \App\Models\Roster\Wrestler  $wrestler
      * @return bool
      */
     public function retire(User $user, RosterMember $rosterMember)

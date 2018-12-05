@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Presenters\EventPresenter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Laracodes\Presenter\Traits\Presentable;
@@ -36,7 +37,7 @@ class Event extends Model
      *
      * @var string
      */
-    protected $presenter = 'App\Presenters\EventPresenter';
+    protected $presenter = EventPresenter::class;
 
     /**
      * An event has many matches.

@@ -1,18 +1,24 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Roster;
 
 use App\Traits\Hireable;
 use App\Traits\HasStatus;
 use App\Traits\HasRetirements;
 use App\Traits\HasSuspensions;
 use Illuminate\Database\Eloquent\Model;
+use App\Presenters\Roster\RefereePresenter;
 use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Manager extends Model
+class Referee extends Model
 {
-    use Hireable, HasStatus, HasRetirements, HasSuspensions, Presentable, SoftDeletes;
+    use Hireable;
+    use HasStatus;
+    use Presentable;
+    use HasRetirements;
+    use HasSuspensions;
+    use SoftDeletes;
 
     protected $casts = [
         'is_active' => 'boolean',
@@ -31,5 +37,10 @@ class Manager extends Model
      *
      * @var string
      */
-    protected $presenter = 'App\Presenters\ManagerPresenter';
+    protected $presenter = RefereePresenter::class;
+
+    public function getNameAttribute()
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
 }

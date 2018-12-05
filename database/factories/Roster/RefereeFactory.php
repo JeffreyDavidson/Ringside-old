@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Referee;
+use App\Models\Roster\Referee;
 use Faker\Generator as Faker;
 
 $factory->define(Referee::class, function (Faker $faker) {

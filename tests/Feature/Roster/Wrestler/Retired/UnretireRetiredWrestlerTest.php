@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Roster\Wrestler\Retired;
 
-use App\Models\Wrestler;
+use App\Models\Roster\Wrestler;
 use Tests\IntegrationTestCase;
 
 class UnretireRetiredWrestlerTest extends IntegrationTestCase

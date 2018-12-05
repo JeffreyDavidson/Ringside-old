@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Wrestler;
+use App\Models\Roster\Wrestler;
 use Illuminate\Database\Seeder;
 
 class WrestlersRetirementsTableSeeder extends Seeder

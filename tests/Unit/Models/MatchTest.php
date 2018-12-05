@@ -5,8 +5,8 @@ namespace Tests\Unit\Models;
 use App\Models\Event;
 use App\Models\Match;
 use App\Models\Title;
-use App\Models\Referee;
-use App\Models\Wrestler;
+use App\Models\Roster\Referee;
+use App\Models\Roster\Wrestler;
 use App\Models\Stipulation;
 use Tests\IntegrationTestCase;
 

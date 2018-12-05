@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Roster\Wrestlers;
+namespace App\Http\Controllers\Roster\Wrestler;
 
-use App\Models\Wrestler;
+use App\Models\Roster\Wrestler;
 use App\Http\Controllers\Controller;
 
 class RetiredWrestlersController extends Controller
@@ -49,7 +49,7 @@ class RetiredWrestlersController extends Controller
     /**
      * Retires a wrestler.
      *
-     * @param  \App\Models\Wrestler  $wrestler
+     * @param  \App\Models\Roster\Wrestler  $wrestler
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Wrestler $wrestler)
@@ -62,7 +62,7 @@ class RetiredWrestlersController extends Controller
     /**
      * Unretires a wrestler.
      *
-     * @param  \App\Models\Wrestler  $wrestler
+     * @param  \App\Models\Roster\Wrestler  $wrestler
      * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Wrestler $wrestler)

@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Roster\Wrestler;
 
-use App\Models\Wrestler;
+use Illuminate\Validation\Rule;
+use App\Rules\BeforeFirstMatchDate;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreWrestlerFormRequest extends FormRequest
+class UpdateWrestlerFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,7 +15,9 @@ class StoreWrestlerFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('create', Wrestler::class);
+        $wrestler = $this->route('wrestler');
+
+        return $this->user()->can('update', $wrestler);
     }
 
     /**
@@ -25,14 +28,14 @@ class StoreWrestlerFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'string', 'unique:wrestlers,name'],
-            'slug' => ['required', 'string', 'unique:wrestlers,slug'],
+            'name' => ['required', 'string', Rule::unique('wrestlers', 'name')->ignore($this->wrestler->id)],
+            'slug' => ['required', 'string', Rule::unique('wrestlers', 'slug')->ignore($this->wrestler->id)],
             'hometown' => ['required', 'string'],
             'feet' => ['required', 'integer'],
             'inches' => ['required', 'integer', 'max:11'],
             'weight' => ['required', 'integer'],
             'signature_move' => ['required', 'string'],
-            'hired_at' => ['required', 'string', 'date'],
+            'hired_at' => ['required', 'string', 'date', new BeforeFirstMatchDate($this->wrestler)],
         ];
     }
 }

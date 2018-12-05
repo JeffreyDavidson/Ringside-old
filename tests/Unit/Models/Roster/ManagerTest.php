@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\Unit\Models;
+namespace Tests\Unit\Models\Roster;
 
 use Carbon\Carbon;
-use App\Models\Manager;
+use App\Models\Roster\Manager;
 use Tests\IntegrationTestCase;
 
 class ManagerTest extends IntegrationTestCase

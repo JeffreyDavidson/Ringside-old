@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Roster\Wrestlers;
+namespace App\Http\Controllers\Roster\Wrestler;
 
-use App\Models\Wrestler;
+use App\Models\Roster\Wrestler;
 use App\Http\Controllers\Controller;
 
 class InactiveWrestlersController extends Controller

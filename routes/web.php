@@ -21,7 +21,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::view('/', 'dashboard')->name('dashboard');
 
     Route::group(['prefix' => 'roster', 'namespace' => 'Roster'], function () {
-        Route::group(['prefix' => 'wrestlers', 'namespace' => 'Wrestlers'], function () {
+        Route::group(['prefix' => 'wrestlers', 'namespace' => 'Wrestler'], function () {
             Route::get('active', 'ActiveWrestlersController@index')->name('active-wrestlers.index');
             Route::get('inactive', 'InactiveWrestlersController@index')->name('inactive-wrestlers.index');
             Route::get('retired', 'RetiredWrestlersController@index')->name('retired-wrestlers.index');
@@ -35,12 +35,12 @@ Route::group(['middleware' => 'auth'], function () {
             Route::delete('retired/{wrestler}/unretire', 'RetiredWrestlersController@destroy')->name('retired-wrestlers.unretire');
         });
 
-        Route::group(['prefix' => 'tagteams', 'namespace' => 'TagTeams'], function () {
+        Route::group(['prefix' => 'tagteams', 'namespace' => 'TagTeam'], function () {
+            Route::get('active', 'ActiveTagTeamsController@index')->name('active-tagteams.index');
             Route::resource('/', 'TagTeamsController')
                 ->except('index')
                 ->parameters(['' => 'tagteam'])
                 ->names(['create' => 'tagteams.create', 'store' => 'tagteams.store', 'edit' => 'tagteams.edit', 'update' => 'tagteams.update', 'show' => 'tagteams.show', 'destroy' => 'tagteams.destroy']);
-
         });
     });
 

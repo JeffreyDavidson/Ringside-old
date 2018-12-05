@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Presenters\ChampionshipPresenter;
 use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
@@ -33,5 +34,5 @@ class Championship extends Pivot
      *
      * @var string
      */
-    protected $presenter = 'App\Presenters\ChampionshipPresenter';
+    protected $presenter = ChampionshipPresenter::class;
 }

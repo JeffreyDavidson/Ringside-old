@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Wrestler;
+use App\Models\Roster\Wrestler;
 use Faker\Generator as Faker;
 
 $factory->define(Wrestler::class, function (Faker $faker) {

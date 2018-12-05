@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Presenters;
+namespace App\Presenters\Roster;
 
 use Laracodes\Presenter\Presenter;
 
