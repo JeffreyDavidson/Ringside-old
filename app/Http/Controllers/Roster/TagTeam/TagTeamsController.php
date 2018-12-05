@@ -49,6 +49,6 @@ class TagTeamsController extends Controller
 
     public function update(UpdateTagTeamFormRequest $request)
     {
-        dd('tetsing');
+
     }
 }

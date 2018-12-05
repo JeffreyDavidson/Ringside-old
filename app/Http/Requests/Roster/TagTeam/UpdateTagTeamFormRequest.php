@@ -15,7 +15,6 @@ class UpdateTagTeamFormRequest extends FormRequest
     {
         $tagteam = $this->route('tagteam');
 
-        dd($tagteam);
         return $this->user()->can('update', $tagteam);
     }
 

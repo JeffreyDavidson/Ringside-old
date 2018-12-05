@@ -21,7 +21,6 @@ class EditTagTeamTest extends IntegrationTestCase
         $tagteam = factory(TagTeam::class)->create();
         
         $response = $this->actingAs($this->authorizedUser)->get(route('tagteams.edit', $tagteam->id));
-        dd($response);
 
         $response->assertSuccessful();
         $response->assertViewIs('tagteams.edit');

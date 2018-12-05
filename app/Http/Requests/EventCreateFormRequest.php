@@ -28,7 +28,6 @@ class EventCreateFormRequest extends FormRequest
      */
     public function rules()
     {
-        // dd($this->all());
         return [
             'name' => ['required', 'string', 'unique:events,name'],
             'slug' => ['required', 'string', 'unique:events,slug'],

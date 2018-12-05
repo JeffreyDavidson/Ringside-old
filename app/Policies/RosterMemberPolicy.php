@@ -51,7 +51,6 @@ class RosterMemberPolicy
      */
     public function update(User $user)
     {
-        dd($user);
         return $user->hasPermission('update-roster-member');
     }
 
