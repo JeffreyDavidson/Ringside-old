@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Roster\TagTeam;
 
+use Illuminate\Http\Request;
 use App\Models\Roster\TagTeam;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Roster\TagTeam\StoreTagTeamFormRequest;
@@ -9,8 +10,10 @@ use App\Http\Requests\Roster\TagTeam\UpdateTagTeamFormRequest;
 
 class TagTeamsController extends Controller
 {
-    /** @var string */
-    protected $authorizeResource = TagTeam::class;
+    public function __construct()
+    {
+        $this->authorizeResource(TagTeam::class, 'tagteam');
+    }
 
     /**
      * Show the form for creating a new tag team.
@@ -44,11 +47,21 @@ class TagTeamsController extends Controller
     public function edit(TagTeam $tagteam)
     {
         return view('tagteams.edit', compact('tagteam'));
-
     }
 
-    public function update(UpdateTagTeamFormRequest $request)
+    public function update(UpdateTagTeamFormRequest $request, TagTeam $tagteam)
     {
+        $tagteam->update($request->all());
+        $tagteam->syncWrestlers($request->get('wrestlers'));
 
+        if ($tagteam->isRetired()) {
+            return redirect()->route('retired-tagteams.index');
+        }
+
+        if (!$tagteam->isActive()) {
+            return redirect()->route('inactive-tagteams.index');
+        }
+
+        return redirect()->route('active-tagteams.index');
     }
 }

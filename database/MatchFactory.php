@@ -3,11 +3,11 @@
 use Carbon\Carbon;
 use App\Models\Event;
 use App\Models\Match;
-use App\Models\Roster\Referee;
-use App\Models\Roster\Wrestler;
 use App\Models\MatchType;
 use App\Models\Stipulation;
 use App\Models\Championship;
+use App\Models\Roster\Referee;
+use App\Models\Roster\Wrestler;
 
 class MatchFactory
 {
@@ -15,7 +15,7 @@ class MatchFactory
     public $match_type_id = null;
     public $stipulation_id = null;
     public $champion = null;
-    public $wrestlers;
+    public $competitors;
     public $titles;
     public $referees;
     public $states = null;
@@ -41,7 +41,7 @@ class MatchFactory
             'stipulation_id' => $this->stipulation_id ?? null,
         ]);
 
-        $this->addWrestlersForMatch($match);
+        $this->addCompetitorsForMatch($match);
 
         if ($this->titles->isNotEmpty()) {
             $match->addTitles($this->titles->pluck('id'));
@@ -96,18 +96,18 @@ class MatchFactory
         return $this;
     }
 
-    public function withWrestlers($wrestlers)
+    public function withCompetitors($competitors)
     {
-        $merged = $this->wrestlers->merge($wrestlers);
+        $merged = $this->competitors->merge($competitors);
 
-        $this->wrestlers = $merged;
+        $this->competitors = $merged;
 
         return $this;
     }
 
-    public function withWrestler(Wrestler $wrestler)
+    public function withCompetitor($competitor)
     {
-        $this->wrestlers->push($wrestler);
+        $this->competitors->push($competitor);
 
         return $this;
     }
@@ -129,15 +129,15 @@ class MatchFactory
         return $this;
     }
 
-    public function addWrestlersForMatch($match)
+    public function addCompetitorsForMatch($match)
     {
-        if ($this->wrestlers->isEmpty()) {
-            $numWrestlersToAddToMatch = $match->type->total_competitors;
+        if ($this->competitors->isEmpty()) {
+            $numCompetitorsToAddToMatch = $match->type->total_competitors;
         } else {
-            $numWrestlersToAddToMatch = $match->type->total_competitors - $this->wrestlers->count();
+            $numCompetitorsToAddToMatch = $match->type->total_competitors - $this->competitors->count();
         }
 
-        $wrestlersForMatch = factory(Wrestler::class, (int) $numWrestlersToAddToMatch)->create(['hired_at' => $match->date->copy()->subMonths(2)]);
+        $competitorsForMatch = factory(Wrestler::class, (int) $numWrestlersToAddToMatch)->create(['hired_at' => $match->date->copy()->subMonths(2)]);
         $concatenatedWrestlers = $this->wrestlers->merge($wrestlersForMatch);
         $this->wrestlers = $concatenatedWrestlers;
 
@@ -184,7 +184,7 @@ class MatchFactory
 
     public function populateDefaults()
     {
-        $this->wrestlers = collect();
+        $this->competitors = collect();
         $this->titles = collect();
         $this->referees = collect();
     }

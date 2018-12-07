@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Roster\TagTeam;
 
-use Tests\TestCase;
 use App\Models\Roster\TagTeam;
 use Tests\IntegrationTestCase;
 
@@ -28,7 +27,7 @@ class EditTagTeamTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function users_who_dont_have_permission_cannot_view_the_edit_tagteam_page()
+    public function users_who_dont_have_permission_cannot_view_the_edit_tag_team_page()
     {
         $tagteam = factory(TagTeam::class)->create();
         
@@ -38,11 +37,10 @@ class EditTagTeamTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function guests_cannot_view_the_create_tagteam_page()
+    public function guests_cannot_view_the_create_tag_team_page()
     {
         $tagteam = factory(TagTeam::class)->create();
 
-        
         $response = $this->get(route('tagteams.create', $tagteam->id));
 
         $response->assertStatus(302);

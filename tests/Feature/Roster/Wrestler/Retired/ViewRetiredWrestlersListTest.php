@@ -16,6 +16,7 @@ class ViewRetiredWrestlersListTest extends IntegrationTestCase
     /** @test */
     public function users_who_have_permission_can_view_the_list_of_retired_wrestlers()
     {
+        $this->withoutExceptionHandling();
         $response = $this->actingAs($this->authorizedUser)->get(route('retired-wrestlers.index'));
 
         $response->assertSuccessful();
