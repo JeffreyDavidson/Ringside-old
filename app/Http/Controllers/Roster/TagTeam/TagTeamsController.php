@@ -10,10 +10,8 @@ use App\Http\Requests\Roster\TagTeam\UpdateTagTeamFormRequest;
 
 class TagTeamsController extends Controller
 {
-    public function __construct()
-    {
-        $this->authorizeResource(TagTeam::class, 'tagteam');
-    }
+    
+    protected $authorizeResource = [TagTeam::class, 'tagteam'];
 
     /**
      * Show the form for creating a new tag team.
