@@ -8,7 +8,7 @@ use App\Rules\QualifiedForMatch;
 use App\Rules\EnsureCorrectCompetitorCount;
 use Illuminate\Foundation\Http\FormRequest;
 
-class MatchCreateFormRequest extends FormRequest
+class StoreMatchFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -38,8 +38,8 @@ class MatchCreateFormRequest extends FormRequest
             'referees' => ['required', 'array'],
             'referees.*' => ['distinct', 'integer', Rule::exists('referees', 'id')],
             'preview' => ['required', 'string'],
-            'wrestlers' => ['required', 'array'],
-            'wrestlers.*.*' => [
+            'competitors' => ['required', 'array'],
+            'competitors.*.*' => [
                 'integer',
                 'exists:wrestlers,id',
                 'distinct',

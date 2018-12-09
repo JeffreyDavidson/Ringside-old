@@ -35,4 +35,24 @@ class Championship extends Pivot
      * @var string
      */
     protected $presenter = ChampionshipPresenter::class;
+
+    /**
+     * A championship can belong to many wrestlers.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphedByMany
+     */
+    public function wrestlers()
+    {
+        return $this->morphedByMany(Wrestler::class, 'championships');
+    }
+
+    /**
+     * A championship can belong to many tag teams.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphedByMany
+     */
+    public function tagteams()
+    {
+        return $this->morphedByMany(TagTeam::class, 'championships');
+    }
 }

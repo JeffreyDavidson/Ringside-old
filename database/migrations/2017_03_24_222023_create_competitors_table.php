@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMatchWrestlerTable extends Migration
+class CreateCompetitorsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,14 @@ class CreateMatchWrestlerTable extends Migration
      */
     public function up()
     {
-        Schema::create('match_wrestler', function (Blueprint $table) {
+        Schema::create('competitors', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('match_id')->index();
-            $table->unsignedInteger('wrestler_id')->index();
+            $table->morphs('competitor');
             $table->integer('side_number');
 
-            $table->unique(['match_id', 'wrestler_id']);
+            $table->unique(['match_id', 'competitor_id']);
             $table->foreign('match_id')->references('id')->on('matches');
-            $table->foreign('wrestler_id')->references('id')->on('wrestlers');
         });
     }
 
@@ -32,6 +31,6 @@ class CreateMatchWrestlerTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('match_wrestler');
+        Schema::dropIfExists('match_competitor');
     }
 }

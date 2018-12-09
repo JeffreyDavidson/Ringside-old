@@ -67,7 +67,7 @@ class UpdateWrestlerTest extends IntegrationTestCase
     {
         $wrestler = factory(Wrestler::class)->create($this->oldAttributes(['hired_at' => '2017-09-10']));
         $event = factory(Event::class)->create(['date' => '2017-10-11']);
-        $match = MatchFactory::forEvent($event)->withWrestler($wrestler)->create();
+        $match = MatchFactory::forEvent($event)->withCompetitor($wrestler)->create();
 
         $response = $this->actingAs($this->authorizedUser)->from(route('wrestlers.edit', $wrestler->id))->patch(route('wrestlers.update', $wrestler->id), $this->validParams([
             'hired_at' => '2017-10-01',
@@ -456,7 +456,7 @@ class UpdateWrestlerTest extends IntegrationTestCase
     {
         $wrestler = factory(Wrestler::class)->create($this->oldAttributes());
         $event = factory(Event::class)->create(['date' => '2017-11-09']);
-        $match = MatchFactory::forEvent($event)->withWrestler($wrestler)->create();
+        $match = MatchFactory::forEvent($event)->withCompetitor($wrestler)->create();
 
         $response = $this->actingAs($this->authorizedUser)->from(route('wrestlers.edit', $wrestler->id))->patch(route('wrestlers.update', $wrestler->id), $this->validParams([
             'hired_at' => '2017-11-10',

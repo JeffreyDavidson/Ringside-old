@@ -112,9 +112,9 @@ class MatchFactory
         return $this;
     }
 
-    public function withChampion(Wrestler $wrestler)
+    public function withChampion(Competitor $competitor)
     {
-        $this->titles->each(function ($title, $key) use ($wrestler) {
+        $this->titles->each(function ($title, $key) use ($competitor) {
             factory(Championship::class)->create([
                 'wrestler_id' => $wrestler->id,
                 'title_id' => $title->id,
@@ -122,28 +122,22 @@ class MatchFactory
             ]);
         });
 
-        $concatenated = $this->wrestlers->concat([$wrestler]);
+        $concatenated = $this->competitors->concat([$wrestler]);
 
-        $this->wrestlers = $concatenated;
+        $this->competitors = $concatenated;
 
         return $this;
     }
 
     public function addCompetitorsForMatch($match)
     {
-        if ($this->competitors->isEmpty()) {
-            $numCompetitorsToAddToMatch = $match->type->total_competitors;
-        } else {
-            $numCompetitorsToAddToMatch = $match->type->total_competitors - $this->competitors->count();
-        }
+        $numCompetitorsToAddToMatch = $this->calculateCompetitorCount();
 
-        $competitorsForMatch = factory(Wrestler::class, (int) $numWrestlersToAddToMatch)->create(['hired_at' => $match->date->copy()->subMonths(2)]);
-        $concatenatedWrestlers = $this->wrestlers->merge($wrestlersForMatch);
-        $this->wrestlers = $concatenatedWrestlers;
+        $this->collectCompetitors($numCompetitorsToAddToMatch);
 
-        $splitWrestlers = $this->wrestlers->pluck('id')->split($match->type->number_of_sides)->flatten(1);
+        $splitCompetitors = $this->competitors->pluck('id')->split($match->type->number_of_sides)->flatten(1);
 
-        $match->addWrestlers($splitWrestlers);
+        $match->addCompetitors($splitCompetitors);
     }
 
     /**
@@ -180,6 +174,18 @@ class MatchFactory
         $this->eventDate = Carbon::yesterday();
 
         return $this;
+    }
+
+    public function calculateCompetitorCount()
+    {
+        return $this->competitors->isEmpty() ? $match->type->total_competitors : $match->type->total_competitors - $this->competitors->count();
+    }
+
+    public function collectCompetitors($numCompetitorsToAddToMatch)
+    {
+        $competitorsForMatch = factory(Wrestler::class, (int)$numCompetitorsToAddToMatch)->create(['hired_at' => $match->date->copy()->subMonths(2)]);
+        $concatenatedCompetitors = $this->competitors->merge($competitorsForMatch);
+        $this->competitors = $concatenatedCompetitors;
     }
 
     public function populateDefaults()

@@ -3,8 +3,9 @@
 namespace App\Models\Roster;
 
 use Carbon\Carbon;
+use App\Interfaces\Competitor;
 
-class TagTeam extends RosterMember
+class TagTeam extends RosterMember implements Competitor
 {
     /**
      * The attributes that are mass assignable.

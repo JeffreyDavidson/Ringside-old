@@ -5,10 +5,10 @@ namespace Tests\Unit\Presenters;
 use stdClass;
 use App\Models\Event;
 use App\Models\Match;
-use App\Models\Roster\Referee;
-use App\Models\Roster\Wrestler;
 use App\Models\Stipulation;
+use App\Models\Roster\Referee;
 use Tests\IntegrationTestCase;
+use App\Models\Roster\Wrestler;
 
 class MatchPresenterTest extends IntegrationTestCase
 {
@@ -19,12 +19,12 @@ class MatchPresenterTest extends IntegrationTestCase
         $wrestlerB = factory(Wrestler::class)->create(['name' => 'Wrestler B']);
         $match = factory(Match::class)->create();
         
-        $match->addWrestlers([
+        $match->addCompetitors([
             0 => [$wrestlerA->id],
             1 => [$wrestlerB->id]
         ]);
 
-        $this->assertEquals('Wrestler A vs. Wrestler B', $match->present()->wrestlers);
+        $this->assertEquals('Wrestler A vs. Wrestler B', $match->present()->competitors);
     }
 
     /** @test */
@@ -36,12 +36,12 @@ class MatchPresenterTest extends IntegrationTestCase
         $wrestlerD = factory(Wrestler::class)->create(['name' => 'Wrestler D']);
         $match = factory(Match::class)->create();
 
-        $match->addWrestlers([
+        $match->addCompetitors([
             0 => [$wrestlerA->id, $wrestlerC->id],
             1 => [$wrestlerB->id, $wrestlerD->id]
         ]);
 
-        $this->assertEquals('Wrestler A & Wrestler C vs. Wrestler B & Wrestler D', $match->present()->wrestlers);
+        $this->assertEquals('Wrestler A & Wrestler C vs. Wrestler B & Wrestler D', $match->present()->competitors);
     }
 
     /** @test */

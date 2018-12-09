@@ -245,9 +245,9 @@ class WrestlerTest extends IntegrationTestCase
     public function it_can_retrieve_a_wrestlers_scheduled_matches()
     {
         $wrestler = factory(Wrestler::class)->create();
-        $scheduledMatchA = MatchFactory::scheduled()->withWrestler($wrestler)->create();
-        $scheduledMatchB = MatchFactory::scheduled()->withWrestler($wrestler)->create();
-        $pastMatch = MatchFactory::past()->withWrestler($wrestler)->create();
+        $scheduledMatchA = MatchFactory::scheduled()->withCompetitor($wrestler)->create();
+        $scheduledMatchB = MatchFactory::scheduled()->withCompetitor($wrestler)->create();
+        $pastMatch = MatchFactory::past()->withCompetitor($wrestler)->create();
 
         $scheduledMatches = $wrestler->scheduledMatches()->get();
 
@@ -268,9 +268,9 @@ class WrestlerTest extends IntegrationTestCase
     public function it_can_retrieve_a_wrestlers_past_matches()
     {
         $wrestler = factory(Wrestler::class)->create();
-        $pastMatchA = MatchFactory::past()->withWrestler($wrestler)->create();
-        $pastMatchB = MatchFactory::past()->withWrestler($wrestler)->create();
-        $scheduledMatch = MatchFactory::scheduled()->withWrestler($wrestler)->create();
+        $pastMatchA = MatchFactory::past()->withCompetitor($wrestler)->create();
+        $pastMatchB = MatchFactory::past()->withCompetitor($wrestler)->create();
+        $scheduledMatch = MatchFactory::scheduled()->withCompetitor($wrestler)->create();
 
         $pastMatches = $wrestler->pastMatches()->get();
 

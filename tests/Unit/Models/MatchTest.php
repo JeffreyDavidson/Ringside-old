@@ -5,10 +5,10 @@ namespace Tests\Unit\Models;
 use App\Models\Event;
 use App\Models\Match;
 use App\Models\Title;
-use App\Models\Roster\Referee;
-use App\Models\Roster\Wrestler;
 use App\Models\Stipulation;
+use App\Models\Roster\Referee;
 use Tests\IntegrationTestCase;
+use App\Models\Roster\Wrestler;
 
 class MatchTest extends IntegrationTestCase
 {
@@ -27,9 +27,9 @@ class MatchTest extends IntegrationTestCase
         $match = factory(Match::class)->create();
         $wrestler = factory(Wrestler::class)->create();
 
-        $match->addWrestler($wrestler, 1);
+        $match->addCompetitor($wrestler, 1);
 
-        $this->assertCount(1, $match->wrestlers);
+        $this->assertCount(1, $match->competitors);
     }
 
     /** @test */
@@ -39,9 +39,9 @@ class MatchTest extends IntegrationTestCase
         $wrestlerA = factory(Wrestler::class)->create();
         $wrestlerB = factory(Wrestler::class)->create();
 
-        $match->addWrestlers([[$wrestlerA->id], [$wrestlerB->id]]);
+        $match->addCompetitors([[$wrestlerA], [$wrestlerB]]);
 
-        $this->assertCount(2, $match->wrestlers);
+        $this->assertCount(2, $match->competitors);
     }
 
     /** @test */

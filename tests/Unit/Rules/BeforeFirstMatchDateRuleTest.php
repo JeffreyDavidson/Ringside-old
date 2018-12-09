@@ -16,7 +16,7 @@ class BeforeFirstMatchDateRuleTest extends IntegrationTestCase
     {
         $wrestler = factory(Wrestler::class)->create(['hired_at' => '2017-10-07']);
         $event = factory(Event::class)->create(['date' => '2017-10-10']);
-        $match = MatchFactory::forEvent($event)->withWrestler($wrestler)->create();
+        $match = MatchFactory::forEvent($event)->withCompetitor($wrestler)->create();
 
         $validator = new BeforeFirstMatchDate($wrestler);
 
@@ -28,7 +28,7 @@ class BeforeFirstMatchDateRuleTest extends IntegrationTestCase
     {
         $wrestler = factory(Wrestler::class)->create(['hired_at' => '2017-10-07']);
         $event = factory(Event::class)->create(['date' => '2017-10-12']);
-        $match = MatchFactory::forEvent($event)->withWrestler($wrestler)->create();
+        $match = MatchFactory::forEvent($event)->withCompetitor($wrestler)->create();
 
         $validator = new BeforeFirstMatchDate($wrestler);
 
