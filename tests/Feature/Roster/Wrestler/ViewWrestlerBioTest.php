@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Roster\Wrestler;
 
-use App\Models\Roster\Wrestler;
 use Tests\IntegrationTestCase;
+use App\Models\Roster\Wrestler;
 
 class ViewWrestlerBioTest extends IntegrationTestCase
 {
@@ -17,6 +17,7 @@ class ViewWrestlerBioTest extends IntegrationTestCase
     /** @test */
     public function users_who_have_permission_can_view_a_wrestler_bio()
     {
+        $this->withoutExceptionHandling();
         $wrestler = factory(Wrestler::class)->create([
             'name' => 'Wrestler 1',
             'slug' => 'wrestler1',

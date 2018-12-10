@@ -116,13 +116,13 @@ class MatchFactory
     {
         $this->titles->each(function ($title, $key) use ($competitor) {
             factory(Championship::class)->create([
-                'wrestler_id' => $wrestler->id,
+                'champion_id' => $competitor->id,
                 'title_id' => $title->id,
                 'won_on' => $title->introduced_at->copy()->subMonths(4),
             ]);
         });
 
-        $concatenated = $this->competitors->concat([$wrestler]);
+        $concatenated = $this->competitors->concat([$competitor]);
 
         $this->competitors = $concatenated;
 

@@ -24,6 +24,14 @@ class TagTeam extends RosterMember implements Competitor
         return $this->belongsToMany(Wrestler::class);
     }
 
+    /**
+     * Get all of the championships held by the wrestler.
+     */
+    public function championships()
+    {
+        return $this->morphToMany(Championship::class, 'champion')->withPivot('id', 'won_on', 'lost_on', 'successful_defenses');
+    }
+
     public function getCurrentWrestlersAttribute()
     {
         return $this->wrestlers()->wherePivot('left_on', null)->limit(2)->get();

@@ -3,6 +3,7 @@
 namespace App\Models\Roster;
 
 use App\Models\Match;
+use App\Models\Championship;
 use App\Interfaces\Competitor;
 use App\Presenters\Roster\WrestlerPresenter;
 
@@ -32,10 +33,10 @@ class Wrestler extends RosterMember implements Competitor
     }
 
     /**
-     * Get all of the matches for the wrestler.
+     * Get all of the championships held by the wrestler.
      */
     public function championships()
     {
-        return $this->morphToMany(Championship::class, 'champion');
+        return $this->morphToMany(Championship::class, 'championships')->withPivot('id', 'won_on', 'lost_on', 'successful_defenses');
     }
 }

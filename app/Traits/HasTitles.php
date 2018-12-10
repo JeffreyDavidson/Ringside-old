@@ -13,25 +13,13 @@ use App\Exceptions\ModelNotTitleChampionException;
 trait HasTitles
 {
     /**
-     * All of the titles a model has held or currently holds.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function titles()
-    {
-        return $this->belongsToMany(Title::class, 'championships')
-            ->using(Championship::class)
-            ->withPivot('id', 'won_on', 'lost_on', 'successful_defenses');
-    }
-
-    /**
      * The titles that a model has held in the past.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function pastTitlesHeld()
     {
-        return $this->titles()->wherePivot('lost_on', '!=', null);
+        return $this->championships()->wherePivot('lost_on', '!=', null);
     }
 
     /**
@@ -51,7 +39,7 @@ trait HasTitles
      */
     public function currentTitlesHeld()
     {
-        return $this->titles()->wherePivot('lost_on', null);
+        return $this->championships()->wherePivot('lost_on', null);
     }
 
     /**
@@ -90,7 +78,7 @@ trait HasTitles
             throw new ModelIsTitleChampionException;
         }
 
-        $this->titles()->attach($title->id, ['won_on' => $date]);
+        $this->championships()->attach($title->id, ['won_on' => $date]);
 
         return $this;
     }
@@ -110,7 +98,7 @@ trait HasTitles
             throw new ModelNotTitleChampionException;
         }
 
-        $this->titles()->updateExistingPivot($title->id, ['lost_on' => $date]);
+        $this->championships()->updateExistingPivot($title->id, ['lost_on' => $date]);
 
         return $this;
     }

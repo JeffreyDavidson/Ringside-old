@@ -4,8 +4,8 @@ namespace App\Models;
 
 use App\Traits\HasStatus;
 use App\Traits\HasMatches;
+use App\Models\Championship;
 use App\Traits\HasRetirements;
-use App\Models\Roster\Wrestler;
 use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\ModelIsActiveException;
 use Laracodes\Presenter\Traits\Presentable;
@@ -43,11 +43,11 @@ class Title extends Model
     /**
      * A title can have many champions.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
      */
     public function champions()
     {
-        return $this->belongsToMany(Wrestler::class, 'championships')->using(Championship::class)->withPivot('id', 'won_on', 'lost_on', 'successful_defenses');
+        return $this->morphToMany(Championship::class, 'championships')->withPivot('id', 'won_on', 'lost_on', 'successful_defenses');
     }
 
     /**

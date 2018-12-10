@@ -2,15 +2,16 @@
 
 use Carbon\Carbon;
 use App\Models\Title;
-use App\Models\Roster\Wrestler;
 use App\Models\Championship;
 use Faker\Generator as Faker;
+use App\Models\Roster\Wrestler;
 
 $factory->define(Championship::class, function (Faker $faker) {
     return [
-        'wrestler_id' => function () {
+        'champion_id' => function () {
             return factory(Wrestler::class)->create()->id;
         },
+        'champion_type' => 'App\Models\Wrestler',
         'title_id' => function () {
             return factory(Title::class)->create()->id;
         },

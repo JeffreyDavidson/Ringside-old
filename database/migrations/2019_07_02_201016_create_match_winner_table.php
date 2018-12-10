@@ -16,11 +16,10 @@ class CreateMatchWinnerTable extends Migration
         Schema::create('match_winner', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('match_id')->index();
-            $table->unsignedInteger('wrestler_id')->index();
+            $table->morphs('loser');
 
-            $table->unique(['match_id', 'wrestler_id']);
+            $table->unique(['match_id', 'loser_id', 'loser_type']);
             $table->foreign('match_id')->references('id')->on('matches');
-            $table->foreign('wrestler_id')->references('id')->on('wrestlers');
         });
     }
 

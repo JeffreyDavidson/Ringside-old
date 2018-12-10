@@ -6,10 +6,10 @@ use Carbon\Carbon;
 use App\Models\Event;
 use App\Models\Match;
 use App\Models\Title;
-use App\Models\Roster\Wrestler;
 use Facades\MatchFactory;
 use App\Models\Championship;
 use Tests\IntegrationTestCase;
+use App\Models\Roster\Wrestler;
 
 class TitleTest extends IntegrationTestCase
 {
@@ -34,7 +34,7 @@ class TitleTest extends IntegrationTestCase
     {
         $title = factory(Title::class)->create(['is_active' => true]);
 
-        $this->assertTrue($title->is_active);
+        $this->assertTrue($title->isActive());
     }
 
     /** @test */
@@ -59,7 +59,7 @@ class TitleTest extends IntegrationTestCase
     {
         $title = factory(Title::class)->create();
         $wrestler = factory(Wrestler::class)->create();
-        factory(Championship::class)->create(['title_id' => $title->id, 'wrestler_id' => $wrestler->id]);
+        factory(Championship::class)->create(['title_id' => $title->id, 'champion_id' => $wrestler->id]);
 
         $this->assertTrue($title->currentChampion->is($wrestler));
     }
@@ -70,8 +70,8 @@ class TitleTest extends IntegrationTestCase
         $title = factory(Title::class)->create();
         $currentChampion = factory(Wrestler::class)->create();
         $newChampion = factory(Wrestler::class)->create();
-        factory(Championship::class)->create(['title_id' => $title->id, 'wrestler_id' => $currentChampion->id, 'won_on' => Carbon::parse('2018-10-01'), 'lost_on' => Carbon::parse('2018-10-08')]);
-        factory(Championship::class)->create(['title_id' => $title->id, 'wrestler_id' => $newChampion->id, 'won_on' => Carbon::parse('2018-10-08')]);
+        factory(Championship::class)->create(['title_id' => $title->id, 'champion_id' => $currentChampion->id, 'won_on' => Carbon::parse('2018-10-01'), 'lost_on' => Carbon::parse('2018-10-08')]);
+        factory(Championship::class)->create(['title_id' => $title->id, 'champion_id' => $newChampion->id, 'won_on' => Carbon::parse('2018-10-08')]);
 
         $this->assertTrue($title->fresh()->previousChampion->is($currentChampion));
         $this->assertTrue($title->fresh()->currentChampion->is($newChampion));

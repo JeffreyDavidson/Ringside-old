@@ -2,8 +2,8 @@
 
 use Carbon\Carbon;
 use App\Models\Title;
-use App\Models\Roster\Wrestler;
 use App\Models\Championship;
+use App\Models\Roster\Wrestler;
 
 class ChampionshipFactory
 {
@@ -43,7 +43,8 @@ class ChampionshipFactory
         }
 
         $champion = factory(Championship::class)->states($this->states)->create([
-            'wrestler_id' => $this->wrestler->id ?? factory(Wrestler::class)->create()->id,
+            'champion_id' => $this->wrestler->id ?? factory(Wrestler::class)->create()->id,
+            'champion_type' => 'App\Models\Wrestler',
             'title_id' => $this->title->id,
             'won_on' => $this->wonOn,
             'lost_on' => $this->lostOn,

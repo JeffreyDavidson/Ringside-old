@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use App\Presenters\ChampionshipPresenter;
 use Laracodes\Presenter\Traits\Presentable;
-use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class Championship extends Pivot
+class Championship extends Model
 {
     use Presentable;
 
