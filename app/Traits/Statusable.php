@@ -10,7 +10,7 @@ use App\Exceptions\ModelIsInactiveException;
 /**
  * @mixin \Eloquent
  */
-trait HasStatus
+trait Statusable
 {
     /**
      * Scope a query to only include models that are currently active.

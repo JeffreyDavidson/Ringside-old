@@ -3,9 +3,9 @@
 namespace App\Models\Roster;
 
 use App\Traits\Hireable;
-use App\Traits\HasStatus;
-use App\Traits\HasRetirements;
-use App\Traits\HasSuspensions;
+use App\Traits\Retirable;
+use App\Traits\Statusable;
+use App\Traits\Suspendable;
 use Illuminate\Database\Eloquent\Model;
 use App\Presenters\Roster\RefereePresenter;
 use Laracodes\Presenter\Traits\Presentable;
@@ -13,16 +13,24 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Referee extends Model
 {
-    use Hireable;
-    use HasStatus;
-    use Presentable;
-    use HasRetirements;
-    use HasSuspensions;
-    use SoftDeletes;
+    use Hireable, Statusable, Retirable, Suspendable, Presentable, SoftDeletes;
 
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'hired_at',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
     protected $casts = [
         'is_active' => 'boolean',
-        'hired_at' => 'datetime',
     ];
 
     /**
@@ -39,7 +47,12 @@ class Referee extends Model
      */
     protected $presenter = RefereePresenter::class;
 
-    public function getNameAttribute()
+    /**
+     * Get the referee's full name.
+     *
+     * @return string
+     */
+    public function getFullNameAttribute(): string
     {
         return "{$this->first_name} {$this->last_name}";
     }

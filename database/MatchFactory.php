@@ -131,9 +131,9 @@ class MatchFactory
 
     public function addCompetitorsForMatch($match)
     {
-        $numCompetitorsToAddToMatch = $this->calculateCompetitorCount();
+        $numCompetitorsToAddToMatch = $this->calculateCompetitorCount($match);
 
-        $this->collectCompetitors($numCompetitorsToAddToMatch);
+        $this->collectCompetitors($numCompetitorsToAddToMatch, $match);
 
         $splitCompetitors = $this->competitors->pluck('id')->split($match->type->number_of_sides)->flatten(1);
 
@@ -176,12 +176,12 @@ class MatchFactory
         return $this;
     }
 
-    public function calculateCompetitorCount()
+    public function calculateCompetitorCount($match)
     {
         return $this->competitors->isEmpty() ? $match->type->total_competitors : $match->type->total_competitors - $this->competitors->count();
     }
 
-    public function collectCompetitors($numCompetitorsToAddToMatch)
+    public function collectCompetitors($numCompetitorsToAddToMatch, $match)
     {
         $competitorsForMatch = factory(Wrestler::class, (int)$numCompetitorsToAddToMatch)->create(['hired_at' => $match->date->copy()->subMonths(2)]);
         $concatenatedCompetitors = $this->competitors->merge($competitorsForMatch);

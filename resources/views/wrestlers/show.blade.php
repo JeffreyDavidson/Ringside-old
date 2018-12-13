@@ -23,7 +23,7 @@
     @if ($wrestler->isCurrentlyAChampion())
         <h2>Current Titles</h2>
         <ul>
-            @foreach ($wrestler->currentTitlesHeld() as $title)
+            @foreach ($wrestler->currentTitlesHeld as $title)
                 <li>{{ $title->name }}</li>
             @endforeach
         </ul>
@@ -32,7 +32,7 @@
     @if ($wrestler->hasCurrentManagers())
         <h2>Current Managers</h2>
         <ul>
-            @foreach ($wrestler->currentManagers() as $manager)
+            @foreach ($wrestler->currentManagers as $manager)
                 <li>{{ $manager->present()->fullName() }}</li>
             @endforeach
         </ul>
@@ -40,7 +40,7 @@
 
     <h2>Past Titles Held</h2>
     <ul>
-        @if ($wrestler->titles->isNotEmpty())
+        @if ($wrestler->championships->isNotEmpty())
             @foreach ($wrestler->pastTitlesHeld->groupByTitle() as $title)
                 <li>{{ "{$titles->first()->title->name} ({$titles->count()}x)" }}</li>    
             @endforeach

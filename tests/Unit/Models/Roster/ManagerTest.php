@@ -3,234 +3,107 @@
 namespace Tests\Unit\Models\Roster;
 
 use Carbon\Carbon;
+use App\Traits\Hireable;
+use App\Traits\Retirable;
+use App\Traits\Statusable;
+use App\Traits\Suspendable;
 use App\Models\Roster\Manager;
 use Tests\IntegrationTestCase;
+use App\Presenters\Roster\ManagerPresenter;
+use Laracodes\Presenter\Traits\Presentable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ManagerTest extends IntegrationTestCase
 {
     /** @test */
-    public function it_can_get_managers_hired_before_a_certain_date()
+    public function a_manager_has_a_first_name()
     {
-        $managerA = factory(Manager::class)->create(['hired_at' => Carbon::parse('2016-12-31')]);
-        $managerB = factory(Manager::class)->create(['hired_at' => Carbon::parse('2014-12-31')]);
-        $managerC = factory(Manager::class)->create(['hired_at' => Carbon::parse('2017-01-01')]);
+        $manager = factory(Manager::class)->create(['first_name' => 'John']);
 
-        $hiredManagers = Manager::hiredBefore(Carbon::parse('2017-01-01'))->get();
-
-        $this->assertTrue($hiredManagers->contains($managerA));
-        $this->assertTrue($hiredManagers->contains($managerB));
-        $this->assertFalse($hiredManagers->contains($managerC));
+        $this->assertEquals('John', $manager->first_name);
     }
 
     /** @test */
-    public function managers_are_marked_as_active_depending_on_hired_date()
+    public function a_manager_has_a_last_name()
     {
-        $managerA = factory(Manager::class)->create(['hired_at' => Carbon::today()->subDays(2)]);
-        $managerB = factory(Manager::class)->create(['hired_at' => Carbon::today()]);
-        $managerC = factory(Manager::class)->create(['hired_at' => Carbon::today()->addDays(2)]);
+        $manager = factory(Manager::class)->create(['last_name' => 'Smith']);
 
-        $this->assertTrue($managerA->isActive());
-        $this->assertTrue($managerB->isActive());
-        $this->assertFalse($managerC->isActive());
+        $this->assertEquals('Smith', $manager->last_name);
     }
 
     /** @test */
-    public function it_can_get_active_managers()
+    public function a_manager_has_an_is_active_field()
     {
-        $managerA = factory(Manager::class)->states('active')->create();
-        $managerB = factory(Manager::class)->states('active')->create();
-        $managerC = factory(Manager::class)->states('inactive')->create();
+        $manager = factory(Manager::class)->create(['is_active' => true]);
 
-        $activeManagers = Manager::active()->get();
-
-        $this->assertTrue($activeManagers->contains($managerA));
-        $this->assertTrue($activeManagers->contains($managerB));
-        $this->assertFalse($activeManagers->contains($managerC));
+        $this->assertTrue($manager->is_active);
     }
 
     /** @test */
-    public function it_can_get_inactive_managers()
+    public function a_manager_has_a_hired_at_date()
     {
-        $managerA = factory(Manager::class)->states('inactive')->create();
-        $managerB = factory(Manager::class)->states('inactive')->create();
-        $managerC = factory(Manager::class)->states('active')->create();
+        $manager = factory(Manager::class)->create(['hired_at' => Carbon::parse('2018-10-01')]);
 
-        $inactiveManagers = Manager::inactive()->get();
-
-        $this->assertTrue($inactiveManagers->contains($managerA));
-        $this->assertTrue($inactiveManagers->contains($managerB));
-        $this->assertFalse($inactiveManagers->contains($managerC));
+        $this->assertEquals('2018-10-01', $manager->hired_at->toDateString());
     }
 
     /** @test */
-    public function an_inactive_manager_can_be_activated()
+    public function a_manager_uses_the_hireable_trait()
     {
-        $manager = factory(Manager::class)->states('inactive')->create();
-
-        $manager->activate();
-
-        $this->assertTrue($manager->isActive());
+        $this->assertTrue(in_array(Hireable::class, class_uses(Manager::class)));
     }
 
     /** @test */
-    public function an_active_manager_can_be_deactivated()
+    public function a_manager_uses_the_statusable_trait()
     {
-        $manager = factory(Manager::class)->states('active')->create();
-
-        $manager->deactivate();
-
-        $this->assertFalse($manager->isActive());
-    }
-
-    /**
-     * @expectedException \App\Exceptions\ModelIsActiveException
-     *
-     * @test
-     */
-    public function an_active_manager_cannot_be_activated()
-    {
-        $manager = factory(Manager::class)->states('active')->create();
-
-        $manager->activate();
-    }
-
-    /**
-     * @expectedException \App\Exceptions\ModelIsInactiveException
-     *
-     * @test
-     */
-    public function an_inactive_manager_cannot_be_deactivated()
-    {
-        $manager = factory(Manager::class)->states('inactive')->create();
-
-        $manager->deactivate();
+        $this->assertTrue(in_array(Statusable::class, class_uses(Manager::class)));
     }
 
     /** @test */
-    public function an_active_manager_can_retire()
+    public function a_manager_uses_the_retirable_trait()
     {
-        $manager = factory(Manager::class)->states('active')->create();
-
-        $manager->retire();
-
-        $this->assertEquals(1, $manager->retirements->count());
-        $this->assertFalse($manager->isActive());
-        $this->assertTrue($manager->isRetired());
-        $this->assertNull($manager->retirements()->first()->ended_at);
+        $this->assertTrue(in_array(Retirable::class, class_uses(Manager::class)));
     }
 
     /** @test */
-    public function a_retired_manager_can_unretire()
+    public function a_manager_uses_the_suspendable_trait()
     {
-        $manager = factory(Manager::class)->states('retired')->create();
-
-        $manager->unretire();
-
-        $this->assertNotNull($manager->retirements()->first()->ended_at);
-        $this->assertTrue($manager->isActive());
-        $this->assertFalse($manager->isRetired());
+        $this->assertTrue(in_array(Suspendable::class, class_uses(Manager::class)));
     }
 
     /** @test */
-    public function it_can_get_retired_managers()
+    public function a_manager_uses_the_presentable_trait()
     {
-        $managerA = factory(Manager::class)->states('retired')->create();
-        $managerB = factory(Manager::class)->states('retired')->create();
-        $managerC = factory(Manager::class)->states('active')->create();
-
-        $retiredManagers = Manager::retired()->get();
-
-        $this->assertTrue($retiredManagers->contains($managerA));
-        $this->assertTrue($retiredManagers->contains($managerB));
-        $this->assertFalse($retiredManagers->contains($managerC));
-    }
-
-    /**
-     * @expectedException \App\Exceptions\ModelIsRetiredException
-     *
-     * @test
-     */
-    public function a_retired_manager_cannot_retire()
-    {
-        $manager = factory(Manager::class)->states('retired')->create();
-
-        $manager->retire();
-    }
-
-    /**
-     * @expectedException \App\Exceptions\ModelIsActiveException
-     *
-     * @test
-     */
-    public function an_active_manager_cannot_unretire()
-    {
-        $manager = factory(Manager::class)->states('active')->create();
-
-        $manager->unretire();
+        $this->assertTrue(in_array(Presentable::class, class_uses(Manager::class)));
     }
 
     /** @test */
-    public function a_manager_can_be_suspended()
+    public function a_manager_uses_the_soft_deletes_trait()
+    {
+        $this->assertTrue(in_array(SoftDeletes::class, class_uses(Manager::class)));
+    }
+
+    /** @test */
+    public function a_manager_uses_the_manager_presenter()
     {
         $manager = factory(Manager::class)->create();
 
-        $manager->suspend();
-
-        $this->assertEquals(1, $manager->suspensions->count());
-        $this->assertFalse($manager->isActive());
-        $this->assertNull($manager->suspensions()->first()->ended_at);
-        $this->assertTrue($manager->isSuspended());
+        $this->assertInstanceOf(ManagerPresenter::class, $manager->present());
     }
 
     /** @test */
-    public function a_suspended_manager_can_be_reinstated()
+    public function a_manager_hired_at_date_is_added_to_dates_array()
     {
-        $manager = factory(Manager::class)->states('suspended')->create();
+        $manager = factory(Manager::class)->create();
 
-        $manager->reinstate();
-
-        $this->assertNotNull($manager->suspensions->last()->ended_at);
-        $this->assertTrue($manager->isActive());
-        $this->assertFalse($manager->isSuspended());
-        $this->assertTrue($manager->hasPastSuspensions());
-        $this->assertEquals(1, $manager->pastSuspensions->count());
+        $this->assertTrue(in_array('hired_at', $manager->getDates()));
     }
 
     /** @test */
-    public function it_can_get_suspended_managers()
+    public function a_manager_is_active_field_is_boolean_type_and_added_to_casts_array()
     {
-        $managerA = factory(Manager::class)->states('suspended')->create();
-        $managerB = factory(Manager::class)->states('suspended')->create();
-        $managerC = factory(Manager::class)->states('active')->create();
+        $manager = factory(Manager::class)->create();
 
-        $suspendedManagers = Manager::suspended()->get();
-
-        $this->assertTrue($suspendedManagers->contains($managerA));
-        $this->assertTrue($suspendedManagers->contains($managerB));
-        $this->assertFalse($suspendedManagers->contains($managerC));
-    }
-
-    /**
-     * @expectedException \App\Exceptions\ModelIsSuspendedException
-     *
-     * @test
-     */
-    public function a_suspended_manager_cannot_be_suspended()
-    {
-        $manager = factory(Manager::class)->states('suspended')->create();
-
-        $manager->suspend();
-    }
-
-    /**
-     * @expectedException \App\Exceptions\ModelIsActiveException
-     *
-     * @test
-     */
-    public function an_active_manager_cannot_be_reinstated()
-    {
-        $manager = factory(Manager::class)->states('active')->create();
-
-        $manager->reinstate();
+        $this->assertTrue($manager->hasCast('is_active', 'boolean'));
     }
 }

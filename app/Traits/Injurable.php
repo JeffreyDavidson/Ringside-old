@@ -6,7 +6,7 @@ use App\Models\Injury;
 use App\Exceptions\ModelIsActiveException;
 use App\Exceptions\ModelIsInjuredException;
 
-trait HasInjuries
+trait Injurable
 {
     /**
      * A model can have many injuries.

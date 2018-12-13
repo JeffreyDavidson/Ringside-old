@@ -87,7 +87,7 @@ class Match extends Model
      */
     public function titles()
     {
-        return $this->belongsToMany(Title::class)->with('currentChampion');
+        return $this->belongsToMany(Title::class);
     }
 
     /**

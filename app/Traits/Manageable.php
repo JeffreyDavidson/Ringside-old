@@ -7,7 +7,7 @@ use App\Exceptions\ManagerNotHiredException;
 use App\Exceptions\ModelHasManagerException;
 use App\Exceptions\ModelIsInactiveException;
 
-trait HasManagers
+trait Manageable
 {
     /**
      * A model can have many managers.

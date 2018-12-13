@@ -3,234 +3,115 @@
 namespace Tests\Unit\Models\Roster;
 
 use Carbon\Carbon;
+use App\Traits\Hireable;
+use App\Traits\Retirable;
+use App\Traits\Statusable;
+use App\Traits\Suspendable;
 use App\Models\Roster\Referee;
 use Tests\IntegrationTestCase;
+use App\Presenters\Roster\RefereePresenter;
+use Laracodes\Presenter\Traits\Presentable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class RefereeTest extends IntegrationTestCase
 {
     /** @test */
-    public function it_can_get_referees_hired_before_a_certain_date()
+    public function a_referee_has_a_first_name()
     {
-        $refereeA = factory(Referee::class)->create(['hired_at' => Carbon::parse('2016-12-31')]);
-        $refereeB = factory(Referee::class)->create(['hired_at' => Carbon::parse('2014-12-31')]);
-        $refereeC = factory(Referee::class)->create(['hired_at' => Carbon::parse('2017-01-01')]);
+        $referee = factory(Referee::class)->create(['first_name' => 'John']);
 
-        $hiredReferees = Referee::hiredBefore(Carbon::parse('2017-01-01'))->get();
-
-        $this->assertTrue($hiredReferees->contains($refereeA));
-        $this->assertTrue($hiredReferees->contains($refereeB));
-        $this->assertFalse($hiredReferees->contains($refereeC));
+        $this->assertEquals('John', $referee->first_name);
     }
 
     /** @test */
-    public function referees_are_marked_as_active_depending_on_hired_date()
+    public function a_referee_has_a_last_name()
     {
-        $refereeA = factory(Referee::class)->create(['hired_at' => Carbon::today()->subDays(2)]);
-        $refereeB = factory(Referee::class)->create(['hired_at' => Carbon::today()]);
-        $refereeC = factory(Referee::class)->create(['hired_at' => Carbon::today()->addDays(2)]);
+        $referee = factory(Referee::class)->create(['last_name' => 'Smith']);
 
-        $this->assertTrue($refereeA->isActive());
-        $this->assertTrue($refereeB->isActive());
-        $this->assertFalse($refereeC->isActive());
+        $this->assertEquals('Smith', $referee->last_name);
     }
 
     /** @test */
-    public function it_can_get_active_referees()
+    public function a_referee_has_an_is_active_field()
     {
-        $refereeA = factory(Referee::class)->states('active')->create();
-        $refereeB = factory(Referee::class)->states('active')->create();
-        $refereeC = factory(Referee::class)->states('inactive')->create();
+        $referee = factory(Referee::class)->create(['is_active' => true]);
 
-        $activeReferees = Referee::active()->get();
-
-        $this->assertTrue($activeReferees->contains($refereeA));
-        $this->assertTrue($activeReferees->contains($refereeB));
-        $this->assertFalse($activeReferees->contains($refereeC));
+        $this->assertTrue($referee->is_active);
     }
 
     /** @test */
-    public function it_can_get_inactive_referees()
+    public function a_referee_has_a_hired_at_date()
     {
-        $refereeA = factory(Referee::class)->states('inactive')->create();
-        $refereeB = factory(Referee::class)->states('inactive')->create();
-        $refereeC = factory(Referee::class)->states('active')->create();
+        $referee = factory(Referee::class)->create(['hired_at' => Carbon::parse('2018-10-01')]);
 
-        $inactiveReferees = Referee::inactive()->get();
-
-        $this->assertTrue($inactiveReferees->contains($refereeA));
-        $this->assertTrue($inactiveReferees->contains($refereeB));
-        $this->assertFalse($inactiveReferees->contains($refereeC));
+        $this->assertEquals('2018-10-01', $referee->hired_at->toDateString());
     }
 
     /** @test */
-    public function an_inactive_referee_can_be_activated()
+    public function a_referee_has_a_full_name()
     {
-        $referee = factory(Referee::class)->states('inactive')->create();
+        $referee = factory(Referee::class)->create(['first_name' => 'John', 'last_name' => 'Smith']);
 
-        $referee->activate();
-
-        $this->assertTrue($referee->isActive());
+        $this->assertEquals('John Smith', $referee->full_name);
     }
 
     /** @test */
-    public function an_active_referee_can_be_deactivated()
+    public function a_referee_uses_the_hireable_trait()
     {
-        $referee = factory(Referee::class)->states('active')->create();
-
-        $referee->deactivate();
-
-        $this->assertFalse($referee->isActive());
-    }
-
-    /**
-     * @expectedException \App\Exceptions\ModelIsActiveException
-     *
-     * @test
-     */
-    public function an_active_referee_cannot_be_activated()
-    {
-        $referee = factory(Referee::class)->states('active')->create();
-
-        $referee->activate();
-    }
-
-    /**
-     * @expectedException \App\Exceptions\ModelIsInactiveException
-     *
-     * @test
-     */
-    public function an_inactive_referee_cannot_be_deactivated()
-    {
-        $referee = factory(Referee::class)->states('inactive')->create();
-
-        $referee->deactivate();
+        $this->assertTrue(in_array(Hireable::class, class_uses(Referee::class)));
     }
 
     /** @test */
-    public function an_active_referee_can_retire()
+    public function a_referee_uses_the_statusable_trait()
     {
-        $referee = factory(Referee::class)->states('active')->create();
-
-        $referee->retire();
-
-        $this->assertEquals(1, $referee->retirements->count());
-        $this->assertFalse($referee->isActive());
-        $this->assertTrue($referee->isRetired());
-        $this->assertNull($referee->retirements()->first()->ended_at);
+        $this->assertTrue(in_array(Statusable::class, class_uses(Referee::class)));
     }
 
     /** @test */
-    public function a_retired_referee_can_unretire()
+    public function a_referee_uses_the_retirable_trait()
     {
-        $referee = factory(Referee::class)->states('retired')->create();
-
-        $referee->unretire();
-
-        $this->assertNotNull($referee->retirements()->first()->ended_at);
-        $this->assertTrue($referee->isActive());
-        $this->assertFalse($referee->isRetired());
+        $this->assertTrue(in_array(Retirable::class, class_uses(Referee::class)));
     }
 
     /** @test */
-    public function it_can_get_retired_referees()
+    public function a_referee_uses_the_suspendable_trait()
     {
-        $refereeA = factory(Referee::class)->states('retired')->create();
-        $refereeB = factory(Referee::class)->states('retired')->create();
-        $refereeC = factory(Referee::class)->states('active')->create();
-
-        $retiredReferees = Referee::retired()->get();
-
-        $this->assertTrue($retiredReferees->contains($refereeA));
-        $this->assertTrue($retiredReferees->contains($refereeB));
-        $this->assertFalse($retiredReferees->contains($refereeC));
-    }
-
-    /**
-     * @expectedException \App\Exceptions\ModelIsRetiredException
-     *
-     * @test
-     */
-    public function a_retired_referee_cannot_retire()
-    {
-        $referee = factory(Referee::class)->states('retired')->create();
-
-        $referee->retire();
-    }
-
-    /**
-     * @expectedException \App\Exceptions\ModelIsActiveException
-     *
-     * @test
-     */
-    public function an_active_referee_cannot_unretire()
-    {
-        $referee = factory(Referee::class)->states('active')->create();
-
-        $referee->unretire();
+        $this->assertTrue(in_array(Suspendable::class, class_uses(Referee::class)));
     }
 
     /** @test */
-    public function a_referee_can_be_suspended()
+    public function a_referee_uses_the_presentable_trait()
+    {
+        $this->assertTrue(in_array(Presentable::class, class_uses(Referee::class)));
+    }
+
+    /** @test */
+    public function a_referee_uses_the_soft_deletes_trait()
+    {
+        $this->assertTrue(in_array(SoftDeletes::class, class_uses(Referee::class)));
+    }
+
+    /** @test */
+    public function a_referee_uses_the_referee_presenter()
     {
         $referee = factory(Referee::class)->create();
 
-        $referee->suspend();
-
-        $this->assertEquals(1, $referee->suspensions->count());
-        $this->assertFalse($referee->isActive());
-        $this->assertNull($referee->suspensions()->first()->ended_at);
-        $this->assertTrue($referee->isSuspended());
+        $this->assertInstanceOf(RefereePresenter::class, $referee->present());
     }
 
     /** @test */
-    public function a_suspended_referee_can_be_reinstated()
+    public function a_referee_hired_at_date_is_added_to_dates_array()
     {
-        $referee = factory(Referee::class)->states('suspended')->create();
+        $referee = factory(Referee::class)->create();
 
-        $referee->reinstate();
-
-        $this->assertNotNull($referee->suspensions->last()->ended_at);
-        $this->assertTrue($referee->isActive());
-        $this->assertFalse($referee->isSuspended());
-        $this->assertTrue($referee->hasPastSuspensions());
-        $this->assertEquals(1, $referee->pastSuspensions->count());
+        $this->assertTrue(in_array('hired_at', $referee->getDates()));
     }
 
     /** @test */
-    public function it_can_get_suspended_referees()
+    public function a_referee_is_active_field_is_boolean_type_and_added_to_casts_array()
     {
-        $refereeA = factory(Referee::class)->states('suspended')->create();
-        $refereeB = factory(Referee::class)->states('suspended')->create();
-        $refereeC = factory(Referee::class)->states('active')->create();
+        $referee = factory(Referee::class)->create();
 
-        $suspendedReferees = Referee::suspended()->get();
-
-        $this->assertTrue($suspendedReferees->contains($refereeA));
-        $this->assertTrue($suspendedReferees->contains($refereeB));
-        $this->assertFalse($suspendedReferees->contains($refereeC));
-    }
-
-    /**
-     * @expectedException \App\Exceptions\ModelIsSuspendedException
-     *
-     * @test
-     */
-    public function a_suspended_referee_cannot_be_suspended()
-    {
-        $referee = factory(Referee::class)->states('suspended')->create();
-
-        $referee->suspend();
-    }
-
-    /**
-     * @expectedException \App\Exceptions\ModelIsActiveException
-     *
-     * @test
-     */
-    public function an_active_referee_cannot_be_reinstated()
-    {
-        $referee = factory(Referee::class)->states('active')->create();
-
-        $referee->reinstate();
+        $this->assertTrue($referee->hasCast('is_active', 'boolean'));
     }
 }

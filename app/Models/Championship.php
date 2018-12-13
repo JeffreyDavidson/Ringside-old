@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Roster\TagTeam;
+use App\Models\Roster\Wrestler;
 use Illuminate\Database\Eloquent\Model;
 use App\Presenters\ChampionshipPresenter;
 use Laracodes\Presenter\Traits\Presentable;
@@ -43,7 +45,7 @@ class Championship extends Model
      */
     public function wrestlers()
     {
-        return $this->morphedByMany(Wrestler::class, 'championships');
+        return $this->morphedByMany(Wrestler::class, 'champion', 'championships');
     }
 
     /**
@@ -53,6 +55,16 @@ class Championship extends Model
      */
     public function tagteams()
     {
-        return $this->morphedByMany(TagTeam::class, 'championships');
+        return $this->morphedByMany(TagTeam::class, 'champion', 'championships');
+    }
+
+    /**
+     * A champion can be a wrestler or tag team.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
+    public function champion()
+    {
+        return $this->morphTo();
     }
 }

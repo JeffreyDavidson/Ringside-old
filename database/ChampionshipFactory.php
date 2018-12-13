@@ -7,7 +7,7 @@ use App\Models\Roster\Wrestler;
 
 class ChampionshipFactory
 {
-    private $wrestler;
+    private $champion;
     private $title = null;
     private $wonOn = null;
     private $lostOn = null;

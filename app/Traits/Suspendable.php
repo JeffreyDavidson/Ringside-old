@@ -10,7 +10,7 @@ use App\Exceptions\ModelIsSuspendedException;
 /**
  * @mixin \Eloquent
  */
-trait HasSuspensions
+trait Suspendable
 {
     /**
      * A model can have many suspensions.

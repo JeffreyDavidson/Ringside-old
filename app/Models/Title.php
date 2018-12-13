@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use App\Traits\HasStatus;
-use App\Traits\HasMatches;
+use App\Traits\Retirable;
+use App\Traits\Statusable;
 use App\Models\Championship;
-use App\Traits\HasRetirements;
+use App\Presenters\TitlePresenter;
 use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\ModelIsActiveException;
 use Laracodes\Presenter\Traits\Presentable;
@@ -14,7 +14,7 @@ use App\Exceptions\TitleNotIntroducedException;
 
 class Title extends Model
 {
-    use HasStatus, HasMatches, HasRetirements, Presentable, SoftDeletes;
+    use Statusable, Retirable, Presentable, SoftDeletes;
 
     /**
      * The attributes that should be cast to native types.
@@ -38,16 +38,16 @@ class Title extends Model
      *
      * @var string
      */
-    protected $presenter = 'App\Presenters\TitlePresenter';
+    protected $presenter = TitlePresenter::class;
 
     /**
      * A title can have many champions.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     * @return \Illuminate\Database\Eloquent\Relations\hasMany
      */
-    public function champions()
+    public function championships()
     {
-        return $this->morphToMany(Championship::class, 'championships')->withPivot('id', 'won_on', 'lost_on', 'successful_defenses');
+        return $this->hasMany(Championship::class);
     }
 
     /**
@@ -55,9 +55,9 @@ class Title extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function currentChampion()
+    public function getCurrentChampionAttribute()
     {
-        return $this->champions()->wherePivot('lost_on', null)->limit(1);
+        return $this->championships()->whereNull('lost_on')->first()->champion;
     }
 
     /**
@@ -65,29 +65,9 @@ class Title extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function previousChampion()
-    {
-        return $this->champions()->wherePivot('lost_on', '!=', null)->latest('championships.won_on')->limit(1);
-    }
-
-    /**
-     * Retrieves the current champion for the title.
-     *
-     * @return \App\Models\Roster\Wrestler|null
-     */
-    public function getCurrentChampionAttribute()
-    {
-        return $this->currentChampion()->first();
-    }
-
-    /**
-     * Retrieves the current champion for the title.
-     *
-     * @return \App\Models\Roster\Wrestler|null
-     */
     public function getPreviousChampionAttribute()
-    {
-        return $this->previousChampion()->first();
+    { 
+        return $this->championships()->whereNotNull('lost_on')->latest('championships.won_on')->first()->champion;
     }
 
     /**

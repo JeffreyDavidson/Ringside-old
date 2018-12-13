@@ -3,9 +3,9 @@
 namespace App\Models\Roster;
 
 use App\Traits\Hireable;
-use App\Traits\HasStatus;
-use App\Traits\HasRetirements;
-use App\Traits\HasSuspensions;
+use App\Traits\Retirable;
+use App\Traits\Statusable;
+use App\Traits\Suspendable;
 use Illuminate\Database\Eloquent\Model;
 use App\Presenters\Roster\ManagerPresenter;
 use Laracodes\Presenter\Traits\Presentable;
@@ -13,11 +13,24 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Manager extends Model
 {
-    use Hireable, HasStatus, HasRetirements, HasSuspensions, Presentable, SoftDeletes;
+    use Hireable, Statusable, Retirable, Suspendable, Presentable, SoftDeletes;
 
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'hired_at',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
     protected $casts = [
         'is_active' => 'boolean',
-        'hired_at' => 'datetime',
     ];
 
     /**

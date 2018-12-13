@@ -22,7 +22,7 @@ class CreateChampionshipsTable extends Migration
             $table->unsignedInteger('successful_defenses')->default(0);
             $table->timestamps();
 
-            $table->unique(['title_id', 'champion_id', 'won_on']);
+            $table->unique(['title_id', 'champion_id', 'champion_type', 'won_on']);
             $table->foreign('title_id')->references('id')->on('titles');
         });
     }
@@ -34,6 +34,6 @@ class CreateChampionshipsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('title_wrestler');
+        Schema::dropIfExists('championships');
     }
 }

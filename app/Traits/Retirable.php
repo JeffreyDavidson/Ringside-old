@@ -11,7 +11,7 @@ use App\Exceptions\ModelIsRetiredException;
 /**
  * @mixin \Eloquent
  */
-trait HasRetirements
+trait Retirable
 {
     /**
      * A wrestler can have many retirements.

@@ -6,10 +6,15 @@ use Carbon\Carbon;
 use App\Models\Event;
 use App\Models\Match;
 use App\Models\Title;
+use App\Traits\Retirable;
 use Facades\MatchFactory;
+use App\Traits\Statusable;
 use App\Models\Championship;
+use App\Models\Roster\TagTeam;
 use Tests\IntegrationTestCase;
 use App\Models\Roster\Wrestler;
+use Laracodes\Presenter\Traits\Presentable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TitleTest extends IntegrationTestCase
 {
@@ -30,15 +35,15 @@ class TitleTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function a_title_can_be_active()
+    public function a_title_has_an_is_active_field()
     {
         $title = factory(Title::class)->create(['is_active' => true]);
 
-        $this->assertTrue($title->isActive());
+        $this->assertTrue($title->is_active);
     }
 
     /** @test */
-    public function a_title_can_be_introduced()
+    public function a_title_has_an_introduced_at_date()
     {
         $title = factory(Title::class)->create(['introduced_at' => Carbon::parse('2018-10-31')]);
 
@@ -46,16 +51,40 @@ class TitleTest extends IntegrationTestCase
     }
 
     /** @test */
-    public function a_title_has_many_champions()
+    public function a_title_uses_the_statusable_trait()
     {
-        $title = factory(Title::class)->create();
-        factory(Championship::class)->create(['title_id' => $title->id]);
-
-        $this->assertCount(1, $title->champions);
+        $this->assertTrue(in_array(Statusable::class, class_uses(Title::class)));
     }
 
     /** @test */
-    public function a_title_is_held_by_a_wrestler()
+    public function a_title_uses_the_retirable_trait()
+    {
+        $this->assertTrue(in_array(Retirable::class, class_uses(Title::class)));
+    }
+
+    /** @test */
+    public function a_title_uses_the_presentable_trait()
+    {
+        $this->assertTrue(in_array(Presentable::class, class_uses(Title::class)));
+    }
+
+    /** @test */
+    public function a_title_uses_the_soft_deletes_trait()
+    {
+        $this->assertTrue(in_array(SoftDeletes::class, class_uses(Title::class)));
+    }
+
+    /** @test */
+    public function a_title_has_many_champions()
+    {
+        $title = factory(Title::class)->create();
+        $championship = factory(Championship::class)->create(['title_id' => $title->id]);
+
+        $this->assertCount(1, $title->championships);
+    }
+
+    /** @test */
+    public function a_title_can_be_held_by_a_wrestler()
     {
         $title = factory(Title::class)->create();
         $wrestler = factory(Wrestler::class)->create();
@@ -65,15 +94,25 @@ class TitleTest extends IntegrationTestCase
     }
 
     /** @test */
+    public function a_title_can_be_held_by_a_tag_team()
+    {
+        $title = factory(Title::class)->create();
+        $tagteam = factory(TagTeam::class)->create();
+        factory(Championship::class)->create(['title_id' => $title->id, 'champion_id' => $tagteam->id]);
+
+        $this->assertTrue($title->currentChampion->is($tagteam));
+    }
+
+    /** @test */
     public function a_title_that_is_lost_by_the_current_champion_is_now_the_previous_champion()
     {
         $title = factory(Title::class)->create();
-        $currentChampion = factory(Wrestler::class)->create();
+        $formerChampion = factory(Wrestler::class)->create();
         $newChampion = factory(Wrestler::class)->create();
-        factory(Championship::class)->create(['title_id' => $title->id, 'champion_id' => $currentChampion->id, 'won_on' => Carbon::parse('2018-10-01'), 'lost_on' => Carbon::parse('2018-10-08')]);
+        factory(Championship::class)->create(['title_id' => $title->id, 'champion_id' => $formerChampion->id, 'won_on' => Carbon::parse('2018-10-01'), 'lost_on' => Carbon::parse('2018-10-08')]);
         factory(Championship::class)->create(['title_id' => $title->id, 'champion_id' => $newChampion->id, 'won_on' => Carbon::parse('2018-10-08')]);
 
-        $this->assertTrue($title->fresh()->previousChampion->is($currentChampion));
+        $this->assertTrue($title->fresh()->previousChampion->is($formerChampion));
         $this->assertTrue($title->fresh()->currentChampion->is($newChampion));
     }
 
@@ -83,153 +122,6 @@ class TitleTest extends IntegrationTestCase
         $title = factory(Title::class)->create();
 
         $this->assertTrue($title->isVacant());
-    }
-
-    /** @test */
-    public function it_can_get_active_titles()
-    {
-        $titleA = factory(Title::class)->states('active')->create();
-        $titleB = factory(Title::class)->states('active')->create();
-        $titleC = factory(Title::class)->states('inactive')->create();
-
-        $activeTitles = Title::active()->get();
-
-        $this->assertTrue($activeTitles->contains($titleA));
-        $this->assertTrue($activeTitles->contains($titleB));
-        $this->assertFalse($activeTitles->contains($titleC));
-    }
-
-    /** @test */
-    public function it_can_get_inactive_titles()
-    {
-        $titleA = factory(Title::class)->states('inactive')->create();
-        $titleB = factory(Title::class)->states('inactive')->create();
-        $titleC = factory(Title::class)->states('active')->create();
-
-        $inactiveTitles = Title::inactive()->get();
-
-        $this->assertTrue($inactiveTitles->contains($titleA));
-        $this->assertTrue($inactiveTitles->contains($titleB));
-        $this->assertFalse($inactiveTitles->contains($titleC));
-    }
-
-    /** @test */
-    public function it_can_get_retired_titles()
-    {
-        $titleA = factory(Title::class)->states('retired')->create();
-        $titleB = factory(Title::class)->states('retired')->create();
-        $titleC = factory(Title::class)->states('active')->create();
-
-        $retiredTitles = Title::retired()->get();
-
-        $this->assertTrue($retiredTitles->contains($titleA));
-        $this->assertTrue($retiredTitles->contains($titleB));
-        $this->assertFalse($retiredTitles->contains($titleC));
-    }
-
-    /** @test */
-    public function an_inactive_title_can_be_activated()
-    {
-        $title = factory(Title::class)->states('inactive')->create();
-
-        $title->activate();
-
-        $this->assertTrue($title->isActive());
-    }
-
-    /** @test */
-    public function an_active_title_can_be_deactivated()
-    {
-        $title = factory(Title::class)->states('active')->create();
-
-        $title->deactivate();
-
-        $this->assertFalse($title->isActive());
-    }
-
-    /**
-     * @expectedException \App\Exceptions\ModelIsActiveException
-     *
-     * @test
-     */
-    public function an_active_title_cannot_be_activated()
-    {
-        $title = factory(Title::class)->states('active')->create();
-
-        $title->activate();
-    }
-
-    /**
-     * @expectedException \App\Exceptions\ModelIsInactiveException
-     *
-     * @test
-     */
-    public function an_inactive_title_cannot_be_deactivated()
-    {
-        $title = factory(Title::class)->states('inactive')->create();
-
-        $title->deactivate();
-    }
-
-    /** @test */
-    public function an_active_title_can_be_retired()
-    {
-        $title = factory(Title::class)->states('active')->create();
-
-        $title->retire();
-
-        $this->assertEquals(1, $title->retirements->count());
-        $this->assertFalse($title->isActive());
-        $this->assertTrue($title->isRetired());
-        $this->assertNull($title->retirements()->first()->ended_at);
-    }
-
-    /** @test */
-    public function a_retired_title_can_be_unretired()
-    {
-        $title = factory(Title::class)->states('retired')->create();
-
-        $title->unretire();
-
-        $this->assertTrue($title->hasPastRetirements());
-        $this->assertNotNull($title->retirements()->first()->ended_at);
-        $this->assertTrue($title->isActive());
-        $this->assertFalse($title->isRetired());
-    }
-
-    /**
-     * @expectedException \App\Exceptions\ModelIsRetiredException
-     *
-     * @test
-     */
-    public function a_retired_title_cannot_be_retired()
-    {
-        $title = factory(Title::class)->states('retired')->create();
-
-        $title->retire();
-    }
-
-    /**
-     * @expectedException \App\Exceptions\ModelIsActiveException
-     *
-     * @test
-     */
-    public function an_active_title_cannot_be_unretired()
-    {
-        $title = factory(Title::class)->states('active')->create();
-
-        $title->unretire();
-    }
-
-    public function it_can_get_a_titles_current_retirement()
-    {
-        $title = factory(Title::class)->create();
-
-        $currentRetirement = factory(Retirement::class)->create(['retirable_id' => $title->id, 'retirable_type' => get_class($title), 'retired_at' => Carbon::parse('2018-10-08')]);
-        $previousRetirement = factory(Retirement::class)->create(['retirable_id' => $title->id, 'retirable_type' => get_class($title), 'retired_at' => Carbon::parse('2018-10-01'), 'ended_at' => Carbon::parse('2018-10-06')]);
-    
-        $this->assertTrue($title->currentRetirement->is($currentRetirement));
-        $this->assertCount(1, $title->pastRetirements);
     }
 
     /** @test */
@@ -257,7 +149,7 @@ class TitleTest extends IntegrationTestCase
         $scheduledMatchB = MatchFactory::forEvent($eventB)->withTitle($title)->create();
         $pastMatch = MatchFactory::forEvent($eventC)->withTitle($title)->create();
 
-        $scheduledMatches = $title->scheduledMatches()->get();
+        $scheduledMatches = $title->scheduledMatches;
 
         $this->assertTrue($scheduledMatches->contains($scheduledMatchA));
         $this->assertTrue($scheduledMatches->contains($scheduledMatchB));
@@ -277,7 +169,7 @@ class TitleTest extends IntegrationTestCase
         $pastMatchB = MatchFactory::forEvent($eventB)->withTitle($title)->create();
         $scheduledMatch = MatchFactory::forEvent($eventC)->withTitle($title)->create();
 
-        $pastMatches = $title->pastMatches()->get();
+        $pastMatches = $title->pastMatches;
 
         $this->assertTrue($pastMatches->contains($pastMatchA));
         $this->assertTrue($pastMatches->contains($pastMatchB));
