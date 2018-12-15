@@ -8,7 +8,7 @@ use App\Models\Roster\Wrestler;
 
 class StoreTagTeamTest extends IntegrationTestCase
 {
-    private $wrestlers;
+    private $wrestlerIds;
 
     public function setUp()
     {

@@ -7,13 +7,11 @@ use App\Traits\Retirable;
 use App\Traits\Statusable;
 use App\Traits\Suspendable;
 use Illuminate\Database\Eloquent\Model;
-use App\Presenters\Roster\ManagerPresenter;
-use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Manager extends Model
 {
-    use Hireable, Statusable, Retirable, Suspendable, Presentable, SoftDeletes;
+    use Hireable, Statusable, Retirable, Suspendable, SoftDeletes;
 
     /**
      * The attributes that should be mutated to dates.
@@ -41,9 +39,12 @@ class Manager extends Model
     protected $fillable = ['first_name', 'last_name', 'is_active', 'hired_at'];
 
     /**
-     * Assign which presenter to be used for model.
+     * Get the manager's full name.
      *
-     * @var string
+     * @return string
      */
-    protected $presenter = ManagerPresenter::class;
+    public function getFullNameAttribute(): string
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
 }

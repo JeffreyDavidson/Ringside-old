@@ -6,15 +6,13 @@ use App\Interfaces\Competitor;
 use App\Models\Roster\Referee;
 use App\Models\Roster\TagTeam;
 use App\Models\Roster\Wrestler;
-use App\Presenters\MatchPresenter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Match extends Model
 {
-    use Presentable, SoftDeletes;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -22,13 +20,6 @@ class Match extends Model
      * @var array
      */
     protected $fillable = ['match_number', 'match_type_id', 'stipulation_id', 'match_decision_id', 'preview', 'result'];
-
-    /**
-     * Assign which presenter to be used for model.
-     *
-     * @var string
-     */
-    protected $presenter = MatchPresenter::class;
 
     /**
      * A match has a decision.
@@ -308,5 +299,51 @@ class Match extends Model
         return $query->whereHas('competitors', function ($query) use ($id) {
             $query->where('wrestlers.id', $id);
         });
+    }
+
+    /**
+     * Formats collection of wrestlers for match.
+     *
+     * @return string
+     */
+    public function wrestlers2()
+    {
+        if (in_array($this->model->type->slug, ['royalrumble', 'battleroyal'])) {
+            return $this->model->type->name;
+        }
+
+        return $this->model->groupedWrestlersBySide()->map(function ($group) {
+            return $group->pluck('name')->implode(' & ');
+        })->implode(' vs. ');
+    }
+
+    /**
+     * Formats collection of referees for match.
+     *
+     * @return string
+     */
+    public function referees2()
+    {
+        return $this->model->referees->map(function ($item) {
+            return $item->present()->fullName();
+        })->implode(' & ');
+    }
+
+    /**
+     * Formats match number for match.
+     *
+     * @return string
+     */
+    public function match_number()
+    {
+        if ($this->model->match_number == $this->model->event->matches()->count()) {
+            return 'Main Event';
+        }
+
+        if ($this->model->match_number == 1) {
+            return 'Opening Match';
+        }
+
+        return 'Match #' . $this->model->match_number;
     }
 }

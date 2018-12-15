@@ -14,13 +14,12 @@ class Injury extends Model
     protected $fillable = ['injured_at', 'healed_at'];
 
     /**
-     * The attributes that should be cast to native types.
+     * The attributes that should be mutated to dates..
      *
      * @var array
      */
-    protected $casts = [
-        'injured_at' => 'datetime',
-        'healed_at' => 'datetime',
+    protected $dates = [
+        'injured_at', 'healed_at',
     ];
 
     /**

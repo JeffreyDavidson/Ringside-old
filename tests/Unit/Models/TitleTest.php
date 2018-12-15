@@ -13,43 +13,10 @@ use App\Models\Championship;
 use App\Models\Roster\TagTeam;
 use Tests\IntegrationTestCase;
 use App\Models\Roster\Wrestler;
-use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TitleTest extends IntegrationTestCase
 {
-    /** @test */
-    public function a_title_has_a_name()
-    {
-        $title = factory(Title::class)->create(['name' => 'Some Title']);
-
-        $this->assertEquals('Some Title', $title->name);
-    }
-
-    /** @test */
-    public function a_title_has_a_slug()
-    {
-        $title = factory(Title::class)->create(['slug' => 'some-slug']);
-
-        $this->assertEquals('some-slug', $title->slug);
-    }
-
-    /** @test */
-    public function a_title_has_an_is_active_field()
-    {
-        $title = factory(Title::class)->create(['is_active' => true]);
-
-        $this->assertTrue($title->is_active);
-    }
-
-    /** @test */
-    public function a_title_has_an_introduced_at_date()
-    {
-        $title = factory(Title::class)->create(['introduced_at' => Carbon::parse('2018-10-31')]);
-
-        $this->assertEquals('2018-10-31', $title->introduced_at->toDateString());
-    }
-
     /** @test */
     public function a_title_uses_the_statusable_trait()
     {
@@ -60,12 +27,6 @@ class TitleTest extends IntegrationTestCase
     public function a_title_uses_the_retirable_trait()
     {
         $this->assertTrue(in_array(Retirable::class, class_uses(Title::class)));
-    }
-
-    /** @test */
-    public function a_title_uses_the_presentable_trait()
-    {
-        $this->assertTrue(in_array(Presentable::class, class_uses(Title::class)));
     }
 
     /** @test */
@@ -182,5 +143,13 @@ class TitleTest extends IntegrationTestCase
         $title = factory(Title::class)->create();
 
         $this->assertFalse($title->hasPastMatches());
+    }
+
+    /** @test */
+    public function a_titles_introduced_at_field_can_be_formatted()
+    {
+        $title = factory(Title::class)->create(['introduced_at' => '2017-09-17']);
+
+        $this->assertEquals('September 17, 2017', $title->formatted_introduced_at);
     }
 }

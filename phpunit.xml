@@ -37,6 +37,10 @@
         <testsuite name="Stipulation Tests">
             <directory suffix="Test.php">./tests/Feature/Stipulation</directory>
         </testsuite>
+
+        <testsuite name="Roster Tests">
+            <directory suffix="Test.php">./tests/Unit/Models/Roster</directory>
+        </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">

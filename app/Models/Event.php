@@ -2,10 +2,8 @@
 
 namespace App\Models;
 
-use App\Presenters\EventPresenter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Laracodes\Presenter\Traits\Presentable;
 use App\Exceptions\EventIsScheduledException;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Exceptions\EventAlreadyArchivedException;
@@ -13,7 +11,7 @@ use App\Exceptions\EventNotAlreadyArchivedException;
 
 class Event extends Model
 {
-    use Presentable, SoftDeletes;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -23,21 +21,13 @@ class Event extends Model
     protected $fillable = ['name', 'slug', 'date', 'venue_id', 'number_of_matches', 'archived_at'];
 
     /**
-     * The attributes that should be cast to native types.
+     * The attributes that should be mutated to dates.
      *
      * @var array
      */
-    protected $casts = [
-        'date' => 'datetime',
-        'archived_at' => 'datetime',
+    protected $dates = [
+        'date', 'archived_at'
     ];
-
-    /**
-     * Assign which presenter to be used for model.
-     *
-     * @var string
-     */
-    protected $presenter = EventPresenter::class;
 
     /**
      * An event has many matches.
@@ -183,5 +173,35 @@ class Event extends Model
     public function isArchived()
     {
         return ! is_null($this->archived_at);
+    }
+
+    /**
+     * Formats event date.
+     *
+     * @return string
+     */
+    public function date()
+    {
+        return $this->model->date->format('F jS, Y');
+    }
+
+    /**
+     * Formats event form date.
+     *
+     * @return string
+     */
+    public function formattedFormDate()
+    {
+        return $this->model->date->format('m/d/Y');
+    }
+
+    /**
+     * Formats time of event.
+     *
+     * @return string
+     */
+    public function time()
+    {
+        return $this->model->date->format('h:ia');
     }
 }

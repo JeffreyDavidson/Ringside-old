@@ -7,13 +7,11 @@ use App\Traits\Retirable;
 use App\Traits\Statusable;
 use App\Traits\Suspendable;
 use Illuminate\Database\Eloquent\Model;
-use App\Presenters\Roster\RefereePresenter;
-use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Referee extends Model
 {
-    use Hireable, Statusable, Retirable, Suspendable, Presentable, SoftDeletes;
+    use Hireable, Statusable, Retirable, Suspendable, SoftDeletes;
 
     /**
      * The attributes that should be mutated to dates.
@@ -39,13 +37,6 @@ class Referee extends Model
      * @var array
      */
     protected $fillable = ['first_name', 'last_name', 'is_active', 'hired_at'];
-
-    /**
-     * Assign which presenter to be used for model.
-     *
-     * @var string
-     */
-    protected $presenter = RefereePresenter::class;
 
     /**
      * Get the referee's full name.

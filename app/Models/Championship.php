@@ -5,13 +5,9 @@ namespace App\Models;
 use App\Models\Roster\TagTeam;
 use App\Models\Roster\Wrestler;
 use Illuminate\Database\Eloquent\Model;
-use App\Presenters\ChampionshipPresenter;
-use Laracodes\Presenter\Traits\Presentable;
 
 class Championship extends Model
 {
-    use Presentable;
-
     /**
      * The table associated with the model.
      *
@@ -20,23 +16,20 @@ class Championship extends Model
     protected $table = 'championships';
 
     /**
-     * The attributes that should be cast to native types.
+     * The attributes that should be mutated to dates.
      *
      * @var array
      */
-    protected $casts = [
-        'won_on' => 'datetime',
-        'lost_on' => 'datetime',
+    protected $dates = [
+        'won_on', 'lost_on',
     ];
 
-    protected $fillable = ['won_on', 'lost_on', 'successful_defenses'];
-
     /**
-     * Assign which presenter to be used for model.
+     * The attributes that are mass assignable.
      *
-     * @var string
+     * @var array
      */
-    protected $presenter = ChampionshipPresenter::class;
+    protected $fillable = ['won_on', 'lost_on', 'successful_defenses'];
 
     /**
      * A championship can belong to many wrestlers.
@@ -66,5 +59,35 @@ class Championship extends Model
     public function champion()
     {
         return $this->morphTo();
+    }
+
+    /**
+     * Formats won on date.
+     *
+     * @return string
+     */
+    public function wonOn()
+    {
+        return $this->model->won_on->format('F j, Y');
+    }
+
+    /**
+     * Formats lost on date.
+     *
+     * @return string
+     */
+    public function lostOn()
+    {
+        return $this->model->lost_on ? $this->model->lost_on->format('F j, Y') : 'Present';
+    }
+
+    /**
+     * Calculates how long a championship has been held.
+     *
+     * @return string
+     */
+    public function lengthOfReign()
+    {
+        return $this->model->lost_on ? $this->model->won_on->diffInDays($this->model->lost_on) . ' days' : 'Present';
     }
 }

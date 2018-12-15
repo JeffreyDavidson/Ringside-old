@@ -13,14 +13,12 @@ use App\Models\Championship;
 use App\Interfaces\Competitor;
 use App\Traits\CompetitorTrait;
 use Illuminate\Database\Eloquent\Model;
-use Laracodes\Presenter\Traits\Presentable;
-use App\Presenters\Roster\WrestlerPresenter;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Wrestler extends Model implements Competitor
 {
-    use CompetitorTrait, Statusable, Injurable, Manageable, Hireable, Retirable, Suspendable, Presentable, SoftDeletes;
+    use CompetitorTrait, Statusable, Injurable, Manageable, Hireable, Retirable, Suspendable, SoftDeletes;
 
     /**
      * The attributes that should be mutated to dates.
@@ -48,13 +46,6 @@ class Wrestler extends Model implements Competitor
     protected $fillable = ['name', 'slug', 'hometown', 'height', 'weight', 'signature_move', 'is_active', 'hired_at'];
 
     /**
-     * Assign which presenter to be used for model.
-     *
-     * @var string
-     */
-    protected $presenter = WrestlerPresenter::class;
-
-    /**
      * Get all of the matches for the wrestler.
      * 
      * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
@@ -72,5 +63,43 @@ class Wrestler extends Model implements Competitor
     public function championships(): MorphToMany
     {
         return $this->morphToMany(Championship::class, 'championships')->withPivot('id', 'won_on', 'lost_on', 'successful_defenses');
+    }
+
+    /**
+     * Formats the wrestler's height.
+     *
+     * @return string
+     */
+    public function height()
+    {
+        $feet = floor($this->model->height / 12);
+        $inches = ($this->model->height % 12);
+
+        return $feet . '\'' . $inches . '"';
+    }
+
+    /**
+     * Formats wrestler's height in feet.
+     *
+     * @return int
+     */
+    public function height_in_feet()
+    {
+        $feet = floor($this->model->height / 12);
+
+        return (int)$feet;
+    }
+
+    /**
+     * Formats wrestler's height in inches.
+     *
+     * @return int
+     */
+    public function height_in_inches()
+    {
+        $feet = floor($this->model->height / 12);
+        $inches = ($this->model->height % 12);
+
+        return $inches;
     }
 }

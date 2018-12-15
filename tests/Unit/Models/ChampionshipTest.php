@@ -1,19 +1,16 @@
 <?php
 
-namespace Tests\Unit\Presenters;
-
-use Carbon\Carbon;
 use App\Models\Championship;
 use Tests\IntegrationTestCase;
 
-class ChampionshipPresenterTest extends IntegrationTestCase
+class ChampionshipTest extends IntegrationTestCase
 {
     /** @test */
     public function a_champions_won_on_date_can_be_formatted()
     {
         $champion = factory(Championship::class)->create(['won_on' => '2017-09-17']);
 
-        $this->assertEquals('September 17, 2017', $champion->present()->wonOn);
+        $this->assertEquals('September 17, 2017', $champion->won_on);
     }
 
     /** @test */
@@ -21,7 +18,7 @@ class ChampionshipPresenterTest extends IntegrationTestCase
     {
         $champion = factory(Championship::class)->create(['lost_on' => '2017-09-17']);
 
-        $this->assertEquals('September 17, 2017', $champion->present()->lostOn);
+        $this->assertEquals('September 17, 2017', $champion->lost_on);
     }
 
     /** @test */
@@ -29,7 +26,7 @@ class ChampionshipPresenterTest extends IntegrationTestCase
     {
         $champion = factory(Championship::class)->create(['lost_on' => null]);
 
-        $this->assertEquals('Present', $champion->present()->lostOn);
+        $this->assertEquals('Present', $champion->lost_on);
     }
 
     /** @test */
@@ -37,7 +34,7 @@ class ChampionshipPresenterTest extends IntegrationTestCase
     {
         $champion = factory(Championship::class)->create(['won_on' => Carbon::now()->subDays(200), 'lost_on' => Carbon::now()]);
 
-        $this->assertEquals('200 days', $champion->present()->lengthOfReign);
+        $this->assertEquals('200 days', $champion->formatted_length_of_reign);
     }
 
     /** @test */
@@ -45,6 +42,6 @@ class ChampionshipPresenterTest extends IntegrationTestCase
     {
         $champion = factory(Championship::class)->create(['won_on' => Carbon::now()->subDays(200), 'lost_on' => null]);
 
-        $this->assertEquals('Present', $champion->present()->lengthOfReign);
+        $this->assertEquals('Present', $champion->formatted_length_of_reign);
     }
 }

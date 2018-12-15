@@ -11,7 +11,6 @@ use App\Traits\Suspendable;
 use App\Interfaces\Competitor;
 use App\Traits\CompetitorTrait;
 use Illuminate\Database\Eloquent\Model;
-use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
@@ -19,7 +18,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class TagTeam extends Model implements Competitor
 {
-    use CompetitorTrait, Statusable, Retirable, Suspendable, Manageable, Hireable, SoftDeletes, Presentable;
+    use CompetitorTrait, Statusable, Retirable, Suspendable, Manageable, Hireable, SoftDeletes;
 
     /**
      * The attributes that should be mutated to dates.

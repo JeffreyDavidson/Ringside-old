@@ -5,16 +5,23 @@ namespace App\Models;
 use App\Traits\Retirable;
 use App\Traits\Statusable;
 use App\Models\Championship;
-use App\Presenters\TitlePresenter;
 use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\ModelIsActiveException;
-use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Exceptions\TitleNotIntroducedException;
 
 class Title extends Model
 {
-    use Statusable, Retirable, Presentable, SoftDeletes;
+    use Statusable, Retirable, SoftDeletes;
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'introduced_at',
+    ];
 
     /**
      * The attributes that should be cast to native types.
@@ -23,7 +30,6 @@ class Title extends Model
      */
     protected $casts = [
         'is_active' => 'boolean',
-        'introduced_at' => 'datetime',
     ];
 
     /**
@@ -32,13 +38,6 @@ class Title extends Model
      * @var array
      */
     protected $fillable = ['name', 'slug', 'is_active', 'introduced_at'];
-
-    /**
-     * Assign which presenter to be used for model.
-     *
-     * @var string
-     */
-    protected $presenter = TitlePresenter::class;
 
     /**
      * A title can have many champions.
@@ -97,5 +96,15 @@ class Title extends Model
         }
 
         return $this->update(['is_active' => true]);
+    }
+
+    /**
+     * Formats introduced at date for model.
+     *
+     * @return string
+     */
+    public function getFormattedIntroducedAtDateAttribute()
+    {
+        return $this->introduced_at->format('F j, Y');
     }
 }
