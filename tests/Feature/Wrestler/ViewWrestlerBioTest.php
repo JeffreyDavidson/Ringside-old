@@ -3,6 +3,13 @@
 namespace Tests\Feature\Roster\Wrestler;
 
 use App\Models\Wrestler;
+use App\Models\Title;
+use App\Models\Event;
+use App\Models\Manager;
+use Carbon\Carbon;
+use Facades\ChampionshipFactory;
+use Facades\ManagerFactory;
+use Facades\MatchFactory;
 use Tests\IntegrationTestCase;
 
 class ViewWrestlerBioTest extends IntegrationTestCase
@@ -39,6 +46,89 @@ class ViewWrestlerBioTest extends IntegrationTestCase
         $response->assertSee(e('6\'1"'));
         $response->assertSee('251 lbs.');
         $response->assertSee('Powerbomb');
+    }
+
+    /** @test */
+    public function a_wrestlers_past_titles_can_be_viewed_on_wrestler_bio()
+    {
+        $wrestler = factory(Wrestler::class)->create();
+        $titleA = factory(Title::class)->create(['name' => 'Past Title A']);
+        $titleB = factory(Title::class)->create(['name' => 'Past Title B']);
+
+        ChampionshipFactory::forWrestler($wrestler)->forTitle($titleA)->wonOn(Carbon::today()->subMonths(8))->lostOn(Carbon::today()->subMonths(7))->create();
+        ChampionshipFactory::forWrestler($wrestler)->forTitle($titleB)->wonOn(Carbon::today()->subMonths(6))->lostOn(Carbon::today()->subMonths(4))->create();
+
+        $response = $this->actingAs($this->authorizedUser)->get(route('wrestlers.show', $wrestler->id));
+
+        $response->assertSee('Past Title A');
+        $response->assertSee('Past Title B');
+    }
+
+    /** @test */
+    public function a_wrestlers_current_titles_can_be_viewed_on_wrestler_bio()
+    {
+        $wrestler = factory(Wrestler::class)->create();
+        $titleA = factory(Title::class)->create(['name' => 'Current Title A']);
+        $titleB = factory(Title::class)->create(['name' => 'Current Title B']);
+
+        ChampionshipFactory::forWrestler($wrestler)->forTitle($titleA)->wonOn(Carbon::today()->subMonths(8))->create();
+        ChampionshipFactory::forWrestler($wrestler)->forTitle($titleB)->wonOn(Carbon::today()->subMonths(6))->create();
+
+        $response = $this->actingAs($this->authorizedUser)->get(route('wrestlers.show', $wrestler->id));
+
+        $response->assertSee('Current Title A');
+        $response->assertSee('Current Title B');
+    }
+
+    /** @test */
+    public function a_wrestlers_past_managers_can_be_viewed_on_wrestler_bio()
+    {
+        $wrestler = factory(Wrestler::class)->create();
+        $managerA = factory(Manager::class)->create(['first_name' => 'Zoey', 'last_name' => 'Scott']);
+        $managerB = factory(Manager::class)->create(['first_name' => 'Will', 'last_name' => 'Stevens']);
+
+        ManagerFactory::forWrestler($wrestler)->forManager($managerA)->hiredOn(Carbon::today()->subMonths(8))->firedOn(Carbon::today()->subMonths(7))->create();
+        ManagerFactory::forWrestler($wrestler)->forManager($managerB)->hiredOn(Carbon::today()->subMonths(6))->firedOn(Carbon::today()->subMonths(4))->create();
+
+        $response = $this->actingAs($this->authorizedUser)->get(route('wrestlers.show', $wrestler->id));
+
+        $response->assertSee('Past Manager A');
+        $response->assertSee('Past Manager B');
+    }
+
+    /** @test */
+    public function a_wrestlers_current_managers_can_be_viewed_on_wrestler_bio()
+    {
+        $wrestler = factory(Wrestler::class)->create();
+        $managerA = factory(Manager::class)->create(['first_name' => 'Jane', 'last_name' => 'Smith']);
+        $managerB = factory(Manager::class)->create(['first_name' => 'John', 'last_name' => 'Williams']);
+
+        ManagerFactory::forWrestler($wrestler)->forManager($managerA)->hiredOn(Carbon::today()->subMonths(8))->create();
+        ManagerFactory::forWrestler($wrestler)->forManager($managerB)->hiredOn(Carbon::today()->subMonths(6))->create();
+
+        $response = $this->actingAs($this->authorizedUser)->get(route('wrestlers.show', $wrestler->id));
+
+        $response->assertSee('Jane Smith');
+        $response->assertSee('John Williams');
+    }
+
+    /** @test */
+    public function a_wrestlers_past_matches_can_be_viewed_on_wrestler_bio()
+    {
+        $wrestler = factory(Wrestler::class)->create();
+        $eventA = factory(Event::class)->states('past')->create(['name' => 'Past Event A']);
+        $eventB = factory(Event::class)->states('past')->create(['name' => 'Past Event B']);
+        $eventC = factory(Event::class)->states('scheduled')->create(['name' => 'Scheduled Event C']);
+
+        MatchFactory::forEvent($eventA)->withWrestler($wrestler)->create();
+        MatchFactory::forEvent($eventB)->withWrestler($wrestler)->create();
+        MatchFactory::forEvent($eventB)->withWrestler($wrestler)->create();
+
+        $response = $this->actingAs($this->authorizedUser)->get(route('wrestlers.show', $wrestler->id));
+
+        $response->assertSee('Past Event A');
+        $response->assertSee('Past Event B');
+        $response->assertDontSee('Scheduled Event C');
     }
 
     /** @test */
