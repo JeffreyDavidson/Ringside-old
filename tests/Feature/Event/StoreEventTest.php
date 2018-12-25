@@ -5,8 +5,8 @@ namespace Tests\Feature\Event;
 use Carbon\Carbon;
 use App\Models\Event;
 use App\Models\Venue;
-use App\Models\Referee;
-use App\Models\Wrestler;
+use App\Models\Roster\Referee;
+use App\Models\Roster\Wrestler;
 use App\Models\MatchType;
 use Tests\IntegrationTestCase;
 

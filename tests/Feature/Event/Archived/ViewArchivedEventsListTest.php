@@ -1,15 +1,12 @@
 <?php
 
-namespace Tests\Feature\Event;
+namespace Tests\Feature\Event\Archived;
 
 use App\Models\Event;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use Tests\IntegrationTestCase;
 
-class ViewArchivedEventsListTest extends TestCase
+class ViewArchivedEventsListTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
-
     public function setUp()
     {
         parent::setUp();
@@ -25,8 +22,7 @@ class ViewArchivedEventsListTest extends TestCase
         $scheduledEvent = factory(Event::class)->states('scheduled')->create();
         $pastEvent = factory(Event::class)->states('past')->create();
 
-        $response = $this->actingAs($this->authorizedUser)
-            ->get(route('archived-events.index'));
+        $response = $this->actingAs($this->authorizedUser)->get(route('archived-events.index'));
 
         $response->assertSuccessful();
         $response->assertViewIs('events.archived');
@@ -40,8 +36,7 @@ class ViewArchivedEventsListTest extends TestCase
     /** @test */
     public function users_who_dont_have_permission_cannot_view_the_list_of_archived_events()
     {
-        $response = $this->actingAs($this->unauthorizedUser)
-            ->get(route('archived-events.index'));
+        $response = $this->actingAs($this->unauthorizedUser)->get(route('archived-events.index'));
 
         $response->assertStatus(403);
     }

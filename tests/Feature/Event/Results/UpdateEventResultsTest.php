@@ -5,7 +5,7 @@ namespace Tests\Feature\Event;
 use App\Models\Event;
 use App\Models\Match;
 use App\Models\Title;
-use App\Models\Wrestler;
+use App\Models\Roster\Wrestler;
 use App\Models\MatchType;
 use Facades\MatchFactory;
 use App\Models\MatchDecision;

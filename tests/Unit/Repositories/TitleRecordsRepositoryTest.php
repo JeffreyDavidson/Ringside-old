@@ -4,7 +4,7 @@ namespace Tests\Unit\Repositories;
 
 use Carbon\Carbon;
 use App\Models\Title;
-use App\Models\Wrestler;
+use App\Models\Roster\Wrestler;
 use Tests\IntegrationTestCase;
 use Facades\ChampionshipFactory;
 use App\Repositories\TitleRecordsRepository;

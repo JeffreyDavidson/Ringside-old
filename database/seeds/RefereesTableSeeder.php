@@ -1,7 +1,7 @@
 <?php
 
 use Carbon\Carbon;
-use App\Models\Referee;
+use App\Models\Roster\Referee;
 use Illuminate\Database\Seeder;
 
 class RefereesTableSeeder extends Seeder

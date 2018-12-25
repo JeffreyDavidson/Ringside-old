@@ -4,8 +4,8 @@ namespace App\Repositories;
 
 use DB;
 use App\Models\Title;
-use App\Models\Wrestler;
 use App\Models\Championship;
+use App\Models\Roster\Wrestler;
 
 class TitleRecordsRepository
 {
@@ -58,7 +58,7 @@ class TitleRecordsRepository
             ->selectRaw('MAX(DATEDIFF(IFNULL(lost_on, ?), won_on)) AS diff', [$now])
             ->value('diff');
 
-        return Wrestler::whereHas('titles', function ($query) use ($now, $reign) {
+        return Wrestler::whereHas('championships', function ($query) use ($now, $reign) {
             $query->whereRaw('DATEDIFF(IFNULL(championships.lost_on, ?), championships.won_on) = ?', [
                 $now, $reign,
             ]);

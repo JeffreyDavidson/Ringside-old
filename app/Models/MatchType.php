@@ -12,8 +12,7 @@ class MatchType extends Model
      * @var array
      */
     protected $needsMultipleReferees = [
-        'battleroyal',
-        'royalrumble',
+        'battleroyal', 'royalrumble',
     ];
 
     /**

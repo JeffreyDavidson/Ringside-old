@@ -3,7 +3,7 @@
 namespace Tests\Unit\Models;
 
 use Carbon\Carbon;
-use App\Models\Wrestler;
+use App\Models\Roster\Wrestler;
 use App\Models\Suspension;
 use Tests\IntegrationTestCase;
 

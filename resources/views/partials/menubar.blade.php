@@ -11,7 +11,7 @@
                         </a>
                     </li>
                     <li class="site-menu-category">Administrator</li>
-                    @can('index', App\Models\Wrestler::class)
+                    @can('index', App\Models\Roster\Wrestler::class)
                         <li class="site-menu-item has-sub 
                             {{ set_open(['roster/wrestlers/create', 'roster/wrestlers/active', 'roster/wrestlers/inactive', 'roster/wrestlers/retired']) }}
                             ">
@@ -21,7 +21,7 @@
                                 <span class="site-menu-arrow"></span>
                             </a>
                             <ul class="site-menu-sub">
-                                @can('create', App\Models\Wrestler::class)
+                                @can('create', App\Models\Roster\Wrestler::class)
                                     <li class="site-menu-item {{ set_active('roster/wrestlers/create') }}">
                                         <a href="{{ route('wrestlers.create') }}"><span class="site-menu-title">Create Wrestler</span></a>
                                     </li>

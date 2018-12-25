@@ -2,18 +2,26 @@
 
 namespace App\Models;
 
-use App\Traits\HasStatus;
-use App\Traits\HasMatches;
-use App\Traits\HasRetirements;
+use App\Traits\Retirable;
+use App\Traits\Statusable;
+use App\Models\Championship;
 use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\ModelIsActiveException;
-use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Exceptions\TitleNotIntroducedException;
 
 class Title extends Model
 {
-    use HasStatus, HasMatches, HasRetirements, Presentable, SoftDeletes;
+    use Statusable, Retirable, SoftDeletes;
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'introduced_at',
+    ];
 
     /**
      * The attributes that should be cast to native types.
@@ -22,7 +30,6 @@ class Title extends Model
      */
     protected $casts = [
         'is_active' => 'boolean',
-        'introduced_at' => 'datetime',
     ];
 
     /**
@@ -33,20 +40,13 @@ class Title extends Model
     protected $fillable = ['name', 'slug', 'is_active', 'introduced_at'];
 
     /**
-     * Assign which presenter to be used for model.
-     *
-     * @var string
-     */
-    protected $presenter = 'App\Presenters\TitlePresenter';
-
-    /**
      * A title can have many champions.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\hasMany
      */
-    public function champions()
+    public function championships()
     {
-        return $this->belongsToMany(Wrestler::class, 'championships')->using(Championship::class)->withPivot('id', 'won_on', 'lost_on', 'successful_defenses');
+        return $this->hasMany(Championship::class);
     }
 
     /**
@@ -54,9 +54,9 @@ class Title extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function currentChampion()
+    public function getCurrentChampionAttribute()
     {
-        return $this->champions()->wherePivot('lost_on', null)->limit(1);
+        return $this->championships()->whereNull('lost_on')->first()->champion;
     }
 
     /**
@@ -64,29 +64,9 @@ class Title extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function previousChampion()
-    {
-        return $this->champions()->wherePivot('lost_on', '!=', null)->latest('championships.won_on')->limit(1);
-    }
-
-    /**
-     * Retrieves the current champion for the title.
-     *
-     * @return \App\Models\Wrestler|null
-     */
-    public function getCurrentChampionAttribute()
-    {
-        return $this->currentChampion()->first();
-    }
-
-    /**
-     * Retrieves the current champion for the title.
-     *
-     * @return \App\Models\Wrestler|null
-     */
     public function getPreviousChampionAttribute()
-    {
-        return $this->previousChampion()->first();
+    { 
+        return $this->championships()->whereNotNull('lost_on')->latest('championships.won_on')->first()->champion;
     }
 
     /**
@@ -116,5 +96,15 @@ class Title extends Model
         }
 
         return $this->update(['is_active' => true]);
+    }
+
+    /**
+     * Formats introduced at date for model.
+     *
+     * @return string
+     */
+    public function getFormattedIntroducedAtDateAttribute()
+    {
+        return $this->introduced_at->format('F j, Y');
     }
 }

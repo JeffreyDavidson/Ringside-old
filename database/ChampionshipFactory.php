@@ -2,12 +2,12 @@
 
 use Carbon\Carbon;
 use App\Models\Title;
-use App\Models\Wrestler;
 use App\Models\Championship;
+use App\Models\Roster\Wrestler;
 
 class ChampionshipFactory
 {
-    private $wrestler;
+    private $champion;
     private $title = null;
     private $wonOn = null;
     private $lostOn = null;
@@ -32,7 +32,7 @@ class ChampionshipFactory
             $this->title = factory(Title::class)->create();
             $this->wonOn = $this->title->introduced_at->copy()->addMonth();
         } elseif (! is_null($this->title) && is_null($this->wonOn)) {
-            if ($this->title->champions()->exists()) {
+            if ($this->title->championships()->exists()) {
                 $dateLastChampionWon = $this->title->fresh()->currentChampion->pivot->won_on;
                 $dateOfTitleChange = $dateLastChampionWon->copy()->addMonth();
                 $this->title->fresh()->currentChampion->loseTitle($this->title, $dateOfTitleChange);
@@ -42,8 +42,14 @@ class ChampionshipFactory
             }
         }
 
+        if (!$this->champion) {
+            $className = $faker->randomElement([Wrestler::class, TagTeam::class]);
+            $champion = factory($className)->create();
+        }
+        
         $champion = factory(Championship::class)->states($this->states)->create([
-            'wrestler_id' => $this->wrestler->id ?? factory(Wrestler::class)->create()->id,
+            'champion_id' => $this->champion->id ?? $champion->id,
+            'champion_type' => $className,
             'title_id' => $this->title->id,
             'won_on' => $this->wonOn,
             'lost_on' => $this->lostOn,
@@ -108,8 +114,8 @@ class ChampionshipFactory
 
     public function resetProperties()
     {
-        if (! is_null($this->wrestler)) {
-            $this->wrestler = null;
+        if (! is_null($this->champion)) {
+            $this->champion = null;
         }
 
         if (! is_null($this->title)) {

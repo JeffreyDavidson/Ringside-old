@@ -2,13 +2,12 @@
 
 namespace App\Models;
 
-use Laracodes\Presenter\Traits\Presentable;
-use Illuminate\Database\Eloquent\Relations\Pivot;
+use App\Models\Roster\TagTeam;
+use App\Models\Roster\Wrestler;
+use Illuminate\Database\Eloquent\Model;
 
-class Championship extends Pivot
+class Championship extends Model
 {
-    use Presentable;
-
     /**
      * The table associated with the model.
      *
@@ -17,21 +16,78 @@ class Championship extends Pivot
     protected $table = 'championships';
 
     /**
-     * The attributes that should be cast to native types.
+     * The attributes that should be mutated to dates.
      *
      * @var array
      */
-    protected $casts = [
-        'won_on' => 'datetime',
-        'lost_on' => 'datetime',
+    protected $dates = [
+        'won_on', 'lost_on',
     ];
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = ['won_on', 'lost_on', 'successful_defenses'];
 
     /**
-     * Assign which presenter to be used for model.
+     * A championship can belong to many wrestlers.
      *
-     * @var string
+     * @return \Illuminate\Database\Eloquent\Relations\MorphedByMany
      */
-    protected $presenter = 'App\Presenters\ChampionshipPresenter';
+    public function wrestlers()
+    {
+        return $this->morphedByMany(Wrestler::class, 'champion', 'championships');
+    }
+
+    /**
+     * A championship can belong to many tag teams.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphedByMany
+     */
+    public function tagteams()
+    {
+        return $this->morphedByMany(TagTeam::class, 'champion', 'championships');
+    }
+
+    /**
+     * A champion can be a wrestler or tag team.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
+    public function champion()
+    {
+        return $this->morphTo();
+    }
+
+    /**
+     * Formats won on date.
+     *
+     * @return string
+     */
+    public function wonOn()
+    {
+        return $this->model->won_on->format('F j, Y');
+    }
+
+    /**
+     * Formats lost on date.
+     *
+     * @return string
+     */
+    public function lostOn()
+    {
+        return $this->model->lost_on ? $this->model->lost_on->format('F j, Y') : 'Present';
+    }
+
+    /**
+     * Calculates how long a championship has been held.
+     *
+     * @return string
+     */
+    public function lengthOfReign()
+    {
+        return $this->model->lost_on ? $this->model->won_on->diffInDays($this->model->lost_on) . ' days' : 'Present';
+    }
 }

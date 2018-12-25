@@ -7,7 +7,7 @@ use App\Models\Venue;
 use Tests\IntegrationTestCase;
 
 class VenueTest extends IntegrationTestCase
-{
+{   
     /** @test */
     public function it_can_get_a_venues_past_events()
     {

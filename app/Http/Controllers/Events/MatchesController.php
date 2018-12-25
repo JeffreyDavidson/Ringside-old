@@ -6,7 +6,7 @@ use App\Models\Event;
 use App\Models\Match;
 use App\Services\AddMatchesToEvent;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\MatchCreateFormRequest;
+use App\Http\Requests\StoreMatchFormRequest;
 
 class MatchesController extends Controller
 {
@@ -28,11 +28,11 @@ class MatchesController extends Controller
     /**
      * Store newly created matches for an event.
      *
-     * @param  \App\Http\Requests\MatchCreateFormRequest  $request
+     * @param  \App\Http\Requests\StoreMatchFormRequest  $request
      * @param  \App\Models\Event  $event
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(MatchCreateFormRequest $request, Event $event)
+    public function store(StoreMatchFormRequest $request, Event $event)
     {
         $matches = collect()->push($request->all());
 

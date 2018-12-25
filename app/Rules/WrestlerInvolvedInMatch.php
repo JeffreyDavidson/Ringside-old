@@ -46,7 +46,7 @@ class WrestlerInvolvedInMatch implements Rule
     {
         return Match::forEvent($this->event)
             ->withMatchNumber($this->matchNumber)
-            ->withWrestler($value)
+            ->withCompetitor($value)
             ->exists();
     }
 
