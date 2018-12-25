@@ -1,7 +1,7 @@
 <?php
 
 use Carbon\Carbon;
-use App\Models\Wrestler;
+use App\Models\Roster\Wrestler;
 use Illuminate\Database\Seeder;
 
 class WrestlersSuspensionsTableSeeder extends Seeder

@@ -42,7 +42,7 @@ class AddMatchesToEvent
             }
 
             $matchObj->addReferees($match['referees']);
-            $matchObj->addWrestlers($match['wrestlers']);
+            $matchObj->addCompetitors($match['competitors']);
         }
     }
 }

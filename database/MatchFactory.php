@@ -3,11 +3,11 @@
 use Carbon\Carbon;
 use App\Models\Event;
 use App\Models\Match;
-use App\Models\Referee;
-use App\Models\Wrestler;
 use App\Models\MatchType;
 use App\Models\Stipulation;
 use App\Models\Championship;
+use App\Models\Roster\Referee;
+use App\Models\Roster\Wrestler;
 
 class MatchFactory
 {
@@ -15,7 +15,7 @@ class MatchFactory
     public $match_type_id = null;
     public $stipulation_id = null;
     public $champion = null;
-    public $wrestlers;
+    public $competitors;
     public $titles;
     public $referees;
     public $states = null;
@@ -41,7 +41,7 @@ class MatchFactory
             'stipulation_id' => $this->stipulation_id ?? null,
         ]);
 
-        $this->addWrestlersForMatch($match);
+        $this->addCompetitorsForMatch($match);
 
         if ($this->titles->isNotEmpty()) {
             $match->addTitles($this->titles->pluck('id'));
@@ -96,54 +96,48 @@ class MatchFactory
         return $this;
     }
 
-    public function withWrestlers($wrestlers)
+    public function withCompetitors($competitors)
     {
-        $merged = $this->wrestlers->merge($wrestlers);
+        $merged = $this->competitors->merge($competitors);
 
-        $this->wrestlers = $merged;
+        $this->competitors = $merged;
 
         return $this;
     }
 
-    public function withWrestler(Wrestler $wrestler)
+    public function withCompetitor($competitor)
     {
-        $this->wrestlers->push($wrestler);
+        $this->competitors->push($competitor);
 
         return $this;
     }
 
-    public function withChampion(Wrestler $wrestler)
+    public function withChampion(Competitor $competitor)
     {
-        $this->titles->each(function ($title, $key) use ($wrestler) {
+        $this->titles->each(function ($title, $key) use ($competitor) {
             factory(Championship::class)->create([
-                'wrestler_id' => $wrestler->id,
+                'champion_id' => $competitor->id,
                 'title_id' => $title->id,
                 'won_on' => $title->introduced_at->copy()->subMonths(4),
             ]);
         });
 
-        $concatenated = $this->wrestlers->concat([$wrestler]);
+        $concatenated = $this->competitors->concat([$competitor]);
 
-        $this->wrestlers = $concatenated;
+        $this->competitors = $concatenated;
 
         return $this;
     }
 
-    public function addWrestlersForMatch($match)
+    public function addCompetitorsForMatch($match)
     {
-        if ($this->wrestlers->isEmpty()) {
-            $numWrestlersToAddToMatch = $match->type->total_competitors;
-        } else {
-            $numWrestlersToAddToMatch = $match->type->total_competitors - $this->wrestlers->count();
-        }
+        $numCompetitorsToAddToMatch = $this->calculateCompetitorCount($match);
 
-        $wrestlersForMatch = factory(Wrestler::class, (int) $numWrestlersToAddToMatch)->create(['hired_at' => $match->date->copy()->subMonths(2)]);
-        $concatenatedWrestlers = $this->wrestlers->merge($wrestlersForMatch);
-        $this->wrestlers = $concatenatedWrestlers;
+        $this->collectCompetitors($numCompetitorsToAddToMatch, $match);
 
-        $splitWrestlers = $this->wrestlers->pluck('id')->split($match->type->number_of_sides)->flatten(1);
+        $splitCompetitors = $this->competitors->pluck('id')->split($match->type->number_of_sides)->flatten(1);
 
-        $match->addWrestlers($splitWrestlers);
+        $match->addCompetitors($splitCompetitors);
     }
 
     /**
@@ -182,9 +176,21 @@ class MatchFactory
         return $this;
     }
 
+    public function calculateCompetitorCount($match)
+    {
+        return $this->competitors->isEmpty() ? $match->type->total_competitors : $match->type->total_competitors - $this->competitors->count();
+    }
+
+    public function collectCompetitors($numCompetitorsToAddToMatch, $match)
+    {
+        $competitorsForMatch = factory(Wrestler::class, (int)$numCompetitorsToAddToMatch)->create(['hired_at' => $match->date->copy()->subMonths(2)]);
+        $concatenatedCompetitors = $this->competitors->merge($competitorsForMatch);
+        $this->competitors = $concatenatedCompetitors;
+    }
+
     public function populateDefaults()
     {
-        $this->wrestlers = collect();
+        $this->competitors = collect();
         $this->titles = collect();
         $this->referees = collect();
     }

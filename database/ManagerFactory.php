@@ -1,8 +1,8 @@
 <?php
 
 use Carbon\Carbon;
-use App\Models\Manager;
-use App\Models\Wrestler;
+use App\Models\Roster\Manager;
+use App\Models\Roster\Wrestler;
 
 class ManagerFactory
 {

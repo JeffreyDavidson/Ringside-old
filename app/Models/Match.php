@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
+use App\Interfaces\Competitor;
+use App\Models\Roster\Referee;
+use App\Models\Roster\TagTeam;
+use App\Models\Roster\Wrestler;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Laracodes\Presenter\Traits\Presentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Match extends Model
 {
-    use Presentable, SoftDeletes;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -17,13 +20,6 @@ class Match extends Model
      * @var array
      */
     protected $fillable = ['match_number', 'match_type_id', 'stipulation_id', 'match_decision_id', 'preview', 'result'];
-
-    /**
-     * Assign which presenter to be used for model.
-     *
-     * @var string
-     */
-    protected $presenter = 'App\Presenters\MatchPresenter';
 
     /**
      * A match has a decision.
@@ -82,7 +78,7 @@ class Match extends Model
      */
     public function titles()
     {
-        return $this->belongsToMany(Title::class)->with('currentChampion');
+        return $this->belongsToMany(Title::class);
     }
 
     /**
@@ -108,27 +104,32 @@ class Match extends Model
     /**
      * A match can have many wrestlers.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\MorphedByMany
      */
     public function wrestlers()
     {
-        return $this->belongsToMany(Wrestler::class)->withPivot('side_number');
+        return $this->morphedByMany(Wrestler::class, 'competitor');
     }
 
     /**
-     * A collection of wrestlers grouped by side.
+     * A match can have many tag teams.
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Database\Eloquent\Relations\MorphedByMany
      */
-    public function groupedWrestlersBySide()
+    public function tagteams()
     {
-        return $this->wrestlers->groupBy('pivot.side_number');
+        return $this->morphedByMany(TagTeam::class, 'competitor');
+    }
+
+    public function getCompetitorsAttribute()
+    {
+        return $this->wrestlers->merge($this->tagteams);
     }
 
     /**
      * Add a referee to a match.
      *
-     * @param  \App\Models\Referee  $referee
+     * @param  \App\Models\Roster\Referee  $referee
      * @return void
      */
     public function addReferee(Referee $referee)
@@ -195,27 +196,26 @@ class Match extends Model
         $this->save();
     }
 
-    /**
-     * Add a wrestler to a match.
-     *
-     * @param  \App\Models\Wrestler  $wrestler
-     * @param  int  $sideNumber
-     */
-    public function addWrestler(Wrestler $wrestler, int $sideNumber)
+    public function addCompetitor(Competitor $competitor, int $sideNumber)
     {
-        $this->wrestlers()->attach($wrestler->id, ['side_number' => $sideNumber]);
+        if ($competitor instanceof Wrestler) {
+            $this->wrestlers()->attach($competitor, ['side_number' => $sideNumber]);
+        } elseif ($competitor instanceof TagTeam) {
+            $this->tagteams()->attach($competitor, ['side_number' => $sideNumber]);
+        }
     }
 
-    /**
-     * Add wrestlers to a match.
-     *
-     * @param  array  $wrestlers
-     * @return void
-     */
-    public function addWrestlers($wrestlers)
+    public function addCompetitors(array $allCompetitors)
     {
-        foreach ($wrestlers as $groupingId => $wrestlerIds) {
-            $this->wrestlers()->attach($wrestlerIds, ['side_number' => $groupingId]);
+        // dd($competitors);
+        foreach($allCompetitors as $sideNumber => $competitors) {
+            foreach ($competitors as $competitor) {
+                if ($competitor instanceof Wrestler) {
+                    $this->wrestlers()->attach($competitor, ['side_number' => $sideNumber]);
+                } elseif ($competitor instanceof TagTeam) {
+                    $this->tagteams()->attach($competitor, ['side_number' => $sideNumber]);
+                }
+            }
         }
     }
 
@@ -294,10 +294,56 @@ class Match extends Model
      * @param  int  $id
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeWithWrestler(Builder $query, $id)
+    public function scopeWithCompetitor(Builder $query, $id)
     {
-        return $query->whereHas('wrestlers', function ($query) use ($id) {
+        return $query->whereHas('competitors', function ($query) use ($id) {
             $query->where('wrestlers.id', $id);
         });
+    }
+
+    /**
+     * Formats collection of wrestlers for match.
+     *
+     * @return string
+     */
+    public function wrestlers2()
+    {
+        if (in_array($this->model->type->slug, ['royalrumble', 'battleroyal'])) {
+            return $this->model->type->name;
+        }
+
+        return $this->model->groupedWrestlersBySide()->map(function ($group) {
+            return $group->pluck('name')->implode(' & ');
+        })->implode(' vs. ');
+    }
+
+    /**
+     * Formats collection of referees for match.
+     *
+     * @return string
+     */
+    public function referees2()
+    {
+        return $this->model->referees->map(function ($item) {
+            return $item->present()->fullName();
+        })->implode(' & ');
+    }
+
+    /**
+     * Formats match number for match.
+     *
+     * @return string
+     */
+    public function match_number()
+    {
+        if ($this->model->match_number == $this->model->event->matches()->count()) {
+            return 'Main Event';
+        }
+
+        if ($this->model->match_number == 1) {
+            return 'Opening Match';
+        }
+
+        return 'Match #' . $this->model->match_number;
     }
 }

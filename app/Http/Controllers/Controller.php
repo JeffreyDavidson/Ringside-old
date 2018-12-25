@@ -20,7 +20,7 @@ class Controller extends BaseController
     {
         $this->request = $request;
         if ($this->authorizeResource) {
-            $this->authorizeResource($this->authorizeResource);
+            $this->authorizeResource(...(array) $this->authorizeResource);
         }
     }
 

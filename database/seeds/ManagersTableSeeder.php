@@ -1,7 +1,7 @@
 <?php
 
 use Carbon\Carbon;
-use App\Models\Manager;
+use App\Models\Roster\Manager;
 use Illuminate\Database\Seeder;
 
 class ManagersTableSeeder extends Seeder

@@ -3,9 +3,9 @@
 namespace Tests\Unit\Rules;
 
 use App\Models\Event;
-use App\Models\Wrestler;
 use Facades\MatchFactory;
 use Tests\IntegrationTestCase;
+use App\Models\Roster\Wrestler;
 use App\Rules\WrestlerInvolvedInMatch;
 
 class WrestlerInvolvedInMatchRuleTest extends IntegrationTestCase
@@ -16,7 +16,7 @@ class WrestlerInvolvedInMatchRuleTest extends IntegrationTestCase
         $wrestlerInMatch = factory(Wrestler::class)->create();
         $wrestlerNotInMatch = factory(Wrestler::class)->create();
         $event = factory(Event::class)->create();
-        $match = MatchFactory::forEvent($event)->withWrestler($wrestlerInMatch)->create();;
+        $match = MatchFactory::forEvent($event)->withCompetitor($wrestlerInMatch)->create();;
 
         $validator = new WrestlerInvolvedInMatch($event, $match->match_number);
 

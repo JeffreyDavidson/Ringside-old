@@ -3,20 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Laracodes\Presenter\Traits\Presentable;
 
 class Retirement extends Model
 {
-    use Presentable;
-
     /**
-     * The attributes that should be cast to native types.
+     * The attributes that should be mutated to dates.
      *
      * @var array
      */
-    protected $casts = [
-        'retired_at' => 'datetime',
-        'ended_at' => 'datetime',
+    protected $dates = [
+        'retired_at', 'ended_at',
     ];
 
     /**
@@ -26,12 +22,6 @@ class Retirement extends Model
      */
     protected $fillable = ['retiree_type', 'retiree_id', 'retired_at', 'ended_at'];
 
-    /**
-     * Assign which presenter to be used for model.
-     *
-     * @var string
-     */
-    protected $presenter = 'App\Presenters\RetirementPresenter';
 
     /**
      * Ends a retirement.
@@ -42,5 +32,15 @@ class Retirement extends Model
     public function end($date = null)
     {
         return $this->update(['ended_at' => $date ?: $this->freshTimestamp()]);
+    }
+
+    /**
+     * Formats retired at date for model.
+     *
+     * @return string
+     */
+    public function getFormattedRetiredAtDate()
+    {
+        return $this->retired_at->format('F j, Y');
     }
 }

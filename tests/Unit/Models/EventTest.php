@@ -11,47 +11,6 @@ use Tests\IntegrationTestCase;
 class EventTest extends IntegrationTestCase
 {
     /** @test */
-    public function an_event_has_a_name()
-    {
-        $event = factory(Event::class)->create(['name' => 'Some Event']);
-
-        $this->assertEquals('Some Event', $event->name);
-    }
-
-    /** @test */
-    public function an_event_has_a_slug()
-    {
-        $event = factory(Event::class)->create(['slug' => 'some-slug']);
-
-        $this->assertEquals('some-slug', $event->slug);
-    }
-
-    /** @test */
-    public function an_event_has_a_date()
-    {
-        $event = factory(Event::class)->create(['date' => '2018-10-31']);
-
-        $this->assertEquals('2018-10-31', $event->date->toDateString());
-    }
-
-    /** @test */
-    public function an_event_has_a_venue()
-    {
-        $venue = factory(Venue::class)->create();
-        $event = factory(Event::class)->create(['venue_id' => $venue->id]);
-
-        $this->assertTrue($event->venue->is($venue));
-    }
-
-    /** @test */
-    public function an_event_has_an_archived_at_date()
-    {
-        $event = factory(Event::class)->create(['archived_at' => Carbon::parse('2018-10-31')]);
-
-        $this->assertEquals('2018-10-31', $event->archived_at->toDateString());
-    }
-
-    /** @test */
     public function the_last_match_in_an_event_is_the_main_event()
     {
         $event = factory(Event::class)->create();
@@ -76,7 +35,7 @@ class EventTest extends IntegrationTestCase
     /** @test */
     public function an_event_that_has_an_archived_date_is_archived()
     {
-        $event = factory(Event::class)->states('archived')->create();
+        $event = factory(Event::class)->create(['archived_at' => Carbon::yesterday()]);
 
         $this->assertTrue($event->isArchived());
     }
@@ -136,5 +95,29 @@ class EventTest extends IntegrationTestCase
         $event = factory(Event::class)->states('past')->create();
 
         $event->unarchive();
+    }
+
+    /** @test */
+    public function event_date_can_be_formatted()
+    {
+        $event = factory(Event::class)->make(['date' => '2017-04-01 12:00:00']);
+
+        $this->assertEquals('April 1st, 2017', $event->formatted_date);
+    }
+
+    /** @test */
+    public function event_date_can_be_formatted_for_a_on_a_form()
+    {
+        $event = factory(Event::class)->make(['date' => '2017-04-01 12:00:00']);
+
+        $this->assertEquals('04/01/2017', $event->formatted_form_date);
+    }
+
+    /** @test */
+    public function event_time_formatted()
+    {
+        $event = factory(Event::class)->make(['date' => '2017-04-01 12:00:00']);
+
+        $this->assertEquals('12:00pm', $event->time);
     }
 }
