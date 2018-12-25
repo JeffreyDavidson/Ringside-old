@@ -96,6 +96,7 @@ class UpdateTitleTest extends IntegrationTestCase
     /** @test */
     public function title_name_is_required()
     {
+        $this->withoutExceptionHandling();
         $title = factory(Title::class)->create($this->oldAttributes());
 
         $response = $this->actingAs($this->authorizedUser)->from(route('titles.edit', $title->id))->patch(route('titles.update', $title->id), $this->validParams([
